@@ -1,11 +1,114 @@
 <html>
     <head>
-        <title>Testing</title>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <title>DaPaaS Data Transformation GUI</title>
+        <script src="js/jquery-1.11.1.min.js"></script>
+        <link rel="stylesheet" href="./js/jquery-ui.min.css">
+        <script src="./js/jquery-ui.min.js"></script>
+        <script src='./js/jsedn.js'></script>
+        <script src='./js/grafter-code-generator.js'></script>
+        <script src='./js/grafter-gui-elements.js'></script>
+        <link rel="stylesheet" href="css/grafter-gui.css">
+        <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.1/css/font-awesome.css" rel="stylesheet">
+        <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/themes/smoothness/jquery-ui.min.css">
+        <!-- START CODE FRAGMENT -->
+
     </head>
     <body>
-        <script src='./js/jsedn.js'></script>
-        <script src='./js/grafter_gui.js'></script>
-        <textarea id="output" rows="50" cols ="120"></textarea>
+        <!-- START CODE FRAGMENT -->
+
+        <!--
+<div style = "width: 30%;">
+<table id="pipeline" style="width: 100%; border: 1px solid black;border-collapse: collapse;">
+<tr>
+<td style="width:20%"></td>
+
+<td>
+<button class="pipelineFunct">drop-rows</button>
+</td>
+
+<td style="width:10%">
+<i class="fa fa-plus addAfterButton"></i>
+<i class="fa fa-times removeButton"></i>
+</td>
+<td style="width:20%"></td>
+</tr>
+
+<tr>
+<td style="width:20%"></td>
+
+<td style="text-align:center;">
+<i class="fa fa-angle-double-down fa-lg pipeNext"></i>
+</td>
+
+<td style="width:10%">
+</td>
+<td style="width:20%"></td>
+</tr>
+
+<tr>
+<td style="width:20%"></td>
+
+<td style="align-content: right;">
+<button class="pipelineFunct">make-dataset</button>
+</td>
+
+<td style="width:10% ">
+<i class="fa fa-plus addAfterButton"></i>
+<i class="fa fa-times removeButton"></i>
+</td>
+<td style="width:20%"></td>
+</tr>
+<tr>
+<td style="width:20%"></td>
+
+<td style="text-align:center;">
+<i id="pipelineAddAtEnd" class="fa fa-plus-circle fa-lg"></i>
+</td>
+
+<td style="width:10%">
+</td>
+<td style="width:20%"></td>
+</tr>
+</table>
+</div>
+-->
+        <div id="dialog-pipeline-main" title="Choose pipeline function type...">
+            <form id="function-selection-form">
+                <label class= "form-label" for="pipeline-functions">Function type:</label>
+                <select name="pipeline-functions" id="pipeline-functions">
+                    <option value="please-choose" selected disabled>Please choose function...</option>
+                    <optgroup label="Grafter functions">
+                        <option value="drop-rows" data-class="ui-icon-script">drop-rows</option>
+                        <option value="make-dataset" data-class="ui-icon-script">make-dataset</option>
+                    </optgroup>
+                    <option value="make-dataset" data-class="ui-icon-script">Create custom function...</option>
+                </select>
+            </form>
+
+            <form id="function-specific-form">
+
+            </form>
+        </div>
+
+        <div id="dialog-confirm"></div>
+        <div style = "width: 30%;">
+            <table id="pipeline" style="width: 100%; border: 1px solid black;border-collapse: collapse;">
+                <tr id="addElementAtEndRow">
+                    <td style="width:20%"></td>
+
+                    <td style="text-align:center;">
+                        <i id="pipelineAddAtEnd" class="fa fa-plus-circle fa-lg"></i>
+                    </td>
+                    <td style="width:20%"></td>
+                </tr>
+            </table>
+            <button id="generate-code" style="width:100%;">Generate Grafter pipeline...</button>
+        </div>
+
+
+        <br/><br/><br/><br/>
+        <textarea id="output" rows="50" cols ="120" style=""></textarea>
+        <br/>
+
     </body>
 </html>
