@@ -60,3 +60,12 @@ select {
 label {
     display: block;
 }
+textarea{
+    width: 20%;
+}
+
+.CodeMirror {
+    background: #f8f8f8; 
+    border: 1px solid #eee;
+    height: auto;
+}

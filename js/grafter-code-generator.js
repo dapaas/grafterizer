@@ -35,7 +35,7 @@ var declarations;
 var prefixers = [];
 
 /* Holds the jsedn list of user functions. Used to render them in Clojure code. */
-var userFunctions = new jsedn.List([]);
+var userFunctions = [];
 
 /* Jsedn definition of the graph-building function. */
 var graphBuilderTemplate;
@@ -73,18 +73,38 @@ function constructGrafterDeclarations(){
 }
 
 /* Constructs the collection of defined prefixers for RDF-isation */
-function constructGrafterPrefixers(){
-    return prefixers;
+function constructGrafterPrefixersArray(){
+    // we make a copy of the prefixers array that we eventually return
+    var result = prefixers.slice();
+    
+    /* the prefixers array needs to be re-initialized so that we don't append new values to it when generating the Grafter code */
+    prefixers=[];
+    return result;
 }
 
 /* Adds a user function rendered as a jsedn object to the collection of user functions */
 function addUserFunction(userFunctionEdn){
-    userFunctions.val.push(userFunctionEdn);
+    userFunctions.push(userFunctionEdn);
 }
 
 /* Calls the jsedn parser and returns the parsed user function */
-function parseUserFunction(userFunctionString){
-    return parseEdnFromString(userFunctionString, "Error parsing user function!");
+function parseAndAddUserFunction(userFunctionString){
+    var result = parseEdnFromString(userFunctionString, "Error parsing user function!");
+    if(result == null)
+        return false;
+    
+    addUserFunction(result);
+    return true;
+}
+
+function constructUserFunctions(){
+    // we make a copy of the user functions array that we eventually return
+    var result = userFunctions.slice();
+    
+    /* the user functions array needs to be re-initialized so that we don't append new values to it when generating the Grafter code */
+    userFunctions = [];
+    
+    return result;
 }
 
 /* Constructs and returns the function used for transforming data to RDF */
@@ -217,7 +237,11 @@ function createMapc(functionSetOrArrayJsedn){
     return jsednFunction;
 }
 
-
+function createCustomCodeForPipeline(code, displayName){
+    var customCodeEdn = parseEdnFromString(code, "Error parsing custom code in " + displayName); 
+    
+    return customCodeEdn;
+}
 
 /***************************************************************************
     Testing functionalities programatically
@@ -275,8 +299,6 @@ function createMapc(functionSetOrArrayJsedn){
 //    addPipelineFunction(mapcFunct);
 //
 //    var resultingPipeline = constructPipeline();
-//
-//    // TODOS: prefixers should be in a normal list; user functions also -> iterate over them
 //
 //    var textStr = "";
 ////    console.log(grafterDeclarations.ednEncode());
