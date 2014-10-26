@@ -26,6 +26,7 @@
                     <optgroup label="Grafter functions">
                         <option value="drop-rows" data-class="ui-icon-script">drop-rows</option>
                         <option value="make-dataset" data-class="ui-icon-script">make-dataset</option>
+                        <option value="mapc" data-class="ui-icon-script">mapc</option>
                     </optgroup>
                     <option value="add-custom-code" data-class="ui-icon-script">Add custom code...</option>
                 </select>
@@ -60,10 +61,6 @@
         </div>
         <div id="dialog-create-custom-function" title="Create a custom Clojure function...">
             <form id="custom-function-selection">
-                <!--
-<label class= "form-label" for="custom-function-name">Function name:</label>
-<input id="custom-function-name" type="text"></input>
--->
                 <select name="custom-functions" id="custom-functions">
 
                     <option value="create-new-func" data-class="ui-icon-script" selected>Create new function...</option>
@@ -71,14 +68,11 @@
                     </optgroup>
 
                 </select>
-                <button id="delete-function" style="display:none;">Delete</button>
-
                 <label class= "form-label" for="custom-function-code">Code:</label>
                 <textarea id="custom-function-code" rows="50" cols ="120" style="display: none;"></textarea>
                 <br>
                 <button id="save-function">Save</button>
-
-
+                <button id="delete-function" style="display:none;">Delete</button>
             </form>
         </div>
     </body>

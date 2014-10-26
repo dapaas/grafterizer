@@ -141,6 +141,55 @@ function showDefaultAddButton(){
     Attaching listeners to the GUI elements; initializing dialogs
 ***************************************************************************/
 
+function getMapcElements(){
+    var mapcTableLabel = document.createElement("label");
+    mapcTableLabel.classList.add("form-label");
+    mapcTableLabel.setAttribute("for", "mapc-table");
+    mapcTableLabel.textContent = "Map columns to functions";
+
+    var mapcTable = document.createElement("table");
+    mapcTable.id = "mapc-table";
+
+    return [mapcTableLabel,mapcTable];
+}
+
+
+function createColFuncMapcMapping(column, funct){
+    return {column: column, funct: funct};
+}
+
+function createColFuncMapcMappingJsEDN(){
+    var jsEdnMapObject = new jsedn.Map([]);
+    
+    var count = $('#mapc-table').appendGrid('getRowCount');
+    for(i=0;i<count; ++i){
+        var rowVal = $('#mapc-table').appendGrid('getRowValue', i);
+        jsEdnMapObject.set(rowVal['mapc-column-key'], rowVal['mapc-function']);
+    }
+    console.log(jsEdnMapObject);
+    return jsEdnMapObject;
+}
+
+function getMapcButtons(dialog){
+    var buttons = { 
+        "Create function": function (){
+            $('#mapc-table').appendGrid('removeEmptyRows');
+            // TODO fix: what happens if we create a function, put in mapc and later remove
+            // first create the mapping that is defined for mapc
+            var mapcMappingJsEDN = createColFuncMapcMappingJsEDN();
+            // then create the mapc function itself
+            var codeJsedn = createMapc(mapcMappingJsEDN);
+            
+            addAtIndexInPipeline('mapc', indexInPipeline, codeJsedn);
+            dialog.dialog("close");
+        },
+        "Cancel": function (){
+            dialog.dialog("close");
+        }
+    };
+    return buttons;
+}
+
 function getCustomFunctionElements(){
     var nameLabel = document.createElement("label");
     nameLabel.classList.add("form-label");
@@ -369,10 +418,70 @@ function refreshCustomFunctionsSelect(){
     $("#custom-functions").selectmenu("refresh");
 }
 
+function getCustomFunctionOptions(selectControl){
+    $(selectControl).empty();
+    // choose option text
+    var chooseOption = document.createElement('option');
+    chooseOption.disabled=true;
+    chooseOption.selected=true;
+    chooseOption.textContent='Choose...';
+    chooseOption.value='mapc-choose';
+    selectControl.appendChild(chooseOption);
+
+    // existing functions options (group)
+    var hasAtLeastOneOption = false;
+    var existingFunctionsGroup = document.createElement('optgroup');
+    existingFunctionsGroup.label = "Existing functions";
+    for(var functionName in customFunctionsMap){
+        existingFunctionsGroup.appendChild(new Option(functionName, functionName));
+        hasAtLeastOneOption=true;
+    }
+    if(hasAtLeastOneOption)
+        selectControl.appendChild(existingFunctionsGroup);
+
+    // TODO later support for creating custom inline function option
+    var createNewCodeElement = document.createElement('option');
+    createNewCodeElement.value = "mapc-create-custom-function";
+    createNewCodeElement.textContent = 'Create custom function...';
+    selectControl.appendChild(createNewCodeElement);
+}
+
+function handleMapcFunctionSelect(evt, rowIndex){
+    switch(evt.target.value){
+        case 'mapc-create-custom-function':
+
+            // reset selection
+            var selectOptions = $(evt.target).children();
+            for(i=0;i<selectOptions.length;++i){
+                selectOptions[i].selected = false;
+            }
+            evt.target[0].selected=true;
+            $("#dialog-create-custom-function").dialog(
+                {
+                    close: function() {
+                        // refresh all select controls in the mapc table
+                        var selectsToRefresh = $("#mapc-table select");
+                        for(i=0;i<selectsToRefresh.length;++i){
+                            getCustomFunctionOptions(selectsToRefresh[i]);
+                        }
+                    } 
+                })
+            .dialog("open");
+
+            break;
+        case 'mapc-choose':
+            // do nothing
+            break;
+        default:
+            // a function has been selected!
+            break;
+    }
+
+
+}
+
 var prefixersInGUI = [{'prefix-name': '', uri: ''}];
-
 var indexInPipeline = 0;
-
 var customFunctionsMap = [];
 var customFunctionCodeMirror;
 var outputCodeMirror;
@@ -387,6 +496,11 @@ $(function() {
         height: 300,
         width: 500,
         title: "Add new pipeline element...",
+        open: function( event, ui) {
+            $("#pipeline-functions")[0].selectedIndex = 0;
+            $("#pipeline-functions").selectmenu("refresh");
+            $("#function-specific-form").empty();
+        },
         close: function( event, ui ) {
             $("#pipeline-functions").selectmenu("refresh");
         },
@@ -398,7 +512,7 @@ $(function() {
         change: function( event, data ) {
             var selectionValue = data.item.value;
             switch (selectionValue){
-// TODO resize! (also for custom functions)
+                    // TODO resize! (also for custom functions)
                 case "drop-rows":
 
                     mainDialog.dialog("option", "buttons", getDropRowsButtons(mainDialog));
@@ -422,6 +536,46 @@ $(function() {
                     );
 
                     addCustomCodeMirror.setValue("");
+                    break;
+                case "mapc":
+                    mainDialog.dialog("option", "buttons", getMapcButtons(mainDialog));
+                    $("#function-specific-form").html(getMapcElements());
+
+                    // init table
+
+                    $('#mapc-table').appendGrid(
+                        'init', {
+                            captionTooltip: 'Default and user-defined prefixes',
+                            initRows: 1,
+                            hideRowNumColumn:true,
+                            hideButtons: {
+                                remove: true,
+                                insert: true,
+                                moveUp: true,
+                                moveDown: true
+                            },
+                            columns: [
+                                {
+                                    name: 'mapc-column-key', display: 'Column key', type: 'text', ctrlAttr: { maxlength: 100 },
+                                    // Make the column resizable
+                                    resizable: true, ctrlCss: { width: '100%' }, displayCss: { 'min-width': '160px' },
+                                    // Customize UI tooltip
+                                    displayTooltip: { items: 'td', content: 'Name of the prefix to be used in creating the graph' }
+                                },
+                                { 
+                                    name: 'mapc-function', display: 'Function', type: 'select', 
+                                    ctrlOptions: function(selectControl){ getCustomFunctionOptions(selectControl)},
+                                    onChange: handleMapcFunctionSelect,
+                                    resizable: true, displayCss: { 'min-width': '160px' },
+                                    displayTooltip: { items: 'td', content: 'Namespace URI corresponding to the prefix' },
+
+                                }
+                            ],
+                            initData: [
+                            ]
+                        }
+                    );
+
                     break;
                 default:
                     break;
@@ -456,24 +610,12 @@ $(function() {
             captionTooltip: 'Default and user-defined prefixes',
             initRows: 1,
             hideRowNumColumn:true,
-            // TODO - disable create/remove/move up/move down buttons only for the default prefixers
             hideButtons: {
                 remove: true,
                 insert: true,
                 moveUp: true,
                 moveDown: true
             },
-            // TODO - create a custom delete button that doesn't remove the default prefixers
-
-            //            customFooterButtons: [
-            //                {
-            //                    uiButton: { icons: { primary: 'ui-icon-plusthick' }},
-            //                    btnClass: 'ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only removeLast',
-            //                    click: function (evt) {
-            //                    }
-            //                }
-            //            ],
-
             columns: [
                 {
                     name: 'prefix-name', display: 'Prefix name', type: 'text', ctrlAttr: { maxlength: 100 },
@@ -489,25 +631,6 @@ $(function() {
                 }
             ],
             initData: [
-                //                { 'prefix-name': '', 'uri': ''}
-                // TODO add this as init data
-                //                { 'prefix-name': 'dcat', 'uri': 'http://www.w3.org/ns/dcat#'},
-                //                { 'prefix-name': 'dcterms', 'uri': 'http://purl.org/dc/terms/'},
-                //                { 'prefix-name': 'foaf', 'uri': 'http://xmlns.com/foaf/0.1/'},
-                //                { 'prefix-name': 'org', 'uri': 'http://www.w3.org/ns/org#'},
-                //                { 'prefix-name': 'os', 'uri': 'http://data.ordnancesurvey.co.uk/ontology/postcode/'},
-                //                { 'prefix-name': 'owl', 'uri': 'http://www.w3.org/2002/07/owl#'},
-                //                { 'prefix-name': 'pmd', 'uri': 'http://publishmydata.com/def/dataset#'},
-                //                { 'prefix-name': 'qb', 'uri': 'http://purl.org/linked-data/cube#'},
-                //                { 'prefix-name': 'rdf', 'uri': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'},
-                //                { 'prefix-name': 'rdfs', 'uri': 'http://www.w3.org/2000/01/rdf-schema#'},
-                //                { 'prefix-name': 'sdmx-attribute', 'uri': 'http://purl.org/linked-data/sdmx/2009/attribute#'},
-                //                { 'prefix-name': 'sdmx-concept', 'uri': 'http://purl.org/linked-data/sdmx/2009/concept#'},
-                //                { 'prefix-name': 'sdmx-measure', 'uri': 'http://purl.org/linked-data/sdmx/2009/measure#'},
-                //                { 'prefix-name': 'skos', 'uri': 'http://www.w3.org/2004/02/skos/core#'},
-                //                { 'prefix-name': 'vcard', 'uri': 'http://www.w3.org/2006/vcard/ns'},
-                //                { 'prefix-name': 'void', 'uri': 'http://rdfs.org/ns/void#'},
-                //                { 'prefix-name': 'xsd', 'uri': 'http://www.w3.org/2001/XMLSchema#'}
             ]
         }
     );
@@ -530,7 +653,7 @@ $(function() {
         }
     });
 
-    var prefixersDialog = $("#dialog-pipeline-prefixers").dialog({
+    $("#dialog-pipeline-prefixers").dialog({
         resizable: true,
         autoOpen: false,
         modal: true,
@@ -595,7 +718,6 @@ $(function() {
     });
 
     $("#save-function").on("click", function(event){
-        // TODO saving custom function - 
         event.preventDefault();
         var customFunctionCode = customFunctionCodeMirror.getValue();
         var codeObject = createCustomFunctionObj(customFunctionCode);
@@ -604,7 +726,7 @@ $(function() {
         }
         customFunctionsMap[ codeObject['fnName'] ] = codeObject;
         refreshCustomFunctionsSelect();
-        // TODO update select
+        // TODO implement DELETE
     });
 
 
@@ -627,7 +749,6 @@ $(function() {
 
     $("#custom-functions").selectmenu({
         change: function( event, data ){
-            // TODO when changing selection - load the code of the function in the editor
             var selectionValue = data.item.value;
             switch (selectionValue){
                 case "create-new-func":
