@@ -141,6 +141,91 @@ function showDefaultAddButton(){
     Attaching listeners to the GUI elements; initializing dialogs
 ***************************************************************************/
 
+function generateSelectOptionsDeriveColumn(selectControl){
+    $(selectControl).empty();
+    // choose option text
+    var chooseOption = document.createElement('option');
+    chooseOption.disabled=true;
+    chooseOption.selected=true;
+    chooseOption.textContent='Choose...';
+    chooseOption.value='derived-col-choose';
+    selectControl.appendChild(chooseOption);
+
+    // existing functions options (group)
+    var hasAtLeastOneOption = false;
+    var existingFunctionsGroup = document.createElement('optgroup');
+    existingFunctionsGroup.label = "Existing functions";
+    for(var functionName in customFunctionsMap){
+        existingFunctionsGroup.appendChild(new Option(functionName, functionName));
+        hasAtLeastOneOption=true;
+    }
+    if(hasAtLeastOneOption)
+        selectControl.appendChild(existingFunctionsGroup);
+
+    // TODO later support for creating custom inline function option
+    var createNewCodeElement = document.createElement('option');
+    createNewCodeElement.value = "derived-col-create-custom-function";
+    createNewCodeElement.textContent = 'Create custom function...';
+    selectControl.appendChild(createNewCodeElement);
+}
+
+function getDeriveColumnElements(){
+    var derivedColumnNameLabel = document.createElement("label");
+    derivedColumnNameLabel.classList.add("form-label");
+    derivedColumnNameLabel.setAttribute("for", "derived-col-name");
+    derivedColumnNameLabel.textContent = "Name of derived column:";
+
+    var derivedColumnNameInput = document.createElement("input");
+    derivedColumnNameInput.id = "derived-col-name";
+    derivedColumnNameInput.setAttribute("type", "text");
+
+    var derivedColumnSourceColsLabel = document.createElement("label");
+    derivedColumnSourceColsLabel.classList.add("form-label");
+    derivedColumnSourceColsLabel.setAttribute("for", "derived-col-source-cols");
+    derivedColumnSourceColsLabel.textContent = "Columns to derive from:";
+
+    var derivedColumnSourceCols = document.createElement("input");
+    derivedColumnSourceCols.id = "derived-col-source-cols";
+    derivedColumnSourceCols.setAttribute("type", "text");
+
+    var derivedColumnFunctionLabel = document.createElement("label");
+    derivedColumnFunctionLabel.classList.add("form-label");
+    derivedColumnFunctionLabel.setAttribute("for", "derived-col-select-func");
+    derivedColumnFunctionLabel.textContent = "Select function:";
+
+    var derivedColumnFunction = document.createElement("select");
+    derivedColumnFunction.id="derived-col-select-func";
+
+    return [derivedColumnNameLabel, derivedColumnNameInput, derivedColumnSourceColsLabel, derivedColumnSourceCols, derivedColumnFunctionLabel, derivedColumnFunction];
+}
+
+function getDeriveColumnButtons(dialog){
+    var buttons = { 
+        "Create function": function (){
+            // create jsedn of the column name (jsedn keyword)
+            var newColName = $("#derived-col-name").val();
+            var newColJsedn = new jsedn.kw(newColName);
+            
+            // create jsedn for the input columns (jsedn vector)
+            var colsToDeriveFrom = $("#derived-col-source-cols").val();
+            var colsToDeriveFromJsedn = parseEdnFromString(colsToDeriveFrom);
+            
+            var functionToDeriveWith = currentlySelectedDeriveColFunction;
+            var functionToDeriveWithJsedn = new jsedn.sym(functionToDeriveWith);
+            
+            var codeJsedn = createDeriveColumn(newColJsedn, colsToDeriveFromJsedn, functionToDeriveWithJsedn);
+            
+            addAtIndexInPipeline('derive-column', indexInPipeline, codeJsedn);
+            
+            dialog.dialog("close");
+        },
+        "Cancel": function (){
+            dialog.dialog("close");
+        }
+    };
+    return buttons;
+}
+
 function getMapcElements(){
     var mapcTableLabel = document.createElement("label");
     mapcTableLabel.classList.add("form-label");
@@ -153,23 +238,6 @@ function getMapcElements(){
     return [mapcTableLabel,mapcTable];
 }
 
-
-function createColFuncMapcMapping(column, funct){
-    return {column: column, funct: funct};
-}
-
-function createColFuncMapcMappingJsEDN(){
-    var jsEdnMapObject = new jsedn.Map([]);
-    
-    var count = $('#mapc-table').appendGrid('getRowCount');
-    for(i=0;i<count; ++i){
-        var rowVal = $('#mapc-table').appendGrid('getRowValue', i);
-        jsEdnMapObject.set(rowVal['mapc-column-key'], rowVal['mapc-function']);
-    }
-    console.log(jsEdnMapObject);
-    return jsEdnMapObject;
-}
-
 function getMapcButtons(dialog){
     var buttons = { 
         "Create function": function (){
@@ -179,7 +247,7 @@ function getMapcButtons(dialog){
             var mapcMappingJsEDN = createColFuncMapcMappingJsEDN();
             // then create the mapc function itself
             var codeJsedn = createMapc(mapcMappingJsEDN);
-            
+
             addAtIndexInPipeline('mapc', indexInPipeline, codeJsedn);
             dialog.dialog("close");
         },
@@ -242,7 +310,7 @@ function getMakeDatasetElements(){
     var label = document.createElement("label");
     label.classList.add("form-label");
     label.setAttribute("for", "columns-keywords");
-    label.textContent = "Clojure array of columns (as keywords):";
+    label.textContent = "Column names:";
 
     var input = document.createElement("input");
     input.setAttribute("type", "text");
@@ -480,12 +548,29 @@ function handleMapcFunctionSelect(evt, rowIndex){
 
 }
 
+function createColFuncMapcMapping(column, funct){
+    return {column: column, funct: funct};
+}
+
+function createColFuncMapcMappingJsEDN(){
+    var jsEdnMapObject = new jsedn.Map([]);
+
+    var count = $('#mapc-table').appendGrid('getRowCount');
+    for(i=0;i<count; ++i){
+        var rowVal = $('#mapc-table').appendGrid('getRowValue', i);
+        jsEdnMapObject.set(rowVal['mapc-column-key'], rowVal['mapc-function']);
+    }
+    console.log(jsEdnMapObject);
+    return jsEdnMapObject;
+}
+
 var prefixersInGUI = [{'prefix-name': '', uri: ''}];
 var indexInPipeline = 0;
 var customFunctionsMap = [];
 var customFunctionCodeMirror;
 var outputCodeMirror;
 var addCustomCodeMirror;
+var currentlySelectedDeriveColFunction = null;
 
 $(function() {
     var mainDialog = $("#dialog-pipeline-main")
@@ -508,6 +593,8 @@ $(function() {
         }
     });
 
+    
+    
     $("#pipeline-functions").selectmenu({
         change: function( event, data ) {
             var selectionValue = data.item.value;
@@ -577,6 +664,37 @@ $(function() {
                     );
 
                     break;
+                case "derive-column":
+                    mainDialog.dialog("option", "buttons", getDeriveColumnButtons(mainDialog));
+                    $("#function-specific-form").html(getDeriveColumnElements());
+                    // fill in the function options
+                    generateSelectOptionsDeriveColumn($("#derived-col-select-func")[0]);
+                    // create a jQuery UI select
+                    $("#derived-col-select-func").selectmenu({
+                        change: function( e, d ){
+                            var selectionValue = d.item.value;
+                            switch (selectionValue){
+                                case "derived-col-create-custom-function":
+                                    currentlySelectedDeriveColFunction = null;
+                                    $("#dialog-create-custom-function").dialog(
+                                        {
+                                            close: function() {
+                                                // refresh the select DOM element
+                                                generateSelectOptionsDeriveColumn($("#derived-col-select-func")[0]);
+                                                // refresh the jQuery UI control
+                                                $("#derived-col-select-func").selectmenu("refresh");
+                                            } 
+                                        })
+                                    .dialog("open");
+                                    break;
+                                default:
+                                    currentlySelectedDeriveColFunction = d.item.value;
+                                    break;
+                            }
+                        }
+                    }).selectmenu("menuWidget")
+                    .addClass("overflow");
+                    break;
                 default:
                     break;
             }
@@ -602,7 +720,7 @@ $(function() {
     });
 
     $("#create-custom-func").on("click", function(){
-        $("#dialog-create-custom-function").dialog("open");
+        $("#dialog-create-custom-function").dialog({close: function(){}}).dialog("open");
     });
 
     $('#prefix-table').appendGrid(
