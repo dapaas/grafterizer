@@ -17,7 +17,7 @@ function getAddSignElement(){
     addSignElement.classList.add("fa");
     addSignElement.classList.add("fa-plus");
     addSignElement.classList.add("addAfterButton");
-
+    addSignElement.classList.add("fa-lg");
     $(addSignElement).on("click", function(){
         var pipelineTable = $("#pipeline")[0];
         var rowIndex = this.parentElement.parentElement.rowIndex;
@@ -35,6 +35,7 @@ function getRemoveSignElement(){
     removeSignElement.classList.add("fa");
     removeSignElement.classList.add("fa-times");
     removeSignElement.classList.add("removeButton");
+    removeSignElement.classList.add("fa-lg");
     $(removeSignElement).on("click", function(){
         var pipelineTable = $("#pipeline")[0];
         var rowIndex = this.parentElement.parentElement.rowIndex;
@@ -69,6 +70,7 @@ function getRemoveSignElement(){
 function getPipelineFunctElement(name){
     var buttonElement = document.createElement("button");
     buttonElement.classList.add("pipelineFunct");
+    buttonElement.disabled=true;
     if(name){
         buttonElement.innerHTML=name;
     }else{
@@ -205,18 +207,18 @@ function getDeriveColumnButtons(dialog){
             // create jsedn of the column name (jsedn keyword)
             var newColName = $("#derived-col-name").val();
             var newColJsedn = new jsedn.kw(newColName);
-            
+
             // create jsedn for the input columns (jsedn vector)
             var colsToDeriveFrom = $("#derived-col-source-cols").val();
             var colsToDeriveFromJsedn = parseEdnFromString(colsToDeriveFrom);
-            
+
             var functionToDeriveWith = currentlySelectedDeriveColFunction;
             var functionToDeriveWithJsedn = new jsedn.sym(functionToDeriveWith);
-            
+
             var codeJsedn = createDeriveColumn(newColJsedn, colsToDeriveFromJsedn, functionToDeriveWithJsedn);
-            
+
             addAtIndexInPipeline('derive-column', indexInPipeline, codeJsedn);
-            
+
             dialog.dialog("close");
         },
         "Cancel": function (){
@@ -369,9 +371,6 @@ function getDropRowsButtons(dialog){
 }
 
 function generateGrafterCode(){
-
-    ////////////////////////
-
 
     /* Grafter Declarations */
 
@@ -558,7 +557,7 @@ function createColFuncMapcMappingJsEDN(){
     var count = $('#mapc-table').appendGrid('getRowCount');
     for(i=0;i<count; ++i){
         var rowVal = $('#mapc-table').appendGrid('getRowValue', i);
-        jsEdnMapObject.set(rowVal['mapc-column-key'], rowVal['mapc-function']);
+        jsEdnMapObject.set(rowVal['mapc-column-key'], new jsedn.sym(rowVal['mapc-function']));
     }
     console.log(jsEdnMapObject);
     return jsEdnMapObject;
@@ -573,8 +572,8 @@ var addCustomCodeMirror;
 var currentlySelectedDeriveColFunction = null;
 
 $(function() {
-    var mainDialog = $("#dialog-pipeline-main")
-    .dialog({
+    
+    var mainDialog = $("#dialog-pipeline-main").dialog({
         resizable: true,
         autoOpen: false,
         modal: true,
@@ -593,39 +592,26 @@ $(function() {
         }
     });
 
-    
-    
     $("#pipeline-functions").selectmenu({
+        width: "100%",
         change: function( event, data ) {
             var selectionValue = data.item.value;
             switch (selectionValue){
                     // TODO resize! (also for custom functions)
                 case "drop-rows":
-
                     mainDialog.dialog("option", "buttons", getDropRowsButtons(mainDialog));
+                    mainDialog.dialog("option", "height", 400);
                     $("#function-specific-form").html(getDropRowsElements());
                     break;
 
                 case "make-dataset":
                     mainDialog.dialog("option", "buttons", getMakeDatasetButtons(mainDialog));
+                    mainDialog.dialog("option", "height", 400);
                     $("#function-specific-form").html(getMakeDatasetElements());
-                    break;
-
-                case "add-custom-code":
-                    mainDialog.dialog("option", "buttons", getCustomFunctionButtons(mainDialog));
-                    $("#function-specific-form").html(getCustomFunctionElements());
-                    if(addCustomCodeMirror)
-                        $(addCustomCodeMirror.getWrapperElement()).remove();
-
-                    addCustomCodeMirror = CodeMirror.fromTextArea(
-                        $("#add-custom-code")[0], 
-                        {lineWrapping : true, lineNumbers: true}
-                    );
-
-                    addCustomCodeMirror.setValue("");
                     break;
                 case "mapc":
                     mainDialog.dialog("option", "buttons", getMapcButtons(mainDialog));
+                    mainDialog.dialog("option", "height", 400);
                     $("#function-specific-form").html(getMapcElements());
 
                     // init table
@@ -666,11 +652,13 @@ $(function() {
                     break;
                 case "derive-column":
                     mainDialog.dialog("option", "buttons", getDeriveColumnButtons(mainDialog));
+                    mainDialog.dialog("option", "height", 420);
                     $("#function-specific-form").html(getDeriveColumnElements());
                     // fill in the function options
                     generateSelectOptionsDeriveColumn($("#derived-col-select-func")[0]);
                     // create a jQuery UI select
                     $("#derived-col-select-func").selectmenu({
+                        width: 250,
                         change: function( e, d ){
                             var selectionValue = d.item.value;
                             switch (selectionValue){
@@ -695,18 +683,34 @@ $(function() {
                     }).selectmenu("menuWidget")
                     .addClass("overflow");
                     break;
+                case "add-custom-code":
+                    mainDialog.dialog("option", "buttons", getCustomFunctionButtons(mainDialog));
+                    mainDialog.dialog("option", "height", 530);
+                    $("#function-specific-form").html(getCustomFunctionElements());
+                    if(addCustomCodeMirror)
+                        $(addCustomCodeMirror.getWrapperElement()).remove();
+
+                    addCustomCodeMirror = CodeMirror.fromTextArea(
+                        $("#add-custom-code")[0], 
+                        {lineWrapping : true, lineNumbers: true}
+                    );
+                    addCustomCodeMirror.setSize("100%", "55%");
+
+                    addCustomCodeMirror.setValue("");
+                    break;
                 default:
                     break;
             }
         }
-    }).selectmenu("menuWidget")
-    .addClass("overflow");
+    }).selectmenu("menuWidget").addClass("overflow");
 
     $("#pipelineAddAtEnd").on("click", function(){
         indexInPipeline=0;
         mainDialog.dialog("open");
+        mainDialog.dialog("option", "height", 400);
     });
-    $("#generate-code").on("click", function(){
+    
+    $("#generate-code").button().on("click", function(){
         generateGrafterCode();
         if(outputCodeMirror)
             $(outputCodeMirror.getWrapperElement()).remove();
@@ -719,7 +723,7 @@ $(function() {
             });
     });
 
-    $("#create-custom-func").on("click", function(){
+    $("#create-custom-func").button().on("click", function(){
         $("#dialog-create-custom-function").dialog({close: function(){}}).dialog("open");
     });
 
@@ -750,8 +754,7 @@ $(function() {
             ],
             initData: [
             ]
-        }
-    );
+        });
 
     // confirmation dialog for prefixers
     $("#dialog-confirm-prefixes").html("Any unsaved changes will be discarded");
@@ -802,7 +805,7 @@ $(function() {
         }
     });
 
-    $("#edit-prefixers").on("click", function(){
+    $("#edit-prefixers").button().on("click", function(){
         $("#dialog-pipeline-prefixers").dialog("open");
     });
 
@@ -824,6 +827,7 @@ $(function() {
                     lineNumbers: true
                 });
             customFunctionCodeMirror.setValue("");
+            customFunctionCodeMirror.setSize("100%", "57%");
 
             // initialize the selection
             refreshCustomFunctionsSelect();
@@ -835,7 +839,7 @@ $(function() {
         }
     });
 
-    $("#save-function").on("click", function(event){
+    $("#save-function").button().on("click", function(event){
         event.preventDefault();
         var customFunctionCode = customFunctionCodeMirror.getValue();
         var codeObject = createCustomFunctionObj(customFunctionCode);
@@ -846,7 +850,6 @@ $(function() {
         refreshCustomFunctionsSelect();
         // TODO implement DELETE
     });
-
 
     $("#dialog-confirm-code").html("Any unsaved changes will be discarded");
     $("#dialog-confirm-code").dialog({
@@ -866,6 +869,7 @@ $(function() {
     });
 
     $("#custom-functions").selectmenu({
+        width: 250,
         change: function( event, data ){
             var selectionValue = data.item.value;
             switch (selectionValue){
@@ -877,8 +881,7 @@ $(function() {
                     break;
             }
         }
-    }).selectmenu("menuWidget")
-    .addClass("overflow");
+    }).selectmenu("menuWidget").addClass("overflow");
 
     //    var count = $('#prefix-table').appendGrid('getRowCount');
     //    for(i=0;i<count; ++i){

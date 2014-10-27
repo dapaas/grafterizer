@@ -43,20 +43,24 @@
         <div id="dialog-confirm"></div>
         <div id="dialog-confirm-prefixes"></div>
         <div id="dialog-confirm-code"></div>
-        <div style = "width: 30%;">
-            <table id="pipeline" style="width: 100%; border: 1px solid black;border-collapse: collapse;">
+        <div style="width: 30%; margin-left: auto; margin-right: auto;">
+            <button id="edit-prefixers" style="width:100%;">Edit prefixes...</button>
+            <button id="create-custom-func" style="width:100%;">Create custom function...</button>
+            <br/><br/>
+<!--            <label class= "form-label" for="pipeline">Grafter pipeline</label>-->
+            <table id="pipeline">
                 <tr id="addElementAtEndRow">
                     <td style="width:20%"></td>
 
                     <td style="text-align:center;">
-                        <i id="pipelineAddAtEnd" class="fa fa-plus-circle fa-lg"></i>
+                        <i id="pipelineAddAtEnd" class="fa fa-plus-circle fa-2x"></i>
                     </td>
                     <td style="width:20%"></td>
                 </tr>
             </table>
-            <button id="generate-code" style="width:100%;">Generate Grafter pipeline...</button>
-            <button id="edit-prefixers" style="width:100%;">Edit prefixes...</button>
-            <button id="create-custom-func" style="width:100%;">Create custom function...</button>
+            <br/>
+            <button id="generate-code" style="width:100%;">Preview Grafter pipeline...</button>
+            
             <br/><br/>
             <textarea id="output" rows="50" cols ="120" style="display: none;"></textarea>
         </div>
