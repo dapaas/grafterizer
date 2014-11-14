@@ -572,7 +572,7 @@ var addCustomCodeMirror;
 var currentlySelectedDeriveColFunction = null;
 
 $(function() {
-    
+
     var mainDialog = $("#dialog-pipeline-main").dialog({
         resizable: true,
         autoOpen: false,
@@ -709,7 +709,7 @@ $(function() {
         mainDialog.dialog("open");
         mainDialog.dialog("option", "height", 400);
     });
-    
+
     $("#generate-code").button().on("click", function(){
         generateGrafterCode();
         if(outputCodeMirror)
@@ -883,26 +883,27 @@ $(function() {
         }
     }).selectmenu("menuWidget").addClass("overflow");
 
-    //    var count = $('#prefix-table').appendGrid('getRowCount');
-    //    for(i=0;i<count; ++i){
-    //        $('#prefix-table').appendGrid('getCellCtrl', 'prefix-name', i).disabled = true;
-    //        $('#prefix-table').appendGrid('getCellCtrl', 'uri', i).disabled = true;
-    //    }
+    $('#rdf-graph-definition').jstree();
 
-    // TODO eventually might look better, but would imply additional logic that needs to be implemented
-    //    $("#pipeline-functions-button").on("click", function(){
-    //        
-    //        var defaultSelectOption = $("#pipeline-functions option[value='please-choose']");
-    //        console.log(defaultSelectOption);
-    //        if(defaultSelectOption.exists()){
-    //            defaultSelectOption.remove();
-    //            $("#pipeline-functions option[value='drop-rows']").selected=true;
-    //            $("#pipeline-functions").selectmenu("refresh");
-    //        }
-    //        
-    //        
-    //    });
-
+    $("#dialog-rdf-mapping").dialog({
+        resizable: true,
+        autoOpen: false,
+        modal: true,
+        height: 490,
+        width: 500,
+        title: "Define RDF mapping...",
+        buttons: {
+            Done: function(){
+                $(this).dialog("close");
+            }
+        }
+    });
+    
+    $("#open-rdf-dialog").button().on("click", function(){
+        $("#dialog-rdf-mapping").dialog("open");
+    });
+    
+    var contr = new RDFControl($("#rdf-control-div").get(0), 100, 79);
 
 });
 

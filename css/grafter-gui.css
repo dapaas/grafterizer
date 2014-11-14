@@ -68,3 +68,70 @@ textarea{
     border: 1px solid #eee;
     height: auto;
 }
+
+#rdf-mapping-table tr td{
+    border: 1px solid black;
+}
+
+.graph-name-td {
+}
+
+
+.add-first-graph-button:hover{
+    color: grey;
+    cursor: pointer;
+}
+
+.form-label-sameline {
+    display: block;
+    text-align: right;
+    clear: both;
+    float:left;
+    margin-right:15px;
+}
+
+.rdf-graph-name-input{
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    width: 60%;
+}
+
+.rdf-graph-table{
+    margin-top: 5px;
+    margin-left: 5px;
+    border: none;
+/*    border: solid 1px;*/
+    border-collapse: collapse;
+    width: 98%;
+}
+.add-first-graph-button {
+    color: ccc;
+    cursor: pointer;
+    margin-top: 110;
+    margin-bottom: auto;
+    margin-left: 45%;
+    margin-right: auto;
+}
+
+.rdf-graph-add-after-button{
+    margin-left: 5px;
+    color: ccc; 
+    vertical-align: middle;
+}
+
+.rdf-graph-add-after-button:hover{
+    color: green;
+    cursor: pointer;
+}
+
+.rdf-graph-remove-button{
+    margin-left: 3px;
+    color: ccc;
+    vertical-align: middle;
+}
+
+.rdf-graph-remove-button:hover{
+    color: red;
+    cursor: pointer;
+}

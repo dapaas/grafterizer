@@ -7,14 +7,19 @@
         <script src='./js/grafter-code-generator.js'></script>
         <script src='./js/grafter-gui-elements.js'></script>
         <script src='./js/jquery.appendGrid-1.5.0.min.js'></script>
-        <script src='./js/codemirror-compressed.js'></script> 
+        <script src='./js/codemirror-compressed.js'></script>
+        <script src='./js/jstree.min.js'></script>
+        <script src='js/rdfisation-ui-control.js'></script>
 
-        <link rel="stylesheet" href="./css/jquery-ui.min.css">
-        <link rel="stylesheet" href="css/jquery.appendGrid-1.5.0.min.css">
-        <link rel="stylesheet" href="css/grafter-gui.css">
-        <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.1/css/font-awesome.css" rel="stylesheet">
-        <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/themes/smoothness/jquery-ui.min.css">
-        <link rel="stylesheet" href="http://codemirror.net/lib/codemirror.css">
+        <link rel="stylesheet" href="./js/themes/default/style.min.css" />
+        <link rel="stylesheet" href="./css/jquery-ui.min.css"/> 
+
+        <link rel="stylesheet" href="css/jquery.appendGrid-1.5.0.min.css"/>
+        <link rel="stylesheet" href="css/grafter-gui.css"/>
+        <link rel="stylesheet" href="css/font-awesome.min.css"/>
+
+        <!--        <link rel="stylesheet"  href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/themes/smoothness/jquery-ui.min.css">-->
+        <link rel="stylesheet" href="http://codemirror.net/lib/codemirror.css"/>
     </head>
     <body>
 
@@ -24,10 +29,10 @@
                 <select name="pipeline-functions" id="pipeline-functions">
                     <option value="please-choose" selected disabled>Please choose function...</option>
                     <optgroup label="Grafter functions">
+                        <option value="derive-column" data-class="ui-icon-script">derive-column</option>
                         <option value="drop-rows" data-class="ui-icon-script">drop-rows</option>
                         <option value="make-dataset" data-class="ui-icon-script">make-dataset</option>
                         <option value="mapc" data-class="ui-icon-script">mapc</option>
-                        <option value="derive-column" data-class="ui-icon-script">derive-column</option>
                     </optgroup>
                     <option value="add-custom-code" data-class="ui-icon-script">Add custom code...</option>
                 </select>
@@ -47,7 +52,7 @@
             <button id="edit-prefixers" style="width:100%;">Edit prefixes...</button>
             <button id="create-custom-func" style="width:100%;">Create custom function...</button>
             <br/><br/>
-<!--            <label class= "form-label" for="pipeline">Grafter pipeline</label>-->
+            <!--            <label class= "form-label" for="pipeline">Grafter pipeline</label>-->
             <table id="pipeline">
                 <tr id="addElementAtEndRow">
                     <td style="width:20%"></td>
@@ -60,7 +65,7 @@
             </table>
             <br/>
             <button id="generate-code" style="width:100%;">Preview Grafter pipeline...</button>
-            
+            <button id="open-rdf-dialog" style="width:100%;">Modify RDF mapping...</button>
             <br/><br/>
             <textarea id="output" rows="50" cols ="120" style="display: none;"></textarea>
         </div>
@@ -80,5 +85,115 @@
                 <button id="delete-function" style="display:none;">Delete</button>
             </form>
         </div>
+
+        <div id="rdf-graph-definition"></div>
+
+<!--
+        <table id="rdf-mapping-table" style="height:100px;overflow:auto; border: 1px solid ccc; border-collapse: collapse;">
+            <tr class="graph-name-row">
+                <td class="graph-name-td" colspan="42">http://my-domain.com/example</td>
+            </tr>
+            <tr class="graph-objects-row">
+                <td>
+                    <i class="button-show-sub-structure-unfolded" class="fa fa-chevron-down"></i>
+                </td>
+                <td>
+                    person-uri
+                </td>
+                <td>
+                    <i class="button-show-sub-structure-folded" class="fa fa-chevron-right"></i>
+                </td>
+                <td>
+                    rdf:a
+                </td>
+                <td>
+                    <i class="fa fa-ellipsis-h"></i>
+                </td>
+                <td class="sub-structure-hidden">
+                    foaf:Person
+                </td>
+            </tr>
+            <tr id="graph-buttons-add-remove">
+                <td class="empty-td"></td>
+                <td class="plus-button-td" style="text-align:center;">
+                    <i id="add-rdf-mapping-button" class="fa fa-plus-circle" ></i>
+                </td>
+                <td class="empty-td"></td>
+                <td class="plus-button-td" style="text-align:center;">
+                    <i class="fa fa-plus-circle"></i>
+                </td>
+                <td class="empty-td"></td>
+                <td class="plus-button-td" style="text-align:center;">
+                    <i class="fa fa-plus-circle"></i>
+                </td>
+            </tr>
+            <tr class="graph-objects-row">
+                <td>
+                </td>
+                <td>
+                </td>
+                <td style="text-align:center;">
+                    <i class="button-show-sub-structure-unfolded" class="fa fa-chevron-down"></i>
+                </td>
+                <td>
+                    foaf:gender
+                </td>
+                <td style="text-align:center;">
+                    <i class="button-show-sub-structure-unfolded" class="fa fa-chevron-down"></i>
+                </td>
+                <td>
+                    sex
+                </td>
+            </tr>
+            <tr id="graph-buttons-add-remove"></tr>
+            <tr class="graph-objects-row">
+                <td>
+                </td>
+                <td>
+                </td>
+                <td style="text-align:center;">
+                    <i class="button-show-sub-structure-unfolded" class="fa fa-chevron-down"></i>
+                </td>
+                <td>
+                    foaf:age
+                </td>
+                <td style="text-align:center;">
+                    <i class="button-show-sub-structure-unfolded" class="fa fa-chevron-down"></i>
+                </td>
+                <td>
+                    age
+                </td>
+            </tr>
+            <tr class="graph-objects-row">
+                <td>
+                <td>
+                <td style="text-align:center;">
+                    <i class="button-show-sub-structure-unfolded" class="fa fa-chevron-down"></i>
+                </td>
+                <td>
+                    foaf:name
+                </td>
+                <td style="text-align:center;">
+                    <i class="button-show-sub-structure-unfolded" class="fa fa-chevron-down"></i>
+                </td>
+                <td>
+                    name
+                </td>
+            </tr>
+
+        </table>
+-->
+        
+        <div id="dialog-rdf-mapping">
+            <div id="rdf-control-div">
+            </div>
+            <form id="graph-functions">
+                <button id="preview-rdf-mapping-button" style="display:none;">Preview RDF mapping</button>
+                <br/>
+                <button id="save-rdf-mapping-button">Save</button>
+            </form>
+            
+        </div>
+
     </body>
 </html>
