@@ -1,7 +1,7 @@
 <html>
     <head>
         <title>DaPaaS Data Transformation GUI</title>
-        <script src="js/jquery-1.11.1.min.js"></script>
+        <script src="./js/jquery-1.11.1.min.js"></script>
         <script src="./js/jquery-ui.min.js"></script>
         <script src='./js/jsedn.js'></script>
         <script src='./js/grafter-code-generator.js'></script>
@@ -9,14 +9,13 @@
         <script src='./js/jquery.appendGrid-1.5.0.min.js'></script>
         <script src='./js/codemirror-compressed.js'></script>
         <script src='./js/jstree.min.js'></script>
-        <script src='js/rdfisation-ui-control.js'></script>
+        <script src='./js/rdfisation-ui-control.js'></script>
 
         <link rel="stylesheet" href="./js/themes/default/style.min.css" />
         <link rel="stylesheet" href="./css/jquery-ui.min.css"/> 
-
-        <link rel="stylesheet" href="css/jquery.appendGrid-1.5.0.min.css"/>
-        <link rel="stylesheet" href="css/grafter-gui.css"/>
-        <link rel="stylesheet" href="css/font-awesome.min.css"/>
+        <link rel="stylesheet" href="./css/jquery.appendGrid-1.5.0.min.css"/>
+        <link rel="stylesheet" href="./css/grafter-gui.css"/>
+        <link rel="stylesheet" href="./css/font-awesome.min.css"/>
 
         <!--        <link rel="stylesheet"  href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/themes/smoothness/jquery-ui.min.css">-->
         <link rel="stylesheet" href="http://codemirror.net/lib/codemirror.css"/>
@@ -43,11 +42,10 @@
             </form>
         </div>
         <div id="dialog-pipeline-prefixers" title="Choose pipeline function type...">
+            <div id="dialog-confirm-prefixes"></div>
             <table id="prefix-table"></table>
         </div>
         <div id="dialog-confirm"></div>
-        <div id="dialog-confirm-prefixes"></div>
-        <div id="dialog-confirm-code"></div>
         <div style="width: 30%; margin-left: auto; margin-right: auto;">
             <button id="edit-prefixers" style="width:100%;">Edit prefixes...</button>
             <button id="create-custom-func" style="width:100%;">Create custom function...</button>
@@ -88,102 +86,6 @@
 
         <div id="rdf-graph-definition"></div>
 
-<!--
-        <table id="rdf-mapping-table" style="height:100px;overflow:auto; border: 1px solid ccc; border-collapse: collapse;">
-            <tr class="graph-name-row">
-                <td class="graph-name-td" colspan="42">http://my-domain.com/example</td>
-            </tr>
-            <tr class="graph-objects-row">
-                <td>
-                    <i class="button-show-sub-structure-unfolded" class="fa fa-chevron-down"></i>
-                </td>
-                <td>
-                    person-uri
-                </td>
-                <td>
-                    <i class="button-show-sub-structure-folded" class="fa fa-chevron-right"></i>
-                </td>
-                <td>
-                    rdf:a
-                </td>
-                <td>
-                    <i class="fa fa-ellipsis-h"></i>
-                </td>
-                <td class="sub-structure-hidden">
-                    foaf:Person
-                </td>
-            </tr>
-            <tr id="graph-buttons-add-remove">
-                <td class="empty-td"></td>
-                <td class="plus-button-td" style="text-align:center;">
-                    <i id="add-rdf-mapping-button" class="fa fa-plus-circle" ></i>
-                </td>
-                <td class="empty-td"></td>
-                <td class="plus-button-td" style="text-align:center;">
-                    <i class="fa fa-plus-circle"></i>
-                </td>
-                <td class="empty-td"></td>
-                <td class="plus-button-td" style="text-align:center;">
-                    <i class="fa fa-plus-circle"></i>
-                </td>
-            </tr>
-            <tr class="graph-objects-row">
-                <td>
-                </td>
-                <td>
-                </td>
-                <td style="text-align:center;">
-                    <i class="button-show-sub-structure-unfolded" class="fa fa-chevron-down"></i>
-                </td>
-                <td>
-                    foaf:gender
-                </td>
-                <td style="text-align:center;">
-                    <i class="button-show-sub-structure-unfolded" class="fa fa-chevron-down"></i>
-                </td>
-                <td>
-                    sex
-                </td>
-            </tr>
-            <tr id="graph-buttons-add-remove"></tr>
-            <tr class="graph-objects-row">
-                <td>
-                </td>
-                <td>
-                </td>
-                <td style="text-align:center;">
-                    <i class="button-show-sub-structure-unfolded" class="fa fa-chevron-down"></i>
-                </td>
-                <td>
-                    foaf:age
-                </td>
-                <td style="text-align:center;">
-                    <i class="button-show-sub-structure-unfolded" class="fa fa-chevron-down"></i>
-                </td>
-                <td>
-                    age
-                </td>
-            </tr>
-            <tr class="graph-objects-row">
-                <td>
-                <td>
-                <td style="text-align:center;">
-                    <i class="button-show-sub-structure-unfolded" class="fa fa-chevron-down"></i>
-                </td>
-                <td>
-                    foaf:name
-                </td>
-                <td style="text-align:center;">
-                    <i class="button-show-sub-structure-unfolded" class="fa fa-chevron-down"></i>
-                </td>
-                <td>
-                    name
-                </td>
-            </tr>
-
-        </table>
--->
-        
         <div id="dialog-rdf-mapping">
             <div id="rdf-control-div">
             </div>
@@ -192,8 +94,93 @@
                 <br/>
                 <button id="save-rdf-mapping-button">Save</button>
             </form>
-            
+
         </div>
+        </div>
+    <div id="dialog-define-graph-node">
+        <table id="define-graph-node-layout-table">
+            <tr>
+                <td class="define-graph-node-left">
+                    <form id="graph-node-type">
+                        <!-- -->
+                        <input id="uri-radio" type="radio" name="node-type-radio" value="uri">
+                        <label class="radio-button-label" for="uri-radio">URI node</label>
+                        <br/>
+                        <input id="literal-radio" type="radio" name="node-type-radio" value="literal">
+                        <label class="radio-button-label" for="literal-radio">Literal node</label>
+                        <br/>
+                        <input id="blank-radio"type="radio" name="node-type-radio" value="blank">
+                        <label class="radio-button-label" for="blank-radio">Blank node</label>
+                        <br/>
+
+                    </form>
+                </td>
+                <td class="define-graph-node-right" style="display:none;">
+                    <form id="form-uri-node" style="display:none;">
+                        <label class="define-graph-form-label" for="uri-node-prefixer">Select node prefix:</label>
+                        <select name="uri-node-prefixer" id="uri-node-prefixer" class="form-uri-node-select">
+
+                            <option value="default-uri-prefix" data-class="ui-icon-script" selected>(base graph URI)</option>
+                            <optgroup id="custom-funct-options" label="Available prefixes">
+                            </optgroup>
+
+                        </select>
+                        <hr>
+                        <label class="define-graph-form-label" for="uri-node-val-src">Select mapping source:</label>
+                        <select name="uri-node-val-src" id="uri-node-val-src" class="form-uri-node-select">
+                            <option value="uri-node-val-src-column" data-class="ui-icon-script" selected>
+                                From dataset column
+                            </option>
+                            <option value="uri-node-val-src-text" data-class="ui-icon-script">
+                                Free-defined text
+                            </option>
+                        </select>
+                        
+                        <br/><br/>
+                        
+                        <div id="uri-node-val-column-elements">
+                            <label class="define-graph-form-label" for="uri-node-val-column">Choose column:</label>
+                            <input type="text" name="uri-node-val-column">
+                        </div>
+                        
+                        <div id="uri-node-val-text-elements" style="display:none;">
+                            <label class="define-graph-form-label" for="uri-node-val-text">Type in node URI:</label>
+                            <input type="text" name="uri-node-val-text">
+                        </div>
+                    </form>
+
+                    <form id="form-literal-node" style="display:none;">
+
+                        <label class="define-graph-form-label" for="uri-literal-val-src">Select mapping source:</label>
+                        <select name="literal-node-val-src" id="literal-node-val-src">
+                            <option value="literal-node-val-src-column" data-class="ui-icon-script" selected>
+                                From dataset column
+                            </option>
+                            <option value="literal-node-val-src-text" data-class="ui-icon-script">
+                                Free-defined text
+                            </option>
+                        </select>
+                        
+                        <br/><br/>
+                        
+                        <div id="literal-node-val-column-elements">
+                            <label class="define-graph-form-label" for="uri-node-val-column">Choose column:</label>
+                            <input type="text" name="uri-literal-val-column">
+                        </div>
+                        
+                        <div id="literal-node-val-text-elements" style="display:none;">
+                            <label class="define-graph-form-label" for="uri-literal-val-text">Type in literal text:</label>
+                            <input type="text" name="uri-node-val-literal">
+                        </div>
+
+                    </form>
+
+                    <!-- Blank nodes don't need additional things to be defined -->
+
+                </td>
+            </tr>
+        </table>
+    </div>
 
     </body>
 </html>

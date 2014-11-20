@@ -778,8 +778,8 @@ $(function() {
         resizable: true,
         autoOpen: false,
         modal: true,
-        height: 300,
-        width: 500,
+        height: "auto",
+        width: "auto",
         title: "Define RDF prefixes",
         open: function (event, ui) {
             clearPrefixersTable();
@@ -808,6 +808,8 @@ $(function() {
     $("#edit-prefixers").button().on("click", function(){
         $("#dialog-pipeline-prefixers").dialog("open");
     });
+
+    /**  Initialise dialog for creating custom functions  **/
 
     $("#dialog-create-custom-function").dialog({
         resizable: true,
@@ -885,6 +887,9 @@ $(function() {
 
     $('#rdf-graph-definition').jstree();
 
+
+    /**  Initialise dialog for RDF graph mapping  **/
+
     $("#dialog-rdf-mapping").dialog({
         resizable: true,
         autoOpen: false,
@@ -898,11 +903,108 @@ $(function() {
             }
         }
     });
-    
+
     $("#open-rdf-dialog").button().on("click", function(){
         $("#dialog-rdf-mapping").dialog("open");
     });
+
+
+    /**  Initialise dialog for defining graph nodes  **/
+
+    $("#dialog-define-graph-node").dialog({
+        dialogClass: "dialog-define-graph-node",
+        autoOpen: false,
+        modal: true,
+        height: "auto",
+        width: "auto",
+        title: "Choose node type",
+        buttons: {
+            Done: function () {
+                // how to know to which graph we should add the node?
+                    // 1) put this with the code for initializing 
+                    // 2) associate position to add the dialog when opening it
+                        // retrieve it there through jquery.data(this, "something-something")
+                // remove add first button
+                // add new node
+                    // create node object according to the current state of the dialog
+                
+                $(this).dialog("close");
+            }
+        }
+    });
+
+    $("#uri-radio").on("click", function () {
+        $(".define-graph-node-right").show();
+        $("#form-uri-node").show();
+        $("#form-literal-node").hide();
+    });
+
+    $("#literal-radio").on("click", function () {
+        $(".define-graph-node-right").show();
+        $("#form-uri-node").hide();
+        $("#form-literal-node").show();
+    }); 
+
+    $("#blank-radio").on("click", function () {
+        $(".define-graph-node-right").hide();
+        $("#form-uri-node").hide();
+        $("#form-literal-node").hide();
+    });
+
+    $("#uri-node-prefixer").selectmenu({
+        width: 200,
+        change: function( event, data ){
+            var selectionValue = data.item.value;
+            console.log(selectionValue);
+        }
+    }).selectmenu("menuWidget").addClass("overflow");
+
+    $("#uri-node-val-src").selectmenu({
+        width: 200,
+        change: function( event, data ){
+            var selectionValue = data.item.value;
+            console.log(selectionValue  );
+            switch (selectionValue) {
+                case "uri-node-val-src-column":
+                    $("#uri-node-val-column-elements").show();
+                    $("#uri-node-val-text-elements").hide();
+                    break;
+                case "uri-node-val-src-text":
+                    $("#uri-node-val-column-elements").hide();
+                    $("#uri-node-val-text-elements").show();
+                    break;
+                default:
+                    $("#uri-node-val-column-elements").hide();
+                    $("#uri-node-val-text-elements").hide();
+                    break;
+            }
+        }
+    }).selectmenu("menuWidget").addClass("overflow");
     
+    $("#literal-node-val-src").selectmenu({
+        width: 200,
+        change: function( event, data ){
+            var selectionValue = data.item.value;
+            console.log(selectionValue);
+            switch (selectionValue) {
+                case "literal-node-val-src-column":
+                    $("#literal-node-val-column-elements").show();
+                    $("#literal-node-val-text-elements").hide();
+                    break;
+                case "literal-node-val-src-text":
+                    $("#literal-node-val-column-elements").hide();
+                    $("#literal-node-val-text-elements").show();
+                    break;
+                default:
+                    $("#literal-node-val-column-elements").hide();
+                    $("#literal-node-val-text-elements").hide();
+                    break;
+            }
+        }
+    }).selectmenu("menuWidget").addClass("overflow");
+
+
+    /**  Create the RDF mapping control object  **/
     var contr = new RDFControl($("#rdf-control-div").get(0), 100, 79);
 
 });

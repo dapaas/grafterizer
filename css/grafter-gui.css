@@ -1,5 +1,5 @@
 i.addAfterButton {
-    color: ccc; 
+    color: #ccc; 
     vertical-align: middle;
 }
 
@@ -8,7 +8,7 @@ i.addAfterButton:hover {
     cursor: pointer;
 }
 i.removeButton {
-    color: ccc;
+    color: #ccc;
     vertical-align: middle;
 }
 i.removeButton:hover {
@@ -17,7 +17,7 @@ i.removeButton:hover {
 }
 
 #pipeline {
-    border: 1px solid ccc;
+    border: 1px solid #ccc;
     border-collapse: collapse;
     text-align: center;
     width:100%;
@@ -43,7 +43,7 @@ i.pipeNext {
 }
 
 i#pipelineAddAtEnd {
-    color: ccc;
+    color: #ccc;
     cursor: pointer;
     display: block;
 }
@@ -102,11 +102,12 @@ textarea{
     margin-left: 5px;
     border: none;
 /*    border: solid 1px;*/
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 5px;
     width: 98%;
 }
 .add-first-graph-button {
-    color: ccc;
+    color: #ccc;
     cursor: pointer;
     margin-top: 110;
     margin-bottom: auto;
@@ -114,10 +115,10 @@ textarea{
     margin-right: auto;
 }
 
-.rdf-graph-add-after-button{
+.rdf-graph-add-after-button {
     margin-left: 5px;
-    color: ccc; 
-    vertical-align: middle;
+    color: #ccc; 
+    vertical-align: middle; 
 }
 
 .rdf-graph-add-after-button:hover{
@@ -127,11 +128,56 @@ textarea{
 
 .rdf-graph-remove-button{
     margin-left: 3px;
-    color: ccc;
+    color: #ccc;
     vertical-align: middle;
 }
 
 .rdf-graph-remove-button:hover{
     color: red;
     cursor: pointer;
+}
+
+.rdf-graph-add-first-node {
+    margin-left: 5px;
+    color: #ccc;
+    cursor: pointer;
+}
+
+.rdf-graph-add-first-node:hover {
+    color: grey;
+    cursor: pointer;
+}
+.rdf-graph-mapping-cell {
+    font-size: 0.9em;
+    text-align: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+}
+.rdf-graph-mapping-tr {
+    margin-top: 5px;
+}
+.radio-button-label {
+    cursor: pointer;
+    display: inline-block;
+}
+.define-graph-node-left {
+    vertical-align: top;
+}
+.define-graph-node-right {
+    padding-left: 10px;
+    border-left: 1px solid #eee;
+    vertical-align: top;
+}
+
+.define-graph-node-layout-table{
+    border-collapse: separate;
+}
+#form-uri-node .ui-selectmenu-text, .dialog-define-graph-node .ui-menu-item, #form-literal-node .ui-selectmenu-text {
+    font-size: 0.8em;
+    padding-left: 5px;
+}
+.define-graph-form-label{
+    font-size: 1em;
 }
