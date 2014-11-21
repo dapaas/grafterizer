@@ -563,6 +563,25 @@ function createColFuncMapcMappingJsEDN(){
     return jsEdnMapObject;
 }
 
+function loadPrefixersInGraphDefinitionDialog(){
+    // remove existing options
+    // add the ones from the GUI
+    $("#custom-prefixer-options > option").remove();
+
+    for (i=0; i<prefixersInGUI.length; ++i){
+        var name = prefixersInGUI[i]['prefix-name'];
+        if(name == ''){
+            continue;
+        }
+        var optionElement = document.createElement("option");
+        optionElement.value = name;
+        optionElement.textContent = name;
+
+        $("#custom-prefixer-options").append(optionElement);
+
+    }
+}
+
 var prefixersInGUI = [{'prefix-name': '', uri: ''}];
 var indexInPipeline = 0;
 var customFunctionsMap = [];
@@ -885,9 +904,6 @@ $(function() {
         }
     }).selectmenu("menuWidget").addClass("overflow");
 
-    $('#rdf-graph-definition').jstree();
-
-
     /**  Initialise dialog for RDF graph mapping  **/
 
     $("#dialog-rdf-mapping").dialog({
@@ -918,16 +934,41 @@ $(function() {
         height: "auto",
         width: "auto",
         title: "Choose node type",
+        open: function () {
+            loadPrefixersInGraphDefinitionDialog();
+        },
         buttons: {
             Done: function () {
                 // how to know to which graph we should add the node?
-                    // 1) put this with the code for initializing 
-                    // 2) associate position to add the dialog when opening it
-                        // retrieve it there through jquery.data(this, "something-something")
+                // 1) put this with the code for initializing 
+                // 2) associate position to add the dialog when opening it
+                // retrieve it there through jquery.data(this, "something-something")
                 // remove add first button
                 // add new node
-                    // create node object according to the current state of the dialog
-                
+                // create node object according to the current state of the dialog
+
+                var nodeModified = jQuery.data(this, "node-modified");
+                var associatedGraph = jQuery.data(this, "associated-graph");
+
+                if (nodeModified === null) {
+                    // get the type that we need to create (it is a root element since it is null)
+                    var nodeType = $('input[name=node-type-radio]:checked', '#graph-node-type').val();
+                    switch (nodeType) {
+                        case "uri": 
+                            console.log($("#uri-node-prefixer"));
+                            var nodePrefix = "";
+                            break;
+                        case "literal":
+                            break;
+                        default:
+                            alertInterface("Invalid root node type!");
+                            // roots can be only uri-s and literals; choosing blank nodes as root should not be possible
+                            return;
+                    } 
+                } else {
+                    // modify an existing element (i.e. replace it)
+                }
+
                 $(this).dialog("close");
             }
         }
@@ -951,19 +992,18 @@ $(function() {
         $("#form-literal-node").hide();
     });
 
-    $("#uri-node-prefixer").selectmenu({
-        width: 200,
-        change: function( event, data ){
-            var selectionValue = data.item.value;
-            console.log(selectionValue);
-        }
-    }).selectmenu("menuWidget").addClass("overflow");
+    //    $("#uri-node-prefixer").selectmenu({
+    //        width: 200,
+    //        change: function( event, data ){
+    //            var selectionValue = data.item.value;
+    //            console.log(selectionValue);
+    //        }
+    //    }).selectmenu("menuWidget").addClass("overflow");
 
     $("#uri-node-val-src").selectmenu({
         width: 200,
         change: function( event, data ){
             var selectionValue = data.item.value;
-            console.log(selectionValue  );
             switch (selectionValue) {
                 case "uri-node-val-src-column":
                     $("#uri-node-val-column-elements").show();
@@ -980,7 +1020,7 @@ $(function() {
             }
         }
     }).selectmenu("menuWidget").addClass("overflow");
-    
+
     $("#literal-node-val-src").selectmenu({
         width: 200,
         change: function( event, data ){
@@ -1003,6 +1043,142 @@ $(function() {
         }
     }).selectmenu("menuWidget").addClass("overflow");
 
+
+    /*************************************************************************************************************************************************************************************************************/
+
+
+    $.widget( "custom.combobox", {
+        _create: function() {
+            this.wrapper = $( "<span>" )
+            .addClass( "custom-combobox" )
+            .insertAfter( this.element );
+
+            this.element.hide();
+            this._createAutocomplete();
+            this._createShowAllButton();
+        },
+
+        _createAutocomplete: function() {
+            var selected = this.element.children( ":selected" ),
+                value = selected.val() ? selected.text() : "";
+
+            this.input = $( "<input>" )
+            .appendTo( this.wrapper )
+            .val( value )
+            .attr( "title", "" )
+            .attr( "spellcheck", false )
+            .addClass( "custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left" )
+            .css("font-size", "0.8em")
+            .autocomplete({
+                delay: 0,
+                minLength: 0,
+                source: $.proxy( this, "_source" )
+            })
+            .tooltip({
+                tooltipClass: "ui-state-highlight"
+            });
+
+            this._on( this.input, {
+                autocompleteselect: function( event, ui ) {
+                    ui.item.option.selected = true;
+                    this._trigger( "select", event, {
+                        item: ui.item.option
+                    });
+                },
+
+                autocompletechange: "_removeIfInvalid"
+            });
+        },
+
+        _createShowAllButton: function() {
+            var input = this.input,
+                wasOpen = false;
+
+            $( "<a>" )
+            .attr( "tabIndex", -1 )
+            .attr( "title", "Show All Items" )
+            .tooltip()
+            .appendTo( this.wrapper )
+            .button({
+                icons: {
+                    primary: "ui-icon-triangle-1-s"
+                },
+                text: false
+            })
+            .removeClass( "ui-corner-all" )
+            .addClass( "custom-combobox-toggle ui-corner-right" )
+            .mousedown(function() {
+                wasOpen = input.autocomplete( "widget" ).is( ":visible" );
+            })
+            .click(function() {
+                input.focus();
+
+                // Close if already visible
+                if ( wasOpen ) {
+                    return;
+                }
+
+                // Pass empty string as value to search for, displaying all results
+                input.autocomplete( "search", "" );
+            });
+        },
+
+        _source: function( request, response ) {
+            var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+            response( this.element.find( "option" ).map(function() {
+                var text = $( this ).text();
+                if ( this.value && ( !request.term || matcher.test(text) ) )
+                    return {
+                        label: text,
+                        value: text,
+                        option: this
+                    };
+            }) );
+        },
+
+        _removeIfInvalid: function( event, ui ) {
+
+            // Selected an item, nothing to do
+            if ( ui.item ) {
+                return;
+            }
+
+            // Search for a match (case-insensitive)
+            var value = this.input.val(),
+                valueLowerCase = value.toLowerCase(),
+                valid = false;
+            this.element.children( "option" ).each(function() {
+                if ( $( this ).text().toLowerCase() === valueLowerCase ) {
+                    this.selected = valid = true;
+                    return false;
+                }
+            });
+
+            // Found a match, nothing to do
+            if ( valid ) {
+                return;
+            }
+
+            // Remove invalid value
+            this.input
+            .val( "" )
+            .attr( "value", value + " didn't match any prefix name" )
+            .tooltip( "open" );
+            this.element.val( "" );
+            this._delay(function() {
+                this.input.tooltip( "close" ).attr( "title", "" );
+            }, 2500 );
+            this.input.autocomplete( "instance" ).term = "";
+        },
+
+        _destroy: function() {
+            this.wrapper.remove();
+            this.element.show();
+        }
+    });
+    
+    $( "#uri-node-prefixer" ).combobox();
+    /*************************************************************************************************************************************************************************************************************/
 
     /**  Create the RDF mapping control object  **/
     var contr = new RDFControl($("#rdf-control-div").get(0), 100, 79);

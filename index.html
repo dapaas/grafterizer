@@ -8,10 +8,8 @@
         <script src='./js/grafter-gui-elements.js'></script>
         <script src='./js/jquery.appendGrid-1.5.0.min.js'></script>
         <script src='./js/codemirror-compressed.js'></script>
-        <script src='./js/jstree.min.js'></script>
         <script src='./js/rdfisation-ui-control.js'></script>
 
-        <link rel="stylesheet" href="./js/themes/default/style.min.css" />
         <link rel="stylesheet" href="./css/jquery-ui.min.css"/> 
         <link rel="stylesheet" href="./css/jquery.appendGrid-1.5.0.min.css"/>
         <link rel="stylesheet" href="./css/grafter-gui.css"/>
@@ -84,8 +82,6 @@
             </form>
         </div>
 
-        <div id="rdf-graph-definition"></div>
-
         <div id="dialog-rdf-mapping">
             <div id="rdf-control-div">
             </div>
@@ -121,7 +117,18 @@
                         <select name="uri-node-prefixer" id="uri-node-prefixer" class="form-uri-node-select">
 
                             <option value="default-uri-prefix" data-class="ui-icon-script" selected>(base graph URI)</option>
-                            <optgroup id="custom-funct-options" label="Available prefixes">
+                            <optgroup id="pre-defined-prefix-options" label="Pre-defined prefixes">
+                                <option value="rdf" data-class="ui-icon-script">rdf</option>
+                                <option value="foaf" data-class="ui-icon-script">foaf</option>
+                                <option value="void" data-class="ui-icon-script">void</option>
+                                <option value="dcterms" data-class="ui-icon-script">dcterms</option>
+                                <option value="vcard" data-class="ui-icon-script">vcard</option>
+                                <option value="pmd" data-class="ui-icon-script">pmd</option>
+                                <option value="qb" data-class="ui-icon-script">qb</option>
+                                <option value="os" data-class="ui-icon-script">os</option>
+                                <option value="sdmx-measure" data-class="ui-icon-script">sdmx-measure</option>
+                            </optgroup>
+                            <optgroup id="custom-prefixer-options" label="User-defined prefixes">
                             </optgroup>
 
                         </select>

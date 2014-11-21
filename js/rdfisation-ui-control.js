@@ -199,9 +199,16 @@ var Graph = function (graphURI, rdfControl) {
     createFirstGraphElementButton.classList.add("rdf-graph-add-first-node");
     createFirstGraphElementButton.classList.add("fa-lg");
     createFirstGraphElementButton.innerHTML = "Add node";
-
+    jQuery.data(createFirstGraphElementButton, "containing-graph", this);
+    
     $(createFirstGraphElementButton).on("click", function () {
-        $("#dialog-define-graph-node").dialog("open");
+        var dialog = $("#dialog-define-graph-node").dialog("open");
+        var containingGraph = jQuery.data(createFirstGraphElementButton, "containing-graph");
+        
+        // we associate a null value to the "node-modified" variable since we want to create a new one
+        jQuery.data(dialog[0], "node-modified", null);
+        // we also associate the containing graph to the dialog so that we know to which graph to add the element
+        jQuery.data(dialog[0], "associated-graph", containingGraph);
     });
 
     graphMappingCell.classList.add("rdf-graph-mapping-cell");

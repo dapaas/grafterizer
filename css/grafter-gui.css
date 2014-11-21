@@ -101,7 +101,7 @@ textarea{
     margin-top: 5px;
     margin-left: 5px;
     border: none;
-/*    border: solid 1px;*/
+    /*    border: solid 1px;*/
     border-collapse: separate;
     border-spacing: 5px;
     width: 98%;
@@ -180,4 +180,32 @@ textarea{
 }
 .define-graph-form-label{
     font-size: 1em;
+}
+
+.custom-combobox {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-combobox-toggle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin-left: -1px;
+    padding: 0;
+}
+
+.custom-combobox-input {
+    width: 166px;
+    margin: 0;
+    padding-left: 5px;
+    padding-bottom: 0.4em;
+    padding-top: 0.4em;
+}
+
+.ui-autocomplete {
+    max-height: 150px;
+    overflow-y: auto;   /* prevent horizontal scrollbar */
+    overflow-x: hidden; /* add padding to account for vertical scrollbar */
+    z-index:1000 !important;
 }
