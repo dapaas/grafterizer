@@ -935,7 +935,41 @@ $(function() {
         width: "auto",
         title: "Choose node type",
         open: function () {
+
+            // TODO open node definition dialog with the current data (retrieve it from the variables of the object)
+            // select for source = column
+            // select for the prefix = prefix or empty (if prefix has been deleted)
             loadPrefixersInGraphDefinitionDialog();
+            //            set fields to values associated to the dialog currently (using an object)
+            var nodeModified = jQuery.data(this, "node-modified");
+            console.log("nodeModified:", nodeModified, nodeModified instanceof ColumnURI);
+            if (nodeModified instanceof ColumnURI) {
+                console.log ("HERE!");
+                // check appropriate radio button
+
+                $('input[name=node-type-radio]:checked').prop("checked", false);
+                console.log($('input#uri-radio[name=node-type-radio]'));
+                $('input#uri-radio[name=node-type-radio]').prop("checked", true);
+
+                var prefix = nodeModified.prefix;
+                var column = nodeModified.column;
+
+            }
+
+            if (typeof nodeModified === ConstantURI) {
+
+            }
+
+            if (typeof nodeModified === ColumnLiteral) {
+
+            }
+
+            if (typeof nodeModified === ConstantLiteral) {
+
+            }
+
+            // determine the type of node
+
         },
         buttons: {
             Done: function () {
@@ -950,55 +984,152 @@ $(function() {
                 var nodeModified = jQuery.data(this, "node-modified");
                 var associatedGraph = jQuery.data(this, "associated-graph");
 
+                var isURI = false;
+                var isSourceFromColumn = false;
+
+                // we retrieve the values from the forms to find out the exact values for the node we are creating
+                var prefixSelectValue = $("#uri-node-prefixer").val();
+                var nodeType = $('input[name=node-type-radio]:checked', '#graph-node-type').val();
+                var literalValueSource = $("#literal-node-val-src").val();
+                var nodeValueSource = $("#uri-node-val-src").val();
+
+                // variable holds the prefix used in creating the object representation of the RDF node
+                var prefix = "";
+
+                switch(prefixSelectValue){
+                    case "default-uri-prefix":
+                        // create a URI node with a prefix value equal to null (we will add the concrete value when constructing the graph)
+                        prefix = null;
+                        break;
+                    case "no-uri-prefix":
+                        prefix = "";
+                        // create a URI node with an empty prefix
+                        break;
+                    default:
+                        if (prefixSelectValue.trim() === ""){
+                            prefix = "";
+
+                        } else {
+                            prefix = prefixSelectValue;
+                        }
+                        // create a URI node with a prefix value equal to the string
+                        // also need to check for empty strings (then default is no-uri)
+                        // later on we can validate as well
+
+                        break;
+                }
+                switch (nodeType) {
+                    case "uri":
+                        isURI = true;
+                        // determine whether the source is a column or user-defined text
+                        switch (nodeValueSource) {
+                            case "uri-node-val-src-column": 
+                                isSourceFromColumn = true;
+                                //                                    ColumnURI
+                                // column
+                                break;
+                            case "uri-node-val-src-text":
+                                isSourceFromColumn = false;
+                                // text
+                                break;
+                            default:
+                                alertInterface("Invalid node source selection for RDF mapping");
+                                // TODO error?
+                                break;
+                        }
+
+                        break;
+                    case "literal":
+                        isURI = false;
+                        switch (literalValueSource) {
+                            case "literal-node-val-src-column": 
+                                isSourceFromColumn = true;
+                                //                                    ColumnURI
+                                // column
+                                break;
+                            case "literal-node-val-src-text":
+                                isSourceFromColumn = false;
+                                // text
+                                break;
+                            default:
+                                alertInterface("Invalid node source selection for RDF mapping");
+                                // TODO error?
+                                break;
+                        }
+
+                        break;
+                    default:
+                        alertInterface("Invalid root node type!");
+                        // roots can be only uri-s and literals; choosing blank nodes as root should not be possible
+                        return;
+                }
+
+                // TODO determine if we should create a new element or modify an existing one
                 if (nodeModified === null) {
-                    // get the type that we need to create (it is a root element since it is null)
-                    var nodeType = $('input[name=node-type-radio]:checked', '#graph-node-type').val();
-                    switch (nodeType) {
-                        case "uri": 
-                            console.log($("#uri-node-prefixer"));
-                            var nodePrefix = "";
-                            break;
-                        case "literal":
-                            break;
-                        default:
-                            alertInterface("Invalid root node type!");
-                            // roots can be only uri-s and literals; choosing blank nodes as root should not be possible
-                            return;
-                    } 
+                    console.log("NEW NODE!");
+                    // new node must be created
                 } else {
+                    console.log("OLD NODE TODO - replace the old node with a new one");
+                    return;
                     // modify an existing element (i.e. replace it)
                 }
+
+                //                console.log("URI? -", isURI);
+                //                console.log("from column? -", isSourceFromColumn);
+                //                console.log("chose prefix:", prefix == "" ? "(empty)" : prefix);
+
+                if(!isURI && !isSourceFromColumn){
+                    // ConstantLiteral
+                    //                    console.log ("Literal text");
+                }
+                if(!isURI && isSourceFromColumn){
+                    // ColumnLiteral
+                    //                    console.log ("Literal column");
+                }
+                if(isURI && !isSourceFromColumn){
+                    // ConstantURI
+                    //                    console.log ("URI text");
+                }
+                if(isURI && isSourceFromColumn){
+                    var columnName = $("#uri-node-val-column").val();
+                    //                    console.log("columnName", columnName);
+                    var node = new ColumnURI(associatedGraph, prefix, columnName);
+
+                    associatedGraph.addChild(node);
+                    // ColumnURI
+                    //                    console.log ("URI column");
+                }
+
+
 
                 $(this).dialog("close");
             }
         }
     });
+    $('input[name=node-type-radio]').change(function () {
+        console.log($('input[name=node-type-radio]:checked').val());
 
-    $("#uri-radio").on("click", function () {
-        $(".define-graph-node-right").show();
-        $("#form-uri-node").show();
-        $("#form-literal-node").hide();
+        switch ($('input[name=node-type-radio]:checked').val()) {
+            case "uri":
+                $(".define-graph-node-right").show();
+                $("#form-uri-node").show();
+                $("#form-literal-node").hide();
+                break;
+            case "literal":
+                $(".define-graph-node-right").show();
+                $("#form-uri-node").hide();
+                $("#form-literal-node").show();
+                break;
+            case "blank":
+                $(".define-graph-node-right").hide();
+                $("#form-uri-node").hide();
+                $("#form-literal-node").hide();
+                break;
+            default: 
+                alert("this should not be possible...");
+                break;
+        }
     });
-
-    $("#literal-radio").on("click", function () {
-        $(".define-graph-node-right").show();
-        $("#form-uri-node").hide();
-        $("#form-literal-node").show();
-    }); 
-
-    $("#blank-radio").on("click", function () {
-        $(".define-graph-node-right").hide();
-        $("#form-uri-node").hide();
-        $("#form-literal-node").hide();
-    });
-
-    //    $("#uri-node-prefixer").selectmenu({
-    //        width: 200,
-    //        change: function( event, data ){
-    //            var selectionValue = data.item.value;
-    //            console.log(selectionValue);
-    //        }
-    //    }).selectmenu("menuWidget").addClass("overflow");
 
     $("#uri-node-val-src").selectmenu({
         width: 200,
@@ -1159,16 +1290,21 @@ $(function() {
                 return;
             }
 
-            // Remove invalid value
+            // Remove invalid value and replace by empty
+            $(this.element).find("option[value='no-uri-prefix']")[0].selected = true;
             this.input
-            .val( "" )
+            .val( $(this.element).find("option[value='no-uri-prefix']").text() )
             .attr( "value", value + " didn't match any prefix name" )
             .tooltip( "open" );
-            this.element.val( "" );
+
             this._delay(function() {
                 this.input.tooltip( "close" ).attr( "title", "" );
             }, 2500 );
             this.input.autocomplete( "instance" ).term = "";
+
+            //            console.log("this.input.val():", this.input.val());
+            //            console.log("this.element.val():", this.element.val());
+            //            console.log('$("#uri-node-prefixer").val()', $("#uri-node-prefixer").val());
         },
 
         _destroy: function() {
@@ -1176,7 +1312,7 @@ $(function() {
             this.element.show();
         }
     });
-    
+
     $( "#uri-node-prefixer" ).combobox();
     /*************************************************************************************************************************************************************************************************************/
 

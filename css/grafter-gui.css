@@ -56,9 +56,7 @@ i#pipelineAddAtEnd:hover {
 select {
     width: 200px;
 }
-label {
-    display: block;
-}
+
 textarea{
     width: 20%;
 }
@@ -80,6 +78,10 @@ textarea{
 .add-first-graph-button:hover{
     color: grey;
     cursor: pointer;
+}
+
+.form-label {
+    display: block;
 }
 
 .form-label-sameline {
@@ -178,9 +180,6 @@ textarea{
     font-size: 0.8em;
     padding-left: 5px;
 }
-.define-graph-form-label{
-    font-size: 1em;
-}
 
 .custom-combobox {
     position: relative;
@@ -205,7 +204,71 @@ textarea{
 
 .ui-autocomplete {
     max-height: 150px;
-    overflow-y: auto;   /* prevent horizontal scrollbar */
-    overflow-x: hidden; /* add padding to account for vertical scrollbar */
-    z-index:1000 !important;
+    overflow-y: auto;   
+    overflow-x: hidden; 
+    z-index: 1000 !important;
+}
+.node-div {
+    cursor: pointer;
+    display: inline-block;
+}
+
+.node-name-label {
+    cursor: pointer;
+    margin-left: 5px;
+    display: inline-block;
+}
+
+.rdf-node-add-after-button {
+    margin-left: 5px;
+    color: #ccc;
+    display: inline-block;
+}
+
+.rdf-node-add-after-button:hover {
+    color: green;
+    cursor: pointer;
+}
+
+.rdf-node-remove-button {
+    margin-left: 2px;
+    color: #ccc;
+    display: inline-block;
+}
+
+.rdf-node-remove-button:hover {
+    color: red;
+    cursor: pointer;
+}
+
+.icon-fold-unfold-subnodes {
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+td.rdf-graph-element-representation, td.rdf-graph-element-sub-elements {
+    vertical-align: top;
+    text-align: left;
+}
+td.rdf-graph-element-sub-elements {
+    border-left: 1px solid black;
+}
+.add-first-element-div{
+    margin-left: 7px;
+    color: #ccc; 
+}
+.add-first-element-div > label {
+    cursor: pointer;
+    margin-left: 3px;
+    font-size: 0.8em;
+}
+
+.add-first-element-div:hover{
+    color: grey;
+    cursor: pointer !important;   
+}
+
+table.rdf-element-table {
+    border-collapse: separate;
+    border-spacing: 5px;
 }

@@ -3,93 +3,8 @@
 /*jslint plusplus: true */
 /*global $, jQuery, alert, alertInterface */
 "use strict";
-//var ColorEnum = Object.freeze({RED: 0, GREEN: 1, BLUE: 2});x
-/* 
-    Generic RDF element class. Constructor takes a callback to adding a peer element.
-*/
-var RDFElement = function (addPeerCallback, containingGraph) {
-    this.subElements = [];
-    this.prototype.addPeer = addPeerCallback;
 
-
-    var rdfElementTable = document.createElement("table"),
-        graphNameRow = rdfElementTable.insertRow(0),
-        graphNameCell = graphNameRow.insertCell(0),
-        graphDefForm = document.createElement("form"),
-        graphNameLabel = document.createElement("label"),
-        graphNameInput = document.createElement("input"),
-        addSignElement = document.createElement("i"),
-        createGraphElementTop = document.createElement("i"),
-        createGraphElementBottom = document.createElement("i"),
-        removeSignElement = document.createElement("i");
-    this.tableElement = rdfElementTable;
-    //    this.htmlRepresentation = ;
-};
-
-RDFElement.prototype.addSubElement = function (subElement) {
-    this.subElements.push(subElement);
-    // add row to parent table here
-
-};
-
-// class representing a generic URI node
-var URINode = function (nodeName) {
-    //<i class="fa fa-share-alt"></i>
-    //{Node}
-
-};
-// inherit from RDFElement
-URINode.prototype = Object.create(RDFElement.prototype);
-URINode.prototype.constructor = URINode;
-
-
-// class representing a root node in the RDF mapping
-var RootNode = function (columnOrConstantURI, addPeerCallback, conatiningGraph) {
-    //<i class="fa fa-share-alt"></i>
-    //{Node}
-    RDFElement.call(this, addPeerCallback, conatiningGraph);
-
-};
-// inherit from URINode
-RootNode.prototype = Object.create(URINode.prototype);
-RootNode.prototype.constructor = RootNode;
-
-
-// class representing a property (predicate) from the RDF mapping
-var Property = function () {
-    //<i class="fa fa-long-arrow-right"></i>
-    //{Property}
-
-};
-
-var ConstantLiteral = function (literalText) {
-    //<i class="fa fa-pencil-square-o"></i>
-    //{Literal node}
-};
-
-var ColumnLiteral = function () {
-    //<i class="fa fa-columns"></i>
-    //{Column node}
-
-};
-
-var ColumnURI = function () {
-    //<i class="fa fa-share-alt"></i>
-    //{Node}
-};
-
-
-
-var BlankNode = function () {
-    //<i class="fa fa-dot-circle-o"></i>
-    //{Blank node}
-};
-
-// generic literal node
-var LiteralNode = function () {
-    //<i class="fa fa-pencil-square-o"></i>
-    //{Literal node}
-};
+//var ColorEnum = Object.freeze({RED: 0, GREEN: 1, BLUE: 2});
 
 var Graph = function (graphURI, rdfControl) {
     if (typeof rdfControl === 'undefined') {
@@ -104,6 +19,7 @@ var Graph = function (graphURI, rdfControl) {
         graphMappingRow = graphTableElement.insertRow(1),
         graphNameCell = graphNameRow.insertCell(0),
         graphMappingCell = graphMappingRow.insertCell(0),
+//        rootsTable = document.createElement("table"),
         graphDefForm = document.createElement("form"),
         graphNameLabel = document.createElement("label"),
         graphNameInput = document.createElement("input"),
@@ -192,6 +108,12 @@ var Graph = function (graphURI, rdfControl) {
     *********************************************************************/
 
     this.graphRoots = [];
+
+    // the rootsTable contains all roots of the graph (we permit more than one)
+//    graphMappingCell.appendChild(rootsTable);
+//    this.rootsTable = rootsTable;
+    this.graphMappingCell = graphMappingCell;
+
     graphMappingRow.classList.add("rdf-graph-mapping-tr");
 
     createFirstGraphElementButton.classList.add("fa");
@@ -200,15 +122,16 @@ var Graph = function (graphURI, rdfControl) {
     createFirstGraphElementButton.classList.add("fa-lg");
     createFirstGraphElementButton.innerHTML = "Add node";
     jQuery.data(createFirstGraphElementButton, "containing-graph", this);
-    
+
     $(createFirstGraphElementButton).on("click", function () {
-        var dialog = $("#dialog-define-graph-node").dialog("open");
-        var containingGraph = jQuery.data(createFirstGraphElementButton, "containing-graph");
-        
+        var dialog = $("#dialog-define-graph-node").dialog(),
+            containingGraph = jQuery.data(createFirstGraphElementButton, "containing-graph");
+
         // we associate a null value to the "node-modified" variable since we want to create a new one
         jQuery.data(dialog[0], "node-modified", null);
         // we also associate the containing graph to the dialog so that we know to which graph to add the element
         jQuery.data(dialog[0], "associated-graph", containingGraph);
+        dialog.dialog("open");
     });
 
     graphMappingCell.classList.add("rdf-graph-mapping-cell");
@@ -221,16 +144,297 @@ Graph.prototype.setURI = function (newGraphURI) {
 };
 
 Graph.prototype.addEmptyRoot = function () {
-    var rootNode = new RootNode(this.addRoot, this),
-        tableToAdd = rootNode.tableElement;
+    //    var rootNode = new RootNode(this.addChild, this),
+    //        tableToAdd = rootNode.tableElement;
 };
 
-Graph.prototype.addRoot = function (root) {
-    this.graphRoots.push(root);
-    var rootRow = this.graphTableElement.insertRow(0),
-        rootCell = rootRow.insertCell(0),
-        rootDataCell = rootRow.insertCell(1);
+// add a child to the graph (i.e. a root node)
+Graph.prototype.addChild = function (child) {
 
+    this.graphRoots.push(child);
+
+    //    $(this.graphTableElement).find(".rdf-graph-add-first-node").hide();
+    //    var rootRow = this.rootsTable.insertRow(0),
+    //        rootCell = rootRow.insertCell(0);
+    //
+    //    rootCell.appendChild(root.tableElement);
+
+    $(this.graphMappingCell).find(".rdf-graph-add-first-node").hide();
+
+    this.graphMappingCell.appendChild(child.tableElement);
+    // TODO put the node DOM element inside this new cell
+};
+
+Graph.prototype.removeChild = function (child) {
+    var childIndex = this.graphRoots.indexOf(child),
+        initialAddButton = $(".rdf-graph-add-first-node");
+    
+    if (childIndex !== -1) {
+        this.graphRoots.splice(childIndex, 1);
+    }
+    
+    // find and remove DOM elements
+    $(child.tableElement).remove();
+
+    if (this.graphRoots.length === 0) {
+        initialAddButton.show();
+    }
+};
+
+//    Generic RDF element class
+var RDFElement = function (containingElement) {
+    this.subElements = [];
+    if (typeof containingElement === Graph) {
+        this.containingGraph = containingElement;
+    } else {
+        this.containingGraph = containingElement.containingGraph;
+    }
+    this.containingElement = containingElement;
+
+    Object.getPrototypeOf(this).addPeer = containingElement.addChild;
+    // TODO if not needed - remove
+    Object.getPrototypeOf(this).removeSelf = function () {
+        this.containingElement.removeChild(this);
+    };
+    // the addChild method should be initialised specifically for each node
+    // or should it? - open up dialog
+
+
+    var rdfElementTable = document.createElement("table");
+    rdfElementTable.classList.add("rdf-element-table");
+    this.tableElement = rdfElementTable;
+    
+    
+    //    this.htmlRepresentation = ;
+};
+
+RDFElement.prototype.addSubElement = function (subElement) {
+    this.subElements.push(subElement);
+    // add row to parent table here
+
+};
+
+// Generic URI node class - structural class used to reason based on the type of node (URI or literal)
+var URINode = function (containingElement) {
+    //<i class="fa fa-share-alt"></i>
+    //{Node}
+
+    RDFElement.call(this, containingElement);
+
+};
+// inherit from RDFElement
+URINode.prototype = Object.create(RDFElement.prototype);
+URINode.prototype.constructor = URINode;
+
+// class representing a property (predicate) from the RDF mapping
+var Property = function () {
+    //<i class="fa fa-long-arrow-right"></i>
+    //{Property}
+
+};
+
+var ConstantLiteral = function (literalText) {
+    //<i class="fa fa-pencil-square-o"></i>
+    //{Literal node}
+};
+
+var ColumnLiteral = function () {
+    //<i class="fa fa-columns"></i>
+    //{Column node}
+
+};
+
+var ColumnURI = function (containingElement, prefix, column) {
+    //<i class="fa fa-share-alt"></i>
+    //{Node}
+
+    // call parent constructor
+    URINode.call(this, containingElement);
+
+    // create the DOM element of this element
+
+    var uriNodeRow = this.tableElement.insertRow(0),
+        uriNodeDataCell = uriNodeRow.insertCell(0),
+        uriNodeSubElementsCell = uriNodeRow.insertCell(1),
+
+        uriNodeNameDiv = document.createElement("div"),
+        uriNodeName = document.createElement("label"),
+        uriNodeSign = document.createElement("i"),
+
+        addNodeSign = document.createElement("i"),
+        removeNodeSign = document.createElement("i"),
+        
+        foldSubElementsSign = document.createElement("i"),
+        unfoldSubElementsSign = document.createElement("i"),
+        
+        addFirstSubElementDiv = document.createElement("div"),
+        addFirstSubElementSign = document.createElement("i"),
+        addFirstSubElementLabel = document.createElement("label"),
+        
+        newPropertyLabel = document.createElement("label"),
+        newPropertySign = document.createElement("i");
+
+    this.prefix = prefix;
+    this.column = column;
+    
+    uriNodeDataCell.classList.add("rdf-graph-element-representation");
+    
+    // TODO if column is empty - display message or what?
+    
+
+    uriNodeSign.classList.add("fa");
+    uriNodeSign.classList.add("fa-share-alt");
+//    uriNodeSign.classList.add("fa-lg");
+    
+    if (prefix === null) {
+        uriNodeName.textContent = "(Graph URI):" + column;
+    } else if (prefix === "") {
+        uriNodeName.textContent = ":" + column;
+    } else {
+        uriNodeName.textContent = prefix + ':' + column;
+    }
+    
+    uriNodeName.classList.add("node-name-label");
+    
+    uriNodeNameDiv.classList.add("node-div");
+    uriNodeNameDiv.appendChild(uriNodeSign);
+    uriNodeNameDiv.appendChild(uriNodeName);
+    
+    uriNodeDataCell.appendChild(uriNodeNameDiv);
+    
+    jQuery.data(uriNodeNameDiv, "node-modified", this);
+    
+    $(uriNodeNameDiv).on("click", function () {
+        var dialog = $("#dialog-define-graph-node").dialog(),
+            nodeModified = jQuery.data(this, "node-modified");
+        console.log("associatedNode", dialog);
+        
+        jQuery.data(dialog[0], "node-modified", nodeModified);
+        jQuery.data(dialog[0], "associated-graph", nodeModified.containingGraph);
+        
+        dialog.dialog("open");
+    });
+
+    // buttons for adding siblings and removing current element
+
+    addNodeSign.classList.add("fa");
+    addNodeSign.classList.add("fa-plus");
+    addNodeSign.classList.add("rdf-node-add-after-button");
+    
+    // association of the add button with the node
+    
+    uriNodeDataCell.appendChild(addNodeSign);
+    
+    removeNodeSign.classList.add("fa");
+    removeNodeSign.classList.add("fa-times");
+    removeNodeSign.classList.add("rdf-node-remove-button");
+    // association of the remove button with the node
+    
+    uriNodeDataCell.appendChild(removeNodeSign);
+    jQuery.data(removeNodeSign, "associated-element", this);
+    
+    // todo make names consistent
+    jQuery.data(addNodeSign, "node-modified", this);
+    $(addNodeSign).on("click", function () {
+        var dialog = $("#dialog-define-graph-node").dialog(),
+            nodeModified = jQuery.data(this, "node-modified");
+
+        // we associate a null value to the "node-modified" variable since we want to create a new element
+        jQuery.data(dialog[0], "node-modified", null);
+        // we also associate the containing graph to the dialog so that we know to which graph to add the element
+        jQuery.data(dialog[0], "associated-graph", nodeModified.containingGraph);
+        dialog.dialog("open");
+    });
+    
+    $(removeNodeSign).on("click", function () {
+        // open confirmation dialog for this node
+        var nodeToRemove = jQuery.data(removeNodeSign, "associated-element"),
+            containingGraph = nodeToRemove.containingGraph;
+        
+        $("#dialog-confirm").html("Are you sure you want to remove this RDF mapping?");
+        $("#dialog-confirm").dialog({
+            resizable: false,
+            modal: true,
+            title: "Confirmation",
+            buttons: {
+                "Yes": function () {
+                    $(this).dialog('close');
+                    nodeToRemove.removeSelf();
+                },
+                "No": function () {
+                    $(this).dialog('close');
+                }
+            }
+        });
+        
+    });
+    
+    foldSubElementsSign.classList.add("fa");
+    foldSubElementsSign.classList.add("fa-minus-square-o");
+    foldSubElementsSign.classList.add("icon-fold-unfold-subnodes");
+    $(foldSubElementsSign).show();
+    
+    unfoldSubElementsSign.classList.add("fa");
+    unfoldSubElementsSign.classList.add("fa-plus-square-o");
+    unfoldSubElementsSign.classList.add("icon-fold-unfold-subnodes");
+    $(unfoldSubElementsSign).hide();
+    
+    uriNodeDataCell.appendChild(foldSubElementsSign);
+    $(foldSubElementsSign).on("click", function () {
+        $(this).siblings(".icon-fold-unfold-subnodes").show();
+        $(this).hide();
+        // hide subnodes
+        $(this).parent().siblings(".rdf-graph-element-sub-elements").hide();
+    });
+    
+    uriNodeDataCell.appendChild(unfoldSubElementsSign);
+    $(unfoldSubElementsSign).on("click", function () {
+        $(this).hide();
+        $(this).siblings(".icon-fold-unfold-subnodes").show();
+        // show subnodes
+        $(this).parent().siblings(".rdf-graph-element-sub-elements").show();
+    });
+    
+    addFirstSubElementDiv.classList.add("add-first-element-div");
+    
+    addFirstSubElementSign.classList.add("fa");
+    addFirstSubElementSign.classList.add("fa-plus-circle");
+    
+    addFirstSubElementLabel.textContent = "Add property";
+    
+    addFirstSubElementDiv.appendChild(addFirstSubElementSign);
+    addFirstSubElementDiv.appendChild(addFirstSubElementLabel);
+    
+    uriNodeSubElementsCell.classList.add("rdf-graph-element-sub-elements");
+    uriNodeSubElementsCell.appendChild(addFirstSubElementDiv);
+    
+    // add new element node (in this case it is a property)
+    // onclick listener opens a property definition dialog?
+    
+//    <i class="fa fa-minus-square-o icon-fold-subnodes"></i>
+
+
+    // including its child data cell as a field
+};
+ColumnURI.prototype = Object.create(URINode.prototype);
+ColumnURI.prototype.constructor = ColumnURI;
+
+var ConstantURI = function () {
+    //<i class="fa fa-share-alt"></i>
+    //{Node}
+};
+
+
+
+var BlankNode = function () {
+    //<i class="fa fa-dot-circle-o"></i>
+    //{Blank node}
+};
+
+// generic literal node
+var LiteralNode = function () {
+    //<i class="fa fa-pencil-square-o"></i>
+    //{Literal node}
 };
 
 var RDFControl = function (divElement, widthPercent, heightPercent) {
