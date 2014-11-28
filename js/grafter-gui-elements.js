@@ -559,7 +559,7 @@ function createColFuncMapcMappingJsEDN(){
         var rowVal = $('#mapc-table').appendGrid('getRowValue', i);
         jsEdnMapObject.set(rowVal['mapc-column-key'], new jsedn.sym(rowVal['mapc-function']));
     }
-    console.log(jsEdnMapObject);
+    //    console.log(jsEdnMapObject);
     return jsEdnMapObject;
 }
 
@@ -930,41 +930,68 @@ $(function() {
     $("#dialog-define-graph-node").dialog({
         dialogClass: "dialog-define-graph-node",
         autoOpen: false,
+        resizable: false,
         modal: true,
         height: "auto",
         width: "auto",
         title: "Choose node type",
         open: function () {
-
-            // TODO open node definition dialog with the current data (retrieve it from the variables of the object)
             // select for source = column
             // select for the prefix = prefix or empty (if prefix has been deleted)
             loadPrefixersInGraphDefinitionDialog();
-            //            set fields to values associated to the dialog currently (using an object)
             var nodeModified = jQuery.data(this, "node-modified");
-            console.log("nodeModified:", nodeModified, nodeModified instanceof ColumnURI);
+            // in case we use the graph URI prefix has a null value
+
             if (nodeModified instanceof ColumnURI) {
-                console.log ("HERE!");
+                var prefix = nodeModified.prefix || "", 
+                    column = nodeModified.column;
                 // check appropriate radio button
+                $("input[name=node-type-radio]:checked").prop("checked", false);
+                $("input#uri-radio[name=node-type-radio]").prop("checked", true);
+                $("input[name=node-type-radio]").trigger("change");
 
-                $('input[name=node-type-radio]:checked').prop("checked", false);
-                console.log($('input#uri-radio[name=node-type-radio]'));
-                $('input#uri-radio[name=node-type-radio]').prop("checked", true);
+                // change value of prefix field
+                $(".custom-combobox-input").val(prefix == "" ? "(no prefix)" : prefix);
 
-                var prefix = nodeModified.prefix;
-                var column = nodeModified.column;
+                // change value of source combo
+                $("#uri-node-val-src").val("uri-node-val-src-column");
+                $("#uri-node-val-src").selectmenu("refresh");
+                $("#uri-node-val-column-elements").show();
+                $("#uri-node-val-text-elements").hide();
+
+                // change value of column 
+                $("#uri-node-val-column").val(column);
+            }
+
+            if (nodeModified instanceof ConstantURI) {
+                
+                var prefix = nodeModified.prefix || "", 
+                    constant = nodeModified.constant;
+                
+                // check appropriate radio button
+                $("input[name=node-type-radio]:checked").prop("checked", false);
+                $("input#uri-radio[name=node-type-radio]").prop("checked", true);
+                $("input[name=node-type-radio]").trigger("change");
+
+                // change value of prefix field
+                $(".custom-combobox-input").val(prefix == "" ? "(no prefix)" : prefix);
+
+                // change value of source combo
+                $("#uri-node-val-src").val("uri-node-val-src-text");
+                $("#uri-node-val-src").selectmenu("refresh");
+                $("#uri-node-val-column-elements").hide();
+                $("#uri-node-val-text-elements").show();
+
+                // change value of column 
+                $("#uri-node-val-text").val(constant);
 
             }
 
-            if (typeof nodeModified === ConstantURI) {
+            if (nodeModified instanceof ColumnLiteral) {
 
             }
 
-            if (typeof nodeModified === ColumnLiteral) {
-
-            }
-
-            if (typeof nodeModified === ConstantLiteral) {
+            if (nodeModified instanceof ConstantLiteral) {
 
             }
 
@@ -982,7 +1009,7 @@ $(function() {
                 // create node object according to the current state of the dialog
 
                 var nodeModified = jQuery.data(this, "node-modified");
-                var associatedGraph = jQuery.data(this, "associated-graph");
+                var associatedElement = jQuery.data(this, "associated-graph");
 
                 var isURI = false;
                 var isSourceFromColumn = false;
@@ -1025,7 +1052,6 @@ $(function() {
                         switch (nodeValueSource) {
                             case "uri-node-val-src-column": 
                                 isSourceFromColumn = true;
-                                //                                    ColumnURI
                                 // column
                                 break;
                             case "uri-node-val-src-text":
@@ -1044,7 +1070,6 @@ $(function() {
                         switch (literalValueSource) {
                             case "literal-node-val-src-column": 
                                 isSourceFromColumn = true;
-                                //                                    ColumnURI
                                 // column
                                 break;
                             case "literal-node-val-src-text":
@@ -1056,10 +1081,14 @@ $(function() {
                                 // TODO error?
                                 break;
                         }
-
+                    case "blank":
+                        if(nodeModified === null && associatedElement instanceof Graph){
+                            alertInterface("Invalid node type! Graph roots cannot be blank.");
+                        }
                         break;
+
                     default:
-                        alertInterface("Invalid root node type!");
+                        alertInterface("Invalid node type!");
                         // roots can be only uri-s and literals; choosing blank nodes as root should not be possible
                         return;
                 }
@@ -1077,27 +1106,21 @@ $(function() {
                 //                console.log("URI? -", isURI);
                 //                console.log("from column? -", isSourceFromColumn);
                 //                console.log("chose prefix:", prefix == "" ? "(empty)" : prefix);
-
                 if(!isURI && !isSourceFromColumn){
                     // ConstantLiteral
-                    //                    console.log ("Literal text");
                 }
                 if(!isURI && isSourceFromColumn){
                     // ColumnLiteral
-                    //                    console.log ("Literal column");
                 }
                 if(isURI && !isSourceFromColumn){
-                    // ConstantURI
-                    //                    console.log ("URI text");
+                    var constantName = $("#uri-node-val-text").val();
+                    var node = new ConstantURI(associatedElement, prefix, constantName);
+                    associatedElement.addChild(node);
                 }
                 if(isURI && isSourceFromColumn){
                     var columnName = $("#uri-node-val-column").val();
-                    //                    console.log("columnName", columnName);
-                    var node = new ColumnURI(associatedGraph, prefix, columnName);
-
-                    associatedGraph.addChild(node);
-                    // ColumnURI
-                    //                    console.log ("URI column");
+                    var node = new ColumnURI(associatedElement, prefix, columnName);
+                    associatedElement.addChild(node);
                 }
 
 
@@ -1107,7 +1130,6 @@ $(function() {
         }
     });
     $('input[name=node-type-radio]').change(function () {
-        console.log($('input[name=node-type-radio]:checked').val());
 
         switch ($('input[name=node-type-radio]:checked').val()) {
             case "uri":
@@ -1126,7 +1148,7 @@ $(function() {
                 $("#form-literal-node").hide();
                 break;
             default: 
-                alert("this should not be possible...");
+                console.log("nothing checked");
                 break;
         }
     });
@@ -1156,7 +1178,6 @@ $(function() {
         width: 200,
         change: function( event, data ){
             var selectionValue = data.item.value;
-            console.log(selectionValue);
             switch (selectionValue) {
                 case "literal-node-val-src-column":
                     $("#literal-node-val-column-elements").show();

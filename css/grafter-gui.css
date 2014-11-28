@@ -192,6 +192,7 @@ textarea{
     bottom: 0;
     margin-left: -1px;
     padding: 0;
+    padding-top: 0.4em;
 }
 
 .custom-combobox-input {
