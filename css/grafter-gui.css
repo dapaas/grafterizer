@@ -209,7 +209,7 @@ textarea{
     overflow-x: hidden; 
     z-index: 1000 !important;
 }
-.node-div {
+.element-div {
     cursor: pointer;
     display: inline-block;
 }
@@ -269,7 +269,30 @@ td.rdf-graph-element-sub-elements {
     cursor: pointer !important;   
 }
 
+.add-first-property-div{
+    margin-left: 7px;
+    color: #ccc; 
+}
+.add-first-property-div > label {
+    cursor: pointer;
+    margin-left: 3px;
+    font-size: 0.8em;
+}
+
+.add-first-property-div:hover{
+    color: grey;
+    cursor: pointer !important;   
+}
+
 table.rdf-element-table {
     border-collapse: separate;
     border-spacing: 5px;
+}
+/*
+div.rdf-control-container > table {
+    display: inline-block;
+}
+*/
+div.rdf-control-container > table td {
+    white-space: nowrap;
 }

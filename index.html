@@ -80,6 +80,7 @@
             </form>
         </div>
 
+        <!-- TODO this should be auto-generated -->
         <div id="dialog-rdf-mapping">
             <div id="rdf-control-div">
             </div>
@@ -90,106 +91,113 @@
             </form>
 
         </div>
+        <!-- TODO this should be auto-generated -->
+        <div id="dialog-define-graph-node">
+            <table id="define-graph-node-layout-table">
+                <tr>
+                    <td class="define-graph-node-left">
+                        <form id="graph-node-type">
+                            <input id="uri-radio" type="radio" name="node-type-radio" value="uri">
+                            <label class="radio-button-label" for="uri-radio">URI node</label>
+                            <br/>
+                            <input id="literal-radio" type="radio" name="node-type-radio" value="literal">  
+                            <label class="radio-button-label" for="literal-radio">Literal node</label>
+                            <br/>
+                            <input id="blank-radio"type="radio" name="node-type-radio" value="blank">
+                            <label class="radio-button-label" for="blank-radio">Blank node</label>
+                            <br/>
+
+                        </form>
+                    </td>
+                    <td class="define-graph-node-right" style="display:none;">
+                        <form id="form-uri-node" style="display:none;">
+                            <label class="form-label" for="uri-node-prefixer">Select node prefix:</label>
+                            <select name="uri-node-prefixer" id="uri-node-prefixer" class="form-uri-node-select">
+                                <option value="no-uri-prefix" data-class="ui-icon-script" selected>(no prefix)</option>
+                                <option value="default-uri-prefix" data-class="ui-icon-script">(base graph URI)</option>
+
+                                <optgroup id="pre-defined-prefix-options" label="Pre-defined prefixes">
+                                    <option value="dcat" data-class="ui-icon-script">dcat</option>
+                                    <option value="dcterms" data-class="ui-icon-script">dcterms</option>
+                                    <option value="foaf" data-class="ui-icon-script">foaf</option>
+                                    <option value="org" data-class="ui-icon-script">org</option>
+                                    <option value="os" data-class="ui-icon-script">os</option>
+                                    <option value="owl" data-class="ui-icon-script">owl</option>
+                                    <option value="pmd" data-class="ui-icon-script">pmd</option>
+                                    <option value="qb" data-class="ui-icon-script">qb</option>
+                                    <option value="rdf" data-class="ui-icon-script">rdf</option>
+                                    <option value="sdmx-attribute" data-class="ui-icon-script">sdmx-attribute</option>
+                                    <option value="sdmx-measure" data-class="ui-icon-script">sdmx-measure</option>
+                                    <option value="sdmx-concept" data-class="ui-icon-script">sdmx-concept</option>
+                                    <option value="skos" data-class="ui-icon-script">skos</option>
+                                    <option value="vcard" data-class="ui-icon-script">vcard</option>
+                                    <option value="void" data-class="ui-icon-script">void</option>
+                                    <option value="xsd" data-class="ui-icon-script">xsd</option>
+                                </optgroup>
+                                <optgroup id="custom-prefixer-options" label="User-defined prefixes">
+                                </optgroup>
+
+                            </select>
+                            <hr>
+                            <label class="form-label" for="uri-node-val-src">Select mapping source:</label>
+                            <select name="uri-node-val-src" id="uri-node-val-src" class="form-uri-node-select">
+                                <option value="uri-node-val-src-column" data-class="ui-icon-script">
+                                    From dataset column
+                                </option>
+                                <option value="uri-node-val-src-text" data-class="ui-icon-script">
+                                    Free-defined text
+                                </option>
+                            </select>
+
+                            <br/><br/>
+
+                            <div id="uri-node-val-column-elements">
+                                <label class="form-label" for="uri-node-val-column">Choose column:</label>
+                                <input type="text" id="uri-node-val-column">
+                            </div>
+
+                            <div id="uri-node-val-text-elements" style="display:none;">
+                                <label class="form-label" for="uri-node-val-text">Type in node URI:</label>
+                                <input type="text" id="uri-node-val-text">
+                            </div>
+                        </form>
+
+                        <form id="form-literal-node" style="display:none;">
+
+                            <label class="form-label" for="uri-literal-val-src">Select mapping source:</label>
+                            <select name="literal-node-val-src" id="literal-node-val-src">
+                                <option value="literal-node-val-src-column" data-class="ui-icon-script" selected>
+                                    From dataset column
+                                </option>
+                                <option value="literal-node-val-src-text" data-class="ui-icon-script">
+                                    Free-defined text
+                                </option>
+                            </select>
+
+                            <br/><br/>
+
+                            <div id="literal-node-val-column-elements">
+                                <label class="form-label" for="uri-node-val-column">Choose column:</label>
+                                <input type="text" id="literal-node-val-column">
+                            </div>
+
+                            <div id="literal-node-val-text-elements" style="display:none;">
+                                <label class="form-label" for="uri-literal-val-text">Type in literal text:</label>
+                                <input type="text" id="literal-node-val-text">
+                            </div>
+
+                        </form>
+                    </td>
+                </tr>
+            </table>
         </div>
-    <div id="dialog-define-graph-node">
-        <table id="define-graph-node-layout-table">
-            <tr>
-                <td class="define-graph-node-left">
-                    <form id="graph-node-type">
-                        <input id="uri-radio" type="radio" name="node-type-radio" value="uri">
-                        <label class="radio-button-label" for="uri-radio">URI node</label>
-                        <br/>
-                        <input id="literal-radio" type="radio" name="node-type-radio" value="literal">  
-                        <label class="radio-button-label" for="literal-radio">Literal node</label>
-                        <br/>
-                        <input id="blank-radio"type="radio" name="node-type-radio" value="blank">
-                        <label class="radio-button-label" for="blank-radio">Blank node</label>
-                        <br/>
-
-                    </form>
-                </td>
-                <td class="define-graph-node-right" style="display:none;">
-                    <form id="form-uri-node" style="display:none;">
-                        <label class="form-label" for="uri-node-prefixer">Select node prefix:</label>
-                        <select name="uri-node-prefixer" id="uri-node-prefixer" class="form-uri-node-select">
-                            <option value="no-uri-prefix" data-class="ui-icon-script" selected>(no prefix)</option>
-                            <option value="default-uri-prefix" data-class="ui-icon-script">(base graph URI)</option>
-
-                            <optgroup id="pre-defined-prefix-options" label="Pre-defined prefixes">
-                                <option value="dcat" data-class="ui-icon-script">dcat</option>
-                                <option value="dcterms" data-class="ui-icon-script">dcterms</option>
-                                <option value="foaf" data-class="ui-icon-script">foaf</option>
-                                <option value="org" data-class="ui-icon-script">org</option>
-                                <option value="os" data-class="ui-icon-script">os</option>
-                                <option value="owl" data-class="ui-icon-script">owl</option>
-                                <option value="pmd" data-class="ui-icon-script">pmd</option>
-                                <option value="qb" data-class="ui-icon-script">qb</option>
-                                <option value="rdf" data-class="ui-icon-script">rdf</option>
-                                <option value="sdmx-attribute" data-class="ui-icon-script">sdmx-attribute</option>
-                                <option value="sdmx-measure" data-class="ui-icon-script">sdmx-measure</option>
-                                <option value="sdmx-concept" data-class="ui-icon-script">sdmx-concept</option>
-                                <option value="skos" data-class="ui-icon-script">skos</option>
-                                <option value="vcard" data-class="ui-icon-script">vcard</option>
-                                <option value="void" data-class="ui-icon-script">void</option>
-                                <option value="xsd" data-class="ui-icon-script">xsd</option>
-                            </optgroup>
-                            <optgroup id="custom-prefixer-options" label="User-defined prefixes">
-                            </optgroup>
-
-                        </select>
-                        <hr>
-                        <label class="form-label" for="uri-node-val-src">Select mapping source:</label>
-                        <select name="uri-node-val-src" id="uri-node-val-src" class="form-uri-node-select">
-                            <option value="uri-node-val-src-column" data-class="ui-icon-script">
-                                From dataset column
-                            </option>
-                            <option value="uri-node-val-src-text" data-class="ui-icon-script">
-                                Free-defined text
-                            </option>
-                        </select>
-
-                        <br/><br/>
-
-                        <div id="uri-node-val-column-elements">
-                            <label class="form-label" for="uri-node-val-column">Choose column:</label>
-                            <input type="text" id="uri-node-val-column">
-                        </div>
-
-                        <div id="uri-node-val-text-elements" style="display:none;">
-                            <label class="form-label" for="uri-node-val-text">Type in node URI:</label>
-                            <input type="text" id="uri-node-val-text">
-                        </div>
-                    </form>
-
-                    <form id="form-literal-node" style="display:none;">
-
-                        <label class="form-label" for="uri-literal-val-src">Select mapping source:</label>
-                        <select name="literal-node-val-src" id="literal-node-val-src">
-                            <option value="literal-node-val-src-column" data-class="ui-icon-script" selected>
-                                From dataset column
-                            </option>
-                            <option value="literal-node-val-src-text" data-class="ui-icon-script">
-                                Free-defined text
-                            </option>
-                        </select>
-
-                        <br/><br/>
-
-                        <div id="literal-node-val-column-elements">
-                            <label class="form-label" for="uri-node-val-column">Choose column:</label>
-                            <input type="text" id="literal-literal-val-column">
-                        </div>
-
-                        <div id="literal-node-val-text-elements" style="display:none;">
-                            <label class="form-label" for="uri-literal-val-text">Type in literal text:</label>
-                            <input type="text" id="literal-node-val-literal">
-                        </div>
-
-                    </form>
-                </td>
-            </tr>
-        </table>
-    </div>
+        <!-- TODO this should be auto-generated -->
+        <div id="dialog-define-graph-property">
+            <form id="form-property">
+                <label class="form-label" for="uri-node-val-column">Choose property:</label>
+                <input type="text" id="property-val">
+            </form>
+        </div>
 
     </body>
 </html>

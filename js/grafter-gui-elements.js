@@ -964,10 +964,10 @@ $(function() {
             }
 
             if (nodeModified instanceof ConstantURI) {
-                
+
                 var prefix = nodeModified.prefix || "", 
                     constant = nodeModified.constant;
-                
+
                 // check appropriate radio button
                 $("input[name=node-type-radio]:checked").prop("checked", false);
                 $("input#uri-radio[name=node-type-radio]").prop("checked", true);
@@ -1009,7 +1009,7 @@ $(function() {
                 // create node object according to the current state of the dialog
 
                 var nodeModified = jQuery.data(this, "node-modified");
-                var associatedElement = jQuery.data(this, "associated-graph");
+                var containingElement = jQuery.data(this, "containing-element");
 
                 var isURI = false;
                 var isSourceFromColumn = false;
@@ -1081,8 +1081,9 @@ $(function() {
                                 // TODO error?
                                 break;
                         }
+                        break;
                     case "blank":
-                        if(nodeModified === null && associatedElement instanceof Graph){
+                        if(nodeModified === null && containingElement instanceof Graph){
                             alertInterface("Invalid node type! Graph roots cannot be blank.");
                         }
                         break;
@@ -1096,6 +1097,30 @@ $(function() {
                 // TODO determine if we should create a new element or modify an existing one
                 if (nodeModified === null) {
                     console.log("NEW NODE!");
+
+                    if(!isURI && !isSourceFromColumn){
+                        var constantName = $("#literal-node-val-text").val();
+                        var node = new ConstantLiteral(containingElement, constantName);
+                        containingElement.addChild(node);
+                        // ConstantLiteral
+                    }
+                    if(!isURI && isSourceFromColumn){
+                        var columnName = $("#literal-node-val-column").val();
+                        var node = new ColumnLiteral(containingElement, columnName);
+                        containingElement.addChild(node);
+                        // ColumnLiteral
+                    }
+                    if(isURI && !isSourceFromColumn){
+                        var constantName = $("#uri-node-val-text").val();
+                        var node = new ConstantURI(containingElement, prefix, constantName);
+                        containingElement.addChild(node);
+                    }
+                    if(isURI && isSourceFromColumn){
+                        var columnName = $("#uri-node-val-column").val();
+                        var node = new ColumnURI(containingElement, prefix, columnName);
+                        containingElement.addChild(node);
+                    }
+
                     // new node must be created
                 } else {
                     console.log("OLD NODE TODO - replace the old node with a new one");
@@ -1106,22 +1131,7 @@ $(function() {
                 //                console.log("URI? -", isURI);
                 //                console.log("from column? -", isSourceFromColumn);
                 //                console.log("chose prefix:", prefix == "" ? "(empty)" : prefix);
-                if(!isURI && !isSourceFromColumn){
-                    // ConstantLiteral
-                }
-                if(!isURI && isSourceFromColumn){
-                    // ColumnLiteral
-                }
-                if(isURI && !isSourceFromColumn){
-                    var constantName = $("#uri-node-val-text").val();
-                    var node = new ConstantURI(associatedElement, prefix, constantName);
-                    associatedElement.addChild(node);
-                }
-                if(isURI && isSourceFromColumn){
-                    var columnName = $("#uri-node-val-column").val();
-                    var node = new ColumnURI(associatedElement, prefix, columnName);
-                    associatedElement.addChild(node);
-                }
+
 
 
 
@@ -1194,7 +1204,6 @@ $(function() {
             }
         }
     }).selectmenu("menuWidget").addClass("overflow");
-
 
     /*************************************************************************************************************************************************************************************************************/
 
@@ -1336,6 +1345,45 @@ $(function() {
 
     $( "#uri-node-prefixer" ).combobox();
     /*************************************************************************************************************************************************************************************************************/
+
+    $("#dialog-define-graph-property").dialog({
+        dialogClass: "dialog-define-graph-node",
+        autoOpen: false,
+        resizable: false,
+        modal: true,
+        height: "auto",
+        width: "auto",
+        title: "Choose node type",
+        open: function () {
+            // TODO editing properties by clicking on the element
+        },
+        buttons: {
+            Done: function () {
+                var propertyModified = jQuery.data(this, "element-modified");
+                var containingElement = jQuery.data(this, "containing-element");
+                console.log(propertyModified);
+                var isURI = false;
+                var isSourceFromColumn = false;
+
+                // we retrieve the values from the forms to find out the exact values for the node we are creating
+
+                if (propertyModified === null) {
+                    console.log("NEW PROPERTY!");
+                    // new node must be created
+                    var propertyName = $("#property-val").val();
+                    var property = new Property(containingElement, propertyName);
+                    containingElement.addChild(property);
+                } else {
+                    console.log("OLD PROPERTY TODO - replace the old node with a new one");
+                    return;
+                    // modify an existing element (i.e. replace it)
+                }
+
+
+                $(this).dialog("close");
+            }
+        }
+    });
 
     /**  Create the RDF mapping control object  **/
     var contr = new RDFControl($("#rdf-control-div").get(0), 100, 79);
