@@ -2,6 +2,33 @@
     Main Grafter/Clojure generation variables and functions.
 ****************************************************************************/
 
+var grafterSupportedRDFPrefixes = [
+    {name: 'dcat', text: ""},
+    {name: 'dcterms', text: ""},
+    {name: 'foaf', text: ""},
+    {name: 'org', text: ""},
+    {name: 'os', text: ""},
+    {name: 'owl', text: ""},
+    {name: 'pmd', text: ""},
+    {name: 'qb', text: ""},
+    {name: 'rdf', text: ""},
+    {name: 'sdmx-attribute', text: ""},
+    {name: 'sdmx-measure', text: ""},
+    {name: 'sdmx-concept', text: ""},
+    {name: 'skos', text: ""},
+    {name: 'vcard', text: ""},
+    {name: 'void', text: ""},
+    {name: 'xsd', text: ""}
+];
+
+function isSupportedPrefix(prefixName){
+    for(i=0;i<grafterSupportedRDFPrefixes.length; ++i){
+        if(grafterSupportedRDFPrefixes[i]['name'] === prefixName)
+            return true;
+    }
+    return false;
+}
+
 var pipelineFunctions = new jsedn.List([]);
 
 var pipeline = new jsedn.List([jsedn.sym("defn"), jsedn.sym("pipeline"), new jsedn.Vector([new jsedn.sym("dataset")]),
@@ -45,6 +72,9 @@ var graphFunction;
 /* List of the graphs that will be included in the graph-building function. */
 var graphs = new jsedn.List([]);
 
+/* List of column keys derived through the GUI pipeline functions */
+var columnKeys = new jsedn.Vector([]);
+
 /* Interface for alerts about errors. To be used to connect to other interface components when we integrate the GUI. */
 function alertInterface(error, errorString){
     /*
@@ -76,7 +106,7 @@ function constructGrafterDeclarations(){
 function constructGrafterPrefixersArray(){
     // we make a copy of the prefixers array that we eventually return
     var result = prefixers.slice();
-    
+
     /* the prefixers array needs to be re-initialized so that we don't append new values to it when generating the Grafter code */
     prefixers=[];
     return result;
@@ -92,7 +122,7 @@ function parseAndAddUserFunction(userFunctionString){
     var result = parseEdnFromString(userFunctionString, "Error parsing user function!");
     if(result == null)
         return false;
-    
+
     addUserFunction(result);
     return true;
 }
@@ -100,10 +130,10 @@ function parseAndAddUserFunction(userFunctionString){
 function constructUserFunctions(){
     // we make a copy of the user functions array that we eventually return
     var result = userFunctions.slice();
-    
+
     /* the user functions array needs to be re-initialized so that we don't append new values to it when generating the Grafter code */
     userFunctions = [];
-    
+
     return result;
 }
 
@@ -173,7 +203,7 @@ function addPipelineFunction(jsednFunction){
 function constructPipeline(){
     pipeline = null;
     pipeline = new jsedn.List([jsedn.sym("defn"), jsedn.sym("pipeline"), new jsedn.Vector([new jsedn.sym("dataset")]), new jsedn.List([jsedn.sym("->"), jsedn.sym("dataset")])]);
-    
+
     pipelineFunctions.map(function(arg){
         pipeline.val[3].val.push(arg);
     });
@@ -185,6 +215,190 @@ function constructPipeline(){
 function removeFunctionFromPipeline(index){
     pipelineFunctions.val.splice(index, 1);
 }
+
+/* Constructs and returns the RDF creation function. */
+function constructRDFGraphFunction(rdfControl){
+    var graphsJsEdnArray = [];
+    var currentGraph = null;
+    var graphFunction = new jsedn.List([
+                                     new jsedn.sym("graph-fn"), 
+                                     new jsedn.Vector([
+                                         new jsedn.Map([new jsedn.kw(":keys"), columnKeys])
+                                     ])
+                                 ]);
+    var currentGraphJsEdn = null;
+    var currentRootJsEdn = null;
+    
+    for(i=0;i<rdfControl.graphs.length; ++i){
+        currentGraph = rdfControl.graphs[i];
+        console.log(currentGraph);
+        currentGraphJsEdn = new jsedn.List([jsedn.sym("graph"), currentGraph.graphURI]);
+
+        // construct a vector for each of the roots and add it to the graph jsedn
+        for(j=0;j<currentGraph.graphRoots.length;++j){
+            currentRootJsEdn = constructNodeVectorEdn(currentGraph.graphRoots[j]);
+            currentGraphJsEdn.val.push(currentRootJsEdn);
+        }
+        console.log("GRAPH " + i + " ENCODED:", currentGraphJsEdn.ednEncode());
+        graphFunction.val.push(currentGraphJsEdn);
+    }
+    var result = new jsedn.List([jsedn.sym("defn"), jsedn.sym("make-graph"), graphFunction]);
+
+
+    return result;
+}
+
+function constructNodeVectorEdn(node){
+
+    if (node instanceof Property) {
+        if(node.subElements.length === 0){
+            alertInterface("Error found in RDF mapping for the sub-elements node " + node.propertyName + "!");
+            return;
+        }
+        var propertyValue = node.subElements[0];
+        // [name {either single node or URI node with sub-nodes (as vector)}
+        console.log("returning prop value");
+        return new jsedn.Vector([constructPropertyJsEdn(node), constructNodeVectorEdn(propertyValue)]);
+    }
+    if (node instanceof ColumnLiteral) {
+        if(node.literalValue.trim() === ""){
+            alertInterface("Empty column literal mapping found!");
+        }
+        // return the value as symbol
+        return new jsedn.sym(node.literalValue);
+    }
+    if (node instanceof ConstantLiteral) {
+        if(node.literalValue.trim() === ""){
+            alertInterface("Empty text literal found in RDF mapping!");
+        }
+        // return the value as string
+        return node.literalValue;
+    }
+    if (node instanceof ColumnURI) {
+        if (node.subElements.length == 0){
+            // we terminate by this URI, return the column
+            // TODO check in keywords array if this exists
+            return constructColumnURINodeJsEdn(node);
+
+        } else {
+            console.log("more than one sub-elements of colURI");
+            // [node-uri-as-generated {sub-1's edn representation} {sub-2's edn representation} ... {sub-n's edn representation}]
+            var allSubElementsVector = new jsedn.Vector([constructColumnURINodeJsEdn(node)]);
+            var subElementEdn;
+            console.log("node.subElements.length:", node.subElements.length);
+            for(k=0;k<node.subElements.length;++k){
+                console.log("i", k);
+                subElementEdn = constructNodeVectorEdn(node.subElements[k]);
+                console.log("subElementEdn:", subElementEdn.ednEncode());
+                allSubElementsVector.val.push(subElementEdn);
+                console.log("allSubElementsVector:", allSubElementsVector.ednEncode());
+            }
+            return allSubElementsVector;
+        }
+    }
+    if (node instanceof ConstantURI) {
+        if (node.subElements.length == 0){
+            // we terminate by this URI, return the column
+            // TODO check in keywords array if this exists
+            return constructConstantURINodeJsEdn(node);
+
+        } else {
+            // [node-uri-as-generated {sub-1's edn representation} {sub-2's edn representation} ... {sub-n's edn representation}]
+            var allSubElementsVector = new jsedn.Vector([constructConstantURINodeJsEdn(node)]);
+            var subElementEdn;
+            for(i=0;i<node.subElements.length;++i){
+                subElementEdn = constructNodeVectorEdn(node.subElements[i]);
+                allSubElementsVector.val.push(subElementEdn);
+            }
+            return allSubElementsVector;
+        }
+
+    }
+    if (node instanceof BlankNode) {
+        // TODO not supported yet
+    }
+}
+
+function constructPropertyJsEdn(property) {
+    // graph URI as prefix, add nothing
+    var propertyPrefix = property.prefix;
+    var propertyName = property.propertyName;
+    if(propertyPrefix == null) {
+        alertInterface("Property prefix cannot be null:" + propertyName);
+        return;
+    } else if (propertyPrefix == "") {
+        alertInterface("Property prefix cannot be omitted:" + propertyName);
+        return;
+    } else {
+        if(isSupportedPrefix(propertyPrefix.trim())){
+            // assume it's a supported property
+            return new jsedn.sym(propertyPrefix+':'+propertyName);
+        } else {
+            // TODO make a check if we have defined the prefix
+            // some custom prefix, that is hopefully defined in the UI (Edit Prefixes...)
+            return new jsedn.List([new jsedn.sym(propertyPrefix), propertyName]);
+        }
+    }
+
+}
+
+function constructColumnURINodeJsEdn(colURINode) {
+    // graph URI as prefix, add nothing
+    var nodePrefix = colURINode.prefix;
+    var nodeValue = colURINode.value;
+    if(nodePrefix == null) {
+        // base graph URI
+        // ((prefixer "graphURI") nodeValue)
+        return new jsedn.List([new jsedn.List([new jsedn.sym("prefixer"), colURINode.containingGraph.graphURI]), new jsedn.sym(nodeValue)]);
+    } else if (nodePrefix == "") {
+        // empty prefix - just take the column as symbol
+        // nodeValue
+        return new jsedn.sym(nodeValue);
+    } else {
+        if(isSupportedPrefix(nodePrefix.trim())){
+            // supported prefix - no need to use prefixer - simple library call
+            // nodePrefix:nodeValue (e.g. vcard:Address)
+            alertInterface("Cannot associate column '" + nodeValue + "' with prefix '" + nodePrefix + "'!");
+            return;
+            //            return new jsedn.sym(nodePrefix + ":" + nodeValue);
+        } else {
+            // TODO make a check if we have defined the prefix
+            // some custom prefix, that is hopefully defined in the UI (Edit Prefixes...)
+            // both are symbols and we get (nodePrefix nodeValue) as a result
+            return new jsedn.List([new jsedn.sym(nodePrefix), new jsedn.sym(nodeValue)]);
+        }
+    }
+
+}
+
+function constructConstantURINodeJsEdn(constURINode) {
+    // graph URI as prefix, add nothing
+    var nodePrefix = constURINode.prefix;
+    var nodeValue = constURINode.value;
+    if(nodePrefix == null) {
+        // base graph URI
+        // ((prefixer "graphURI") "nodeValue")
+        return new jsedn.List([new jsedn.List([new jsedn.sym("prefixer"), constURINode.containingGraph.graphURI]), nodeValue]);
+    } else if (nodePrefix == "") {
+        // empty prefix - just take the column as symbol
+        // nodeValue
+        return nodeValue;
+    } else {
+        if(isSupportedPrefix(nodePrefix.trim())){
+
+            // nodePrefix:nodeValue (e.g. vcard:Address)
+            return new jsedn.sym(nodePrefix + ":" + nodeValue);
+        } else {
+            // TODO make a check if we have defined the prefix
+            // some custom prefix, that is hopefully defined in the UI (Edit Prefixes...)
+            // both are symbols and we get (nodePrefix nodeValue) as a result
+            return nodePrefix + nodeValue;
+        }
+    }
+
+    // prefix null, empty or undefined
+}
+
 
 /***************************************************************************
     Convenience functions for generating code corresponding to the Grafter API.
@@ -239,7 +453,7 @@ function createMapc(functionSetOrArrayJsedn){
 
 function createCustomCodeForPipeline(code, displayName){
     var customCodeEdn = parseEdnFromString(code, "Error parsing custom code in " + displayName); 
-    
+
     return customCodeEdn;
 }
 

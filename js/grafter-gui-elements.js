@@ -207,6 +207,7 @@ function getDeriveColumnButtons(dialog){
             // create jsedn of the column name (jsedn keyword)
             var newColName = $("#derived-col-name").val();
             var newColJsedn = new jsedn.kw(newColName);
+            columnKeys.val.push(newColJsedn);
 
             // create jsedn for the input columns (jsedn vector)
             var colsToDeriveFrom = $("#derived-col-source-cols").val();
@@ -325,7 +326,10 @@ function getMakeDatasetButtons(dialog){
     var buttons = { 
         "Create function": function (){ 
             var rawVal = $("#columns-keywords").val();
-            var columnsKeywords = parseEdnFromString(rawVal, "Error parsing the Clojure code!");
+            var columnsKeywords = parseEdnFromString('[' + rawVal + ']', "Error parsing the Clojure code!");
+            for(i=0; i<columnsKeywords.val.length; ++i){
+                columnKeys.val.push(columnsKeywords.val[i]);
+            }
             var jsEdnMakeDataset = createMakeDataset(columnsKeywords);
             addAtIndexInPipeline("make-dataset", indexInPipeline, jsEdnMakeDataset);
             dialog.dialog("close");
@@ -398,7 +402,11 @@ function generateGrafterCode(){
     }
 
     var grafterCustomFunctions = constructUserFunctions();
-
+    
+    /* Graph Template */
+    
+    var graphTemplate = constructRDFGraphFunction(rdfControl);
+    
     /* Pipeline Function */
 
     var rows = $("#pipeline")[0].rows;
@@ -423,10 +431,12 @@ function generateGrafterCode(){
     for(i=0;i<grafterCustomFunctions.length;++i){
         textStr += (grafterCustomFunctions[i].ednEncode() + '\n');
     }
+    
+    textStr += graphTemplate.ednEncode();
+    
     textStr += '\n';
-
+    textStr += '\n';
     textStr += (resultingPipeline.ednEncode());
-
 
     $("#output").val(textStr);
 
@@ -557,13 +567,32 @@ function createColFuncMapcMappingJsEDN(){
     var count = $('#mapc-table').appendGrid('getRowCount');
     for(i=0;i<count; ++i){
         var rowVal = $('#mapc-table').appendGrid('getRowValue', i);
-        jsEdnMapObject.set(rowVal['mapc-column-key'], new jsedn.sym(rowVal['mapc-function']));
+        var colKey = rowVal['mapc-column-key'];
+        jsEdnMapObject.set(new jsedn.sym(colKey.trim()), new jsedn.sym(rowVal['mapc-function']));
+        columnKeys.val.push(new jsedn.sym(colKey.trim().substr(1)));
     }
     //    console.log(jsEdnMapObject);
     return jsEdnMapObject;
 }
 
 function loadPrefixersInGraphDefinitionDialog(){
+    // remove existing options
+    // add the ones defined in the grafter-code-generator.js
+    $("#pre-defined-prefix-options > option").remove();
+    
+    for (i=0; i<grafterSupportedRDFPrefixes.length; ++i){
+        var prefixName = grafterSupportedRDFPrefixes[i]['name'];
+        if(prefixName == ''){
+            continue;
+        }
+        var optionElement = document.createElement("option");
+        optionElement.value = prefixName;
+        optionElement.textContent = prefixName;
+
+        $("#pre-defined-prefix-options").append(optionElement);
+
+    }
+    
     // remove existing options
     // add the ones from the GUI
     $("#custom-prefixer-options > option").remove();
@@ -573,7 +602,7 @@ function loadPrefixersInGraphDefinitionDialog(){
         if(name == ''){
             continue;
         }
-        var optionElement = document.createElement("option");
+        optionElement = document.createElement("option");
         optionElement.value = name;
         optionElement.textContent = name;
 
@@ -582,13 +611,14 @@ function loadPrefixersInGraphDefinitionDialog(){
     }
 }
 
-var prefixersInGUI = [{'prefix-name': '', uri: ''}];
+var prefixersInGUI = [/*{'prefix-name': '', uri: ''}*/];
 var indexInPipeline = 0;
 var customFunctionsMap = [];
 var customFunctionCodeMirror;
 var outputCodeMirror;
 var addCustomCodeMirror;
 var currentlySelectedDeriveColFunction = null;
+var rdfControl;
 
 $(function() {
 
@@ -1361,7 +1391,6 @@ $(function() {
             Done: function () {
                 var propertyModified = jQuery.data(this, "element-modified");
                 var containingElement = jQuery.data(this, "containing-element");
-                console.log(propertyModified);
                 var isURI = false;
                 var isSourceFromColumn = false;
 
@@ -1370,8 +1399,11 @@ $(function() {
                 if (propertyModified === null) {
                     console.log("NEW PROPERTY!");
                     // new node must be created
-                    var propertyName = $("#property-val").val();
-                    var property = new Property(containingElement, propertyName);
+                    var propertyText = $("#property-val").val();
+                    // TODO hack - should have a separate prefix field to choose the prefix name from
+                    var prefix = propertyText.split(':')[0].trim();
+                    var propName = propertyText.split(':')[1].trim();
+                    var property = new Property(containingElement, prefix, propName);
                     containingElement.addChild(property);
                 } else {
                     console.log("OLD PROPERTY TODO - replace the old node with a new one");
@@ -1386,7 +1418,7 @@ $(function() {
     });
 
     /**  Create the RDF mapping control object  **/
-    var contr = new RDFControl($("#rdf-control-div").get(0), 100, 79);
+    rdfControl = new RDFControl($("#rdf-control-div").get(0), 100, 79);
 
 });
 

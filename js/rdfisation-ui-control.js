@@ -1,7 +1,7 @@
 /*jslint node: true */
 /*jslint browser: true*/
 /*jslint plusplus: true */
-/*global $, jQuery, alert, alertInterface */
+/*global $, jQuery, alert, alertInterface, jsedn */
 "use strict";
 
 //var ColorEnum = Object.freeze({RED: 0, GREEN: 1, BLUE: 2});
@@ -163,8 +163,8 @@ Graph.prototype.addChild = function (child) {
 Graph.prototype.removeChild = function (child) {
     var childIndex = this.graphRoots.indexOf(child),
         initialAddButton = $(".rdf-graph-add-first-node");
-    
-    
+
+
     console.log("CHILD", child);
     console.log("CHILD INDEX", childIndex);
     if (childIndex !== -1) {
@@ -181,7 +181,6 @@ Graph.prototype.removeChild = function (child) {
 
 //    Generic RDF element class
 var RDFElement = function (containingElement) {
-    console.log("Creating element contained by:", containingElement);
     this.subElements = [];
     if (containingElement instanceof Graph) {
         this.containingGraph = containingElement;
@@ -210,10 +209,11 @@ var RDFElement = function (containingElement) {
 };
 
 // class representing a property (predicate) from the RDF mapping
-var Property = function (containingElement, propertyName) {
+var Property = function (containingElement, prefix, propertyName) {
 
     RDFElement.call(this, containingElement);
-
+    this.propertyName = propertyName;
+    this.prefix = prefix;
     var propertyRow = this.tableElement.insertRow(0),
         propertyDataCell = propertyRow.insertCell(0),
         propertySubElementsCell = propertyRow.insertCell(1),
@@ -240,7 +240,7 @@ var Property = function (containingElement, propertyName) {
     propertyIcon.classList.add("fa");
     propertyIcon.classList.add("fa-long-arrow-right");
 
-    propertyQualifiedName.textContent = propertyName;
+    propertyQualifiedName.textContent = prefix + ':' + propertyName;
     propertyQualifiedName.classList.add("node-name-label");
 
     // TODO rename node-div to element-div
@@ -279,7 +279,7 @@ var Property = function (containingElement, propertyName) {
     propertyDataCell.appendChild(removePropertySign);
     // association of the remove button with the node
     jQuery.data(removePropertySign, "containing-element", this);
-    
+
     // todo make names consistent
     jQuery.data(addPropertySign, "containing-element", this.containingElement);
 
@@ -341,10 +341,10 @@ var Property = function (containingElement, propertyName) {
         // show subnodes
         $(this).parent().siblings(".rdf-graph-element-sub-elements").show();
     });
-    
+
     // add the first and only sub-element (cannot have more than one object pointed to by a property
     addPropertyAssociationDiv.classList.add("add-first-element-div");
-//containing-element = this
+    //containing-element = this
     addFirstSubElementSign.classList.add("fa");
     addFirstSubElementSign.classList.add("fa-plus-circle");
 
@@ -355,19 +355,19 @@ var Property = function (containingElement, propertyName) {
 
     propertySubElementsCell.classList.add("rdf-graph-element-sub-elements");
     propertySubElementsCell.appendChild(addPropertyAssociationDiv);
-    
-     // associate this element as a container for any new sub-elements created using this button
+
+    // associate this element as a container for any new sub-elements created using this button
     jQuery.data(addPropertyAssociationDiv, "containing-element", this);
     $(addPropertyAssociationDiv).on("click", function () {
         var containingElement = jQuery.data(this, "containing-element"),
             dialog =  $("#dialog-define-graph-node").dialog();
-        
+
         jQuery.data(dialog[0], "node-modified", null);
         jQuery.data(dialog[0], "containing-element", containingElement);
 
         dialog.dialog("open");
     });
-    
+
     this.subElementsCell = propertySubElementsCell;
 
 
@@ -402,12 +402,15 @@ Property.prototype.addChild = function (child) {
 
     this.subElementsCell.appendChild(child.tableElement);
     // TODO put the node DOM element inside this new cell
+    
 };
 
 
 var LiteralNode = function (containingElement, value) {
     RDFElement.call(this, containingElement);
-
+    
+    this.literalValue = value;
+    
     var literalNodeRow = this.tableElement.insertRow(0),
         literalNodeDataCell = literalNodeRow.insertCell(0),
 
@@ -477,6 +480,7 @@ var URINode = function (containingElement, prefix, unqualifiedName) {
         newPropertySign = document.createElement("i");
 
     this.prefix = prefix;
+    this.value = unqualifiedName;
 
     /***************************************/
     //    this.column = column;
@@ -615,15 +619,15 @@ var URINode = function (containingElement, prefix, unqualifiedName) {
     $(addFirstSubElementDiv).on("click", function () {
         var containingElement = jQuery.data(addFirstSubElementDiv, "containing-element"),
             dialog =  $("#dialog-define-graph-property").dialog();
-        
+
         // create a new element (indicated to the dialog callback logic by a null value of 'node-modified')
         jQuery.data(dialog[0], "element-modified", null);
-        
+
         //... as a sub-element of the current element
         jQuery.data(dialog[0], "containing-element", containingElement);
-        
+
         dialog.dialog("open");
-        
+
     });
     this.subElementsCell = uriNodeSubElementsCell;
 
@@ -648,8 +652,8 @@ URINode.prototype.addChild = function (child) {
 URINode.prototype.removeChild = function (child) {
     var childIndex = this.subElements.indexOf(child),
         initialAddButton = $(this.subElementsCell).find(".add-first-property-div");
-    
-    
+
+
     console.log("CHILD", child);
     console.log("CHILD INDEX", childIndex);
     if (childIndex !== -1) {
@@ -711,7 +715,7 @@ var RDFControl = function (divElement, widthPercent, heightPercent) {
 
         // insert an add button to be used initially
         var initialAddButton = document.createElement("i");
-        
+
         initialAddButton.classList.add("fa");
         initialAddButton.classList.add("fa-plus-circle");
         initialAddButton.classList.add("add-first-graph-button");
