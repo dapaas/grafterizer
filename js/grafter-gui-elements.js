@@ -192,6 +192,7 @@ function getDeriveColumnElements(){
 
     var derivedColumnFunctionLabel = document.createElement("label");
     derivedColumnFunctionLabel.classList.add("form-label");
+    derivedColumnFunctionLabel.style.marginTop = "8px";
     derivedColumnFunctionLabel.setAttribute("for", "derived-col-select-func");
     derivedColumnFunctionLabel.textContent = "Select function:";
 
@@ -227,6 +228,17 @@ function getDeriveColumnButtons(dialog){
         }
     };
     return buttons;
+}
+// TODO clean this out or implement the rest of the calls using it
+function createDeriveColumnPipelineFunction(newColName, colsToDeriveFrom, functionToDeriveWith, index){
+    var newColJsedn = new jsedn.kw(newColName);
+    columnKeys.val.push(newColJsedn);
+    var colsToDeriveFromJsedn = parseEdnFromString(colsToDeriveFrom);
+    var functionToDeriveWithJsedn = new jsedn.sym(functionToDeriveWith);
+
+    var codeJsedn = createDeriveColumn(newColJsedn, colsToDeriveFromJsedn, functionToDeriveWithJsedn);
+
+    addAtIndexInPipeline('derive-column', index, codeJsedn);
 }
 
 function getMapcElements(){
@@ -307,6 +319,12 @@ function getCustomFunctionButtons(dialog){
         }
     };
     return buttons;
+}
+
+// TODO clean this out or implement the rest of the calls using it
+function createAndAddCustomFunctionToPipeline(functionDisplayName, code, index){
+    var codeJsedn = createCustomCodeForPipeline(code, functionDisplayName);
+    addAtIndexInPipeline(functionDisplayName, index, codeJsedn);
 }
 
 function getMakeDatasetElements(){
@@ -402,11 +420,11 @@ function generateGrafterCode(){
     }
 
     var grafterCustomFunctions = constructUserFunctions();
-    
+
     /* Graph Template */
-    
+
     var graphTemplate = constructRDFGraphFunction(rdfControl);
-    
+
     /* Pipeline Function */
 
     var rows = $("#pipeline")[0].rows;
@@ -431,9 +449,9 @@ function generateGrafterCode(){
     for(i=0;i<grafterCustomFunctions.length;++i){
         textStr += (grafterCustomFunctions[i].ednEncode() + '\n');
     }
-    
+
     textStr += graphTemplate.ednEncode();
-    
+
     textStr += '\n';
     textStr += '\n';
     textStr += (resultingPipeline.ednEncode());
@@ -462,11 +480,13 @@ function createCustomFunctionObj(customCode){
 
     var functionName;
     var tmp = customCode.split("defn");
-    if(tmp.length == 1){
-        alertInterface("Error parsing custom function: 'defn' keyword not found","");
+    var tmp1 = customCode.split("def");
+    if(tmp.length == 1 && tmp1.length == 1){
+        alertInterface("Error parsing custom function: Neither 'defn' nor 'def' keyword found","");
         return {};
     }
 
+    tmp.length > 1 ? tmp=tmp : tmp=tmp1; 
 
     tmp = tmp[1].trim();
     tmp = tmp.split(/\s+/);
@@ -579,7 +599,7 @@ function loadPrefixersInGraphDefinitionDialog(){
     // remove existing options
     // add the ones defined in the grafter-code-generator.js
     $("#pre-defined-prefix-options > option").remove();
-    
+
     for (i=0; i<grafterSupportedRDFPrefixes.length; ++i){
         var prefixName = grafterSupportedRDFPrefixes[i]['name'];
         if(prefixName == ''){
@@ -592,7 +612,7 @@ function loadPrefixersInGraphDefinitionDialog(){
         $("#pre-defined-prefix-options").append(optionElement);
 
     }
-    
+
     // remove existing options
     // add the ones from the GUI
     $("#custom-prefixer-options > option").remove();
@@ -621,15 +641,17 @@ var currentlySelectedDeriveColFunction = null;
 var rdfControl;
 
 $(function() {
-
+    /**  Initialise dialog for choosing pipeline function  **/
+    
     var mainDialog = $("#dialog-pipeline-main").dialog({
         resizable: true,
         autoOpen: false,
         modal: true,
-        height: 300,
+        height: 500,
         width: 500,
         title: "Add new pipeline element...",
         open: function( event, ui) {
+            mainDialog.dialog("option", "height", 500);
             $("#pipeline-functions")[0].selectedIndex = 0;
             $("#pipeline-functions").selectmenu("refresh");
             $("#function-specific-form").empty();
@@ -660,7 +682,7 @@ $(function() {
                     break;
                 case "mapc":
                     mainDialog.dialog("option", "buttons", getMapcButtons(mainDialog));
-                    mainDialog.dialog("option", "height", 400);
+                    mainDialog.dialog("option", "height", "auto");
                     $("#function-specific-form").html(getMapcElements());
 
                     // init table
@@ -669,7 +691,7 @@ $(function() {
                         'init', {
                             captionTooltip: 'Default and user-defined prefixes',
                             initRows: 1,
-                            hideRowNumColumn:true,
+                            hideRowNumColumn:true,  
                             hideButtons: {
                                 remove: true,
                                 insert: true,
@@ -685,10 +707,14 @@ $(function() {
                                     displayTooltip: { items: 'td', content: 'Name of the prefix to be used in creating the graph' }
                                 },
                                 { 
-                                    name: 'mapc-function', display: 'Function', type: 'select', 
+                                    name: 'mapc-function', 
+                                    display: 'Function', 
+                                    type: 'select', 
                                     ctrlOptions: function(selectControl){ getCustomFunctionOptions(selectControl)},
+                                    ctrlCss: { width: '100%' }, 
                                     onChange: handleMapcFunctionSelect,
-                                    resizable: true, displayCss: { 'min-width': '160px' },
+                                    resizable: false, 
+                                    displayCss: { 'min-width': '160px' },
                                     displayTooltip: { items: 'td', content: 'Namespace URI corresponding to the prefix' },
 
                                 }
@@ -701,13 +727,13 @@ $(function() {
                     break;
                 case "derive-column":
                     mainDialog.dialog("option", "buttons", getDeriveColumnButtons(mainDialog));
-                    mainDialog.dialog("option", "height", 420);
+                    mainDialog.dialog("option", "height", 580);
                     $("#function-specific-form").html(getDeriveColumnElements());
                     // fill in the function options
                     generateSelectOptionsDeriveColumn($("#derived-col-select-func")[0]);
                     // create a jQuery UI select
                     $("#derived-col-select-func").selectmenu({
-                        width: 250,
+                        width: "100%",
                         change: function( e, d ){
                             var selectionValue = d.item.value;
                             switch (selectionValue){
@@ -730,7 +756,7 @@ $(function() {
                             }
                         }
                     }).selectmenu("menuWidget")
-                    .addClass("overflow");
+                    .addClass("derived-col-select-overflow");
                     break;
                 case "add-custom-code":
                     mainDialog.dialog("option", "buttons", getCustomFunctionButtons(mainDialog));
@@ -751,14 +777,16 @@ $(function() {
                     break;
             }
         }
-    }).selectmenu("menuWidget").addClass("overflow");
+    }).selectmenu("menuWidget").addClass("pipeline-functions-overflow");
 
     $("#pipelineAddAtEnd").on("click", function(){
         indexInPipeline=0;
         mainDialog.dialog("open");
-        mainDialog.dialog("option", "height", 400);
+//        mainDialog.dialog("option", "height", "500");
     });
-
+    
+    /**  Initiate code generation  **/
+    
     $("#generate-code").button().on("click", function(){
         generateGrafterCode();
         if(outputCodeMirror)
@@ -775,54 +803,9 @@ $(function() {
     $("#create-custom-func").button().on("click", function(){
         $("#dialog-create-custom-function").dialog({close: function(){}}).dialog("open");
     });
-
-    $('#prefix-table').appendGrid(
-        'init', {
-            captionTooltip: 'Default and user-defined prefixes',
-            initRows: 1,
-            hideRowNumColumn:true,
-            hideButtons: {
-                remove: true,
-                insert: true,
-                moveUp: true,
-                moveDown: true
-            },
-            columns: [
-                {
-                    name: 'prefix-name', display: 'Prefix name', type: 'text', ctrlAttr: { maxlength: 100 },
-                    // Make the column resizable
-                    resizable: true, ctrlCss: { width: '100%' }, displayCss: { 'min-width': '160px' },
-                    // Customize UI tooltip
-                    displayTooltip: { items: 'td', content: 'Name of the prefix to be used in creating the graph' }
-                },
-                { 
-                    name: 'uri', display: 'URI', type: 'text', ctrlAttr: { maxlength: 2048}, 
-                    resizable: true, ctrlCss: { width: '100%' }, displayCss: { 'min-width': '160px' },
-                    displayTooltip: { items: 'td', content: 'Namespace URI corresponding to the prefix' }
-                }
-            ],
-            initData: [
-            ]
-        });
-
-    // confirmation dialog for prefixers
-    $("#dialog-confirm-prefixes").html("Any unsaved changes will be discarded");
-    $("#dialog-confirm-prefixes").dialog({
-        autoOpen: false,
-        resizable: false,
-        modal: true,
-        title: "Confirmation",
-        buttons: {
-            "Yes": function () {
-                $("#dialog-pipeline-prefixers").dialog('close');
-                $(this).dialog('close');
-            },
-            "No": function () {
-                $(this).dialog('close');
-            }
-        }
-    });
-
+    
+    /**  Initialise dialog for defining prefixes  **/
+    
     $("#dialog-pipeline-prefixers").dialog({
         resizable: true,
         autoOpen: false,
@@ -853,6 +836,52 @@ $(function() {
             }
         }
     });
+    $('#prefix-table').appendGrid(
+        'init', {
+            captionTooltip: 'Default and user-defined prefixes',
+            initRows: 1,
+            hideRowNumColumn:true,
+            hideButtons: {
+                remove: true,
+                insert: true,
+                moveUp: true,
+                moveDown: true
+            },
+            columns: [
+                {
+                    name: 'prefix-name', display: 'Prefix name', type: 'text', ctrlAttr: { maxlength: 100 },
+                    // Make the column resizable
+                    resizable: true, ctrlCss: { width: '100%' }, displayCss: { 'min-width': '   100px' },
+                    // Customize UI tooltip
+                    displayTooltip: { items: 'td', content: 'Name of the prefix to be used in creating the graph' }
+                },
+                { 
+                    name: 'uri', display: 'URI', type: 'text', ctrlAttr: { maxlength: 2048}, 
+                    resizable: false, ctrlCss: { width: '460px' }, displayCss: { 'min-width': '160px' },
+                    displayTooltip: { items: 'td', content: 'Namespace URI corresponding to the prefix' }
+                }
+            ],
+            initData: [
+            ]
+        });
+
+    // confirmation dialog for prefixers
+    $("#dialog-confirm-prefixes").html("Any unsaved changes will be discarded");
+    $("#dialog-confirm-prefixes").dialog({
+        autoOpen: false,
+        resizable: false,
+        modal: true,
+        title: "Confirmation",
+        buttons: {
+            "Yes": function () {
+                $("#dialog-pipeline-prefixers").dialog('close');
+                $(this).dialog('close');
+            },
+            "No": function () {
+                $(this).dialog('close');
+            }
+        }
+    });
 
     $("#edit-prefixers").button().on("click", function(){
         $("#dialog-pipeline-prefixers").dialog("open");
@@ -878,7 +907,7 @@ $(function() {
                     lineNumbers: true
                 });
             customFunctionCodeMirror.setValue("");
-            customFunctionCodeMirror.setSize("100%", "57%");
+            customFunctionCodeMirror.setSize("98%", "57%");
 
             // initialize the selection
             refreshCustomFunctionsSelect();
@@ -920,7 +949,7 @@ $(function() {
     });
 
     $("#custom-functions").selectmenu({
-        width: 250,
+        width: '100%',
         change: function( event, data ){
             var selectionValue = data.item.value;
             switch (selectionValue){
@@ -932,7 +961,7 @@ $(function() {
                     break;
             }
         }
-    }).selectmenu("menuWidget").addClass("overflow");
+    }).selectmenu("menuWidget").addClass("custom-functions-select-overflow");
 
     /**  Initialise dialog for RDF graph mapping  **/
 
@@ -940,8 +969,8 @@ $(function() {
         resizable: true,
         autoOpen: false,
         modal: true,
-        height: 490,
-        width: 500,
+        height: 700,
+        width: 800,
         title: "Define RDF mapping...",
         buttons: {
             Done: function(){
@@ -1418,14 +1447,350 @@ $(function() {
     });
 
     /**  Create the RDF mapping control object  **/
-    rdfControl = new RDFControl($("#rdf-control-div").get(0), 100, 79);
+    rdfControl = new RDFControl($("#rdf-control-div").get(0), 100, 95);
 
 });
 
 /***************************************************************************
-    Testing functionalities programatically
+    Testing functionalities programatically - preloading some test data
 ***************************************************************************/
 $(function() {
 
-});
+    /*******************************************************************************
+        Custom functions
+    *******************************************************************************/
 
+    var f1 = "(defn select-row [ds n]\r\n  (->> (rows ds [n])\r\n       incanter.core\/to-list\r\n       first))";
+
+    var f2 = "(defn normalise-header-c\r\n  \"cultural facilities\"\r\n  [ds f]\r\n  (let [[div sub-div & years-row] (->> (select-row ds 0)\r\n                                       (drop 3))\r\n        type-row (->> (select-row ds 1)\r\n                      (drop 3))\r\n\r\n        data-type-row (->> (select-row ds 2)\r\n                           (drop 3))\r\n\r\n        new-header (->> (map #(str (cstr\/trim %1) \" \" (cstr\/trim %2) \" \" (cstr\/trim %3)) years-row type-row data-type-row)\r\n                        (concat [\"file\" \"division\" \"type\"])\r\n                        (map f))]\r\n    (make-dataset ds (map str new-header))))";
+
+
+    var f3 = "(defn normalise-header-t\r\n  \"traffic equipment\"\r\n  [ds f]\r\n  (let [[div & years-row] (->> (select-row ds 0)\r\n                               (drop 2))\r\n        type-row (->> (select-row ds 1)\r\n                      (drop 2))\r\n\r\n        data-type-row (->> (select-row ds 2)\r\n                           (drop 2))\r\n\r\n        new-header (->> (map #(str (cstr\/trim %1) \" \" (cstr\/trim %2) \" \" (cstr\/trim %3)) years-row type-row data-type-row)\r\n                        (concat [\"file\" \"division\"])\r\n                        (map f))]\r\n    (make-dataset ds (map str new-header))))";
+
+    var f4 = "(defn normalise-header-h\r\n  \"highschool\"\r\n  [ds f]\r\n  (let [[div type & years-row] (->> (select-row ds 0)\r\n                                    (drop 3))\r\n        type-row (->> (select-row ds 1)\r\n                      (drop 3))\r\n\r\n        new-header (->> (map #(str (cstr\/trim %1) \" \" (cstr\/trim %2)) years-row type-row)\r\n                        (concat [\"file\" \"division\" \"type\"])\r\n                        (map f))]\r\n    (make-dataset ds (map str new-header))))";
+
+    var f5 = "(defn replace-words [mapping]\r\n  (fn [s] (reduce (fn [st [match replacement]]\r\n                    ;(cstr\/replace st (re-pattern (str \"\\\\b\" match \"\\\\b\")) replacement)) s\r\n                    (cstr\/replace st (re-pattern match) replacement)) s\r\n                  (partition 2 mapping))))";
+
+    var f6 = "(defn ->Integer [i]\r\n  (cond\r\n    (= \"-\" i) 0\r\n    (nil? i) 0\r\n    (number? i) (int i)\r\n    (string? i) (Integer\/parseInt i)))";
+
+    var f7 = "(defn replace-varible-string [cell]\r\n  (-> cell\r\n      (cstr\/replace #\".* #\" \"number\")\r\n      (cstr\/replace #\"[0-9]{4} \" \"\")))";
+
+    var f8 = "(defn extract-year [cell]\r\n  ;(first (cstr\/split (str cell) #\" # | art | railroad \")))\r\n  (apply str (filter #(Character\/isDigit %) (str cell))))";
+
+    var f9 = "(defn remove-extension [cell]\r\n  (cstr\/replace cell \".xlsx\" \"\"))";
+
+    var f10 = "(defn hyphenate [str]\r\n  (cstr\/replace str \" \" \"-\"))";
+
+    var f11 = "(defn observation-uri [variable division year]\r\n  (->> [variable division year]\r\n       (interpose \" \")\r\n       (apply str)\r\n       hyphenate\r\n       cstr\/lower-case\r\n       pluqi-data))";
+
+    var f12 = "(def filename->indicator-uri\r\n  {\"2005-2006_cultural facilities.xlsx\" (pluqi-schema \"Cultural_satisfaction\")\r\n   \"2007-2008_cultural facilities.xlsx\" (pluqi-schema \"Cultural_satisfaction\")\r\n   \"2009-2011_cultural facilities.xlsx\" (pluqi-schema \"Cultural_satisfaction\")\r\n   \"2011-2012_cultural facilities.xlsx\" (pluqi-schema \"Cultural_satisfaction\")\r\n   \"2005-2012_traffic equipment.xlsx\"   (pluqi-schema \"Daily_life_satisfaction\")\r\n   \"2005-2008_green space.xlsx\"         (pluqi-schema \"Environmental_needs_and_efficiency\")\r\n   \"2009-2012_green space.xlsx\"         (pluqi-schema \"Environmental_needs_and_efficiency\")\r\n   \"2011-2013_highschool.xlsx\"          (pluqi-schema \"Level_of_opportunity\")\r\n   \"2011-2012_place of a crime.xlsx\"    (pluqi-schema \"Safety_and_security\")})";
+
+    var f13 = "(defn division-uri [s]\r\n  (pluqi-data s))";
+
+    var f14 = "(defn date-format [fmt]\r\n  (let [parser (java.text.SimpleDateFormat. fmt)]\r\n    (fn [s]\r\n      (.parse parser (str s) (java.text.ParsePosition. 0)))))";
+
+    var f15 = "(defn observation-label [var year division]\r\n  (str (cstr\/capitalize var) \" in \" division \" in \" year \".\"))";
+
+    var f16 = "(def call-year (date-format \"yyyy\"))";
+    var f17 = "(def call-comp-removeext (comp pluqi-data remove-extension))";
+    var f18 = "(def call-comp-hyphenate (comp pluqi-data hyphenate))";
+
+    var codeObject = createCustomFunctionObj(f1);
+    if(codeObject['fnName'] == null){
+        return;
+    }
+    customFunctionsMap[codeObject['fnName']] = codeObject;
+
+    codeObject = createCustomFunctionObj(f2);
+    if(codeObject['fnName'] == null){
+        return;
+    }
+    customFunctionsMap[codeObject['fnName']] = codeObject;
+
+    codeObject = createCustomFunctionObj(f3);
+    if(codeObject['fnName'] == null){
+        return;
+    }
+    customFunctionsMap[codeObject['fnName']] = codeObject;
+
+    codeObject = createCustomFunctionObj(f4);
+    if(codeObject['fnName'] == null){
+        return;
+    }
+    customFunctionsMap[codeObject['fnName']] = codeObject;
+
+    codeObject = createCustomFunctionObj(f5);
+    if(codeObject['fnName'] == null){
+        return;
+    }
+    customFunctionsMap[codeObject['fnName']] = codeObject;
+
+    codeObject = createCustomFunctionObj(f6);
+    if(codeObject['fnName'] == null){
+        return;
+    }
+    customFunctionsMap[codeObject['fnName']] = codeObject;
+
+    codeObject = createCustomFunctionObj(f7);
+    if(codeObject['fnName'] == null){
+        return;
+    }
+    customFunctionsMap[codeObject['fnName']] = codeObject;
+
+    codeObject = createCustomFunctionObj(f8);
+    if(codeObject['fnName'] == null){
+        return;
+    }
+    customFunctionsMap[codeObject['fnName']] = codeObject;
+
+    codeObject = createCustomFunctionObj(f9);
+    if(codeObject['fnName'] == null){
+        return;
+    }
+    customFunctionsMap[codeObject['fnName']] = codeObject;
+
+    codeObject = createCustomFunctionObj(f10);
+    if(codeObject['fnName'] == null){
+        return;
+    }
+    customFunctionsMap[codeObject['fnName']] = codeObject;
+
+    codeObject = createCustomFunctionObj(f11);
+    if(codeObject['fnName'] == null){
+        return;
+    }
+    customFunctionsMap[codeObject['fnName']] = codeObject;
+
+    codeObject = createCustomFunctionObj(f12);
+    if(codeObject['fnName'] == null){
+        return;
+    }
+    customFunctionsMap[codeObject['fnName']] = codeObject;
+
+    codeObject = createCustomFunctionObj(f13);
+    if(codeObject['fnName'] == null){
+        return;
+    }
+    customFunctionsMap[codeObject['fnName']] = codeObject;
+
+    codeObject = createCustomFunctionObj(f14);
+    if(codeObject['fnName'] == null){
+        return;
+    }
+    customFunctionsMap[codeObject['fnName']] = codeObject;
+
+    codeObject = createCustomFunctionObj(f15);
+    if(codeObject['fnName'] == null){
+        return;
+    }
+    customFunctionsMap[codeObject['fnName']] = codeObject;
+
+    codeObject = createCustomFunctionObj(f16);
+    if(codeObject['fnName'] == null){
+        return;
+    }
+    customFunctionsMap[codeObject['fnName']] = codeObject;
+
+    codeObject = createCustomFunctionObj(f17);
+    if(codeObject['fnName'] == null){
+        return;
+    }
+    customFunctionsMap[codeObject['fnName']] = codeObject;
+
+    codeObject = createCustomFunctionObj(f18);
+    if(codeObject['fnName'] == null){
+        return;
+    }
+    customFunctionsMap[codeObject['fnName']] = codeObject;
+
+
+    /*******************************************************************************
+        Prefixes
+    *******************************************************************************/
+
+
+    var prefixer = createPrefixer("base-domain", "http://project.dapaas.eu/pluqi");
+    prefixersInGUI.push(prefixer);
+    prefixer = createPrefixer("pluqi-graph", "http://project.dapaas.eu/pluqi/graph/pluqi/");
+    prefixersInGUI.push(prefixer);
+    prefixer = createPrefixer("pluqi-schema", "http://project.dapaas.eu/pluqi/schema/");
+    prefixersInGUI.push(prefixer);
+    prefixer = createPrefixer("pluqi-data", "http://project.dapaas.eu/pluqi/data/");
+    prefixersInGUI.push(prefixer);
+
+
+    /*******************************************************************************
+        Pipeline
+    *******************************************************************************/
+
+
+    var jsEdnRowsFunction = createDropRows(4);
+    addAtIndexInPipeline("drop-rows", 0, jsEdnRowsFunction);
+
+    var index = 1;
+    var functionDisplayName = "apply-columns";
+    var code = "(apply-columns {:division fill-when})"
+    createAndAddCustomFunctionToPipeline(functionDisplayName, code, index);
+
+    var index = 2;
+    var functionDisplayName = "mapply-melt";
+    var code = "(mapply-melt pivot-keys)"
+    createAndAddCustomFunctionToPipeline(functionDisplayName, code, index);
+
+    var newColName = ":year";
+    var colsToDeriveFrom = ":variable";
+    var functionToDeriveWith = "extract-year";
+    index = 3;
+    createDeriveColumnPipelineFunction(newColName, colsToDeriveFrom, functionToDeriveWith, index);
+
+    var index = 4;
+    var functionDisplayName = "mapc";
+    var code = "(mapc {:variable replace-varible-string :value ->Integer})"
+    createAndAddCustomFunctionToPipeline(functionDisplayName, code, index);
+
+    newColName = ":observation-label";
+    colsToDeriveFrom = ":variable :year :division";
+    functionToDeriveWith = "observation-label";
+    index = 5;
+    createDeriveColumnPipelineFunction(newColName, colsToDeriveFrom, functionToDeriveWith, index);
+
+
+    newColName = ":observation-date";
+    colsToDeriveFrom = ":year";
+    functionToDeriveWith = "call-year";
+    index = 6;
+    createDeriveColumnPipelineFunction(newColName, colsToDeriveFrom, functionToDeriveWith, index);
+
+
+    newColName = ":dataset-uri";
+    colsToDeriveFrom = ":file";
+    functionToDeriveWith = "call-comp-removeext";
+    index = 7;
+    createDeriveColumnPipelineFunction(newColName, colsToDeriveFrom, functionToDeriveWith, index);
+
+
+    newColName = ":dimension-uri";
+    colsToDeriveFrom = ":variable";
+    functionToDeriveWith = "call-comp-hyphenate";
+    index = 8;
+    createDeriveColumnPipelineFunction(newColName, colsToDeriveFrom, functionToDeriveWith, index);
+
+
+    newColName = ":observation-uri";
+    colsToDeriveFrom = ":variable :division :year";
+    functionToDeriveWith = "observation-uri";
+    index = 9;
+    createDeriveColumnPipelineFunction(newColName, colsToDeriveFrom, functionToDeriveWith, index);
+
+
+    newColName = ":indicator-uri";
+    colsToDeriveFrom = ":file";
+    functionToDeriveWith = "filename->indicator-uri";
+    index = 10;
+    createDeriveColumnPipelineFunction(newColName, colsToDeriveFrom, functionToDeriveWith, index);
+
+
+    newColName = ":division-uri";
+    colsToDeriveFrom = ":division";
+    functionToDeriveWith = "division-uri";
+    index = 11;
+    createDeriveColumnPipelineFunction(newColName, colsToDeriveFrom, functionToDeriveWith, index);
+
+    var graph = new Graph("http://project.dapaas.eu/pluqi/graph/pluqi/example", rdfControl);
+    var dimensionRoot = new ColumnURI(graph, "", "dimension-uri");
+
+    var prop1 = new Property(dimensionRoot, "rdf", "a");
+    var indicatorURINode = new ColumnLiteral(prop1, "indicator-uri");
+
+    var prop2 = new Property(dimensionRoot, "rdf", "a");
+    var owlNamedIndiv = new ConstantLiteral(prop2, "owl:NamedIndividual");
+
+    var prop3 = new Property(dimensionRoot, "pluqi-schema", "hasValue");
+    var observationURINode = new ColumnLiteral(prop3, "observation-uri");
+
+    var observationRoot = new ColumnURI(graph, "", "observation-uri");
+
+    var prop4 = new Property(observationRoot, "rdf", "a");
+    var owlNamedIndiv1 = new ConstantLiteral(prop4, "owl:NamedIndividual");
+
+    var prop5 = new Property(observationRoot, "rdf", "a");
+    var pluqiValue = new ColumnURI(prop5, "pluqi-schema", "Value");
+
+    var prop6 = new Property(observationRoot, "rdfs", "label");
+    var observationLabel = new ColumnLiteral(prop6, "observation-label");
+
+    var prop7 = new Property(observationRoot, "pluqi-schema", "measure");
+    var valueColumnLiteral = new ColumnLiteral(prop7, "value");
+
+    var prop8 = new Property(observationRoot, "pluqi-schema", "location");
+    var divisionURINode = new ColumnLiteral(prop8, "division-uri");
+
+    var prop9 = new Property(observationRoot, "pluqi-schema", "hasValue");
+    var datasetURINode = new ColumnLiteral(prop9, "dataset-uri");
+
+    var prop10 = new Property(observationRoot, "pluqi-schema", "time");
+    var observationDateURINode = new ColumnLiteral(prop10, "observation-date");
+
+    var prop11 = new Property(observationRoot, "rdfs", "comment");
+    var typeLabel = new ColumnLiteral(prop11, "type");
+
+
+
+    var datasetRoot = new ColumnURI(graph, "", "dataset-uri");
+    
+    var prop12 = new Property(datasetRoot, "rdf", "a");
+    var pluqiDatasource = new ColumnURI(prop12, "pluqi-schema", "DataSource");
+    
+    var prop13 = new Property(datasetRoot, "rdf", "a");
+    var owlNamedIndiv2 = new ConstantLiteral(prop13, "owl:NamedIndividual");
+    
+
+    rdfControl.addGraph(graph);
+    graph.addChild(dimensionRoot);
+    
+    dimensionRoot.addChild(prop1);
+    prop1.addChild(indicatorURINode);
+    
+    dimensionRoot.addChild(prop2);
+    prop2.addChild(owlNamedIndiv);
+    
+    dimensionRoot.addChild(prop3);
+    prop3.addChild(observationURINode);
+    
+    
+    graph.addChild(observationRoot);
+    
+    observationRoot.addChild(prop4);
+    prop4.addChild(owlNamedIndiv1);
+    
+    observationRoot.addChild(prop5);
+    prop5.addChild(pluqiValue);
+    
+    observationRoot.addChild(prop6);
+    prop6.addChild(observationLabel);
+    
+    observationRoot.addChild(prop7);
+    prop7.addChild(valueColumnLiteral);
+    
+    observationRoot.addChild(prop8);
+    prop8.addChild(divisionURINode);
+    
+    observationRoot.addChild(prop9);
+    prop9.addChild(datasetURINode);
+    
+    observationRoot.addChild(prop10);
+    prop10.addChild(observationDateURINode);
+    
+    observationRoot.addChild(prop11);
+    prop11.addChild(typeLabel);
+
+    
+    graph.addChild(datasetRoot);
+    
+    datasetRoot.addChild(prop12);
+    prop12.addChild(pluqiDatasource);
+    
+    datasetRoot.addChild(prop13);
+    prop13.addChild(owlNamedIndiv2);
+
+});

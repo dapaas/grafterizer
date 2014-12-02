@@ -41,6 +41,7 @@ var Graph = function (graphURI, rdfControl) {
     graphNameInput.style.borderLeft = "0";
     graphNameInput.style.borderRight = "0";
     graphNameInput.classList.add("rdf-graph-name-input");
+    graphNameInput.value = graphURI;
     jQuery.data(graphNameInput, "containing-graph", this);
 
     addSignElement.classList.add("fa");
@@ -102,7 +103,7 @@ var Graph = function (graphURI, rdfControl) {
 
     this.graphTableElement = graphTableElement;
     this.graphNameInput = graphNameInput;
-
+    
     /********************************************************************
         Table row that contains the user-defined mapping to RDF
     *********************************************************************/

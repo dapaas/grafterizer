@@ -113,7 +113,7 @@ textarea{
     cursor: pointer;
     margin-top: 110;
     margin-bottom: auto;
-    margin-left: 45%;
+    margin-left: 48%;
     margin-right: auto;
 }
 
@@ -295,4 +295,14 @@ div.rdf-control-container > table {
 */
 div.rdf-control-container > table td {
     white-space: nowrap;
+}
+.custom-functions-select-overflow{
+    height: 250px;
+}
+
+.pipeline-functions-overflow {
+    height: 250px;
+}
+.derived-col-select-overflow {
+    height: 250px;
 }
