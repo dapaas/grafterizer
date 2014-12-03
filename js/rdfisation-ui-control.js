@@ -166,8 +166,7 @@ Graph.prototype.removeChild = function (child) {
         initialAddButton = $(".rdf-graph-add-first-node");
 
 
-    console.log("CHILD", child);
-    console.log("CHILD INDEX", childIndex);
+    
     if (childIndex !== -1) {
         this.graphRoots.splice(childIndex, 1);
     }
@@ -193,8 +192,6 @@ var RDFElement = function (containingElement) {
     Object.getPrototypeOf(this).addPeer = containingElement.addChild;
     // TODO if not needed - remove
     Object.getPrototypeOf(this).removeSelf = function () {
-        console.log("THIS", this);
-        console.log("THIS CONTAINING", this.containingElement);
         this.containingElement.removeChild(this);
     };
     // the addChild method should be initialised specifically for each node
@@ -374,7 +371,6 @@ var Property = function (containingElement, prefix, propertyName) {
 
 };
 Property.prototype.removeChild = function (child) {
-    console.log("removing child");
     var childIndex = this.subElements.indexOf(child),
         initialAddButton = $(".add-property-association-div");
 
@@ -418,7 +414,6 @@ var LiteralNode = function (containingElement, value) {
         literalNodeNameDiv = document.createElement("div"),
         literalNodeName = document.createElement("label"),
         literalNodeIcon = document.createElement("i");
-    console.log(this.tableElement);
     literalNodeDataCell.classList.add("rdf-graph-element-representation");
 
     literalNodeIcon.classList.add("fa");
@@ -432,7 +427,6 @@ var LiteralNode = function (containingElement, value) {
     literalNodeNameDiv.appendChild(literalNodeName);
 
     literalNodeDataCell.appendChild(literalNodeNameDiv);
-    console.log(literalNodeDataCell);
     // TODO if literal is a root we should be able to add new roots using buttons
 
 };
@@ -655,8 +649,6 @@ URINode.prototype.removeChild = function (child) {
         initialAddButton = $(this.subElementsCell).find(".add-first-property-div");
 
 
-    console.log("CHILD", child);
-    console.log("CHILD INDEX", childIndex);
     if (childIndex !== -1) {
         this.subElements.splice(childIndex, 1);
     }
@@ -664,7 +656,6 @@ URINode.prototype.removeChild = function (child) {
     // find and remove DOM elements
     $(child.tableElement).remove();
 
-    console.log("this.subElements.length", this.subElements.length);
     if (this.subElements.length === 0) {
         initialAddButton.show();
     }

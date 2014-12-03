@@ -642,7 +642,7 @@ var rdfControl;
 
 $(function() {
     /**  Initialise dialog for choosing pipeline function  **/
-    
+
     var mainDialog = $("#dialog-pipeline-main").dialog({
         resizable: true,
         autoOpen: false,
@@ -782,11 +782,11 @@ $(function() {
     $("#pipelineAddAtEnd").on("click", function(){
         indexInPipeline=0;
         mainDialog.dialog("open");
-//        mainDialog.dialog("option", "height", "500");
+        //        mainDialog.dialog("option", "height", "500");
     });
-    
+
     /**  Initiate code generation  **/
-    
+
     $("#generate-code").button().on("click", function(){
         generateGrafterCode();
         if(outputCodeMirror)
@@ -803,9 +803,9 @@ $(function() {
     $("#create-custom-func").button().on("click", function(){
         $("#dialog-create-custom-function").dialog({close: function(){}}).dialog("open");
     });
-    
+
     /**  Initialise dialog for defining prefixes  **/
-    
+
     $("#dialog-pipeline-prefixers").dialog({
         resizable: true,
         autoOpen: false,
@@ -982,7 +982,6 @@ $(function() {
     $("#open-rdf-dialog").button().on("click", function(){
         $("#dialog-rdf-mapping").dialog("open");
     });
-
 
     /**  Initialise dialog for defining graph nodes  **/
 
@@ -1264,9 +1263,7 @@ $(function() {
         }
     }).selectmenu("menuWidget").addClass("overflow");
 
-    /*************************************************************************************************************************************************************************************************************/
-
-
+    // Custom combo for choosing prefixers for defining graph nodes 
     $.widget( "custom.combobox", {
         _create: function() {
             this.wrapper = $( "<span>" )
@@ -1403,7 +1400,8 @@ $(function() {
     });
 
     $( "#uri-node-prefixer" ).combobox();
-    /*************************************************************************************************************************************************************************************************************/
+
+    /**  Initialise dialog for registering Grafter transformations  **/
 
     $("#dialog-define-graph-property").dialog({
         dialogClass: "dialog-define-graph-node",
@@ -1446,10 +1444,80 @@ $(function() {
         }
     });
 
+
+    $("#open-pipeline-registration-dialog").button().on("click", function(){
+        $("#dialog-pipeline-registration").dialog("open");
+    });
+
+
+    $("#dialog-pipeline-registration").dialog({
+        resizable: true,
+        autoOpen: false,
+        modal: true,
+        height: 490,
+        width: 500,
+        title: "Register Grafter pipeline and mapping",
+        open: function(event, ui){
+            $("#pipeline-registration-id").val("PLUQIGrafterTransformation");
+            $("#pipeline-registration-description").val("PLUQI use case example Grafter transformation. Cleans unnecessary data fields and maps the remaining data to RDF.");
+        },
+        buttons: {
+            Register: function(){
+                $(this).dialog("close");
+            },
+            Cancel: function() {
+                $(this).dialog("close");
+            }
+        }
+    });
     /**  Create the RDF mapping control object  **/
     rdfControl = new RDFControl($("#rdf-control-div").get(0), 100, 95);
 
+    /*RESTful call*/
+    
+
+
 });
+
+function registerPipeline(){
+    var url = "http://dapaas.ontotext.com/dapaas-import-services/grafter/list";
+    var method = "GET";
+
+    var xhr = createCORSRequest('GET', url);
+    if (!xhr) {
+        alert('CORS not supported');
+        return;
+    }
+
+    // Response handlers.
+    xhr.onload = function() {
+        var text = xhr.responseText;
+        alert(text);
+    };
+
+    xhr.onerror = function() {
+        alert('Woops, there was an error making the request.');
+    };
+    xhr.withCredentials = true;
+    xhr.send();
+}
+
+function createCORSRequest(method, url) {
+    var xhr = new XMLHttpRequest();
+    if ("withCredentials" in xhr) {
+        // XHR for Chrome/Firefox/Opera/Safari.
+        xhr.open(method, url, true);
+    } else if (typeof XDomainRequest != "undefined") {
+        // XDomainRequest for IE.
+        xhr = new XDomainRequest();
+        xhr.open(method, url);
+    } else {
+        // CORS not supported.
+        xhr = null;
+    }
+    return xhr;
+}
+
 
 /***************************************************************************
     Testing functionalities programatically - preloading some test data
@@ -1737,59 +1805,59 @@ $(function() {
 
 
     var datasetRoot = new ColumnURI(graph, "", "dataset-uri");
-    
+
     var prop12 = new Property(datasetRoot, "rdf", "a");
     var pluqiDatasource = new ColumnURI(prop12, "pluqi-schema", "DataSource");
-    
+
     var prop13 = new Property(datasetRoot, "rdf", "a");
     var owlNamedIndiv2 = new ConstantLiteral(prop13, "owl:NamedIndividual");
-    
+
 
     rdfControl.addGraph(graph);
     graph.addChild(dimensionRoot);
-    
+
     dimensionRoot.addChild(prop1);
     prop1.addChild(indicatorURINode);
-    
+
     dimensionRoot.addChild(prop2);
     prop2.addChild(owlNamedIndiv);
-    
+
     dimensionRoot.addChild(prop3);
     prop3.addChild(observationURINode);
-    
-    
+
+
     graph.addChild(observationRoot);
-    
+
     observationRoot.addChild(prop4);
     prop4.addChild(owlNamedIndiv1);
-    
+
     observationRoot.addChild(prop5);
     prop5.addChild(pluqiValue);
-    
+
     observationRoot.addChild(prop6);
     prop6.addChild(observationLabel);
-    
+
     observationRoot.addChild(prop7);
     prop7.addChild(valueColumnLiteral);
-    
+
     observationRoot.addChild(prop8);
     prop8.addChild(divisionURINode);
-    
+
     observationRoot.addChild(prop9);
     prop9.addChild(datasetURINode);
-    
+
     observationRoot.addChild(prop10);
     prop10.addChild(observationDateURINode);
-    
+
     observationRoot.addChild(prop11);
     prop11.addChild(typeLabel);
 
-    
+
     graph.addChild(datasetRoot);
-    
+
     datasetRoot.addChild(prop12);
     prop12.addChild(pluqiDatasource);
-    
+
     datasetRoot.addChild(prop13);
     prop13.addChild(owlNamedIndiv2);
 

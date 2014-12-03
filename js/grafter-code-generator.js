@@ -37,22 +37,32 @@ var pipeline = new jsedn.List([jsedn.sym("defn"), jsedn.sym("pipeline"), new jse
 /* Holds the individual declarations. Used to form the declarations object that can then be rendered in Clojure. */
 var declarationsList = new jsedn.List([
     jsedn.kw(":require"),
-    new jsedn.Vector([jsedn.sym("grafter.rdf"), jsedn.kw(":refer"), new jsedn.Vector([jsedn.sym("graph-fn"), jsedn.sym("graph"), jsedn.sym("s"), jsedn.sym("add"), jsedn.sym("prefixer")])]),
-    new jsedn.Vector([jsedn.sym("grafter.tabular"), jsedn.kw(":refer"), new jsedn.Vector(
-        [jsedn.sym("column-names"), jsedn.sym("columns"), jsedn.sym("rows"), jsedn.sym("all-columns"), jsedn.sym("derive-column"),
-         jsedn.sym("mapc"), jsedn.sym("swap"), jsedn.sym("drop-rows"), jsedn.sym("open-all-datasets"), jsedn.sym("make-dataset"), 
-         jsedn.sym("move-first-row-to-header"), jsedn.sym("_")
-        ])]),
+    new jsedn.Vector([jsedn.sym("grafter.rdf"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+    new jsedn.Vector([jsedn.sym("grafter.tabular"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+    new jsedn.Vector([jsedn.sym("grafter.parse"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+    new jsedn.Vector([jsedn.sym("grafter.sequences"), jsedn.kw(":refer"), jsedn.kw(":all")]),
     new jsedn.Vector([jsedn.sym("grafter.rdf.sesame"), jsedn.kw(":as"), jsedn.sym("ses")]),
-    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.rdf"), jsedn.kw(":refer"), jsedn.kw(":all")]),
-    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.foaf"), jsedn.kw(":refer"), jsedn.kw(":all")]),
-    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.void"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+    new jsedn.Vector([jsedn.sym("clojure-csv.core"), jsedn.kw(":as"), jsedn.sym("csv")]),
+    new jsedn.Vector([jsedn.sym("clojure.string"), jsedn.kw(":as"), jsedn.sym("cstr")]),
+    new jsedn.Vector([jsedn.sym("incanter.core")]),
+    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.dcat"), jsedn.kw(":refer"), jsedn.kw(":all")]),
     new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.dcterms"), jsedn.kw(":refer"), jsedn.kw(":all")]),
-    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.vcard"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.foaf"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.ons-geography"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.org"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.os"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.owl"), jsedn.kw(":refer"), jsedn.kw(":all")]),
     new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.pmd"), jsedn.kw(":refer"), jsedn.kw(":all")]),
     new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.qb"), jsedn.kw(":refer"), jsedn.kw(":all")]),
-    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.os"), jsedn.kw(":refer"), jsedn.kw(":all")]),
-    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.sdmx-measure"), jsedn.kw(":refer"), jsedn.kw(":all")])
+    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.rdf"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.sdmx-attribute"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.sdmx-concept"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.sdmx-measure"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.skos"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.vcard"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.void"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.xsd"), jsedn.kw(":refer"), jsedn.kw(":all")])
+    
 ]);
 
 /* Declarations object. Used to render the individual declarations with the needed enclosing definitions in Clojure. */

@@ -306,3 +306,13 @@ div.rdf-control-container > table td {
 .derived-col-select-overflow {
     height: 250px;
 }
+
+#pipeline-registration-id {
+    width : 100%;
+}
+
+#pipeline-registration-description {
+    width : 100%;
+    height : 70%;
+    resize:none;
+}
