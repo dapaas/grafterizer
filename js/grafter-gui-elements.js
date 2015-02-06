@@ -1458,11 +1458,14 @@ $(function() {
         width: 500,
         title: "Register Grafter pipeline and mapping",
         open: function(event, ui){
-            $("#pipeline-registration-id").val("PLUQIGrafterTransformation");
-            $("#pipeline-registration-description").val("PLUQI use case example Grafter transformation. Cleans unnecessary data fields and maps the remaining data to RDF.");
         },
         buttons: {
             Register: function(){
+                generateGrafterCode();
+                var pipelineId = $("#pipeline-registration-id").val(),
+                    pipelineDescription = $("#pipeline-registration-description").val(),
+                    pipelineCode = $("#output").val();
+                registerPipeline(pipelineId, pipelineDescription, "asdf");
                 $(this).dialog("close");
             },
             Cancel: function() {
@@ -1476,10 +1479,43 @@ $(function() {
     /*RESTful call*/
     
 
-
 });
 
-function registerPipeline(){
+function registerPipeline(id, description, code){
+    var url = "http://dapaas.ontotext.com/grafter-gui-service/generate-executable";
+
+    var xhr = createCORSRequest('POST', url);
+    if (!xhr) {
+        alert('CORS not supported');
+        return;
+    }
+
+    // Response handlers.
+    xhr.onload = function() {
+        var text = xhr.responseText;
+        alert(text);
+    };
+
+    xhr.onerror = function() {
+        console.log('Woops, there was an error making the request.');
+    };
+    var data = new FormData();
+//    console.log(id);
+//    console.log(description);
+//    console.log(code);
+//    data.append("id", id);
+//    data.append("description", description);
+//    data.append("code", code);
+    xhr.withCredentials = true;
+//    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xhr.setRequestHeader('id', id);
+    xhr.setRequestHeader('description', description);
+    xhr.setRequestHeader('code', code);
+    console.log(data);
+    xhr.send(data);
+}
+
+function getAllPipelines(){
     var url = "http://dapaas.ontotext.com/dapaas-import-services/grafter/list";
     var method = "GET";
 
@@ -1506,7 +1542,7 @@ function createCORSRequest(method, url) {
     var xhr = new XMLHttpRequest();
     if ("withCredentials" in xhr) {
         // XHR for Chrome/Firefox/Opera/Safari.
-        xhr.open(method, url, true);
+        xhr.open(method, url, true, "dapaas", "dApAAs2014");
     } else if (typeof XDomainRequest != "undefined") {
         // XDomainRequest for IE.
         xhr = new XDomainRequest();
@@ -1517,7 +1553,6 @@ function createCORSRequest(method, url) {
     }
     return xhr;
 }
-
 
 /***************************************************************************
     Testing functionalities programatically - preloading some test data
@@ -1860,5 +1895,8 @@ $(function() {
 
     datasetRoot.addChild(prop13);
     prop13.addChild(owlNamedIndiv2);
+    
+    $("#pipeline-registration-id").val("PLUQIGrafterTransformation");
+    $("#pipeline-registration-description").val("PLUQI use case example Grafter transformation. Cleans unnecessary data fields and maps the remaining data to RDF.");
 
 });

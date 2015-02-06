@@ -241,7 +241,6 @@ var Property = function (containingElement, prefix, propertyName) {
     propertyQualifiedName.textContent = prefix + ':' + propertyName;
     propertyQualifiedName.classList.add("node-name-label");
 
-    // TODO rename node-div to element-div
     propertyNameDiv.classList.add("element-div");
     propertyNameDiv.appendChild(propertyIcon);
     propertyNameDiv.appendChild(propertyQualifiedName);
@@ -398,7 +397,6 @@ Property.prototype.addChild = function (child) {
     $(this.subElementsCell).find(".add-first-element-div").hide();
 
     this.subElementsCell.appendChild(child.tableElement);
-    // TODO put the node DOM element inside this new cell
     
 };
 
