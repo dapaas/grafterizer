@@ -1,1 +1,4 @@
-<p>This is the upload view.</p>
+<div ng-file-drop ng-model="file" class="drop-box"
+	drag-over-class="dragover" accept=".csv,.xsl,.xslx">Drop the tabular document here</div>
+
+<div class="btn btn-primary" ng-file-select ng-model="file" accept=".csv,.xsl,.xslx">Upload tabular document</div>
