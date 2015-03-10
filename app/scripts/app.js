@@ -17,7 +17,8 @@ angular
     'ngSanitize',
     'ngTouch',
     'ngTable',
-    'angularFileUpload'
+    'angularFileUpload',
+    'ui.grid'
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -32,6 +33,10 @@ angular
       .when('/upload', {
         templateUrl: 'views/upload.html',
         controller: 'UploadCtrl'
+      })
+      .when('/grid', {
+        templateUrl: 'views/grid.html',
+        controller: 'GridCtrl'
       })
       .otherwise({
         redirectTo: '/'
