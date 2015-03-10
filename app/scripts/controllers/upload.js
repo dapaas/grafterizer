@@ -8,10 +8,10 @@
  * Controller of the grafterizerApp
  */
 angular.module('grafterizerApp')
-  .controller('UploadCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+  .controller('UploadCtrl', function ($scope, fileUpload) {
+  	$scope.$watch('file', function() {
+  		if ($scope.file) {
+	  		fileUpload.upload($scope.file);
+  		}
+  	});
   });

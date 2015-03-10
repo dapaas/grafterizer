@@ -8,25 +8,12 @@
  * Controller of the grafterizerApp
  */
 angular.module('grafterizerApp')
-  .controller('GridCtrl', function ($scope) {
-  	 $scope.myData = [
-		{
-		"firstName": "Cox",
-		"lastName": "Carney",
-		"company": "Enormo",
-		"employed": true
-		},
-		{
-		"firstName": "Lorraine",
-		"lastName": "Wise",
-		"company": "Comveyer",
-		"employed": false
-		},
-		{
-		"firstName": "Nancy",
-		"lastName": "Waters",
-		"company": "Fuelton",
-		"employed": false
-		}
-	];
+  .controller('GridCtrl', function ($scope, fileUpload) {
+
+  	var data = fileUpload.getResults();
+
+  	$scope.gridOptions = {
+  		//data: $rootScope.data ? $rootScope.data.data: null
+  		data: data ? data.data: null
+  	};
   });
