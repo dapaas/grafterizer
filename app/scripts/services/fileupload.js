@@ -8,14 +8,26 @@
  * Service in the grafterizerApp.
  */
 angular.module('grafterizerApp')
-  .service('fileUpload', function (fileParsing, $location, $rootScope) {
+  .service('fileUpload', function (fileParsing, $location, $rootScope, $mdToast) {
     // AngularJS will instantiate a singleton by calling "new" on this function
 
-    var fileResults = null;
+    var fileResults = null,
+      title = null;
 
   	this.upload = function(file) {
   		console.log('file upload', file);
-  		fileParsing.parse(file[0], function(results) {
+      if (!file.length) {
+        $mdToast.show(
+          $mdToast.simple()
+            .content('File upload error')
+            .position('right top')
+            .hideDelay(3000)
+        );
+        return;
+      }
+      file = file[0];
+      title = file.name;
+  		fileParsing.parse(file, function(results) {
   			console.log('parsing results', results);
   			fileResults = results;
   			//$rootScope.data = results;
@@ -27,4 +39,8 @@ angular.module('grafterizerApp')
   	this.getResults = function() {
   		return fileResults;
   	};
+
+    this.getTitle = function() {
+      return title && title.replace ? _.startCase(title.replace(/\.[^/.]+$/, "")) : "";
+    };
   });

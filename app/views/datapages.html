@@ -17,6 +17,8 @@
 	</md-list>
 </md-content>
 
-<md-button class="md-accent md-fab md-fab-bottom-right sin-fa-button">
-	<i class="fa fa-plus"></i>
-</md-button>
+<div ng-controller="UploadCtrl">
+	<md-button class="md-accent md-fab md-fab-bottom-right sin-fa-button" ng-file-select ng-model="file" accept=".csv,.xsl,.xslx" aria-label="Upload">
+		<i class="fa fa-plus"></i>
+	</md-button>
+</div>

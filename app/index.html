@@ -1,8 +1,8 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" ng-app="grafterizerApp">
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title ng-bind="title + ' - Grafterizer'">Grafterizer</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -11,14 +11,15 @@
     <link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css" />
     <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
     <link rel="stylesheet" href="bower_components/components-font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
   </head>
-  <body ng-app="grafterizerApp" layout="row" ng-controller="NavigationCtrl as nav">
-    <!--[if lt IE 7]>
+  <body layout="row" ng-controller="NavigationCtrl as nav">
+    <!--[if lt IE 9]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
@@ -30,17 +31,29 @@
       </md-toolbar>
       <br>
       <md-content flex role="navigation" layout="column">
-        <md-button class="md-button md-primary" ng-href="#/datapages">My data pages</md-button>
+        <md-button class="md-button md-primary" ng-href="#/datapages">Data pages</md-button>
         <md-button class="md-button md-primary" ng-href="#/transformations">My transformations</md-button>
       </md-content>
     </md-sidenav>
 
     <div flex role="main" tabindex="-1" layout="column">
-      <md-toolbar layout="row">
+      <md-toolbar layout="row" class="md-toolbar-tools">
         <md-button class="menu" hide-gt-sm ng-click="nav.toggleSideMenu()" aria-label="Show User List">
           <i class="fa fa-bars"></i>
         </md-button>
-      </md-toolbar>
+        <div layout="row" flex class="fill-height">
+          <div class="md-toolbar-item md-breadcrumb">
+            <span ng-if="sectionTitle">
+              <span hide-sm hide-md>{{sectionTitle}}</span>
+              <span class="docs-menu-separator-icon" style="" hide-sm hide-md>
+                <i class="fa fa-chevron-right" aria-hidden="true"></i>
+              </span>
+             </span>
+           <span class="md-breadcrumb-page">{{title}}</span>
+          </div>
+ <span flex></span> <!-- use up the empty space -->
+        </div>
+       </md-toolbar>
         
       <div flex layout="column" ng-view></div>
     </div>
@@ -62,6 +75,8 @@
     <script src="bower_components/angular-ui-grid/ui-grid.js"></script>
     <script src="bower_components/angular-aria/angular-aria.js"></script>
     <script src="bower_components/angular-material/angular-material.js"></script>
+    <script src="bower_components/lodash/lodash.js"></script>
+    <script src="bower_components/angular-loading-bar/build/loading-bar.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -75,6 +90,7 @@
         <script src="scripts/services/fileparsing.js"></script>
         <script src="scripts/controllers/navigation.js"></script>
         <script src="scripts/controllers/datapages.js"></script>
+        <script src="scripts/services/datapagesresource.js"></script>
         <!-- endbuild -->
 </body>
 </html>

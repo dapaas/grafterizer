@@ -1,3 +1,18 @@
-<p>This is the grid view.</p>
-
-<div ui-grid="gridOptions" ui-grid-auto-resize class="grid"></div>
+<md-content md-scroll-y class="md-padding" layout="column" flex>
+    <md-input-container class="sin-no-shrink">
+      <label>Title</label>
+      <input ng-model="document.title" required>
+    </md-input-container>
+    <md-input-container class="sin-no-shrink">
+        <label>Metadata</label>
+        <textarea ng-model="document.metadata"></textarea>
+      </md-input-container>
+<!--       <section layout="row" layout-sm="column" layout-align="center center" class="sin-no-shrink">
+      <md-button class="md-raised md-accent">Save</md-button>
+      <md-button class="md-raised md-primary">Transform</md-button>
+      <md-button class="md-raised">Discard</md-button>
+    </section>
+ -->    <div layout="column" flex class="sin-no-shrink" layout-margin>
+		<div ui-grid="gridOptions" class="sin-grid md-whiteframe-z3" ui-grid-auto-resize flex></div>
+    </div>
+</md-content>

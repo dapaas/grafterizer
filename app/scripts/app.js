@@ -18,9 +18,11 @@ angular
     'ngSanitize',
     'ngTouch',
     'angularFileUpload',
-    'ui.grid'
+    'ui.grid',
+    'ui.grid.autoResize',
+    'angular-loading-bar'
   ])
-  .config(function ($routeProvider) {
+  .config(function ($routeProvider, cfpLoadingBarProvider) {
     $routeProvider
       .when('/', {
         templateUrl: 'views/main.html',
@@ -45,4 +47,5 @@ angular
       .otherwise({
         redirectTo: '/'
       });
+    cfpLoadingBarProvider.includeSpinner = false;
   });
