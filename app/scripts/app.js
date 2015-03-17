@@ -10,13 +10,13 @@
  */
 angular
   .module('grafterizerApp', [
+    'ngMaterial',
     'ngAnimate',
     'ngCookies',
     'ngResource',
     'ngRoute',
     'ngSanitize',
     'ngTouch',
-    'ngTable',
     'angularFileUpload',
     'ui.grid'
   ])
@@ -37,6 +37,10 @@ angular
       .when('/grid', {
         templateUrl: 'views/grid.html',
         controller: 'GridCtrl'
+      })
+      .when('/datapages', {
+        templateUrl: 'views/datapages.html',
+        controller: 'DatapagesCtrl'
       })
       .otherwise({
         redirectTo: '/'
