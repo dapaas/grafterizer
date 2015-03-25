@@ -31,8 +31,13 @@
       </md-toolbar>
       <br>
       <md-content flex role="navigation" layout="column">
-        <md-button class="md-button md-primary" ng-href="#/datapages">Data pages</md-button>
-        <md-button class="md-button md-primary" ng-href="#/transformations">My transformations</md-button>
+        <md-button class="md-button md-primary" ng-href="#/datapages">
+          <i class="fa fa-dashboard"></i> Data pages</md-button>
+        <md-button class="md-button md-primary" ng-href="#/transformations">
+          <i class="fa fa-filter"></i> Transformations</md-button>
+        <md-button class="md-button md-primary" ng-href="#/files">
+          <i class="fa fa-file"></i> Files
+        </md-button>
       </md-content>
     </md-sidenav>
 
@@ -92,6 +97,8 @@
         <script src="scripts/controllers/datapages.js"></script>
         <script src="scripts/services/datapagesresource.js"></script>
         <script src="scripts/services/loopback-services.js"></script>
+        <script src="scripts/controllers/files.js"></script>
+        <script src="scripts/controllers/file.js"></script>
         <!-- endbuild -->
 </body>
 </html>

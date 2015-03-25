@@ -45,6 +45,14 @@ angular
         templateUrl: 'views/datapages.html',
         controller: 'DatapagesCtrl'
       })
+      .when('/files', {
+        templateUrl: 'views/files.html',
+        controller: 'FilesCtrl'
+      })
+      .when('/file/:id', {
+        templateUrl: 'views/file.html',
+        controller: 'FileCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

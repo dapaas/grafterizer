@@ -1,0 +1,25 @@
+<md-content md-scroll-y class="md-padding">
+	<md-list>
+	  <md-item ng-repeat="file in files">
+	    <md-item-content>
+		  	<md-button ng-href="#/file/{{file.id}}">
+		      <div class="md-tile-left">
+				  <i class="fa fa-file"></i>
+		      </div>
+		      <div class="md-tile-content">
+		        <h3>{{file.name}}</h3>
+		        <h4>{{file.date}}</h4>
+		        <p>
+		          {{file.metadata}}
+		        </p>
+		      </div>
+		  	</md-button>
+	    </md-item-content>
+	  </md-item>
+	</md-list>
+</md-content>
+<div ng-controller="UploadCtrl">
+	<md-button class="md-accent md-fab md-fab-bottom-right sin-fa-button" ng-file-select ng-model="file" accept=".csv,.xsl,.xslx" aria-label="Upload">
+		<i class="fa fa-plus"></i>
+	</md-button>
+</div>
