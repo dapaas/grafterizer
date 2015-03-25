@@ -20,7 +20,8 @@ angular
     'angularFileUpload',
     'ui.grid',
     'ui.grid.autoResize',
-    'angular-loading-bar'
+    'angular-loading-bar',
+    'lbServices'
   ])
   .config(function ($routeProvider, cfpLoadingBarProvider) {
     $routeProvider

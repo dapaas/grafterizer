@@ -1,15 +1,15 @@
 <md-content md-scroll-y class="md-padding">
 	<md-list>
-	  <md-item ng-repeat="item in todos">
+	  <md-item ng-repeat="datapage in datapages">
 	    <md-item-content>
 	      <div class="md-tile-left">
 			  <i class="fa fa-file"></i>
 	      </div>
 	      <div class="md-tile-content">
-	        <h3>{{item.what}}</h3>
-	        <h4>{{item.who}}</h4>
+	        <h3>{{datapage.title}}</h3>
+	        <h4>{{datapage.data}}</h4>
 	        <p>
-	          {{item.notes}}
+	          {{datapage.metadata}}
 	        </p>
 	      </div>
 	    </md-item-content>
