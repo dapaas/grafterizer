@@ -93,3 +93,17 @@ md-sidenav .md-button.md-default-theme {
   }
 }
 
+md-sidenav .md-button {
+  text-align: left;
+  i {
+    margin-left:0.5em;
+    margin-right:0.5em;
+  }
+}
+
+#loading-bar .bar {
+  background: rgb(255,64,129);
+  &.peg {
+    box-shadow: rgb(255,64,129) 1px 0 6px 1px;
+  }
+}
