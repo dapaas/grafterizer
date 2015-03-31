@@ -53,6 +53,11 @@ angular
         templateUrl: 'views/datapages.html',
         controller: 'DatapagesCtrl'
       })
+      .state('transformations', {
+        url: '/transformations',
+        templateUrl: 'views/transformations.html',
+        controller: 'TransformationsCtrl'
+      })
       .state('files', {
         url: '/files',
         templateUrl: 'views/files.html',
