@@ -2,7 +2,7 @@
 	<md-list>
 	  <md-item ng-repeat="file in files">
 	    <md-item-content>
-		  	<md-button ng-href="#/file/{{file.id}}">
+		  	<md-button ui-sref="files.file({id: file.id})">
 		      <div class="md-tile-left">
 				  <i class="fa fa-file"></i>
 		      </div>

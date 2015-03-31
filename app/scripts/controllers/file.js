@@ -9,8 +9,8 @@
  */
 angular.module('grafterizerApp')
   .controller('FileCtrl', function ($scope, $rootScope, $stateParams, File) {
-  	var id = $stateParams.id;
-    
+  	var id = $scope.id = $stateParams.id;
+
   	File.findById({
   		id: id
   	}, function(value){

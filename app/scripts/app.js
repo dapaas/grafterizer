@@ -30,43 +30,75 @@ angular
     $stateProvider
       .state('main', {
         url: '/',
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
+        views: {
+          main: {
+            templateUrl: 'views/main.html',
+            controller: 'MainCtrl'
+          } 
+        }
       })
       .state('about', {
         url: '/about',
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl'
+        views: {
+          main: {
+            templateUrl: 'views/about.html',
+            controller: 'AboutCtrl'
+          }
+        }
       })
       .state('upload', {
         url: '/upload',
-        templateUrl: 'views/upload.html',
-        controller: 'UploadCtrl'
+        views: {
+          main: {
+            templateUrl: 'views/upload.html',
+            controller: 'UploadCtrl'
+          }
+        }
       })
       .state('grid', {
         url: '/grid',
-        templateUrl: 'views/grid.html',
-        controller: 'GridCtrl'
+        views: {
+          main: {
+            templateUrl: 'views/grid.html',
+            controller: 'GridCtrl'
+          }
+        }
       })
       .state('datapages', {
         url: '/datapages',
-        templateUrl: 'views/datapages.html',
-        controller: 'DatapagesCtrl'
+        views: {
+          main: {
+            templateUrl: 'views/datapages.html',
+            controller: 'DatapagesCtrl'
+          }
+        }
       })
       .state('transformations', {
         url: '/transformations',
-        templateUrl: 'views/transformations.html',
-        controller: 'TransformationsCtrl'
+        views: {
+          main: {
+            templateUrl: 'views/transformations.html',
+            controller: 'TransformationsCtrl'
+          }
+        }
       })
       .state('files', {
         url: '/files',
-        templateUrl: 'views/files.html',
-        controller: 'FilesCtrl'
+        views: {
+          main: {
+            templateUrl: 'views/files.html',
+            controller: 'FilesCtrl'
+          }
+        }
       })
-      .state('file', {
-        url: '/file/:id',
-        templateUrl: 'views/file.html',
-        controller: 'FileCtrl'
+      .state('files.file', {
+        url: '^/file/:id',
+        views: {
+          "main@": {
+            templateUrl: 'views/file.html',
+            controller: 'FileCtrl'
+          }
+        }
       });
 
     cfpLoadingBarProvider.includeSpinner = false;
