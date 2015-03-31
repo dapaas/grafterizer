@@ -22,9 +22,10 @@ angular
     'ui.grid',
     'ui.grid.autoResize',
     'angular-loading-bar',
-    'lbServices'
+    'lbServices',
+    'ncy-angular-breadcrumb'
   ])
-  .config(function ($stateProvider, $urlRouterProvider, cfpLoadingBarProvider) {
+  .config(function ($stateProvider, $urlRouterProvider, cfpLoadingBarProvider, $breadcrumbProvider) {
     $urlRouterProvider.otherwise("/");
 
     $stateProvider
@@ -35,6 +36,9 @@ angular
             templateUrl: 'views/main.html',
             controller: 'MainCtrl'
           } 
+        },
+        ncyBreadcrumb: {
+          label: 'Home page'
         }
       })
       .state('about', {
@@ -89,6 +93,9 @@ angular
             templateUrl: 'views/files.html',
             controller: 'FilesCtrl'
           }
+        },
+        ncyBreadcrumb: {
+          label: 'Files'
         }
       })
       .state('files.file', {
@@ -98,8 +105,21 @@ angular
             templateUrl: 'views/file.html',
             controller: 'FileCtrl'
           }
+        },
+        ncyBreadcrumb: {
+          label: 'File {{id}}'
         }
       });
 
     cfpLoadingBarProvider.includeSpinner = false;
+
+    $breadcrumbProvider.setOptions({
+      template:
+        '<ol class="breadcrumb">'+
+          '<li ng-repeat="step in steps" ng-class="{active: $last}" ng-switch="$last || !!step.abstract">'+
+            '<a ng-switch-when="false" href="{{step.ncyBreadcrumbLink}}">{{step.ncyBreadcrumbLabel}}</a>'+
+             '<span ng-switch-when="true">{{step.ncyBreadcrumbLabel}}</span>'+
+          '</li>'+
+        '</ol>'
+    });
   });

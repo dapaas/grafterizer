@@ -107,3 +107,25 @@ md-sidenav .md-button {
     box-shadow: rgb(255,64,129) 1px 0 6px 1px;
   }
 }
+
+
+.breadcrumb {
+  padding: 8px 15px;
+  margin-bottom: 20px;
+  list-style: none;
+  //background-color: #f5f5f5;
+  border-radius: 4px;
+}
+.breadcrumb > li {
+  display: inline-block;
+}
+.breadcrumb > li + li:before {
+  content: "/";
+  // content: "a";
+  padding: 0 5px;
+  color: #cccccc;
+}
+.breadcrumb > .active {
+  color: #303F9F;
+  color: white;
+}
