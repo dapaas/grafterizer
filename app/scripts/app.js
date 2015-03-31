@@ -25,8 +25,11 @@ angular
     'lbServices',
     'ncy-angular-breadcrumb'
   ])
-  .config(function ($stateProvider, $urlRouterProvider, cfpLoadingBarProvider, $breadcrumbProvider) {
+  .config(function ($stateProvider, $urlRouterProvider, cfpLoadingBarProvider, $breadcrumbProvider, $locationProvider) {
     $urlRouterProvider.otherwise("/");
+
+    // TODO enable in production
+    // $locationProvider.html5Mode(true);
 
     $stateProvider
       .state('main', {
