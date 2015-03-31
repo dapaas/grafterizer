@@ -127,7 +127,7 @@ angular
           }
         },
         ncyBreadcrumb: {
-          label: 'File {{id}}'
+          label: '{{document.title || "File "+id}}'
         }
       });
 
