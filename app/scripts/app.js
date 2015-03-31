@@ -75,6 +75,9 @@ angular
             templateUrl: 'views/datapages.html',
             controller: 'DatapagesCtrl'
           }
+        },
+        ncyBreadcrumb: {
+          label: 'Datapages'
         }
       })
       .state('transformations', {
@@ -84,6 +87,20 @@ angular
             templateUrl: 'views/transformations.html',
             controller: 'TransformationsCtrl'
           }
+        },
+        ncyBreadcrumb: {
+          label: 'Transformations'
+        }
+      })
+      .state('transformations.new', {
+        url: '/new',
+        views: {
+          "main@": {
+            template: 'new'
+          }
+        },
+        ncyBreadcrumb: {
+          label: 'New transformation'
         }
       })
       .state('files', {
