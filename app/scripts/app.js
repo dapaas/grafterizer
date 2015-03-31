@@ -23,7 +23,8 @@ angular
     'ui.grid.autoResize',
     'angular-loading-bar',
     'lbServices',
-    'ncy-angular-breadcrumb'
+    'ncy-angular-breadcrumb',
+    'angularMoment'
   ])
   .config(function ($stateProvider, $urlRouterProvider, cfpLoadingBarProvider, $breadcrumbProvider, $locationProvider) {
     $urlRouterProvider.otherwise("/");

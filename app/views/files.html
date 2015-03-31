@@ -8,7 +8,7 @@
 		      </div>
 		      <div class="md-tile-content">
 		        <h3>{{file.name}}</h3>
-		        <h4>{{file.date}}</h4>
+		        <h4> <span am-time-ago="file.date"></span> - {{file.date | date:'H\'h\'mm\' d/M/yyyy'}}</h4>
 		        <p>
 		          {{file.metadata}}
 		        </p>

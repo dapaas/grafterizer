@@ -35,6 +35,8 @@ module.exports = function(config) {
       'bower_components/angular-loading-bar/build/loading-bar.js',
       'bower_components/angular-ui-router/release/angular-ui-router.js',
       'bower_components/angular-breadcrumb/release/angular-breadcrumb.js',
+      'bower_components/moment/moment.js',
+      'bower_components/angular-moment/angular-moment.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',
