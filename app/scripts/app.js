@@ -119,7 +119,7 @@ angular
         }
       })
       .state('files.file', {
-        url: '^/file/:id',
+        url: '/:id',
         views: {
           "main@": {
             templateUrl: 'views/file.html',
