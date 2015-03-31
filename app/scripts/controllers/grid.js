@@ -8,10 +8,7 @@
  * Controller of the grafterizerApp
  */
 angular.module('grafterizerApp')
-  .controller('GridCtrl', function ($scope, fileUpload, $interval, $rootScope) {
-
-  	$rootScope.sectionTitle = 'Data pages';
-  	$rootScope.title = 'New data page';
+  .controller('GridCtrl', function ($scope, fileUpload, $interval) {
 
   	var data = fileUpload.getResults();
 

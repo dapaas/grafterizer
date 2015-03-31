@@ -8,9 +8,7 @@
  * Controller of the grafterizerApp
  */
 angular.module('grafterizerApp')
-  .controller('FilesCtrl', function ($scope, $rootScope, File) {
-  	$rootScope.title = 'Files';
-  	$rootScope.sectionTitle = null;
+  .controller('FilesCtrl', function ($scope, File) {
   	File.find({
   		"filter[fields][content]": false
   	}, function(list){

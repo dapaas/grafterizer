@@ -8,9 +8,7 @@
  * Controller of the grafterizerApp
  */
 angular.module('grafterizerApp')
-  .controller('DatapagesCtrl', function ($scope, Datapages, $rootScope) {
-  	$rootScope.title = 'Data pages';
-  	$rootScope.sectionTitle = null;
+  .controller('DatapagesCtrl', function ($scope, Datapages) {
   	
   	Datapages.find({}, function(list){
   		console.log(list);
