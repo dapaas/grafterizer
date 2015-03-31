@@ -10,6 +10,7 @@
  */
 angular
   .module('grafterizerApp', [
+    'ui.router',
     'ngMaterial',
     'ngAnimate',
     'ngCookies',
@@ -23,38 +24,45 @@ angular
     'angular-loading-bar',
     'lbServices'
   ])
-  .config(function ($routeProvider, cfpLoadingBarProvider) {
-    $routeProvider
-      .when('/', {
+  .config(function ($stateProvider, $urlRouterProvider, cfpLoadingBarProvider) {
+    $urlRouterProvider.otherwise("/");
+
+    $stateProvider
+      .state('main', {
+        url: '/',
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
-      .when('/about', {
+      .state('about', {
+        url: '/about',
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl'
       })
-      .when('/upload', {
+      .state('upload', {
+        url: '/upload',
         templateUrl: 'views/upload.html',
         controller: 'UploadCtrl'
       })
-      .when('/grid', {
+      .state('grid', {
+        url: '/grid',
         templateUrl: 'views/grid.html',
         controller: 'GridCtrl'
       })
-      .when('/datapages', {
+      .state('datapages', {
+        url: '/datapages',
         templateUrl: 'views/datapages.html',
         controller: 'DatapagesCtrl'
       })
-      .when('/files', {
+      .state('files', {
+        url: '/files',
         templateUrl: 'views/files.html',
         controller: 'FilesCtrl'
       })
-      .when('/file/:id', {
+      .state('file', {
+        url: '/file/:id',
         templateUrl: 'views/file.html',
         controller: 'FileCtrl'
-      })
-      .otherwise({
-        redirectTo: '/'
       });
+
     cfpLoadingBarProvider.includeSpinner = false;
   });
