@@ -100,7 +100,7 @@ angular
         url: '/new',
         views: {
           "main@": {
-            template: 'new'
+            templateUrl: 'views/transformationedit.html',
           }
         },
         ncyBreadcrumb: {
