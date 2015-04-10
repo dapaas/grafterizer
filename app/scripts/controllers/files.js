@@ -30,7 +30,4 @@ angular.module('grafterizerApp')
   	}, function(error){
   		console.log("pas glop")
   	});
-  	$scope.canard = function(){
-  		console.log("canard")
-  	};
   });
