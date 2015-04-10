@@ -130,8 +130,16 @@ md-sidenav .md-button {
   color: white;
 }
 
-md-item md-item-content i.fa {
-  font-size: 28px;
-  padding-left: 12px;
-  padding-bottom: 5px;
+.files-list {
+  md-item md-tile-content {
+    padding-left:25px;
+  }
+
+  md-item md-item-content i.fa {
+    float:left;
+    margin-right:30px;
+    font-size: 28px;
+    //padding-left: 12px;
+    padding-top: 7px;
+  }
 }
