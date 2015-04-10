@@ -1,17 +1,14 @@
-<md-content md-scroll-y class="md-padding">
+<md-content md-scroll-y class="md-padding dapaas-list">
 	<md-list>
-	  <md-item ng-repeat="datapage in datapages">
+	  <md-item ng-repeat="transformation in transformations">
 	    <md-item-content>
-	      <div class="md-tile-left">
-			  <i class="fa fa-file"></i>
-	      </div>
-	      <div class="md-tile-content">
-	        <h3>{{datapage.title}}</h3>
-	        <h4>{{datapage.data}}</h4>
-	        <p>
-	          {{datapage.metadata}}
-	        </p>
-	      </div>
+		  	<md-button ui-sref="transformations.transformation({id: transformation.id})">
+		      <div class="md-tile-content">
+  			    <i class="fa fa-filter"></i>
+		        <h3>{{transformation.name}}</h3>
+		        <h4> </h4>
+		      </div>
+		  	</md-button>
 	    </md-item-content>
 	  </md-item>
 	</md-list>

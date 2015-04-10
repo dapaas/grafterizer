@@ -8,7 +8,7 @@
  * Controller of the grafterizerApp
  */
 angular.module('grafterizerApp')
-  .controller('UploadCtrl', function ($scope, fileUpload, $mdToast, File, $location) {
+  .controller('UploadCtrl', function ($scope, fileUpload, $mdToast, File, $state) {
   	$scope.$watch('file', function() {
   		if ($scope.file && $scope.file[0]) {
   			var now = new Date();
@@ -27,7 +27,9 @@ angular.module('grafterizerApp')
 	  				return;
 	  			}
 
-		  		$location.path("/file/"+data.id);
+	  			$state.go('files.file', {
+	  				id: data.id
+	  			});
 	  			/*File.create({
 	  				name: "je suis un canard",//data.name,
 	  				link: "canard",//data.hash+'.'+data.extension,

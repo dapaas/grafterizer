@@ -94,6 +94,7 @@ md-sidenav .md-button.md-default-theme {
 }
 
 md-sidenav .md-button {
+  line-height: 2em;
   text-align: left;
   i {
     margin-left:0.5em;
@@ -130,7 +131,7 @@ md-sidenav .md-button {
   color: white;
 }
 
-.files-list {
+.files-list, .dapaas-list {
   md-item md-tile-content {
     padding-left:25px;
   }

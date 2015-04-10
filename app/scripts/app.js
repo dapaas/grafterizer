@@ -100,11 +100,32 @@ angular
         url: '/new',
         views: {
           "main@": {
-            templateUrl: 'views/transformation.html',
+            controller: 'TransformationNewCtrl',
+            templateUrl: 'views/transformation.html'
+          },
+          "actions@": {
+            templateUrl: 'views/actions.html',
+            controller: 'ActionsCtrl'
           }
         },
         ncyBreadcrumb: {
           label: 'New transformation'
+        }
+      })
+      .state('transformations.transformation', {
+        url: '/:id',
+        views: {
+          "main@": {
+            templateUrl: 'views/transformation.html',
+            controller: 'TransformationCtrl'
+          },
+          "actions@": {
+            templateUrl: 'views/actions.html',
+            controller: 'ActionsCtrl'
+          }
+        },
+        ncyBreadcrumb: {
+          label: '{{document.title || "File "+id}}'
         }
       })
       .state('files', {
@@ -133,6 +154,22 @@ angular
         },
         ncyBreadcrumb: {
           label: '{{document.title || "File "+id}}'
+        }
+      })
+      .state('demo', {
+        url: '/demo',
+        views: {
+          "main@": {
+            templateUrl: 'views/demo.html',
+            controller: 'DemoCtrl'
+          },
+          "actions@": {
+            templateUrl: 'views/actions.html',
+            controller: 'ActionsCtrl'
+          }
+        },
+        ncyBreadcrumb: {
+          label: 'Demo'
         }
       });
 

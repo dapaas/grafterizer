@@ -2,16 +2,16 @@
 
 /**
  * @ngdoc function
- * @name grafterizerApp.controller:FileCtrl
+ * @name grafterizerApp.controller:TransformationCtrl
  * @description
- * # FileCtrl
+ * # TransformationCtrl
  * Controller of the grafterizerApp
  */
 angular.module('grafterizerApp')
-  .controller('FileCtrl', function (
+  .controller('TransformationCtrl', function (
     $scope,
     $stateParams,
-    File,
+    Transformation,
     $rootScope,
     $state,
     $mdToast,
@@ -19,22 +19,14 @@ angular.module('grafterizerApp')
 
   	var id = $scope.id = $stateParams.id;
 
-  	File.findById({
+  	Transformation.findById({
   		id: id
   	}, function(value){
   		// todo merge
   		$scope.document = {
   			title: value.name,
-        description: value.description
+        	description: value.metadata
   		};
-  		var data = value.content;
-	  	$scope.gridOptions = {
-	  		//data: $rootScope.data ? $rootScope.data.data: null
-	  		data: data ? data.data: null,
-	  		columnDefs: data ? 
-	  			_.map(data.meta.fields, function(f){return {name: f,width:Math.min(80+f.length*8, 250)};}) :
-	  			[{name:'empty document', width:'100%'}]
-	  	};
   	}, function(error){
       $mdToast.show(
         $mdToast.simple()
@@ -46,28 +38,29 @@ angular.module('grafterizerApp')
 
     $rootScope.actions = {
       save: function(){
-        File.prototype$updateAttributes({
+        Transformation.prototype$updateAttributes({
           id: id
         }, {
           name: $scope.document.title,
-          description: $scope.document.description
+          metadata: $scope.document.description
+          //clojure
         });
       },
       delete: function(ev) {
         var confirm = $mdDialog.confirm()
-          .title('Do you really want us to delete this file?')
-          .content('It\'s a nice file')
+          .title('Do you really want to delete this transformation?')
+          .content('It\'s a nice transformation')
           .ariaLabel('Deletion confirmation')
           .ok('Please do it!')
           .cancel('Finally no, I like it')
           .targetEvent(ev);
 
         $mdDialog.show(confirm).then(function() {
-          File.deleteById({id: id}).$promise.then(function(){
-            $state.go('files');
+          Transformation.deleteById({id: id}).$promise.then(function(){
+            $state.go('transformations');
             $mdToast.show(
               $mdToast.simple()
-                .content('File "'+$scope.document.title+'" deleted')
+                .content('Transformation "'+$scope.document.title+'" deleted')
                 .position('right top')
                 .hideDelay(6000)
             );

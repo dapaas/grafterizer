@@ -1,0 +1,22 @@
+<md-content class="md-padding" layout="column" flex>
+
+<div layout-sm="column" layout-gt-sm="row">
+	<md-select placeholder="Transformation" ng-model="selectedTransformation" flex>
+		<md-option ng-value="transformation" ng-repeat="transformation in transformations">
+			<strong>{{transformation.id}}</strong>: {{transformation.name}}
+		</md-option>
+	</md-select>
+	<span>&nbsp;</span>
+	<md-select placeholder="File" ng-model="selectedFile" flex>
+		<md-option ng-value="file" ng-repeat="file in files">
+			<strong>{{file.id}}</strong>: {{file.name}}
+		</md-option>
+	</md-select>
+</div>
+
+<div flex layout-gt-lg="row" layout="column">
+	<iframe src="/backup/index.html" style="border:none;" flex layout-margin></iframe>
+	<div ui-grid="gridOptions" class="sin-grid md-whiteframe-z3" ui-grid-auto-resize flex="33"></div>
+</div>
+
+</md-content>
