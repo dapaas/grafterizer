@@ -1,20 +1,24 @@
 <md-content md-scroll-y class="md-padding">
 	<md-list>
 	  <md-item ng-repeat="file in files">
+	  	<md-subheader  ng-show="file.period">{{file.period}}</md-subheader>
 	    <md-item-content>
-		  	<md-button ui-sref="files.file({id: file.id})">
+		  	<!-- <md-button ui-sref="files.file({id: file.id})"> -->
 		      <div class="md-tile-left">
 				  <i class="fa fa-file"></i>
+		            <!-- <img ng-src="{{item.face}}" class="face" alt="{{item.who}}"> -->
+
 		      </div>
 		      <div class="md-tile-content">
 		        <h3>{{file.name}}</h3>
-		        <h4> <span am-time-ago="file.date"></span> - {{file.date | date:'H\'h\'mm\' d/M/yyyy'}}</h4>
+		        <h4> <span am-time-ago="file.date"></span> - {{file.date | date:'H\'h\'mm\' - d/M/yyyy'}}</h4>
 		        <p>
 		          {{file.metadata}}
 		        </p>
 		      </div>
-		  	</md-button>
+		  	<!-- </md-button> -->
 	    </md-item-content>
+	    <md-divider md-inset ng-if="!$last"></md-divider>
 	  </md-item>
 	</md-list>
 </md-content>

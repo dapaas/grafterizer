@@ -10,9 +10,22 @@
 angular.module('grafterizerApp')
   .controller('FilesCtrl', function ($scope, File) {
   	File.find({
-  		"filter[fields][content]": false
+  		"filter[fields][content]": false,
+      "filter[order]": "date DESC"
   	}, function(list){
-  		console.log(list);
+      var period = null;
+      var now = new Date();
+      list.forEach(function(file) {
+        var fileMoment = moment(file.date);
+        if (fileMoment.isSame(now, "day")) {
+          var tmpPeriod = "Today";
+        } else {
+          var tmpPeriod = fileMoment.fromNow();
+        }
+        if (period !== tmpPeriod) {
+          file.period = period = tmpPeriod;
+        }
+      });
   		$scope.files = list;
   	}, function(error){
   		console.log("pas glop")
