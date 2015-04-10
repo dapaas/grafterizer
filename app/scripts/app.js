@@ -125,6 +125,10 @@ angular
           "main@": {
             templateUrl: 'views/file.html',
             controller: 'FileCtrl'
+          },
+          "actions@": {
+            templateUrl: 'views/actions.html',
+            controller: 'ActionsCtrl'
           }
         },
         ncyBreadcrumb: {
