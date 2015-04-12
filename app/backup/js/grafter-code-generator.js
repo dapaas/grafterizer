@@ -543,3 +543,11 @@ function createCustomCodeForPipeline(code, displayName){
 //    $("#output").text(textStr);
 //
 //});
+
+function setCode(code) {
+    console.log("source code received", code);
+};
+
+function getCode() {
+    return "this is a test";
+};
