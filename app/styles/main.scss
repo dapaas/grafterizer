@@ -105,7 +105,7 @@ md-sidenav .md-button {
 #loading-bar .bar {
   background: rgb(255,64,129);
   &.peg {
-    box-shadow: rgb(255,64,129) 1px 0 6px 1px;
+    box-shadow: rgb(255,64,129) 1px 0 6px 15px;
   }
 }
 
@@ -153,4 +153,29 @@ md-sidenav .md-button {
 
 md-sidenav .dapaas-title.md-button {
   text-align: center;
+}
+
+md-sidenav {
+  width:204px;
+  min-width:204px;
+  max-width:204px;
+
+  &.md-locked-open {
+    width:204px;
+    min-width:204px;
+    max-width:204px;
+  }
+}
+
+.error-infos.md-warm {
+  padding:20px;
+  font-family: monospace;
+  background:#F44336;
+  color:white;
+}
+
+.graftwerk-exception {
+  .ui-grid-render-container {
+    opacity: 0.5;
+  }
 }
