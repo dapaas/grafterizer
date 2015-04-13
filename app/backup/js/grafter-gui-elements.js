@@ -154,15 +154,31 @@ function generateSelectOptionsDeriveColumn(selectControl){
     selectControl.appendChild(chooseOption);
 
     // existing functions options (group)
-    var hasAtLeastOneOption = false;
+    var hasAtLeastOneFunctionOption = false;
     var existingFunctionsGroup = document.createElement('optgroup');
     existingFunctionsGroup.label = "Existing functions";
     for(var functionName in customFunctionsMap){
         existingFunctionsGroup.appendChild(new Option(functionName, functionName));
-        hasAtLeastOneOption=true;
+        hasAtLeastOneFunctionOption=true;
     }
-    if(hasAtLeastOneOption)
+    var hasAtLeastOnePrefixerOption = false;
+    var existingPrefixersGroup = document.createElement('optgroup');
+    existingPrefixersGroup.label = "Existing prefixers";
+    for(i=0;i<prefixersInGUI.length;++i){
+        var prefixerName = prefixersInGUI[i]['prefix-name'];
+        if(prefixerName == ''){
+            alertInterface("Name or URI of a prefix empty, ignoring...", "");
+            continue;
+        }
+        hasAtLeastOnePrefixerOption=true;
+        existingPrefixersGroup.appendChild(new Option(prefixerName, prefixerName));
+    }
+    
+    if(hasAtLeastOneFunctionOption)
         selectControl.appendChild(existingFunctionsGroup);
+    
+    if(hasAtLeastOnePrefixerOption)
+        selectControl.appendChild(existingPrefixersGroup);
 
     // TODO later support for creating custom inline function option
     var createNewCodeElement = document.createElement('option');
@@ -207,7 +223,7 @@ function getDeriveColumnButtons(dialog){
         "Create function": function (){
             // create jsedn of the column name (jsedn keyword)
             var newColName = $("#derived-col-name").val();
-            var newColJsedn = new jsedn.kw(newColName);
+            var newColJsedn = new jsedn.sym(newColName);
             columnKeys.val.push(newColJsedn);
 
             // create jsedn for the input columns (jsedn vector)
@@ -232,7 +248,8 @@ function getDeriveColumnButtons(dialog){
 // TODO clean this out or implement the rest of the calls using it
 function createDeriveColumnPipelineFunction(newColName, colsToDeriveFrom, functionToDeriveWith, index){
     var newColJsedn = new jsedn.kw(newColName);
-    columnKeys.val.push(newColJsedn);
+    var newColJsednColKey = new jsedn.sym(newColName.substring(1));
+    columnKeys.val.push(newColJsednColKey);
     var colsToDeriveFromJsedn = parseEdnFromString(colsToDeriveFrom);
     var functionToDeriveWithJsedn = new jsedn.sym(functionToDeriveWith);
 
@@ -260,6 +277,7 @@ function getMapcButtons(dialog){
             // TODO fix: what happens if we create a function, put in mapc and later remove
             // first create the mapping that is defined for mapc
             var mapcMappingJsEDN = createColFuncMapcMappingJsEDN();
+//            console.log(mapcMappingJsEDN);
             // then create the mapc function itself
             var codeJsedn = createMapc(mapcMappingJsEDN);
 
@@ -395,8 +413,8 @@ function getDropRowsButtons(dialog){
 function generateGrafterCode(){
 
     /* Grafter Declarations */
-
-    var grafterDeclarations = constructGrafterDeclarations();
+// TODO those are not needed here; may be needed afterwards?
+//    var grafterDeclarations = constructGrafterDeclarations();
 
     /* Prefixers */
 
@@ -439,7 +457,7 @@ function generateGrafterCode(){
 
     var resultingPipeline = constructPipeline();
     var textStr = "";
-    textStr += (grafterDeclarations.ednEncode() + '\n' + '\n');
+//    textStr += (grafterDeclarations.ednEncode() + '\n' + '\n');
 
     for(i=0;i<grafterPrefixers.length;++i){
         textStr += (grafterPrefixers[i].ednEncode() + '\n');
@@ -449,7 +467,7 @@ function generateGrafterCode(){
     for(i=0;i<grafterCustomFunctions.length;++i){
         textStr += (grafterCustomFunctions[i].ednEncode() + '\n');
     }
-
+    
     textStr += graphTemplate.ednEncode();
 
     textStr += '\n';
@@ -704,7 +722,7 @@ $(function() {
                                     // Make the column resizable
                                     resizable: true, ctrlCss: { width: '100%' }, displayCss: { 'min-width': '160px' },
                                     // Customize UI tooltip
-                                    displayTooltip: { items: 'td', content: 'Name of the prefix to be used in creating the graph' }
+                                    displayTooltip: { items: 'td', content: 'Name of the column to which you want to apply a function' }
                                 },
                                 { 
                                     name: 'mapc-function', 
@@ -715,7 +733,7 @@ $(function() {
                                     onChange: handleMapcFunctionSelect,
                                     resizable: false, 
                                     displayCss: { 'min-width': '160px' },
-                                    displayTooltip: { items: 'td', content: 'Namespace URI corresponding to the prefix' },
+                                    displayTooltip: { items: 'td', content: 'Function to apply to the chosen column' },
 
                                 }
                             ],
@@ -798,6 +816,12 @@ $(function() {
                 lineNumbers: true, 
                 readOnly: true
             });
+        /************** TEST TODO REMOVEME *************/
+//        console.log(outputCodeMirror.getValue());
+        var TESTVAR = jsedn.parse("(" + outputCodeMirror.getValue() + ")");
+        console.log(TESTVAR);
+
+        /************** TEST TODO REMOVEME ***************/
     });
 
     $("#create-custom-func").button().on("click", function(){
@@ -832,7 +856,7 @@ $(function() {
             },
             "Cancel": function () {
                 $("#dialog-confirm-prefixes").dialog("open");
-                clearPrefixersTable();
+
             }
         }
     });
@@ -876,6 +900,7 @@ $(function() {
             "Yes": function () {
                 $("#dialog-pipeline-prefixers").dialog('close');
                 $(this).dialog('close');
+                clearPrefixersTable();
             },
             "No": function () {
                 $(this).dialog('close');
@@ -1476,8 +1501,7 @@ $(function() {
     /**  Create the RDF mapping control object  **/
     rdfControl = new RDFControl($("#rdf-control-div").get(0), 100, 95);
 
-    /*RESTful call*/
-    
+
 
 });
 
@@ -1500,14 +1524,14 @@ function registerPipeline(id, description, code){
         console.log('Woops, there was an error making the request.');
     };
     var data = new FormData();
-//    console.log(id);
-//    console.log(description);
-//    console.log(code);
-//    data.append("id", id);
-//    data.append("description", description);
-//    data.append("code", code);
+    //    console.log(id);
+    //    console.log(description);
+    //    console.log(code);
+    //    data.append("id", id);
+    //    data.append("description", description);
+    //    data.append("code", code);
     xhr.withCredentials = true;
-//    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    //    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.setRequestHeader('id', id);
     xhr.setRequestHeader('description', description);
     xhr.setRequestHeader('code', code);
@@ -1554,49 +1578,369 @@ function createCORSRequest(method, url) {
     return xhr;
 }
 
+
 /***************************************************************************
     Testing functionalities programatically - preloading some test data
 ***************************************************************************/
+$(function() {
+//
+//    /*******************************************************************************
+//        Custom functions
+//    *******************************************************************************/
+//
+//    var f1 = "(defn select-row [ds n]\r\n  (->> (rows ds [n])\r\n       incanter.core\/to-list\r\n       first))";
+//
+//    var f2 = "(defn normalise-header-c\r\n  \"cultural facilities\"\r\n  [ds f]\r\n  (let [[div sub-div & years-row] (->> (select-row ds 0)\r\n                                       (drop 3))\r\n        type-row (->> (select-row ds 1)\r\n                      (drop 3))\r\n\r\n        data-type-row (->> (select-row ds 2)\r\n                           (drop 3))\r\n\r\n        new-header (->> (map #(str (cstr\/trim %1) \" \" (cstr\/trim %2) \" \" (cstr\/trim %3)) years-row type-row data-type-row)\r\n                        (concat [\"file\" \"division\" \"type\"])\r\n                        (map f))]\r\n    (make-dataset ds (map str new-header))))";
+//
+//
+//    var f3 = "(defn normalise-header-t\r\n  \"traffic equipment\"\r\n  [ds f]\r\n  (let [[div & years-row] (->> (select-row ds 0)\r\n                               (drop 2))\r\n        type-row (->> (select-row ds 1)\r\n                      (drop 2))\r\n\r\n        data-type-row (->> (select-row ds 2)\r\n                           (drop 2))\r\n\r\n        new-header (->> (map #(str (cstr\/trim %1) \" \" (cstr\/trim %2) \" \" (cstr\/trim %3)) years-row type-row data-type-row)\r\n                        (concat [\"file\" \"division\"])\r\n                        (map f))]\r\n    (make-dataset ds (map str new-header))))";
+//
+//    var f4 = "(defn normalise-header-h\r\n  \"highschool\"\r\n  [ds f]\r\n  (let [[div type & years-row] (->> (select-row ds 0)\r\n                                    (drop 3))\r\n        type-row (->> (select-row ds 1)\r\n                      (drop 3))\r\n\r\n        new-header (->> (map #(str (cstr\/trim %1) \" \" (cstr\/trim %2)) years-row type-row)\r\n                        (concat [\"file\" \"division\" \"type\"])\r\n                        (map f))]\r\n    (make-dataset ds (map str new-header))))";
+//
+//    var f5 = "(defn replace-words [mapping]\r\n  (fn [s] (reduce (fn [st [match replacement]]\r\n                    ;(cstr\/replace st (re-pattern (str \"\\\\b\" match \"\\\\b\")) replacement)) s\r\n                    (cstr\/replace st (re-pattern match) replacement)) s\r\n                  (partition 2 mapping))))";
+//
+//    var f6 = "(defn ->Integer [i]\r\n  (cond\r\n    (= \"-\" i) 0\r\n    (nil? i) 0\r\n    (number? i) (int i)\r\n    (string? i) (Integer\/parseInt i)))";
+//
+//    var f7 = "(defn replace-varible-string [cell]\r\n  (-> cell\r\n      (cstr\/replace #\".* #\" \"number\")\r\n      (cstr\/replace #\"[0-9]{4} \" \"\")))";
+//
+//    var f8 = "(defn extract-year [cell]\r\n  ;(first (cstr\/split (str cell) #\" # | art | railroad \")))\r\n  (apply str (filter #(Character\/isDigit %) (str cell))))";
+//
+//    var f9 = "(defn remove-extension [cell]\r\n  (cstr\/replace cell \".xlsx\" \"\"))";
+//
+//    var f10 = "(defn hyphenate [str]\r\n  (cstr\/replace str \" \" \"-\"))";
+//
+//    var f11 = "(defn observation-uri [variable division year]\r\n  (->> [variable division year]\r\n       (interpose \" \")\r\n       (apply str)\r\n       hyphenate\r\n       cstr\/lower-case\r\n       pluqi-data))";
+//
+//    var f12 = "(def filename->indicator-uri\r\n  {\"2005-2006_cultural facilities.xlsx\" (pluqi-schema \"Cultural_satisfaction\")\r\n   \"2007-2008_cultural facilities.xlsx\" (pluqi-schema \"Cultural_satisfaction\")\r\n   \"2009-2011_cultural facilities.xlsx\" (pluqi-schema \"Cultural_satisfaction\")\r\n   \"2011-2012_cultural facilities.xlsx\" (pluqi-schema \"Cultural_satisfaction\")\r\n   \"2005-2012_traffic equipment.xlsx\"   (pluqi-schema \"Daily_life_satisfaction\")\r\n   \"2005-2008_green space.xlsx\"         (pluqi-schema \"Environmental_needs_and_efficiency\")\r\n   \"2009-2012_green space.xlsx\"         (pluqi-schema \"Environmental_needs_and_efficiency\")\r\n   \"2011-2013_highschool.xlsx\"          (pluqi-schema \"Level_of_opportunity\")\r\n   \"2011-2012_place of a crime.xlsx\"    (pluqi-schema \"Safety_and_security\")})";
+//
+//    var f13 = "(defn division-uri [s]\r\n  (pluqi-data s))";
+//
+//    var f14 = "(defn date-format [fmt]\r\n  (let [parser (java.text.SimpleDateFormat. fmt)]\r\n    (fn [s]\r\n      (.parse parser (str s) (java.text.ParsePosition. 0)))))";
+//
+//    var f15 = "(defn observation-label [var year division]\r\n  (str (cstr\/capitalize var) \" in \" division \" in \" year \".\"))";
+//
+//    var f16 = "(def call-year (date-format \"yyyy\"))";
+//    var f17 = "(def call-comp-removeext (comp pluqi-data remove-extension))";
+//    var f18 = "(def call-comp-hyphenate (comp pluqi-data hyphenate))";
+//
+//    var codeObject = createCustomFunctionObj(f1);
+//    if(codeObject['fnName'] == null){
+//        return;
+//    }
+//    customFunctionsMap[codeObject['fnName']] = codeObject;
+//
+//    codeObject = createCustomFunctionObj(f2);
+//    if(codeObject['fnName'] == null){
+//        return;
+//    }
+//    customFunctionsMap[codeObject['fnName']] = codeObject;
+//
+//    codeObject = createCustomFunctionObj(f3);
+//    if(codeObject['fnName'] == null){
+//        return;
+//    }
+//    customFunctionsMap[codeObject['fnName']] = codeObject;
+//
+//    codeObject = createCustomFunctionObj(f4);
+//    if(codeObject['fnName'] == null){
+//        return;
+//    }
+//    customFunctionsMap[codeObject['fnName']] = codeObject;
+//
+//    codeObject = createCustomFunctionObj(f5);
+//    if(codeObject['fnName'] == null){
+//        return;
+//    }
+//    customFunctionsMap[codeObject['fnName']] = codeObject;
+//
+//    codeObject = createCustomFunctionObj(f6);
+//    if(codeObject['fnName'] == null){
+//        return;
+//    }
+//    customFunctionsMap[codeObject['fnName']] = codeObject;
+//
+//    codeObject = createCustomFunctionObj(f7);
+//    if(codeObject['fnName'] == null){
+//        return;
+//    }
+//    customFunctionsMap[codeObject['fnName']] = codeObject;
+//
+//    codeObject = createCustomFunctionObj(f8);
+//    if(codeObject['fnName'] == null){
+//        return;
+//    }
+//    customFunctionsMap[codeObject['fnName']] = codeObject;
+//
+//    codeObject = createCustomFunctionObj(f9);
+//    if(codeObject['fnName'] == null){
+//        return;
+//    }
+//    customFunctionsMap[codeObject['fnName']] = codeObject;
+//
+//    codeObject = createCustomFunctionObj(f10);
+//    if(codeObject['fnName'] == null){
+//        return;
+//    }
+//    customFunctionsMap[codeObject['fnName']] = codeObject;
+//
+//    codeObject = createCustomFunctionObj(f11);
+//    if(codeObject['fnName'] == null){
+//        return;
+//    }
+//    customFunctionsMap[codeObject['fnName']] = codeObject;
+//
+//    codeObject = createCustomFunctionObj(f12);
+//    if(codeObject['fnName'] == null){
+//        return;
+//    }
+//    customFunctionsMap[codeObject['fnName']] = codeObject;
+//
+//    codeObject = createCustomFunctionObj(f13);
+//    if(codeObject['fnName'] == null){
+//        return;
+//    }
+//    customFunctionsMap[codeObject['fnName']] = codeObject;
+//
+//    codeObject = createCustomFunctionObj(f14);
+//    if(codeObject['fnName'] == null){
+//        return;
+//    }
+//    customFunctionsMap[codeObject['fnName']] = codeObject;
+//
+//    codeObject = createCustomFunctionObj(f15);
+//    if(codeObject['fnName'] == null){
+//        return;
+//    }
+//    customFunctionsMap[codeObject['fnName']] = codeObject;
+//
+//    codeObject = createCustomFunctionObj(f16);
+//    if(codeObject['fnName'] == null){
+//        return;
+//    }
+//    customFunctionsMap[codeObject['fnName']] = codeObject;
+//
+//    codeObject = createCustomFunctionObj(f17);
+//    if(codeObject['fnName'] == null){
+//        return;
+//    }
+//    customFunctionsMap[codeObject['fnName']] = codeObject;
+//
+//    codeObject = createCustomFunctionObj(f18);
+//    if(codeObject['fnName'] == null){
+//        return;
+//    }
+//    customFunctionsMap[codeObject['fnName']] = codeObject;
+//
+//
+//    /*******************************************************************************
+//        Prefixes
+//    *******************************************************************************/
+//
+//
+//    var prefixer = createPrefixer("base-domain", "http://project.dapaas.eu/pluqi");
+//    prefixersInGUI.push(prefixer);
+//    prefixer = createPrefixer("pluqi-graph", "http://project.dapaas.eu/pluqi/graph/pluqi/");
+//    prefixersInGUI.push(prefixer);
+//    prefixer = createPrefixer("pluqi-schema", "http://project.dapaas.eu/pluqi/schema/");
+//    prefixersInGUI.push(prefixer);
+//    prefixer = createPrefixer("pluqi-data", "http://project.dapaas.eu/pluqi/data/");
+//    prefixersInGUI.push(prefixer);
+//
+//
+//    /*******************************************************************************
+//        Pipeline
+//    *******************************************************************************/
+//
+//
+//    var jsEdnRowsFunction = createDropRows(4);
+//    addAtIndexInPipeline("drop-rows", 0, jsEdnRowsFunction);
+//
+//    var index = 1;
+//    var functionDisplayName = "apply-columns";
+//    var code = "(apply-columns {:division fill-when})"
+//    createAndAddCustomFunctionToPipeline(functionDisplayName, code, index);
+//
+//    var index = 2;
+//    var functionDisplayName = "mapply-melt";
+//    var code = "(mapply-melt pivot-keys)"
+//    createAndAddCustomFunctionToPipeline(functionDisplayName, code, index);
+//
+//    var newColName = ":year";
+//    var colsToDeriveFrom = ":variable";
+//    var functionToDeriveWith = "extract-year";
+//    index = 3;
+//    createDeriveColumnPipelineFunction(newColName, colsToDeriveFrom, functionToDeriveWith, index);
+//
+//    var index = 4;
+//    var functionDisplayName = "mapc";
+//    var code = "(mapc {:variable replace-varible-string :value ->Integer})"
+//    createAndAddCustomFunctionToPipeline(functionDisplayName, code, index);
+//
+//    newColName = ":observation-label";
+//    colsToDeriveFrom = ":variable :year :division";
+//    functionToDeriveWith = "observation-label";
+//    index = 5;
+//    createDeriveColumnPipelineFunction(newColName, colsToDeriveFrom, functionToDeriveWith, index);
+//
+//
+//    newColName = ":observation-date";
+//    colsToDeriveFrom = ":year";
+//    functionToDeriveWith = "call-year";
+//    index = 6;
+//    createDeriveColumnPipelineFunction(newColName, colsToDeriveFrom, functionToDeriveWith, index);
+//
+//
+//    newColName = ":dataset-uri";
+//    colsToDeriveFrom = ":file";
+//    functionToDeriveWith = "call-comp-removeext";
+//    index = 7;
+//    createDeriveColumnPipelineFunction(newColName, colsToDeriveFrom, functionToDeriveWith, index);
+//
+//
+//    newColName = ":dimension-uri";
+//    colsToDeriveFrom = ":variable";
+//    functionToDeriveWith = "call-comp-hyphenate";
+//    index = 8;
+//    createDeriveColumnPipelineFunction(newColName, colsToDeriveFrom, functionToDeriveWith, index);
+//
+//
+//    newColName = ":observation-uri";
+//    colsToDeriveFrom = ":variable :division :year";
+//    functionToDeriveWith = "observation-uri";
+//    index = 9;
+//    createDeriveColumnPipelineFunction(newColName, colsToDeriveFrom, functionToDeriveWith, index);
+//
+//
+//    newColName = ":indicator-uri";
+//    colsToDeriveFrom = ":file";
+//    functionToDeriveWith = "filename->indicator-uri";
+//    index = 10;
+//    createDeriveColumnPipelineFunction(newColName, colsToDeriveFrom, functionToDeriveWith, index);
+//
+//
+//    newColName = ":division-uri";
+//    colsToDeriveFrom = ":division";
+//    functionToDeriveWith = "division-uri";
+//    index = 11;
+//    createDeriveColumnPipelineFunction(newColName, colsToDeriveFrom, functionToDeriveWith, index);
+//
+//    var graph = new Graph("http://project.dapaas.eu/pluqi/graph/pluqi/example", rdfControl);
+//    var dimensionRoot = new ColumnURI(graph, "", "dimension-uri");
+//
+//    var prop1 = new Property(dimensionRoot, "rdf", "a");
+//    var indicatorURINode = new ColumnLiteral(prop1, "indicator-uri");
+//
+//    var prop2 = new Property(dimensionRoot, "rdf", "a");
+//    var owlNamedIndiv = new ConstantLiteral(prop2, "owl:NamedIndividual");
+//
+//    var prop3 = new Property(dimensionRoot, "pluqi-schema", "hasValue");
+//    var observationURINode = new ColumnLiteral(prop3, "observation-uri");
+//
+//    var observationRoot = new ColumnURI(graph, "", "observation-uri");
+//
+//    var prop4 = new Property(observationRoot, "rdf", "a");
+//    var owlNamedIndiv1 = new ConstantLiteral(prop4, "owl:NamedIndividual");
+//
+//    var prop5 = new Property(observationRoot, "rdf", "a");
+//    var pluqiValue = new ColumnURI(prop5, "pluqi-schema", "Value");
+//
+//    var prop6 = new Property(observationRoot, "rdfs", "label");
+//    var observationLabel = new ColumnLiteral(prop6, "observation-label");
+//
+//    var prop7 = new Property(observationRoot, "pluqi-schema", "measure");
+//    var valueColumnLiteral = new ColumnLiteral(prop7, "value");
+//
+//    var prop8 = new Property(observationRoot, "pluqi-schema", "location");
+//    var divisionURINode = new ColumnLiteral(prop8, "division-uri");
+//
+//    var prop9 = new Property(observationRoot, "pluqi-schema", "hasValue");
+//    var datasetURINode = new ColumnLiteral(prop9, "dataset-uri");
+//
+//    var prop10 = new Property(observationRoot, "pluqi-schema", "time");
+//    var observationDateURINode = new ColumnLiteral(prop10, "observation-date");
+//
+//    var prop11 = new Property(observationRoot, "rdfs", "comment");
+//    var typeLabel = new ColumnLiteral(prop11, "type");
+//
+//
+//
+//    var datasetRoot = new ColumnURI(graph, "", "dataset-uri");
+//
+//    var prop12 = new Property(datasetRoot, "rdf", "a");
+//    var pluqiDatasource = new ColumnURI(prop12, "pluqi-schema", "DataSource");
+//
+//    var prop13 = new Property(datasetRoot, "rdf", "a");
+//    var owlNamedIndiv2 = new ConstantLiteral(prop13, "owl:NamedIndividual");
+//
+//
+//    rdfControl.addGraph(graph);
+//    graph.addChild(dimensionRoot);
+//
+//    dimensionRoot.addChild(prop1);
+//    prop1.addChild(indicatorURINode);
+//
+//    dimensionRoot.addChild(prop2);
+//    prop2.addChild(owlNamedIndiv);
+//
+//    dimensionRoot.addChild(prop3);
+//    prop3.addChild(observationURINode);
+//
+//
+//    graph.addChild(observationRoot);
+//
+//    observationRoot.addChild(prop4);
+//    prop4.addChild(owlNamedIndiv1);
+//
+//    observationRoot.addChild(prop5);
+//    prop5.addChild(pluqiValue);
+//
+//    observationRoot.addChild(prop6);
+//    prop6.addChild(observationLabel);
+//
+//    observationRoot.addChild(prop7);
+//    prop7.addChild(valueColumnLiteral);
+//
+//    observationRoot.addChild(prop8);
+//    prop8.addChild(divisionURINode);
+//
+//    observationRoot.addChild(prop9);
+//    prop9.addChild(datasetURINode);
+//
+//    observationRoot.addChild(prop10);
+//    prop10.addChild(observationDateURINode);
+//
+//    observationRoot.addChild(prop11);
+//    prop11.addChild(typeLabel);
+//
+//
+//    graph.addChild(datasetRoot);
+//
+//    datasetRoot.addChild(prop12);
+//    prop12.addChild(pluqiDatasource);
+//
+//    datasetRoot.addChild(prop13);
+//    prop13.addChild(owlNamedIndiv2);
+//
+//    $("#pipeline-registration-id").val("PLUQIGrafterTransformation");
+//    $("#pipeline-registration-description").val("PLUQI use case example Grafter transformation. Cleans unnecessary data fields and maps the remaining data to RDF.");
+//    
+//    var obj = graph.getStringifiableGraph();
+////    console.log(obj);
+//    var str = JSON.stringify(obj);
+//    
+//    
+}); 
+
 $(function() {
 
     /*******************************************************************************
         Custom functions
     *******************************************************************************/
 
-    var f1 = "(defn select-row [ds n]\r\n  (->> (rows ds [n])\r\n       incanter.core\/to-list\r\n       first))";
+    var f1 = "(defn -\x3Einteger  \n    \"An example transformation function that converts a string to an integer\"  \n    [s]  \n    (Integer\x2FparseInt s)\n)";
 
-    var f2 = "(defn normalise-header-c\r\n  \"cultural facilities\"\r\n  [ds f]\r\n  (let [[div sub-div & years-row] (->> (select-row ds 0)\r\n                                       (drop 3))\r\n        type-row (->> (select-row ds 1)\r\n                      (drop 3))\r\n\r\n        data-type-row (->> (select-row ds 2)\r\n                           (drop 3))\r\n\r\n        new-header (->> (map #(str (cstr\/trim %1) \" \" (cstr\/trim %2) \" \" (cstr\/trim %3)) years-row type-row data-type-row)\r\n                        (concat [\"file\" \"division\" \"type\"])\r\n                        (map f))]\r\n    (make-dataset ds (map str new-header))))";
+    var f2 = "(def -\x3Egender {\"f\" (s \"female\") \"m\" (s \"male\")})";
 
-
-    var f3 = "(defn normalise-header-t\r\n  \"traffic equipment\"\r\n  [ds f]\r\n  (let [[div & years-row] (->> (select-row ds 0)\r\n                               (drop 2))\r\n        type-row (->> (select-row ds 1)\r\n                      (drop 2))\r\n\r\n        data-type-row (->> (select-row ds 2)\r\n                           (drop 2))\r\n\r\n        new-header (->> (map #(str (cstr\/trim %1) \" \" (cstr\/trim %2) \" \" (cstr\/trim %3)) years-row type-row data-type-row)\r\n                        (concat [\"file\" \"division\"])\r\n                        (map f))]\r\n    (make-dataset ds (map str new-header))))";
-
-    var f4 = "(defn normalise-header-h\r\n  \"highschool\"\r\n  [ds f]\r\n  (let [[div type & years-row] (->> (select-row ds 0)\r\n                                    (drop 3))\r\n        type-row (->> (select-row ds 1)\r\n                      (drop 3))\r\n\r\n        new-header (->> (map #(str (cstr\/trim %1) \" \" (cstr\/trim %2)) years-row type-row)\r\n                        (concat [\"file\" \"division\" \"type\"])\r\n                        (map f))]\r\n    (make-dataset ds (map str new-header))))";
-
-    var f5 = "(defn replace-words [mapping]\r\n  (fn [s] (reduce (fn [st [match replacement]]\r\n                    ;(cstr\/replace st (re-pattern (str \"\\\\b\" match \"\\\\b\")) replacement)) s\r\n                    (cstr\/replace st (re-pattern match) replacement)) s\r\n                  (partition 2 mapping))))";
-
-    var f6 = "(defn ->Integer [i]\r\n  (cond\r\n    (= \"-\" i) 0\r\n    (nil? i) 0\r\n    (number? i) (int i)\r\n    (string? i) (Integer\/parseInt i)))";
-
-    var f7 = "(defn replace-varible-string [cell]\r\n  (-> cell\r\n      (cstr\/replace #\".* #\" \"number\")\r\n      (cstr\/replace #\"[0-9]{4} \" \"\")))";
-
-    var f8 = "(defn extract-year [cell]\r\n  ;(first (cstr\/split (str cell) #\" # | art | railroad \")))\r\n  (apply str (filter #(Character\/isDigit %) (str cell))))";
-
-    var f9 = "(defn remove-extension [cell]\r\n  (cstr\/replace cell \".xlsx\" \"\"))";
-
-    var f10 = "(defn hyphenate [str]\r\n  (cstr\/replace str \" \" \"-\"))";
-
-    var f11 = "(defn observation-uri [variable division year]\r\n  (->> [variable division year]\r\n       (interpose \" \")\r\n       (apply str)\r\n       hyphenate\r\n       cstr\/lower-case\r\n       pluqi-data))";
-
-    var f12 = "(def filename->indicator-uri\r\n  {\"2005-2006_cultural facilities.xlsx\" (pluqi-schema \"Cultural_satisfaction\")\r\n   \"2007-2008_cultural facilities.xlsx\" (pluqi-schema \"Cultural_satisfaction\")\r\n   \"2009-2011_cultural facilities.xlsx\" (pluqi-schema \"Cultural_satisfaction\")\r\n   \"2011-2012_cultural facilities.xlsx\" (pluqi-schema \"Cultural_satisfaction\")\r\n   \"2005-2012_traffic equipment.xlsx\"   (pluqi-schema \"Daily_life_satisfaction\")\r\n   \"2005-2008_green space.xlsx\"         (pluqi-schema \"Environmental_needs_and_efficiency\")\r\n   \"2009-2012_green space.xlsx\"         (pluqi-schema \"Environmental_needs_and_efficiency\")\r\n   \"2011-2013_highschool.xlsx\"          (pluqi-schema \"Level_of_opportunity\")\r\n   \"2011-2012_place of a crime.xlsx\"    (pluqi-schema \"Safety_and_security\")})";
-
-    var f13 = "(defn division-uri [s]\r\n  (pluqi-data s))";
-
-    var f14 = "(defn date-format [fmt]\r\n  (let [parser (java.text.SimpleDateFormat. fmt)]\r\n    (fn [s]\r\n      (.parse parser (str s) (java.text.ParsePosition. 0)))))";
-
-    var f15 = "(defn observation-label [var year division]\r\n  (str (cstr\/capitalize var) \" in \" division \" in \" year \".\"))";
-
-    var f16 = "(def call-year (date-format \"yyyy\"))";
-    var f17 = "(def call-comp-removeext (comp pluqi-data remove-extension))";
-    var f18 = "(def call-comp-hyphenate (comp pluqi-data hyphenate))";
 
     var codeObject = createCustomFunctionObj(f1);
     if(codeObject['fnName'] == null){
@@ -1610,115 +1954,20 @@ $(function() {
     }
     customFunctionsMap[codeObject['fnName']] = codeObject;
 
-    codeObject = createCustomFunctionObj(f3);
-    if(codeObject['fnName'] == null){
-        return;
-    }
-    customFunctionsMap[codeObject['fnName']] = codeObject;
-
-    codeObject = createCustomFunctionObj(f4);
-    if(codeObject['fnName'] == null){
-        return;
-    }
-    customFunctionsMap[codeObject['fnName']] = codeObject;
-
-    codeObject = createCustomFunctionObj(f5);
-    if(codeObject['fnName'] == null){
-        return;
-    }
-    customFunctionsMap[codeObject['fnName']] = codeObject;
-
-    codeObject = createCustomFunctionObj(f6);
-    if(codeObject['fnName'] == null){
-        return;
-    }
-    customFunctionsMap[codeObject['fnName']] = codeObject;
-
-    codeObject = createCustomFunctionObj(f7);
-    if(codeObject['fnName'] == null){
-        return;
-    }
-    customFunctionsMap[codeObject['fnName']] = codeObject;
-
-    codeObject = createCustomFunctionObj(f8);
-    if(codeObject['fnName'] == null){
-        return;
-    }
-    customFunctionsMap[codeObject['fnName']] = codeObject;
-
-    codeObject = createCustomFunctionObj(f9);
-    if(codeObject['fnName'] == null){
-        return;
-    }
-    customFunctionsMap[codeObject['fnName']] = codeObject;
-
-    codeObject = createCustomFunctionObj(f10);
-    if(codeObject['fnName'] == null){
-        return;
-    }
-    customFunctionsMap[codeObject['fnName']] = codeObject;
-
-    codeObject = createCustomFunctionObj(f11);
-    if(codeObject['fnName'] == null){
-        return;
-    }
-    customFunctionsMap[codeObject['fnName']] = codeObject;
-
-    codeObject = createCustomFunctionObj(f12);
-    if(codeObject['fnName'] == null){
-        return;
-    }
-    customFunctionsMap[codeObject['fnName']] = codeObject;
-
-    codeObject = createCustomFunctionObj(f13);
-    if(codeObject['fnName'] == null){
-        return;
-    }
-    customFunctionsMap[codeObject['fnName']] = codeObject;
-
-    codeObject = createCustomFunctionObj(f14);
-    if(codeObject['fnName'] == null){
-        return;
-    }
-    customFunctionsMap[codeObject['fnName']] = codeObject;
-
-    codeObject = createCustomFunctionObj(f15);
-    if(codeObject['fnName'] == null){
-        return;
-    }
-    customFunctionsMap[codeObject['fnName']] = codeObject;
-
-    codeObject = createCustomFunctionObj(f16);
-    if(codeObject['fnName'] == null){
-        return;
-    }
-    customFunctionsMap[codeObject['fnName']] = codeObject;
-
-    codeObject = createCustomFunctionObj(f17);
-    if(codeObject['fnName'] == null){
-        return;
-    }
-    customFunctionsMap[codeObject['fnName']] = codeObject;
-
-    codeObject = createCustomFunctionObj(f18);
-    if(codeObject['fnName'] == null){
-        return;
-    }
-    customFunctionsMap[codeObject['fnName']] = codeObject;
-
-
     /*******************************************************************************
         Prefixes
     *******************************************************************************/
 
 
-    var prefixer = createPrefixer("base-domain", "http://project.dapaas.eu/pluqi");
+    var prefixer = createPrefixer("base-domain", "http://my-domain.com");
     prefixersInGUI.push(prefixer);
-    prefixer = createPrefixer("pluqi-graph", "http://project.dapaas.eu/pluqi/graph/pluqi/");
+    prefixer = createPrefixer("base-graph", "http://my-domain.com/graph/");
     prefixersInGUI.push(prefixer);
-    prefixer = createPrefixer("pluqi-schema", "http://project.dapaas.eu/pluqi/schema/");
+    prefixer = createPrefixer("base-id", "http://my-domain.com/id/");
     prefixersInGUI.push(prefixer);
-    prefixer = createPrefixer("pluqi-data", "http://project.dapaas.eu/pluqi/data/");
+    prefixer = createPrefixer("base-vocab", "http://my-domain.com/def/");
+    prefixersInGUI.push(prefixer);
+    prefixer = createPrefixer("base-data", "http://my-domain.com/data/");
     prefixersInGUI.push(prefixer);
 
 
@@ -1727,176 +1976,66 @@ $(function() {
     *******************************************************************************/
 
 
-    var jsEdnRowsFunction = createDropRows(4);
+    var jsEdnRowsFunction = createDropRows(1);
     addAtIndexInPipeline("drop-rows", 0, jsEdnRowsFunction);
 
     var index = 1;
-    var functionDisplayName = "apply-columns";
-    var code = "(apply-columns {:division fill-when})"
-    createAndAddCustomFunctionToPipeline(functionDisplayName, code, index);
+    var columnsKeywords = parseEdnFromString('[:name :sex :age]', "Error parsing the Clojure code!");
+    columnKeys.val.push(new jsedn.sym("name"));
+    columnKeys.val.push(new jsedn.sym("sex"));
+    columnKeys.val.push(new jsedn.sym("age"));
+    
+    var jsEdnMakeDataset = createMakeDataset(columnsKeywords);
+    addAtIndexInPipeline("make-dataset", index, jsEdnMakeDataset);
 
-    var index = 2;
-    var functionDisplayName = "mapply-melt";
-    var code = "(mapply-melt pivot-keys)"
-    createAndAddCustomFunctionToPipeline(functionDisplayName, code, index);
+    
+    index = 2;
+    var newColName = ":person-uri";
+    var colsToDeriveFrom = ":name";
+    var functionToDeriveWith = "base-id";
+    createDeriveColumnPipelineFunction(newColName, colsToDeriveFrom, functionToDeriveWith, index);
 
-    var newColName = ":year";
-    var colsToDeriveFrom = ":variable";
-    var functionToDeriveWith = "extract-year";
     index = 3;
-    createDeriveColumnPipelineFunction(newColName, colsToDeriveFrom, functionToDeriveWith, index);
+    var codeJsedn = createMapc(parseEdnFromString("{:age ->integer :sex ->gender}", "Error"));
+    addAtIndexInPipeline('mapc', index, codeJsedn);
+    
+    
+    var graph = new Graph("http://my-domain.com/graph/example", rdfControl);
+    var personURIRoot = new ColumnURI(graph, "", "person-uri");
 
-    var index = 4;
-    var functionDisplayName = "mapc";
-    var code = "(mapc {:variable replace-varible-string :value ->Integer})"
-    createAndAddCustomFunctionToPipeline(functionDisplayName, code, index);
-
-    newColName = ":observation-label";
-    colsToDeriveFrom = ":variable :year :division";
-    functionToDeriveWith = "observation-label";
-    index = 5;
-    createDeriveColumnPipelineFunction(newColName, colsToDeriveFrom, functionToDeriveWith, index);
-
-
-    newColName = ":observation-date";
-    colsToDeriveFrom = ":year";
-    functionToDeriveWith = "call-year";
-    index = 6;
-    createDeriveColumnPipelineFunction(newColName, colsToDeriveFrom, functionToDeriveWith, index);
-
-
-    newColName = ":dataset-uri";
-    colsToDeriveFrom = ":file";
-    functionToDeriveWith = "call-comp-removeext";
-    index = 7;
-    createDeriveColumnPipelineFunction(newColName, colsToDeriveFrom, functionToDeriveWith, index);
-
-
-    newColName = ":dimension-uri";
-    colsToDeriveFrom = ":variable";
-    functionToDeriveWith = "call-comp-hyphenate";
-    index = 8;
-    createDeriveColumnPipelineFunction(newColName, colsToDeriveFrom, functionToDeriveWith, index);
-
-
-    newColName = ":observation-uri";
-    colsToDeriveFrom = ":variable :division :year";
-    functionToDeriveWith = "observation-uri";
-    index = 9;
-    createDeriveColumnPipelineFunction(newColName, colsToDeriveFrom, functionToDeriveWith, index);
-
-
-    newColName = ":indicator-uri";
-    colsToDeriveFrom = ":file";
-    functionToDeriveWith = "filename->indicator-uri";
-    index = 10;
-    createDeriveColumnPipelineFunction(newColName, colsToDeriveFrom, functionToDeriveWith, index);
-
-
-    newColName = ":division-uri";
-    colsToDeriveFrom = ":division";
-    functionToDeriveWith = "division-uri";
-    index = 11;
-    createDeriveColumnPipelineFunction(newColName, colsToDeriveFrom, functionToDeriveWith, index);
-
-    var graph = new Graph("http://project.dapaas.eu/pluqi/graph/pluqi/example", rdfControl);
-    var dimensionRoot = new ColumnURI(graph, "", "dimension-uri");
-
-    var prop1 = new Property(dimensionRoot, "rdf", "a");
-    var indicatorURINode = new ColumnLiteral(prop1, "indicator-uri");
-
-    var prop2 = new Property(dimensionRoot, "rdf", "a");
-    var owlNamedIndiv = new ConstantLiteral(prop2, "owl:NamedIndividual");
-
-    var prop3 = new Property(dimensionRoot, "pluqi-schema", "hasValue");
-    var observationURINode = new ColumnLiteral(prop3, "observation-uri");
-
-    var observationRoot = new ColumnURI(graph, "", "observation-uri");
-
-    var prop4 = new Property(observationRoot, "rdf", "a");
-    var owlNamedIndiv1 = new ConstantLiteral(prop4, "owl:NamedIndividual");
-
-    var prop5 = new Property(observationRoot, "rdf", "a");
-    var pluqiValue = new ColumnURI(prop5, "pluqi-schema", "Value");
-
-    var prop6 = new Property(observationRoot, "rdfs", "label");
-    var observationLabel = new ColumnLiteral(prop6, "observation-label");
-
-    var prop7 = new Property(observationRoot, "pluqi-schema", "measure");
-    var valueColumnLiteral = new ColumnLiteral(prop7, "value");
-
-    var prop8 = new Property(observationRoot, "pluqi-schema", "location");
-    var divisionURINode = new ColumnLiteral(prop8, "division-uri");
-
-    var prop9 = new Property(observationRoot, "pluqi-schema", "hasValue");
-    var datasetURINode = new ColumnLiteral(prop9, "dataset-uri");
-
-    var prop10 = new Property(observationRoot, "pluqi-schema", "time");
-    var observationDateURINode = new ColumnLiteral(prop10, "observation-date");
-
-    var prop11 = new Property(observationRoot, "rdfs", "comment");
-    var typeLabel = new ColumnLiteral(prop11, "type");
-
-
-
-    var datasetRoot = new ColumnURI(graph, "", "dataset-uri");
-
-    var prop12 = new Property(datasetRoot, "rdf", "a");
-    var pluqiDatasource = new ColumnURI(prop12, "pluqi-schema", "DataSource");
-
-    var prop13 = new Property(datasetRoot, "rdf", "a");
-    var owlNamedIndiv2 = new ConstantLiteral(prop13, "owl:NamedIndividual");
-
+    var prop1 = new Property(personURIRoot, "rdf", "a");
+    var foafPersonURINode = new ConstantURI(prop1, "foaf", "Person");
+    
+    var prop2 = new Property(personURIRoot, "foaf", "gender");
+    var sexColumn = new ColumnLiteral(prop2, "sex");
+    
+    var prop3 = new Property(personURIRoot, "foaf", "age");
+    var ageColumn = new ColumnLiteral(prop3, "age");
+    
+    var prop4 = new Property(personURIRoot, "foaf", "name");
+    var nameColumn = new ColumnLiteral(prop4, "name");
 
     rdfControl.addGraph(graph);
-    graph.addChild(dimensionRoot);
+    graph.addChild(personURIRoot);
 
-    dimensionRoot.addChild(prop1);
-    prop1.addChild(indicatorURINode);
-
-    dimensionRoot.addChild(prop2);
-    prop2.addChild(owlNamedIndiv);
-
-    dimensionRoot.addChild(prop3);
-    prop3.addChild(observationURINode);
-
-
-    graph.addChild(observationRoot);
-
-    observationRoot.addChild(prop4);
-    prop4.addChild(owlNamedIndiv1);
-
-    observationRoot.addChild(prop5);
-    prop5.addChild(pluqiValue);
-
-    observationRoot.addChild(prop6);
-    prop6.addChild(observationLabel);
-
-    observationRoot.addChild(prop7);
-    prop7.addChild(valueColumnLiteral);
-
-    observationRoot.addChild(prop8);
-    prop8.addChild(divisionURINode);
-
-    observationRoot.addChild(prop9);
-    prop9.addChild(datasetURINode);
-
-    observationRoot.addChild(prop10);
-    prop10.addChild(observationDateURINode);
-
-    observationRoot.addChild(prop11);
-    prop11.addChild(typeLabel);
-
-
-    graph.addChild(datasetRoot);
-
-    datasetRoot.addChild(prop12);
-    prop12.addChild(pluqiDatasource);
-
-    datasetRoot.addChild(prop13);
-    prop13.addChild(owlNamedIndiv2);
+    personURIRoot.addChild(prop1);
+    prop1.addChild(foafPersonURINode);
     
+    personURIRoot.addChild(prop2);
+    prop2.addChild(sexColumn);
+    
+    personURIRoot.addChild(prop3);
+    prop3.addChild(ageColumn);
+    
+    personURIRoot.addChild(prop4);
+    prop4.addChild(nameColumn);
+
     $("#pipeline-registration-id").val("PLUQIGrafterTransformation");
     $("#pipeline-registration-description").val("PLUQI use case example Grafter transformation. Cleans unnecessary data fields and maps the remaining data to RDF.");
-
-});
+    
+//    var obj = graph.getStringifiableGraph();
+////    console.log(obj);
+//    var str = JSON.stringify(obj);
+    
+    
+}); 
