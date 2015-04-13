@@ -211,12 +211,18 @@ function addPipelineFunction(jsednFunction){
 
 /* Constructs and returns the data transformation pipeline. */
 function constructPipeline(){
+    var readDatasetFunct = new jsedn.List([new jsedn.sym("read-dataset"), new jsedn.sym("data-file"), new jsedn.kw(":format"), new jsedn.kw(":csv")]); 
+    console.log("readDatasetFunct", readDatasetFunct);
+    
     pipeline = null;
-    pipeline = new jsedn.List([jsedn.sym("defn"), jsedn.sym("pipeline"), new jsedn.Vector([new jsedn.sym("dataset")]), new jsedn.List([jsedn.sym("->"), jsedn.sym("dataset")])]);
+    
+    pipeline = new jsedn.List([jsedn.sym("defpipe"), jsedn.sym("my-pipe"), "Pipeline to convert tabular persons data into a different tabular format.", new jsedn.Vector([new jsedn.sym("data-file")]), new jsedn.List([jsedn.sym("->"), readDatasetFunct])]);
 
     pipelineFunctions.map(function(arg){
-        pipeline.val[3].val.push(arg);
+        pipeline.val[4].val.push(arg);
     });
+    
+    //(read-dataset data-file :format :csv)
     pipelineFunctions=new jsedn.List([]);
     return pipeline;
 }
@@ -241,7 +247,7 @@ function constructRDFGraphFunction(rdfControl){
     
     for(i=0;i<rdfControl.graphs.length; ++i){
         currentGraph = rdfControl.graphs[i];
-        console.log(currentGraph);
+//        console.log(currentGraph);
         currentGraphJsEdn = new jsedn.List([jsedn.sym("graph"), currentGraph.graphURI]);
 
         // construct a vector for each of the roots and add it to the graph jsedn
@@ -249,11 +255,10 @@ function constructRDFGraphFunction(rdfControl){
             currentRootJsEdn = constructNodeVectorEdn(currentGraph.graphRoots[j]);
             currentGraphJsEdn.val.push(currentRootJsEdn);
         }
-        console.log("GRAPH " + i + " ENCODED:", currentGraphJsEdn.ednEncode());
+//        console.log("GRAPH " + i + " ENCODED:", currentGraphJsEdn.ednEncode());
         graphFunction.val.push(currentGraphJsEdn);
     }
     var result = new jsedn.List([jsedn.sym("defn"), jsedn.sym("make-graph"), graphFunction]);
-
 
     return result;
 }
@@ -267,7 +272,7 @@ function constructNodeVectorEdn(node){
         }
         var propertyValue = node.subElements[0];
         // [name {either single node or URI node with sub-nodes (as vector)}
-        console.log("returning prop value");
+//        console.log("returning prop value");
         return new jsedn.Vector([constructPropertyJsEdn(node), constructNodeVectorEdn(propertyValue)]);
     }
     if (node instanceof ColumnLiteral) {
@@ -291,17 +296,17 @@ function constructNodeVectorEdn(node){
             return constructColumnURINodeJsEdn(node);
 
         } else {
-            console.log("more than one sub-elements of colURI");
+//            console.log("more than one sub-elements of colURI");
             // [node-uri-as-generated {sub-1's edn representation} {sub-2's edn representation} ... {sub-n's edn representation}]
             var allSubElementsVector = new jsedn.Vector([constructColumnURINodeJsEdn(node)]);
             var subElementEdn;
-            console.log("node.subElements.length:", node.subElements.length);
+//            console.log("node.subElements.length:", node.subElements.length);
             for(k=0;k<node.subElements.length;++k){
-                console.log("i", k);
+//                console.log("i", k);
                 subElementEdn = constructNodeVectorEdn(node.subElements[k]);
-                console.log("subElementEdn:", subElementEdn.ednEncode());
+//                console.log("subElementEdn:", subElementEdn.ednEncode());
                 allSubElementsVector.val.push(subElementEdn);
-                console.log("allSubElementsVector:", allSubElementsVector.ednEncode());
+//                console.log("allSubElementsVector:", allSubElementsVector.ednEncode());
             }
             return allSubElementsVector;
         }
@@ -355,12 +360,13 @@ function constructPropertyJsEdn(property) {
 function constructColumnURINodeJsEdn(colURINode) {
     // graph URI as prefix, add nothing
     var nodePrefix = colURINode.prefix;
-    var nodeValue = colURINode.value;
+    var nodeValue = colURINode.column;
     if(nodePrefix == null) {
         // base graph URI
         // ((prefixer "graphURI") nodeValue)
         return new jsedn.List([new jsedn.List([new jsedn.sym("prefixer"), colURINode.containingGraph.graphURI]), new jsedn.sym(nodeValue)]);
     } else if (nodePrefix == "") {
+//        console.log(colURINode);
         // empty prefix - just take the column as symbol
         // nodeValue
         return new jsedn.sym(nodeValue);
@@ -384,7 +390,7 @@ function constructColumnURINodeJsEdn(colURINode) {
 function constructConstantURINodeJsEdn(constURINode) {
     // graph URI as prefix, add nothing
     var nodePrefix = constURINode.prefix;
-    var nodeValue = constURINode.value;
+    var nodeValue = constURINode.constant;
     if(nodePrefix == null) {
         // base graph URI
         // ((prefixer "graphURI") "nodeValue")
