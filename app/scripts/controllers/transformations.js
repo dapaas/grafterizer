@@ -4,6 +4,7 @@ angular.module('grafterizerApp')
   .controller('TransformationsCtrl', function ($scope, Transformation) {
   	Transformation.find({
 		"filter[fields][clojure]": false,
+    "filter[fields][model]": false,
     	"filter[order]": "id DESC"
   	}, function(list){
   	 	$scope.transformations = list;

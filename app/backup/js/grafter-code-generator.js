@@ -544,9 +544,16 @@ function createCustomCodeForPipeline(code, displayName){
 //
 //});
 
-function setCode(code) {
-    console.log("source code received", code);
+function setJsonCode(code) {
+    console.log("json source code received", code);
 };
+
+function getJsonCode() {
+    return {
+        "test": true,
+        "answer": 42
+    };
+}
 
 function getCode() {
     /*return "(ns ontotext-grafter.pipeline"+

@@ -19,6 +19,7 @@ angular.module('grafterizerApp')
 
 	Transformation.find({
 		"filter[fields][clojure]": false,
+		"filter[fields][model]": false,
 		"filter[fields][metadata]": false,
 		"filter[order]": "id DESC"
 	}, function(list){
@@ -36,13 +37,19 @@ angular.module('grafterizerApp')
 		}
 
 		// TODO This is ugly :-)
-		var sourceCode = document.getElementsByTagName("iframe")[0].contentWindow.getCode();
+		var iframe = document.getElementsByTagName("iframe")[0].contentWindow;
+
+		var sourceCode = iframe.getCode(),
+			jsonCode = iframe.getJsonCode();
+
 		console.log("generated source code", sourceCode);
+		console.log("generated json code", jsonCode);
 
 		Transformation.prototype$updateAttributes({
 			id: $scope.selectedTransformation.id
 		}, {
-			clojure: sourceCode
+			clojure: sourceCode,
+			model: jsonCode
 		}, function(){
 			PipeService.pipe(
 				$scope.selectedTransformation.id,
@@ -87,7 +94,7 @@ angular.module('grafterizerApp')
 				id: $scope.selectedTransformation.id
 			}, function(data) {
 				console.log(data);
-				document.getElementsByTagName("iframe")[0].contentWindow.setCode(data.clojure);
+				document.getElementsByTagName("iframe")[0].contentWindow.setJsonCode(data.model);
 			});
 		}
 	})
