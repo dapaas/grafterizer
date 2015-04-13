@@ -1,6 +1,8 @@
 (function(window, angular, undefined) {'use strict';
 
-var urlBase = "http://localhost:3000/api";
+var urlBase = location.protocol === 'file:' ?
+          'http://localhost:3000' : "http://"+location.hostname+":3000/api";
+
 var authHeader = 'authorization';
 
 /**
