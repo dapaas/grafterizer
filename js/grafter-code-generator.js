@@ -31,8 +31,7 @@ function isSupportedPrefix(prefixName){
 
 var pipelineFunctions = new jsedn.List([]);
 
-var pipeline = new jsedn.List([jsedn.sym("defn"), jsedn.sym("pipeline"), new jsedn.Vector([new jsedn.sym("dataset")]),
-                               new jsedn.List([jsedn.sym("->"), jsedn.sym("dataset")])]);
+var pipeline = new jsedn.List([jsedn.sym("defn"), jsedn.sym("pipeline"), new jsedn.Vector([new jsedn.sym("dataset")]), new jsedn.List([jsedn.sym("->"), jsedn.sym("dataset")])]);
 
 /* Holds the individual declarations. Used to form the declarations object that can then be rendered in Clojure. */
 var declarationsList = new jsedn.List([
@@ -212,7 +211,6 @@ function addPipelineFunction(jsednFunction){
 /* Constructs and returns the data transformation pipeline. */
 function constructPipeline(){
     var readDatasetFunct = new jsedn.List([new jsedn.sym("read-dataset"), new jsedn.sym("data-file"), new jsedn.kw(":format"), new jsedn.kw(":csv")]); 
-    console.log("readDatasetFunct", readDatasetFunct);
     
     pipeline = null;
     

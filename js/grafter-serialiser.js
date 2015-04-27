@@ -7,20 +7,10 @@
 /*jslint nomen: true */
 "use strict";
 
-var Types = {};
-
 // TODO validate all class inputs
 
 //Graph.prototype.save() = function () {};
-
-var Graft = function (graph) {
-    this.graph = graph;
-    this.__type = "Graft";
-};
-Graft.revive = function (data) {
-    return new Graft(data.graph);
-};
-Types.Graft = Graft;
+var SerializationTypesRegistry = {};
 
 var Prefixer = function (name, uri) {
     this.name = name;
@@ -30,9 +20,8 @@ var Prefixer = function (name, uri) {
 Prefixer.revive = function (data) {
     return new Prefixer(data.name, data.uri);
 };
-Types.Prefixer = Prefixer;
 
-var GenericFunction = function (index) {
+var PipelineFunction = function (index) {
     this.index = index;
 };
 
@@ -44,31 +33,36 @@ var CustomFunctionDeclaration = function (name, clojureCode) {
 CustomFunctionDeclaration.revive = function (data) {
     return new CustomFunctionDeclaration(data.name, data.clojureCode);
 };
-Types.CustomFunctionDeclaration = CustomFunctionDeclaration;
 
 var CustomCode = function (index, name, clojureCode) {
-    GenericFunction.call(this, index);
+    PipelineFunction.call(this, index);
     this.name = name; // display name in the pipeline
     this.clojureCode = clojureCode; // clojure code corresponding to the function
     this.__type = "CustomCode";
 };
+CustomCode.prototype = Object.create(PipelineFunction.prototype);
+CustomCode.prototype.getFunctionName = function () {
+    return this.name;
+};
 CustomCode.revive = function (data) {
     return new CustomCode(data.index, data.name, data.clojureCode);
 };
-Types.CustomCode = CustomCode;
 
 var DropRowsFunction = function (index, numberOfRows) {
-    GenericFunction.call(this, index);
+    PipelineFunction.call(this, index);
     this.numberOfRows = numberOfRows;
     this.__type = "DropRowsFunction";
+};
+DropRowsFunction.prototype = Object.create(PipelineFunction.prototype);
+DropRowsFunction.prototype.getFunctionName = function () {
+    return "drop-rows";
 };
 DropRowsFunction.revive = function (data) {
     return new DropRowsFunction(data.index, data.numberOfRows);
 };
-Types.DropRowsFunction = DropRowsFunction;
 
 var DeriveColumnFunction = function (index, newColName, colsToDeriveFrom, functionToDeriveWith) {
-    GenericFunction.call(this, index);
+    PipelineFunction.call(this, index);
     this.newColName = newColName;
     this.colsToDeriveFrom = colsToDeriveFrom;
     if (functionToDeriveWith !== null) {
@@ -83,10 +77,13 @@ var DeriveColumnFunction = function (index, newColName, colsToDeriveFrom, functi
     this.functionToDeriveWith = functionToDeriveWith;
     this.__type = "DeriveColumnFunction";
 };
+DeriveColumnFunction.prototype = Object.create(PipelineFunction.prototype);
+DeriveColumnFunction.prototype.getFunctionName = function () {
+    return "derive-column";
+};
 DeriveColumnFunction.revive = function (data) {
     return new DeriveColumnFunction(data.index, data.newColName, data.colsToDeriveFrom, data.functionToDeriveWith);
 };
-Types.DeriveColumnFunction = DeriveColumnFunction;
 
 var KeyFunctionPair = function (key, func) {
     this.key = key;
@@ -107,11 +104,10 @@ var KeyFunctionPair = function (key, func) {
 KeyFunctionPair.revive = function (data) {
     return new KeyFunctionPair(data.key, data.func);
 };
-Types.KeyFunctionPair = KeyFunctionPair;
 
 var MapcFunction = function (index, keyFunctionPairs) {
     // array of obj with [key, function]
-    GenericFunction.call(this, index);
+    PipelineFunction.call(this, index);
     var i, kfPair;
     if (keyFunctionPairs !== null) {
         for (i = 0; i < keyFunctionPairs.length; ++i) {
@@ -124,21 +120,28 @@ var MapcFunction = function (index, keyFunctionPairs) {
     this.keyFunctionPairs = keyFunctionPairs;
     this.__type = "MapcFunction";
 };
+MapcFunction.prototype = Object.create(PipelineFunction.prototype);
+MapcFunction.prototype.getFunctionName = function () {
+    return "mapc";
+};
 MapcFunction.revive = function (data) {
     return new MapcFunction(data.index, data.keyFunctionPairs);
 };
-Types.MapcFunction = MapcFunction;
 
 var MakeDatasetFunction = function (index, columnsArray) {
     // array of column names
-    GenericFunction.call(this, index);
+    PipelineFunction.call(this, index);
     this.columnsArray = columnsArray;
     this.__type = "MakeDatasetFunction";
+};
+MakeDatasetFunction.prototype = Object.create(PipelineFunction.prototype);
+MakeDatasetFunction.prototype.getFunctionName = function () {
+    return "make-dataset";
 };
 MakeDatasetFunction.revive = function (data) {
     return new MakeDatasetFunction(data.index, data.columnsArray);
 };
-Types.MakeDatasetFunction = MakeDatasetFunction;
+SerializationTypesRegistry.MakeDatasetFunction = MakeDatasetFunction;
 
 var Pipeline = function (functions) {
     // functions that make up the pipeline
@@ -146,7 +149,7 @@ var Pipeline = function (functions) {
     var funct, i;
     for (i = 0; i < functions.length; ++i) {
         funct = functions[i];
-        if (!(funct instanceof GenericFunction)) {
+        if (!(funct instanceof PipelineFunction)) {
             if (funct.__type === "CustomCode") {
                 functions[i] = CustomCode.revive(funct);
             }
@@ -170,11 +173,187 @@ var Pipeline = function (functions) {
 Pipeline.revive = function (data) {
     return new Pipeline(data.functions);
 };
-Types.Pipeline = Pipeline;
+Pipeline.removeFunction = function (funct) {
+    var functIndex = this.functions.indexOf(funct);
+    
+    if(functIndex !== -1) {
+        this.functions.splice(functIndex, 1);
+    }
+};
 
-var Transformation = function (customFunctionDeclarations, prefixers, pipelines, grafts) {
+// TODO refactor - make function the same for all classes
+function getStringifiableElement(inputElement) {
+    if (!(inputElement instanceof StringifiableRDFElement)) {
+        return SerializationTypesRegistry[inputElement.__type].revive(inputElement);
+    } else {
+        return inputElement;
+    }
+}
+
+var StringifiableRDFElement = function (subElements) {
+    var i, subElement, stringifiableSubElements;
+    stringifiableSubElements = [];
+    if (subElements) {
+        for (i = 0; i < subElements.length; ++i) {
+            stringifiableSubElements.push(getStringifiableElement(subElements[i]));
+        }
+    }
+    this.subElements = stringifiableSubElements;
+};
+
+var StringifiableURINode = function (prefix, subElements) {
+    StringifiableRDFElement.call(this, subElements);
+    this.prefix = prefix;
+};
+StringifiableURINode.prototype = Object.create(StringifiableRDFElement.prototype);
+StringifiableURINode.revive = function (data) {
+    return new StringifiableURINode(data.prefix, data.subElements);
+};
+
+var StringifiableConstantURI = function (prefix, constantURIText, subElements) {
+    StringifiableURINode.call(this, prefix, subElements);
+    this.constant = constantURIText;
+    this.__type = "StringifiableConstantURI";
+};
+StringifiableConstantURI.prototype = Object.create(StringifiableURINode.prototype);
+StringifiableConstantURI.prototype.getDOMElement = function (containingElement) {
+    var i, subElement, constantURI;
+    constantURI = new ConstantURI(containingElement, this.prefix, this.constant);
+    constantURI.subElements = [];
+    if (this.subElements) {
+        for (i = 0; i < this.subElements.length; ++i) {
+            subElement = this.subElements[i];
+            constantURI.addChild(subElement.getDOMElement(constantURI));
+        }
+    }
+    return constantURI;
+};
+StringifiableConstantURI.revive = function (data) {
+    return new StringifiableConstantURI(data.prefix, data.constant, data.subElements);
+};
+
+var StringifiableColumnURI = function (prefix, columnName, subElements) {
+    StringifiableURINode.call(this, prefix, subElements);
+    this.column = columnName;
+    this.__type = "StringifiableColumnURI";
+};
+StringifiableColumnURI.prototype = Object.create(StringifiableURINode.prototype);
+StringifiableColumnURI.prototype.getDOMElement = function (containingElement) {
+    var i, subElement, columnURI;
+    columnURI = new ColumnURI(containingElement, this.prefix, this.column);
+    columnURI.subElements = [];
+    if (this.subElements) {
+        for (i = 0; i < this.subElements.length; ++i) {
+            subElement = this.subElements[i];
+            columnURI.addChild(subElement.getDOMElement(columnURI));
+        }
+    }
+    return columnURI;
+};
+StringifiableColumnURI.revive = function (data) {
+    return new StringifiableColumnURI(data.prefix, data.column, data.subElements);
+};
+
+var StringifiableProperty = function (prefix, propertyName, subElements) {
+    StringifiableRDFElement.call(this, subElements);
+    this.prefix = prefix;
+    this.propertyName = propertyName;
+    this.__type = "StringifiableProperty";
+};
+StringifiableProperty.prototype = Object.create(StringifiableRDFElement.prototype);
+StringifiableProperty.prototype.getDOMElement = function (containingElement) {
+    var i, subElement, property;
+    property = new Property(containingElement, this.prefix, this.propertyName);
+    property.subElements = [];
+    if (this.subElements) {
+        for (i = 0; i < this.subElements.length; ++i) {
+            subElement = this.subElements[i];
+            property.addChild(subElement.getDOMElement(property));
+        }
+    }
+    return property;
+};
+StringifiableProperty.revive = function (data) {
+    return new StringifiableProperty(data.prefix, data.propertyName, data.subElements);
+};
+
+var StringifiableColumnLiteral = function (literalText, subElements) {
+    StringifiableRDFElement.call(this, subElements);
+    this.literalValue = literalText;
+    this.__type = "StringifiableColumnLiteral";
+};
+StringifiableColumnLiteral.prototype = Object.create(StringifiableRDFElement.prototype);
+StringifiableColumnLiteral.prototype.getDOMElement = function (containingElement) {
+    var i, subElement, columnLiteral;
+    columnLiteral = new ColumnLiteral(containingElement, this.literalValue);
+    columnLiteral.subElements = [];
+    if (this.subElements) {
+        for (i = 0; i < this.subElements.length; ++i) {
+            subElement = this.subElements[i];
+            columnLiteral.addChild(subElement.getDOMElement(columnLiteral));
+        }
+    }
+    return columnLiteral;
+};
+StringifiableColumnLiteral.revive = function (data) {
+    return new StringifiableColumnLiteral(data.literalValue, data.subElements);
+};
+
+var StringifiableConstantLiteral = function (literalText, subElements) {
+    StringifiableRDFElement.call(this, subElements);
+    this.literalValue = literalText;
+    this.__type = "StringifiableConstantLiteral";
+};
+StringifiableConstantLiteral.prototype = Object.create(StringifiableRDFElement.prototype);
+StringifiableConstantLiteral.prototype.getDOMElement = function (containingElement) {
+    var i, subElement, constantLiteral;
+    constantLiteral = new ConstantLiteral(containingElement, this.literalValue);
+    constantLiteral.subElements = [];
+    if (this.subElements) {
+        for (i = 0; i < this.subElements.length; ++i) {
+            subElement = this.subElements[i];
+            constantLiteral.addChild(subElement.getDOMElement(constantLiteral));
+        }
+    }
+    return constantLiteral;
+};
+StringifiableConstantLiteral.revive = function (data) {
+    return new StringifiableColumnLiteral(data.literalText, data.subElements);
+};
+
+var StringifiableGraph = function (graphURI, graphRoots) {
+    var i, stringifiableGraphRoots;
+    
+    stringifiableGraphRoots = [];
+    // just a string
+    this.graphURI = graphURI;
+    // need to get stringifiable roots first
+    for (i = 0; i < graphRoots.length; ++i) {
+        stringifiableGraphRoots.push(getStringifiableElement(graphRoots[i]));
+    }
+    this.graphRoots = stringifiableGraphRoots;
+    this.__type = "StringifiableGraph";
+};
+StringifiableGraph.loadDOMGraph = function (rdfControl, stringifiableGraph) {
+    var resultingGraph, i, graphRoot;
+    resultingGraph = new Graph(stringifiableGraph.graphURI, rdfControl);
+    for (i = 0; i < stringifiableGraph.graphRoots.length; ++i) {
+        graphRoot = stringifiableGraph.graphRoots[i];
+        resultingGraph.addChild(graphRoot.getDOMElement(resultingGraph));
+    }
+    // iterate roots
+    // create dom root
+    // add to resulting graph
+    return resultingGraph;
+};
+StringifiableGraph.revive = function (data) {
+    return new StringifiableGraph(data.graphURI, data.graphRoots);
+};
+
+var Transformation = function (customFunctionDeclarations, prefixers, pipelines, graphs) {
     // validate that inputs are revived
-    var i, cfd, prefixer, pipeline, graft;
+    var i, cfd, prefixer, pipeline, graph;
+    
     for (i = 0; i < customFunctionDeclarations.length; ++i) {
         cfd = customFunctionDeclarations[i];
         if (!(cfd instanceof CustomFunctionDeclaration)  && cfd.__type === "CustomFunctionDeclaration") {
@@ -191,69 +370,51 @@ var Transformation = function (customFunctionDeclarations, prefixers, pipelines,
         }
     }
 
-    for (i = 0; i < prefixers.length; ++i) {
+    for (i = 0; i < pipelines.length; ++i) {
         pipeline = pipelines[i];
         if (!(pipeline instanceof Pipeline) && pipeline.__type === "Pipeline") {
             // TODO: validate
             pipelines[i] = Pipeline.revive(pipeline);
         }
     }
-
-    for (i = 0; i < prefixers.length; ++i) {
-        graft = grafts[i];
-        if (!(graft instanceof Graft) && prefixer.__type === "Graft") {
-            // TODO: validate
-            grafts[i] = Graft.revive(graft);
+   
+    for (i = 0; i < graphs.length; ++i) {
+        graph = graphs[i];
+        if (!(graph instanceof StringifiableGraph) && graph.__type === "StringifiableGraph") {
+            graphs[i] = StringifiableGraph.revive(graphs[i]);
         }
     }
 
     this.customFunctionDeclarations = customFunctionDeclarations;
     this.prefixers = prefixers;
     this.pipelines = pipelines;
-    this.grafts = grafts;
+    this.graphs = graphs;
     this.__type = "Transformation";
 };
 Transformation.revive = function (data) {
-    return new Transformation(data.customFunctionDeclarations, data.prefixers, data.pipelines, data.grafts);
+    
+    return new Transformation(data.customFunctionDeclarations, data.prefixers, data.pipelines, data.graphs);
 };
-Types.Transformation = Transformation;
 
-$(function () {
-    var f1, f2, cf1, cf2, customFunctionDeclarations, prefixer1, prefixer2, baseIdPrefixer, prefixer4, prefixer5, prefixers, pipeline, dropRowsFunction, makeDatasetFunction, deriveColumnFunction, ageKeyFuncMapping, sexKeyFuncMapping, mapcFunction, str, obj;
-
-    f1 = "(defn ->integer \"An example transformation function that converts a string to an integer\"\
-[s]\
-(Integer/parseInt s))";
-
-    f2 = "(defn ->gender\
-[str]\
-{\"f\" (s \"female\") \"m\" (s \"male\")}\
-)";
-    cf1 = new CustomFunctionDeclaration("->integer", f1);
-    cf2 = new CustomFunctionDeclaration("->gender", f2);
-    customFunctionDeclarations =  [cf1, cf2];
-
-    prefixer1 = new Prefixer("base-domain", "http://my-domain.com");
-    prefixer2 = new Prefixer("base-graph", "http://my-domain.com/graph/");
-    baseIdPrefixer = new Prefixer("base-id", "http://my-domain.com/id/");
-    prefixer4 = new Prefixer("base-vocab", "http://my-domain.com/def/");
-    prefixer5 = new Prefixer("base-data", "http://my-domain.com/data/");
-
-    prefixers = [prefixer1, prefixer2, baseIdPrefixer, prefixer4, prefixer5];
-
-    dropRowsFunction = new DropRowsFunction(0, 1);
-    makeDatasetFunction = new MakeDatasetFunction(1, [":name", ":sex", ":age"]);
-    deriveColumnFunction = new DeriveColumnFunction(2, ":person-uri", [":name"], baseIdPrefixer);
-
-    ageKeyFuncMapping = new KeyFunctionPair(":age", cf1);
-    sexKeyFuncMapping = new KeyFunctionPair(":sex", cf2);
-    mapcFunction = new MapcFunction(3, [ageKeyFuncMapping, sexKeyFuncMapping]);
-
-    pipeline = new Pipeline([dropRowsFunction, makeDatasetFunction, deriveColumnFunction, mapcFunction]);
-
-//    obj = JSON.parse(str, function (key, value) {
-//        return key === '' && value.hasOwnProperty('__type')
-//            ? Types[value.__type].revive(value) : this[key];
-//    });
-
-});
+SerializationTypesRegistry.Transformation = Transformation;
+SerializationTypesRegistry.Graph = Graph; 
+SerializationTypesRegistry.Property = Property;
+SerializationTypesRegistry.ConstantLiteral = ConstantLiteral;
+SerializationTypesRegistry.ColumnLiteral = ColumnLiteral;
+SerializationTypesRegistry.ColumnURI = ColumnURI;
+SerializationTypesRegistry.ConstantURI = ConstantURI;
+SerializationTypesRegistry.BlankNode = BlankNode;
+SerializationTypesRegistry.Prefixer = Prefixer;
+SerializationTypesRegistry.CustomFunctionDeclaration = CustomFunctionDeclaration;
+SerializationTypesRegistry.CustomCode = CustomCode;
+SerializationTypesRegistry.DropRowsFunction = DropRowsFunction;
+SerializationTypesRegistry.DeriveColumnFunction = DeriveColumnFunction;
+SerializationTypesRegistry.KeyFunctionPair = KeyFunctionPair;
+SerializationTypesRegistry.MapcFunction = MapcFunction;
+SerializationTypesRegistry.Pipeline = Pipeline;
+SerializationTypesRegistry.StringifiableConstantURI = StringifiableConstantURI;
+SerializationTypesRegistry.StringifiableColumnURI = StringifiableColumnURI;
+SerializationTypesRegistry.StringifiableProperty = StringifiableProperty;
+SerializationTypesRegistry.StringifiableColumnLiteral = StringifiableColumnLiteral;
+SerializationTypesRegistry.StringifiableConstantLiteral = StringifiableConstantLiteral;
+SerializationTypesRegistry.StringifiableGraph = StringifiableGraph;
