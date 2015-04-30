@@ -27,7 +27,7 @@ angular
     'angularMoment'
   ])
   .config(function ($stateProvider, $urlRouterProvider, cfpLoadingBarProvider, $breadcrumbProvider, $locationProvider) {
-    $urlRouterProvider.otherwise("/demo");
+    $urlRouterProvider.otherwise("/screenshot");
 
     // TODO enable in production
     // $locationProvider.html5Mode(true);
@@ -170,6 +170,15 @@ angular
         },
         ncyBreadcrumb: {
           label: 'Demo'
+        }
+      })
+      .state('screenshot', {
+        url: '/screenshot',
+        views: {
+          "main@": {
+            templateUrl: 'views/screenshot.html',
+            controller: 'DemoCtrl'
+          }
         }
       });
 

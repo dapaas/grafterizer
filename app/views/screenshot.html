@@ -1,0 +1,41 @@
+<md-content class="md-padding" layout="column" flex>
+
+  <md-input-container class="sin-no-shrink">
+      <label>Title</label>
+      <input ng-model="document.title" required>
+    </md-input-container>
+    <md-input-container class="sin-no-shrink">
+        <label>Description</label>
+        <textarea ng-model="document.description"></textarea>
+      </md-input-container>
+
+<div layout="row">
+	<md-switch aria-label="Expose as public" flex>
+	    Expose as public
+	</md-switch>
+
+	<p flex>
+		Owner: <strong>John S.</strong>	
+	</p>
+</div>
+
+<div layout="row">
+	<md-select placeholder="File" ng-model="selectedFile" flex>
+		<md-option ng-value="file" ng-repeat="file in files">
+			<strong>{{file.id}}</strong>: {{file.name}}
+		</md-option>
+	</md-select>
+</div>
+
+<h4 style="margin-bottom:0">Pipeline and mapping to RDF</h4>
+<div flex layout-gt-lg="row" layout="column">
+	<iframe src="/backup/index.html" style="border:none;" flex layout-margin></iframe>
+	<div flex="33" layout="column" ng-class="graftwerkException ? 'graftwerk-exception' : ''">
+		<div layout-margin class="md-whiteframe-z2 md-warm error-infos" ng-if="graftwerkException">
+			{{graftwerkException}}
+		</div>
+		<div ui-grid="gridOptions" class="sin-grid md-whiteframe-z3" ui-grid-auto-resize flex layout-margin></div>
+	</div>
+</div>
+
+</md-content>
