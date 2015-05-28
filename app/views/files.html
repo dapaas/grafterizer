@@ -1,7 +1,10 @@
 <md-content md-scroll-y class="md-padding files-list">
 	<md-list>
 	  <md-item ng-repeat="file in files">
-	  	<md-subheader  ng-show="file.period">{{file.period}}</md-subheader>
+	  	<!-- <div ng-if="file.period"> -->
+		  	<!-- <md-subheader ng-show="file.period">{{file.period}}</md-subheader> -->
+		  	<!-- <md-subheader ng-show="file.period">{{file.period}}</md-subheader> -->
+	  	<!-- </div> -->
 	    <md-item-content>
 		  	<!-- <md-button ui-sref="files.file({id: file.id})"> -->
 		  	<md-button ui-sref="files.file({id: file.id})">
