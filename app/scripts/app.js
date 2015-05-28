@@ -18,7 +18,7 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
-    'angularFileUpload',
+    'ngFileUpload',
     'ui.grid',
     'ui.grid.autoResize',
     'angular-loading-bar',

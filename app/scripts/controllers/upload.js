@@ -8,7 +8,7 @@
  * Controller of the grafterizerApp
  */
 angular.module('grafterizerApp')
-  .controller('UploadCtrl', function ($scope, fileUpload, $mdToast, File, $state) {
+  .controller('UploadCtrl', function ($scope, Upload, $mdToast, File, $state) {
   	$scope.$watch('file', function() {
   		if ($scope.file && $scope.file[0]) {
   			var now = new Date();
@@ -21,7 +21,7 @@ angular.module('grafterizerApp')
 			        .hideDelay(6000)
 			    );
   			};
-	  		fileUpload.upload($scope.file[0], function(data){
+	  		Upload.upload($scope.file[0], function(data){
 	  			if (!data) {
 	  				errorcallback();
 	  				return;

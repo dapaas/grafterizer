@@ -12,8 +12,8 @@
 } 
 md-toolbar h1 {
   font-size: 1.250em;
-  font-weight: 400;
-  margin: auto;
+  //font-weight: 400;
+  //margin: auto;
 }
 md-list .md-button {
   color: inherit;
@@ -178,4 +178,7 @@ md-sidenav {
   .ui-grid-render-container {
     opacity: 0.5;
   }
+}
+.ui-grid {
+  border:none;
 }

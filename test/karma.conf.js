@@ -26,7 +26,7 @@ module.exports = function(config) {
       'bower_components/angular-route/angular-route.js',
       'bower_components/angular-sanitize/angular-sanitize.js',
       'bower_components/angular-touch/angular-touch.js',
-      'bower_components/ng-file-upload/angular-file-upload.js',
+      'bower_components/ng-file-upload/ng-file-upload.js',
       'bower_components/papaparse/papaparse.js',
       'bower_components/angular-ui-grid/ui-grid.js',
       'bower_components/angular-aria/angular-aria.js',
