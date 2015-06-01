@@ -1,0 +1,17 @@
+<md-select ng-model="selectedFunctionName" placeholder="Choose a function...">
+    <md-optgroup label="Grafter functions">
+        <md-option value="derive-column">derive-column</md-option>
+        <md-option value="drop-rows">drop-rows</md-option>
+        <md-option value="make-dataset">make-dataset</md-option>
+        <md-option value="mapc">mapc</md-option>
+    </md-optgroup>
+    <md-option value="custom-code">Add custom code...</md-option>
+</md-select>
+<div flex>
+    <drop-rows-function ng-if="selectedFunctionName=='drop-rows'"></drop-rows-function>
+    <derive-column-function ng-if="selectedFunctionName=='derive-column'"></derive-column-function>
+</div>
+<div>
+    <md-button class="md-raised" ng-disabled="!selectedFunctionName" ng-click="add()">Create function</md-button>
+    <md-button class="md-raised" ng-click="closeDialog()">Cancel</md-button>
+</div>
