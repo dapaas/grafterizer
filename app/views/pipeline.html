@@ -1,0 +1,8 @@
+
+<div layout="column">
+    
+    <div ng-repeat="funct in pipeline.functions">
+        <pipeline-function function="funct"></pipeline-function> 
+        <md-button class="md-primary" ng-click="clickAddAfter(funct)">+</md-button><md-button class="md-primary" ng-click="clickRemove(funct)">-</md-button></div>
+    
+    <md-button class="md-primary" ng-click="clickAddAfter(null)" ng-hide="pipeline.functions.length!=0">+</md-button></div>

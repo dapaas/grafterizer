@@ -27,7 +27,7 @@ angular
     'angularMoment'
   ])
   .config(function ($stateProvider, $urlRouterProvider, cfpLoadingBarProvider, $breadcrumbProvider, $locationProvider) {
-    $urlRouterProvider.otherwise("/screenshot");
+    $urlRouterProvider.otherwise("/");
 
     // TODO enable in production
     // $locationProvider.html5Mode(true);
