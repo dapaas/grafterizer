@@ -1,8 +1,13 @@
 
 <div layout="column">
-    
-    <div ng-repeat="funct in pipeline.functions">
-        <pipeline-function function="funct"></pipeline-function> 
-        <md-button class="md-primary" ng-click="clickAddAfter(funct)">+</md-button><md-button class="md-primary" ng-click="clickRemove(funct)">-</md-button></div>
+   
+   	<ul data-as-sortable="dragControlListeners" data-ng-model="pipeline.functions">
+ 	   <div data-as-sortable-item ng-repeat="funct in pipeline.functions">
+ 	   		<div data-as-sortable-item-handle>
+		        <pipeline-function function="funct"></pipeline-function> 
+		        <md-button class="md-primary" ng-click="clickAddAfter(funct)">+</md-button><md-button class="md-primary" ng-click="clickRemove(funct)">-</md-button>
+ 	   		</div>
+	     </div>
+	 </ul>
     
     <md-button class="md-primary" ng-click="clickAddAfter(null)" ng-hide="pipeline.functions.length!=0">+</md-button></div>

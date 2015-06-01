@@ -13,6 +13,13 @@ angular.module('grafterizerApp')
         restrict: 'E',
         link: function postLink(scope, element, attrs) {
             scope.pipeline = new transformationDataModel.Pipeline([]);
+            scope.dragControlListeners = {
+                accept: function () {return true},
+                itemMoved: function (event) {},
+                orderChanged: function(event) {
+                    console.log(scope.pipeline)
+                }
+            };
             scope.clickAddAfter = function (funct) {
                 $mdDialog.show({
                     templateUrl: 'views/pipelineFunctionDialog.html'
