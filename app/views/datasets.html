@@ -1,0 +1,20 @@
+{{records}}
+
+<md-content md-scroll-y class="md-padding">
+	<md-list>
+	  <md-item ng-repeat="dataset in records">
+	    <md-item-content>
+			<md-button ui-sref="datasets.dataset({id: dataset['foaf:primaryTopic']})">
+				<div class="md-tile-content">
+					<i class="fa fa-file"></i>
+					<h3>{{dataset['dct:title']}}</h3>
+					<h4> <span am-time-ago="file.date"></span> - {{file.date | date:'H\'h\'mm\' - d/M/yyyy'}}</h4>
+					<p>
+					{{file.metadata}}
+					</p>
+				</div>
+			</md-button>
+	    </md-item-content>
+	  </md-item>
+	</md-list>
+</md-content>
