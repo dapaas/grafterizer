@@ -26,7 +26,8 @@ angular
     'ncy-angular-breadcrumb',
     'angularMoment',
     'http-auth-interceptor',
-    'ui.sortable'
+    'ui.sortable',
+    'ui.codemirror'
   ])
   .config(function ($stateProvider, $urlRouterProvider, cfpLoadingBarProvider, $breadcrumbProvider, $locationProvider) {
     $urlRouterProvider.otherwise("/");

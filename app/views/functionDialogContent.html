@@ -10,6 +10,7 @@
 <div flex>
     <drop-rows-function ng-if="selectedFunctionName=='drop-rows'"></drop-rows-function>
     <derive-column-function ng-if="selectedFunctionName=='derive-column'"></derive-column-function>
+    <custom-code ng-if="selectedFunctionName=='custom-code'"></custom-code>
 </div>
 <div>
     <md-button class="md-raised" ng-disabled="!selectedFunctionName" ng-click="add()">Create function</md-button>
