@@ -24,7 +24,8 @@ angular
     'angular-loading-bar',
     'lbServices',
     'ncy-angular-breadcrumb',
-    'angularMoment'
+    'angularMoment',
+    'http-auth-interceptor'
   ])
   .config(function ($stateProvider, $urlRouterProvider, cfpLoadingBarProvider, $breadcrumbProvider, $locationProvider) {
     $urlRouterProvider.otherwise("/screenshot");
@@ -180,7 +181,44 @@ angular
             controller: 'DemoCtrl'
           }
         }
-      });
+      })
+      .state('distributions', {
+        url: '/distributions',
+        views: {
+          "main@": {
+            templateUrl: 'views/distributions.html',
+            controller: 'DistributionsCtrl'
+          }
+        }
+      })
+      .state('datasets', {
+        url: '/datasets',
+        views: {
+          "main@": {
+            templateUrl: 'views/datasets.html',
+            controller: 'DatasetsCtrl'
+          }
+        },
+        ncyBreadcrumb: {
+          label: 'Datasets'
+        }
+      })
+      .state('datasets.dataset', {
+        url: '/datasets/:id',
+        views: {
+          "main@": {
+            templateUrl: 'views/dataset.html',
+            controller: 'DatasetCtrl'
+          }//,
+          // "actions@": {
+          //   templateUrl: 'views/actions.html',
+          //   controller: 'ActionsCtrl'
+          // }
+        },
+        ncyBreadcrumb: {
+          label: '{{document.title || "Dataset "+id}}'
+        }
+      })
 
     cfpLoadingBarProvider.includeSpinner = false;
 
