@@ -131,7 +131,7 @@ angular
           }
         },
         ncyBreadcrumb: {
-          label: 'New transformation'
+          label: '{{document.title || "New transformation"}}'
         }
       })
       .state('transformations.transformation', {
