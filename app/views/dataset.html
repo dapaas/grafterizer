@@ -1,4 +1,24 @@
-<p>This is the dataset view.</p>
 <md-content md-scroll-y class="md-padding" layout="column" flex>
-	<textarea ui-code-mirror ng-model="document.raw" flex></textarea>
+	<p>{{document['dct:description']}}</p>
+
+        <div layout="row">
+          <md-switch aria-label="Expose as public" ng-model="document['dct:public']" flex ng-disabled=true>
+            Expose as public
+          </md-switch>
+          <p flex ng-show="document['dct:publisher']">
+            Publisher: <strong>{{document['dct:publisher']}}</strong> 
+          </p>
+        </div>
+	<md-chips>
+      <md-chip ng-repeat="keyword in document['dcat:keyword']">{{keyword}}</md-chip>
+    </md-chips>
+	<md-list md-scroll-y class="dapaas-list">
+		<md-list-item class="md-2-line" ng-repeat="distribution in document['dcat:distribution']" ng-click="selectDistribution(distribution)">
+			<div class="md-avatar fa fa-photo"></div>
+			<div class="md-list-item-text">
+				<h3>{{distribution}}</h3>
+			</div>
+		</md-list-item>
+	</md-list>
 </md-content>
+

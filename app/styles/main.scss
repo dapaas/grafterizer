@@ -155,12 +155,16 @@ md-sidenav .md-button {
       // margin:0;
       // padding:0;
 
-      .fa-filter {
-        font-size: 26px;
+      .fa {
+        font-size: 19px;
         text-align: center;
         line-height: 40px;
         background:$gray;
         color:white;
+
+        &.fa-filter {
+          font-size:26px;
+        }
       }
   }
 }
@@ -210,6 +214,10 @@ md-sidenav {
 
 .flex-no-shrink {
   flex-shrink: 0;
+}
+
+.no-border-radius {
+  border-radius:0;
 }
 
 md-tab-content {
