@@ -30,12 +30,14 @@ angular
     'ui.codemirror'
   ])
   .config(function (
+  	$mdThemingProvider,
     $stateProvider,
     $urlRouterProvider,
     $urlMatcherFactoryProvider,
     cfpLoadingBarProvider,
     $breadcrumbProvider,
     $locationProvider) {
+
     $urlRouterProvider.otherwise("/");
 
     // TODO enable in production
@@ -250,4 +252,9 @@ angular
           '</li>'+
         '</ol>'
     });
+
+    $mdThemingProvider.theme('default')
+	    // .dark()
+	    .primaryPalette('indigo')
+	    .accentPalette('blue');
   });
