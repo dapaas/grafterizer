@@ -25,7 +25,7 @@ angular
     'lbServices',
     'ncy-angular-breadcrumb',
     'angularMoment',
-    'http-auth-interceptor',
+    //'http-auth-interceptor',
     'ui.sortable'
   ])
   .config(function (
