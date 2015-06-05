@@ -28,11 +28,28 @@ angular
     'http-auth-interceptor',
     'ui.sortable'
   ])
-  .config(function ($stateProvider, $urlRouterProvider, cfpLoadingBarProvider, $breadcrumbProvider, $locationProvider) {
+  .config(function (
+    $stateProvider,
+    $urlRouterProvider,
+    $urlMatcherFactoryProvider,
+    cfpLoadingBarProvider,
+    $breadcrumbProvider,
+    $locationProvider) {
     $urlRouterProvider.otherwise("/");
 
     // TODO enable in production
     // $locationProvider.html5Mode(true);
+
+    // Workaround for https://github.com/angular-ui/ui-router/issues/1119
+    var valToString = function(val) {
+      return val !== null ? val.toString() : val;
+    }
+    $urlMatcherFactoryProvider.type('nonURIEncoded', {
+      encode: valToString,
+      decode: valToString,
+      is: function () { return true; }
+    });
+
 
     $stateProvider
       .state('main', {
@@ -115,7 +132,7 @@ angular
         }
       })
       .state('transformations.transformation', {
-        url: '/:id',
+        url: '/{id:nonURIEncoded}',
         views: {
           "main@": {
             templateUrl: 'views/transformation.html',
@@ -205,7 +222,7 @@ angular
         }
       })
       .state('datasets.dataset', {
-        url: '/datasets/:id',
+        url: '/datasets/{id:nonURIEncoded}',
         views: {
           "main@": {
             templateUrl: 'views/dataset.html',
