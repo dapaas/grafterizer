@@ -16,8 +16,12 @@ angular.module('grafterizerApp')
 
   	var id = $scope.id = $stateParams.id;
 
+
   	ontotextAPI.dataset(id).success(function(data){
-  		console.log(data);
+  		$scope.document = {
+  			title: data['dct:title'],
+  			raw: JSON.stringify(data)
+  		};
   	});
     $scope.awesomeThings = [
       'HTML5 Boilerplate',

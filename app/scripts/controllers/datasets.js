@@ -8,8 +8,8 @@
  * Controller of the grafterizerApp
  */
 angular.module('grafterizerApp')
-  .controller('DatasetsCtrl', function ($scope, ontotextAPI, grafterSerialiser) {
-  	ontotextAPI.catalog().success(function(data){
+  .controller('DatasetsCtrl', function ($scope, ontotextAPI) {
+  	ontotextAPI.datasets().success(function(data){
   		$scope.records = data['dcat:record'];
   	});
 
