@@ -11,7 +11,7 @@ angular.module('grafterizerApp')
   .controller('TransformationNewCtrl', function (
   	$scope,
     $stateParams,
-    Transformation,
+    ontotextAPI,
     $rootScope,
     $state,
     $mdToast,
@@ -26,7 +26,26 @@ angular.module('grafterizerApp')
 
     $rootScope.actions = {
     	save: function(){
-	        Transformation.create({
+        ontotextAPI.newTransformation({
+            '@context': ontotextAPI.getContextDeclaration(),
+            '@type': 'dcat:Transformation',
+            'dct:title': $scope.document.title,
+            'dct:description': $scope.document.description,
+            'dct:public': $scope.document['dct:public'],
+            'dct:modified': moment().format("YYYY-MM-DD")
+          }, "this is clojure", {json: 'yeah'})
+          .success(function(data){
+            $mdToast.show(
+              $mdToast.simple()
+                .content('Transformation saved')
+                .position('bottom left')
+                .hideDelay(6000)
+              );
+            $state.go('transformations.transformation', {
+              id: data['@id']
+            });
+          });
+	        /*Transformation.create({
 	        	uri: "about:blank",
 	        	name: $scope.document.title,
 	        	metadata: $scope.document.description,
@@ -42,7 +61,7 @@ angular.module('grafterizerApp')
 			        .position('right top')
 			        .hideDelay(6000)
 		        );
-	        });
+	        });*/
     	}
     };
   });

@@ -2,6 +2,9 @@
 @import "components-font-awesome/scss/font-awesome.scss";
 // endbower
 
+$light-gray: #fafafa;
+$gray: rgb(178,178,178);
+
 .menuBtn {
   background-color: transparent;
   border: none;
@@ -10,6 +13,14 @@
   position: absolute;
   width: 36px;
 } 
+.hamburger {
+  font-size:24px;
+  width: 38px;
+  min-width: initial;
+  padding:4px 0px;
+  margin:0;
+  margin-left: 0!important;
+}
 md-toolbar h1 {
   font-size: 1.250em;
   //font-weight: 400;
@@ -39,7 +50,7 @@ md-toolbar i.fa {
 
 .sin-fa-button {
   font-size:28px;
-  i {line-height:46px;margin-left:1px;}
+  i {line-height:56px;margin-left:1px;}
 }
 
 .upload-view .md-button:not(.md-fab) {
@@ -89,7 +100,14 @@ md-sidenav .md-button.md-default-theme {
 .md-toolbar-tools {
   padding: 0px 16px;
   .md-breadcrumb {
-    font-size:22px;  
+    font-size:22px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    li {
+      display: inline;
+    }
   }
 }
 
@@ -132,22 +150,29 @@ md-sidenav .md-button {
 }
 
 .files-list, .dapaas-list {
-  md-item md-tile-content {
-    padding-left:25px;
-  }
+  md-list-item .md-button.md-default-theme {
+      border-radius:0;
+      // margin:0;
+      // padding:0;
 
-  md-item md-item-content i.fa {
-    float:left;
-    margin-right:30px;
-    font-size: 28px;
-    //padding-left: 12px;
-    padding-top: 7px;
+      .fa-filter {
+        font-size: 26px;
+        text-align: center;
+        line-height: 40px;
+        background:$gray;
+        color:white;
+      }
   }
 }
 
 .actions-view {
   .fa {
-    font-size:20px;
+    font-size: 28px;
+    line-height: 47px;
+  }
+  .md-toolbar-tools .md-button {
+    margin-left:0;
+    margin-right:0;
   }
 }
 
@@ -181,4 +206,8 @@ md-sidenav {
 }
 .ui-grid {
   border:none;
+}
+
+.flex-no-shrink {
+  flex-shrink: 0;
 }

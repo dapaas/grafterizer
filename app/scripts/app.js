@@ -234,7 +234,7 @@ angular
           // }
         },
         ncyBreadcrumb: {
-          label: '{{document.title || "Dataset "+id}}'
+          label: '{{document.title || id}}'
         }
       })
 
