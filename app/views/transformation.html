@@ -1,20 +1,30 @@
-<md-content class="md-padding" layout="column" flex>
-  <md-input-container class="sin-no-shrink">
-      <label>Title</label>
-      <input ng-model="document.title" required pattern="[a-zA-Z0-9\s]*">
-    </md-input-container>
-    <md-input-container class="sin-no-shrink">
-        <label>Description</label>
-        <textarea ng-model="document.description"></textarea>
-      </md-input-container>
-<div layout="row">
-  <md-switch aria-label="Expose as public" ng-model="document['dct:public']" flex>
-      Expose as public
-  </md-switch>
-
-  <p flex ng-show="document['dct:publisher']">
-    Publisher: <strong>{{document['dct:publisher']}}</strong> 
-  </p>
-</div>
+<md-content layout="column" flex>
+  <md-tabs class="md-accent" md-dynamic-height>
+    <md-tab label="Metadata">
+      <md-tab-body>
+        <md-input-container class="sin-no-shrink">
+          <label>Title</label>
+          <input ng-model="document.title" required pattern="[a-zA-Z0-9\s]*">
+        </md-input-container>
+        <md-input-container class="sin-no-shrink">
+          <label>Description</label>
+          <textarea ng-model="document.description"></textarea>
+        </md-input-container>
+        <div layout="row">
+          <md-switch aria-label="Expose as public" ng-model="document['dct:public']" flex>
+            Expose as public
+          </md-switch>
+          <p flex ng-show="document['dct:publisher']">
+            Publisher: <strong>{{document['dct:publisher']}}</strong> 
+          </p>
+        </div>
+      </md-tab-body>
+    </md-tab>
+    <md-tab label="Pipeline">
+      <md-tab-body>
+        <pipeline></pipeline>
+      </md-tab-body>
+    </md-tab>
+  </md-tabs>
 
 </md-content>
