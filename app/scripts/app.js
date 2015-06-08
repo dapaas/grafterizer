@@ -46,7 +46,8 @@ angular
     // Workaround for https://github.com/angular-ui/ui-router/issues/1119
     var valToString = function(val) {
       return val !== null ? val.toString() : val;
-    }
+    };
+    
     $urlMatcherFactoryProvider.type('nonURIEncoded', {
       encode: valToString,
       decode: valToString,

@@ -15,10 +15,10 @@ angular.module('grafterizerApp')
             scope.pipeline = new transformationDataModel.Pipeline([]);
             
             scope.dragControlListeners = {
-                accept: function () {return true},
+                accept: function () {return true;},
                 itemMoved: function (event) {},
                 orderChanged: function(event) {
-                    console.log(scope.pipeline)
+                    console.log(scope.pipeline);
                 }
             };
             scope.clickAddAfter = function (funct) {

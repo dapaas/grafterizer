@@ -17,17 +17,18 @@ angular.module('grafterizerApp')
       var now = new Date();
       list.forEach(function(file) {
         var fileMoment = moment(file.date);
+        var tmpPeriod;
         if (fileMoment.isSame(now, "day")) {
-          var tmpPeriod = "Today";
+          tmpPeriod = "Today";
         } else {
-          var tmpPeriod = fileMoment.fromNow();
+          tmpPeriod = fileMoment.fromNow();
         }
         if (period !== tmpPeriod) {
           file.period = period = tmpPeriod;
         }
       });
   		$scope.files = list;
-  	}, function(error){
-  		console.log("pas glop")
+  	}, function(){
+  		console.log("pas glop");
   	});
   });

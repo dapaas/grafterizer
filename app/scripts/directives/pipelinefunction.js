@@ -16,7 +16,7 @@ angular.module('grafterizerApp')
         },
         link: function postLink(scope, element, attrs) {
             scope.editFunction = function() {
-                scope.originalFunction = new Object();
+                scope.originalFunction = {};
                 scope.selectedFunctionName = scope.function.name;
                 angular.copy(scope.function, scope.originalFunction);
                 $mdDialog.show({
@@ -28,7 +28,7 @@ angular.module('grafterizerApp')
                 }, function() {
                     angular.copy(scope.originalFunction, scope.function);
                 });
-            }
+            };
             //element.text('this is the pipelineFunction directive');
         }
     };

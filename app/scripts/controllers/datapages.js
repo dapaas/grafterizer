@@ -13,7 +13,7 @@ angular.module('grafterizerApp')
   	Datapages.find({}, function(list){
   		console.log(list);
   		$scope.datapages = list;
-  	}, function(error){
-  		console.log("pas glop")
+  	}, function(){
+  		console.log("pas glop");
   	});
   });

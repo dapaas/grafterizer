@@ -23,9 +23,9 @@ angular.module('grafterizerApp')
                 case "edit-prefixes":
                     $mdDialog.show({
                         templateUrl: 'views/editPipelineFunctionDialog.html',
-                        scope: scope,
+                        // scope: $scope,
                         preserveScope: true
-                    }).then(function(pipeFunct) {
+                    }).then(function(/*pipeFunct*/) {
                     }, function() {
                     }); 
                     break;

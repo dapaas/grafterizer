@@ -24,7 +24,7 @@ angular.module('grafterizerApp')
 
   	this.query = function() {
   		if (data === null) {
-  			data = JSON.parse(localStorage.getItem(localStorageKey))
+  			data = JSON.parse(localStorage.getItem(localStorageKey));
   		}
   		return data;
   	};
@@ -34,7 +34,7 @@ angular.module('grafterizerApp')
   	};
 
   	this.save = function(datapage) {
-  		data[datapage.id] = databage;
+  		data[datapage.id] = datapage;
   		this._commit();
   	};
   });

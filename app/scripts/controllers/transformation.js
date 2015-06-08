@@ -23,11 +23,10 @@ angular.module('grafterizerApp')
     };
 
     ontotextAPI.transformation(id).success(function(data){
-      console.log(data)
       $scope.document = data;
       $scope.document.title = data['dct:title'];
       $scope.document.description = data['dct:description'];
-    }).error(function(data, status){
+    }).error(function(){
       $state.go('^');
     });
 
@@ -45,7 +44,7 @@ angular.module('grafterizerApp')
         delete update.title;
         delete update.description;
         console.log(update);
-        console.log(JSON.stringify(update))
+        console.log(JSON.stringify(update));
 
         ontotextAPI.updateTransformation(id, update)
           .success(function(data){

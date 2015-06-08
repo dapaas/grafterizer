@@ -21,7 +21,7 @@ angular.module('grafterizerApp')
   	var errorHandler = function(data, status, headers, config){
       var message;
       if (data && data.error) {
-        message = "API error: "+data.error
+        message = "API error: "+data.error;
       } else if (status) {
         message = "Error "+status+" while contacting ontotext's API";
       } else {
@@ -40,13 +40,13 @@ angular.module('grafterizerApp')
       var formData = new FormData();
       angular.forEach(data, function (value, key) {
         formData.append(key, value);
-        console.log(value,key)
+        console.log(value,key);
       });
 
       var headers = headersGetter();
       delete headers['Content-Type'];
 
-      console.log(formData)
+      console.log(formData);
       return formData;
     };
 
@@ -86,7 +86,7 @@ angular.module('grafterizerApp')
           "foaf:primaryTopic":{"@type":"@id"},
           "dcat:distribution":{"@type":"@id"}
         };
-  	}
+  	};
 
   	var createOrUpdateTransformation = function(id, meta, clojure, json){
   		var method = id ? 'PUT' : 'POST';

@@ -13,7 +13,7 @@ angular.module('grafterizerApp')
         restrict: 'E',
         link: function postLink(scope, element, attrs) {
             scope.$parent.generateCurrFunction = function(){
-                return new transformationDataModel.DeriveColumnFunction("todo", "todo", "todo")
+                return new transformationDataModel.DeriveColumnFunction("todo", "todo", "todo");
             };
         }
     };

@@ -19,7 +19,7 @@ angular.module('grafterizerApp')
             //        element.text('this is the functionsDialog directive');
             scope.generateCurrFunction = function(){
                 console.error("todo");
-            }
+            };
             scope.add = function(){
                 $mdDialog.hide(scope.generateCurrFunction());
             };

@@ -14,8 +14,7 @@ angular.module('grafterizerApp')
     ontotextAPI,
     $rootScope,
     $state,
-    $mdToast,
-    $mdDialog) {
+    $mdToast) {
 
   	$scope.document = {
   		title: "New transformation",
