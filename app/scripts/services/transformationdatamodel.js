@@ -51,7 +51,8 @@ angular.module('grafterizerApp')
 
     var CustomCode = function (name, clojureCode) {
         GenericFunction.call(this);
-        this.name = name; // display name in the pipeline
+        this.name = "custom-code";
+        this.displayName = name; // display name in the pipeline
         this.clojureCode = clojureCode; // clojure code corresponding to the function
         this.__type = "CustomCode";
     };
@@ -64,6 +65,7 @@ angular.module('grafterizerApp')
         GenericFunction.call(this);
         this.numberOfRows = numberOfRows;
         this.name = "drop-rows";
+        this.displayName = "drop-rows";
         this.__type = "DropRowsFunction";
     };
     DropRowsFunction.revive = function (data) {
@@ -76,6 +78,7 @@ angular.module('grafterizerApp')
         this.newColName = newColName;
         this.colsToDeriveFrom = colsToDeriveFrom;
         this.name = "derive-column";
+        this.displayName = "derive-column";
         if (functionToDeriveWith !== null) {
             if (!(functionToDeriveWith instanceof CustomFunctionDeclaration) && functionToDeriveWith.__type === "CustomFunctionDeclaration") {
                 functionToDeriveWith = CustomFunctionDeclaration.revive(functionToDeriveWith);
@@ -118,6 +121,7 @@ angular.module('grafterizerApp')
         // array of obj with [key, function]
         GenericFunction.call(this);
         this.name = "mapc";
+        this.displayName = "mapc";
         var i, kfPair;
         if (keyFunctionPairs !== null) {
             for (i = 0; i < keyFunctionPairs.length; ++i) {
@@ -138,6 +142,7 @@ angular.module('grafterizerApp')
     var MakeDatasetFunction = function (columnsArray) {
         // array of column names
         this.name = "make-dataset";
+        this.displayName = "make-dataset";
         GenericFunction.call(this);
         this.columnsArray = columnsArray;
         this.__type = "MakeDatasetFunction";
@@ -221,7 +226,7 @@ angular.module('grafterizerApp')
             }
         }
 
-        for (i = 0; i < prefixers.length; ++i) {
+        for (i = 0; i < pipelines.length; ++i) {
             pipeline = pipelines[i];
             if (!(pipeline instanceof Pipeline) && pipeline.__type === "Pipeline") {
                 // TODO: validate

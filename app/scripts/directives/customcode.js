@@ -18,7 +18,7 @@ angular.module('grafterizerApp')
                 mode: 'clojure'
             };
             scope.$parent.generateCurrFunction = function(){
-                return new transformationDataModel.CustomCode();
+                return new transformationDataModel.CustomCode(scope.function.displayName, scope.function.clojureCode);
             };
         }
     };
