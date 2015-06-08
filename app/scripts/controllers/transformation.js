@@ -41,6 +41,7 @@ angular.module('grafterizerApp')
         var update = angular.copy($scope.document);
         update['dct:title'] = update.title;
         update['dct:description'] = update.description;
+        update['dct:modified'] = moment().format("YYYY-MM-DD");
         delete update.title;
         delete update.description;
         console.log(update);
