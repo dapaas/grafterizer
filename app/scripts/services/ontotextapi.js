@@ -8,7 +8,7 @@
  * Service in the grafterizerApp.
  */
 angular.module('grafterizerApp')
-  .service('ontotextAPI', function ($http, $mdToast) {
+  .service('ontotextAPI', function ($http, $mdToast, Upload) {
 
   	var endpoint = 'http://ec2-54-76-140-62.eu-west-1.compute.amazonaws.com:8080/catalog';
 
@@ -19,13 +19,37 @@ angular.module('grafterizerApp')
   	};
 
   	var errorHandler = function(data, status, headers, config){
-		$mdToast.show(
-			$mdToast.simple()
-			.content('An error occured when contacting ontotextAPI')
-			.position('bottom left')
-			.hideDelay(3000)
-		);
+      var message;
+      if (data && data.error) {
+        message = "API error: "+data.error
+      } else if (status) {
+        message = "Error "+status+" while contacting ontotext's API";
+      } else {
+        message = "An error occured when contacting ontotextAPI";
+      }
+
+  		$mdToast.show(
+  			$mdToast.simple()
+  			.content(message)
+  			.position('bottom left')
+  			.hideDelay(3000)
+  		);
   	};
+
+    var transformRequest = function (data, headersGetter) {
+      var formData = new FormData();
+      angular.forEach(data, function (value, key) {
+        formData.append(key, value);
+        console.log(value,key)
+      });
+
+      var headers = headersGetter();
+      delete headers['Content-Type'];
+
+      console.log(formData)
+      return formData;
+    };
+
 
   	this.datasets = function() {
   		return $http.get(endpoint+"/datasets/catalog", jsonLdConfig).error(errorHandler);
@@ -82,30 +106,17 @@ angular.module('grafterizerApp')
   		}
 
   		var headers = {
-			'Content-Type': 'multipart/form-data'
+			 'Content-Type': 'multipart/form-data',
+       'transformation-type': 'pipe',
+       'command': 'my-pipe'
   		};
-
-  		if (id) {
-  			headers['transformation-id'] = id;
-  		}
 
   		return $http({
   			url: endpoint+"/transformations", 
   			method: method,
   			data: data,
   			headers: headers,
-  			transformRequest: function (data, headersGetter) {
-                var formData = new FormData();
-                angular.forEach(data, function (value, key) {
-                	console.log(key, value);
-                    formData.append(key, value);
-                });
-
-                var headers = headersGetter();
-                delete headers['Content-Type'];
-
-                return formData;
-            }
+  			transformRequest: transformRequest
   		}).error(errorHandler);
   	};
 
@@ -133,4 +144,59 @@ angular.module('grafterizerApp')
   			}
   		}).error(errorHandler);
   	};
+
+    this.distribution = function(id) {
+      return $http.get(endpoint+"/distributions", angular.merge({
+        headers: {
+          'distrib-id': id
+        }
+      }, jsonLdConfig)).error(errorHandler);
+    };
+
+    this.uploadDistribution = function(distributionID, file, metadata) {
+      var meta = new Blob([JSON.stringify(metadata)],
+        {type: "application/ld+json"});
+
+      return Upload.upload({
+        url: endpoint+"/distributions",
+        method: 'POST',
+        file: [file, meta],
+        fileFormDataName: ['file', 'meta'],
+        headers: {
+          'dataset-id': distributionID
+        }
+      }).error(errorHandler);
+    };
+
+    this.distributionFile = function(distributionID) {
+      return $http.get(endpoint+"/distributions/file", {
+        headers: {
+          'distrib-id': distributionID
+        }
+      }).error(errorHandler);
+    };
+
+    this.graftwerk = function(distributionID) {
+
+      var data = {
+        'transformation-code': new Blob(["(defpipe my-pipe [data-file] (-> (read-dataset data-file :format :csv)))"],
+        {type: "application/clojure"}),
+        'input-file': new Blob(["name,sex,age\nalice,f,34\nbob,m,63"], {type: "text/csv"})
+      };
+
+      var headers = {
+        'Content-Type': 'multipart/form-data',
+        'command': 'my-pipe',
+        'transformation-type': 'pipe'
+        //'input-distribution': distributionID
+      };
+
+      return $http({
+        url: endpoint+"/grafter/transformation/preview", 
+        method: "POST",
+        data: data,
+        headers: headers,
+        transformRequest: transformRequest
+      }).error(errorHandler);
+    };
   });
