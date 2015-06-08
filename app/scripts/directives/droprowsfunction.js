@@ -7,7 +7,7 @@
  * # dropRowsFunction
  */
 angular.module('grafterizerApp')
-  .directive('dropRowsFunction', function ($compile, transformationDataModel) {
+  .directive('dropRowsFunction', function (transformationDataModel) {
     return {
       templateUrl: 'views/dropRowsFunction.html',
       restrict: 'E',
