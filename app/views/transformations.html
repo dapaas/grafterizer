@@ -1,16 +1,14 @@
-<md-content md-scroll-y class="md-padding dapaas-list">
+<md-content md-scroll-y class="dapaas-list">
 	<md-list>
-	  <md-item ng-repeat="transformation in transformations">
-	    <md-item-content>
-		  	<md-button ui-sref="transformations.transformation({id: transformation.id})">
-		      <div class="md-tile-content">
-  			    <i class="fa fa-filter"></i>
-		        <h3>{{transformation.name}}</h3>
-		        <h4> </h4>
-		      </div>
-		  	</md-button>
-	    </md-item-content>
-	  </md-item>
+	  <md-list-item class="md-2-line" ng-repeat="transformation in transformations" ng-click="selectTransformation(transformation)">
+	  <div class="md-avatar fa fa-filter">
+	  	<!-- <i class="fa fa-filter"></i> -->
+	  </div>
+	    <div class="md-list-item-text">
+		    <h3>{{transformation['dct:title']}}</h3>
+			<p>{{transformation['dct:modified'] | date:'d/M/yyyy'}}</p>
+		</div>
+	  </md-list-item>
 	</md-list>
 </md-content>
 

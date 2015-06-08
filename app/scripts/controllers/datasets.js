@@ -8,11 +8,14 @@
  * Controller of the grafterizerApp
  */
 angular.module('grafterizerApp')
-  .controller('DatasetsCtrl', function ($scope, ontotextAPI, grafterSerialiser) {
-  	ontotextAPI.catalog().success(function(data){
-  		$scope.records = data['dcat:record'];
+  .controller('DatasetsCtrl', function ($scope, ontotextAPI, $state) {
+  	ontotextAPI.datasets().success(function(data){
+  		$scope.records = data['dcat:record'].reverse();
   	});
 
-  	// $scope.something = new grafterSerialiser.MyClass();
-  	// $scope.other = new grafterSerialiser.SecondClass();
+  	$scope.selectDataset = function(dataset) {
+  		$state.go('datasets.dataset', {
+  			id: dataset['foaf:primaryTopic']
+  		});
+  	};
   });

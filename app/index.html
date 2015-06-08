@@ -27,7 +27,7 @@
 
     <!-- Add your site or application content here -->
 
-    <md-sidenav md-is-locked-open="$mdMedia('gt-sm')" class="md-whiteframe-z2" md-component-id="left" tabindex="-1">
+    <md-sidenav class="md-whiteframe-z2" md-component-id="left" tabindex="-1">
       <md-toolbar layout="column">
         <md-button class="md-button dapaas-title" ui-sref="main" flex>
           <h1>Grafterizer</h1>
@@ -35,8 +35,8 @@
       </md-toolbar>
       <br>
       <md-content flex role="navigation" layout="column">
-        <md-button class="md-button md-primary" ui-sref="datapages">
-          <i class="fa fa-dashboard"></i> Data pages</md-button>
+        <md-button class="md-button md-primary" ui-sref="datasets">
+          <i class="fa fa-dashboard"></i> Datasets</md-button>
         <md-button class="md-button md-primary" ui-sref="transformations">
           <i class="fa fa-filter"></i> Transformations</md-button>
         <md-button class="md-button md-primary" ui-sref="files">
@@ -49,14 +49,14 @@
     </md-sidenav>
 
     <div flex role="main" tabindex="-1" layout="column">
-      <md-toolbar layout="row" class="md-toolbar-tools">
-        <md-button class="menu" hide-gt-sm ng-click="nav.toggleSideMenu()" aria-label="Show User List">
+      <md-toolbar layout="row" class="md-toolbar-tools md-whiteframe-z1">
+        <md-button class="menu hamburger" ng-click="nav.toggleSideMenu()" aria-label="Show User List">
           <i class="fa fa-bars"></i>
         </md-button>
         <div layout="row" flex class="fill-height">
           <div class="md-toolbar-item md-breadcrumb" ncy-breadcrumb></div>
          <span flex></span> <!-- use up the empty space -->
-         <div layout="column" ui-view="actions"></div>
+         <div layout="column" class="flex-no-shrink" ui-view="actions"></div>
         </div>
        </md-toolbar>
         

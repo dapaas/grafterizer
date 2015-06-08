@@ -11,40 +11,46 @@ angular.module('grafterizerApp')
   .controller('TransformationCtrl', function (
     $scope,
     $stateParams,
-    Transformation,
+    ontotextAPI,
     $rootScope,
     $state,
     $mdToast,
     $mdDialog) {
 
   	var id = $scope.id = $stateParams.id;
+    $scope.document = {
+      title: 'loading'
+    };
 
-  	Transformation.findById({
-  		id: id
-  	}, function(value){
-  		// todo merge
-  		$scope.document = {
-  			title: value.name,
-        	description: value.metadata
-  		};
-  	}, function(error){
-      $mdToast.show(
-        $mdToast.simple()
-          .content('Error: '+error.statusText)
-          .position('right top')
-          .hideDelay(6000)
-      );
-  	});
+    ontotextAPI.transformation(id).success(function(data){
+      console.log(data)
+      $scope.document = data;
+      $scope.document.title = data['dct:title'];
+      $scope.document.description = data['dct:description'];
+    }).error(function(data, status){
+      $state.go('^');
+    });
+
+    ontotextAPI.getClojure(id).success(function(data){
+      console.log(data);
+      $scope.clojure = data;
+    });
 
     $rootScope.actions = {
       save: function(){
-        Transformation.prototype$updateAttributes({
-          id: id
-        }, {
-          name: $scope.document.title,
-          metadata: $scope.document.description
-          //clojure
-        });
+        var update = angular.copy($scope.document);
+        update['dct:title'] = update.title;
+        update['dct:description'] = update.description;
+        delete update.title;
+        delete update.description;
+        console.log(update);
+        console.log(JSON.stringify(update))
+
+        ontotextAPI.updateTransformation(id, update)
+          .success(function(data){
+            console.log(data);
+            console.log("oh yeah");
+          });
       },
       delete: function(ev) {
         var confirm = $mdDialog.confirm()
@@ -52,16 +58,16 @@ angular.module('grafterizerApp')
           .content('It\'s a nice transformation')
           .ariaLabel('Deletion confirmation')
           .ok('Please do it!')
-          .cancel('Finally no, I like it')
+          .cancel('I changed my mind, I like it')
           .targetEvent(ev);
 
         $mdDialog.show(confirm).then(function() {
-          Transformation.deleteById({id: id}).$promise.then(function(){
+          ontotextAPI.deleteTransformation(id).success(function(){
             $state.go('transformations');
             $mdToast.show(
               $mdToast.simple()
                 .content('Transformation "'+$scope.document.title+'" deleted')
-                .position('right top')
+                .position('bottom left')
                 .hideDelay(6000)
             );
           });

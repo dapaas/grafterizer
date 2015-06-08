@@ -45,9 +45,9 @@ module.exports = function (grunt) {
         files: ['test/spec/{,*/}*.js'],
         tasks: ['newer:jshint:test', 'karma']
       },
-      compass: {
+      sass: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
-        tasks: ['compass:server', 'autoprefixer']
+        tasks: ['sass:server', 'postcss']
       },
       gruntfile: {
         files: ['Gruntfile.js']
@@ -152,9 +152,12 @@ module.exports = function (grunt) {
     },
 
     // Add vendor prefixed styles
-    autoprefixer: {
+    postcss: {
       options: {
-        browsers: ['last 1 version']
+        processors: [
+          require('autoprefixer-core')({browsers: 'last 1 version'}),
+          require('csswring')
+        ]
       },
       server: {
         options: {
@@ -206,7 +209,31 @@ module.exports = function (grunt) {
     },
 
     // Compiles Sass to CSS and generates necessary files if requested
-    compass: {
+    sass: {
+      options: {
+        sourceMap: true,
+        includePaths: ['bower_components']
+        },
+      dist: {
+        files: [{
+          expand: true,
+          cwd: '<%= yeoman.app %>/styles',
+          src: ['*.{scss,sass}'],
+          dest: '.tmp/styles',
+          ext: '.css'
+        }]
+      },
+      server: {
+        files: [{
+          expand: true,
+          cwd: '<%= yeoman.app %>/styles',
+          src: ['*.{scss,sass}'],
+          dest: '.tmp/styles',
+          ext: '.css'
+        }]
+      }
+    },
+    /*compass: {
       options: {
         sassDir: '<%= yeoman.app %>/styles',
         cssDir: '.tmp/styles',
@@ -232,7 +259,7 @@ module.exports = function (grunt) {
           sourcemap: true
         }
       }
-    },
+    },*/
 
     // Renames files for browser caching purposes
     filerev: {
@@ -403,13 +430,13 @@ module.exports = function (grunt) {
     // Run some tasks in parallel to speed up the build process
     concurrent: {
       server: [
-        'compass:server'
+        'sass:server'
       ],
       test: [
-        'compass'
+        //'compass'
       ],
       dist: [
-        'compass:dist',
+        'sass',
         'imagemin',
         'svgmin'
       ]
@@ -434,7 +461,7 @@ module.exports = function (grunt) {
       'clean:server',
       'wiredep',
       'concurrent:server',
-      'autoprefixer:server',
+      'postcss:server',
       'connect:livereload',
       'watch'
     ]);
@@ -449,7 +476,7 @@ module.exports = function (grunt) {
     'clean:server',
     'wiredep',
     'concurrent:test',
-    'autoprefixer',
+    'postcss',
     'connect:test',
     'karma'
   ]);
@@ -459,7 +486,7 @@ module.exports = function (grunt) {
     'wiredep',
     'useminPrepare',
     'concurrent:dist',
-    'autoprefixer',
+    'postcss',
     'concat',
     'ngAnnotate',
     'copy:dist',
