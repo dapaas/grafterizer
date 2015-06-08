@@ -166,6 +166,12 @@ md-sidenav .md-button {
           font-size:26px;
         }
       }
+
+      .md-list-item-text h3 {
+        word-break: break-word;
+        //TODO
+        line-height: 1em;
+      }
   }
 }
 
@@ -222,4 +228,15 @@ md-sidenav {
 
 md-tab-content {
   padding:8px;
+}
+
+// TODO
+md-switch {
+  flex-wrap: wrap;
+}
+
+// TODO ng-file-upload#796
+body > input[type=file] {
+  top:0;
+  left:0;
 }
