@@ -240,6 +240,18 @@ angular
           label: '{{document.title || id}}'
         }
       })
+      .state('distribution', {
+        url: '/distribution/{id:nonURIEncoded}',
+        views: {
+          "main@": {
+            templateUrl: 'views/distribution.html',
+            controller: 'DistributionCtrl'
+          }
+        },
+        ncyBreadcrumb: {
+          label: '{{document.title || id}}'
+        }
+      });
 
     cfpLoadingBarProvider.includeSpinner = false;
 
