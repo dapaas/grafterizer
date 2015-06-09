@@ -266,8 +266,31 @@ angular
         '</ol>'
     });
 
+    var colors = [
+      'red',
+      'pink',
+      'purple',
+      'deep-purple',
+      'indigo',
+      'blue',
+      'light-blue',
+      'cyan',
+      'teal',
+      'green',
+      'light-green',
+      'lime',
+      'yellow',
+      'amber',
+      'orange',
+      'deep-orange',
+      'brown',
+      'grey',
+      'blue-grey'
+    ];
+
     $mdThemingProvider.theme('default')
-	    // .dark()
-	    .primaryPalette('indigo')
-	    .accentPalette('blue');
+	    .primaryPalette(colors[Math.floor(Math.random()*colors.length)])
+	    .accentPalette(colors[Math.floor(Math.random()*colors.length)]);
+
+    jsedn.Symbol.prototype.validRegex = new RegExp(/.*/);
   });
