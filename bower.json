@@ -21,7 +21,8 @@
     "angular-moment": "~0.10.1",
     "angular-http-auth": "~1.2.2",
     "ng-sortable": "~1.2.2",
-    "angular-ui-codemirror": "~0.3.0"
+    "angular-ui-codemirror": "~0.3.0",
+    "jsedn": "shaunxcode/jsedn"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.0"
