@@ -8,9 +8,9 @@
  * Service in the grafterizerApp.
  */
 angular.module('grafterizerApp')
-  .service('ontotextAPI', function ($http, $mdToast, Upload) {
+  .service('ontotextAPI', function ($http, $mdToast, Upload, $log) {
 
-  	var endpoint = 'http://ec2-54-76-140-62.eu-west-1.compute.amazonaws.com:8080/catalog';
+  	var endpoint = 'http://ec2-54-76-140-62.eu-west-1.compute.amazonaws.com:8080';
 
   	var jsonLdConfig = {
   		headers: {
@@ -52,11 +52,11 @@ angular.module('grafterizerApp')
 
 
   	this.datasets = function() {
-  		return $http.get(endpoint+"/datasets/catalog", jsonLdConfig).error(errorHandler);
+  		return $http.get(endpoint+"/catalog/datasets/catalog", jsonLdConfig).error(errorHandler);
   	};
 
   	this.dataset = function(id) {
-  		return $http.get(endpoint+"/datasets", angular.merge({
+  		return $http.get(endpoint+"/catalog/datasets", angular.merge({
   			headers: {
   				'dataset-id': id
   			}
@@ -64,11 +64,11 @@ angular.module('grafterizerApp')
   	};
 
   	this.transformations = function() {
-  		return $http.get(endpoint+"/transformations/catalog", jsonLdConfig).error(errorHandler);
+  		return $http.get(endpoint+"/catalog/transformations/catalog", jsonLdConfig).error(errorHandler);
   	};
 
   	this.transformation = function(id) {
-  		return $http.get(endpoint+"/transformations", angular.merge({
+  		return $http.get(endpoint+"/catalog/transformations", angular.merge({
   			headers: {
   				'transformation-id': id
   			}
@@ -88,8 +88,8 @@ angular.module('grafterizerApp')
         };
   	};
 
-  	var createOrUpdateTransformation = function(id, meta, clojure, json){
-  		var method = id ? 'PUT' : 'POST';
+  	var createOrUpdateTransformation = function(isNew, meta, clojure, json){
+  		var method = isNew ? 'POST' : 'PUT';
   		var data = {
 			'meta': new Blob([JSON.stringify(meta)],
 				{type: "application/ld+json"})
@@ -106,13 +106,11 @@ angular.module('grafterizerApp')
   		}
 
   		var headers = {
-			 'Content-Type': 'multipart/form-data',
-       'transformation-type': 'pipe',
-       'command': 'my-pipe'
+			 'Content-Type': 'multipart/form-data'
   		};
 
   		return $http({
-  			url: endpoint+"/transformations", 
+  			url: endpoint+"/catalog/transformations", 
   			method: method,
   			data: data,
   			headers: headers,
@@ -122,15 +120,15 @@ angular.module('grafterizerApp')
 
   	this.newTransformation = function(meta, clojure, json) {
   		console.log(meta);
-  		return createOrUpdateTransformation(null, meta, clojure, json);
+  		return createOrUpdateTransformation(true, meta, clojure, json);
   	};
 
-  	this.updateTransformation = function(id, meta, clojure, json) {
-  		return createOrUpdateTransformation(id, meta, clojure, json);
+  	this.updateTransformation = function(meta, clojure, json) {
+  		return createOrUpdateTransformation(false, meta, clojure, json);
   	};
 
   	this.deleteTransformation = function(id) {
-  		return $http.delete(endpoint+"/transformations", angular.merge({
+  		return $http.delete(endpoint+"/catalog/transformations", angular.merge({
   			headers: {
   				'transformation-id': id
   			}
@@ -138,15 +136,34 @@ angular.module('grafterizerApp')
   	};
 
   	this.getClojure = function(id) {
-  		return $http.get(endpoint+"/transformations/code/clojure", {
+  		return $http.get(endpoint+"/catalog/transformations/code/clojure", {
   			headers: {
   				'transformation-id': id
   			}
   		}).error(errorHandler);
   	};
 
+    this.getJson = function(id) {
+      return $http.get(endpoint+"/catalog/transformations/code/json", {
+        headers: {
+          'transformation-id': id
+        },
+        // TODO angular fails when the JSON document is invalid...
+        // lets use an amazing try catch
+        transformResponse: [function(data, headers) {
+          try {
+            return JSON.parse(data);
+          } catch(e) {
+            $log.debug(data);
+            $log.error(e);
+            return false;
+          }
+        }]
+      }).error(errorHandler);
+    };
+
     this.distribution = function(id) {
-      return $http.get(endpoint+"/distributions", angular.merge({
+      return $http.get(endpoint+"/catalog/distributions", angular.merge({
         headers: {
           'distrib-id': id
         }
@@ -158,7 +175,7 @@ angular.module('grafterizerApp')
         {type: "application/ld+json"});
 
       return Upload.upload({
-        url: endpoint+"/distributions",
+        url: endpoint+"/catalog/distributions",
         method: 'POST',
         file: [file, meta],
         fileFormDataName: ['file', 'meta'],
@@ -169,7 +186,7 @@ angular.module('grafterizerApp')
     };
 
     this.distributionFile = function(distributionID) {
-      return $http.get(endpoint+"/distributions/file", {
+      return $http.get(endpoint+"/catalog/distributions/file", {
         headers: {
           'distrib-id': distributionID
         }
@@ -181,18 +198,20 @@ angular.module('grafterizerApp')
       var data = {
         'transformation-code': new Blob(["(defpipe my-pipe [data-file] (-> (read-dataset data-file :format :csv)))"],
         {type: "application/clojure"}),
-        'input-file': new Blob(["name,sex,age\nalice,f,34\nbob,m,63"], {type: "text/csv"})
+        'input-file': new Blob(["name,sex,age\nalice,f,34\nbob,m,63"], {type: "text/csv"}),
+        'command': "my-pipe",
+        'transformation-type': "pipe"
       };
 
       var headers = {
         'Content-Type': 'multipart/form-data',
         'command': 'my-pipe',
-        'transformation-type': 'pipe'
-        //'input-distribution': distributionID
+        'transformation-type': 'pipe',
+        // 'input-distribution': distributionID
       };
 
       return $http({
-        url: endpoint+"/grafter/transformation/preview", 
+        url: endpoint+"/dapaas-services/grafter/transformation/preview", 
         method: "POST",
         data: data,
         headers: headers,

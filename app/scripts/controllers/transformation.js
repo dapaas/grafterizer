@@ -46,7 +46,7 @@ angular.module('grafterizerApp')
         console.log(update);
         console.log(JSON.stringify(update));
 
-        ontotextAPI.updateTransformation(id, update)
+        ontotextAPI.updateTransformation(update)
           .success(function(data){
             console.log(data);
             console.log("oh yeah");
