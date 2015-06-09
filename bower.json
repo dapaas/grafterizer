@@ -9,7 +9,7 @@
     "angular-route": "~1.4.0",
     "angular-sanitize": "~1.4.0",
     "angular-touch": "~1.4.0",
-    "ng-file-upload": "~5.0.1",
+    "ng-file-upload": "~5.0.3",
     "papaparse": "~4.1.0",
     "angular-ui-grid": "~3.0.0-rc.21",
     "angular-material": "~0.9.7",

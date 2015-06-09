@@ -234,9 +234,3 @@ md-tab-content {
 md-switch {
   flex-wrap: wrap;
 }
-
-// TODO ng-file-upload#796
-body > input[type=file] {
-  top:0;
-  left:0;
-}
