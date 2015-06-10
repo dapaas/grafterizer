@@ -9,8 +9,6 @@
  */
 angular.module('grafterizerApp')
     .controller('EditprefixersCtrl', function ($scope, $mdDialog, transformationDataModel, $mdToast) {
-    console.log($scope);
-    //    $scope.gridPrefixers
     $scope.gridOpts = {
         onRegisterApi: function(gridApi){
             $scope.gridApi = gridApi;
@@ -38,10 +36,6 @@ angular.module('grafterizerApp')
     }
     $scope.removeSelectedPrefixers = function () {
         var selectedRows = $scope.gridApi.selection.getSelectedRows(), i, indexInGrid;
-        //        console.log("$scope.gridApi");
-        //        console.log($scope.gridApi);
-        //        console.log("$scope.gridApi.selection");
-        //        console.log($scope.gridApi.selection);
         for(i = 0; i < selectedRows.length; ++i){
             if(!$scope.transformation.removePrefixer(selectedRows[i].prefixName)){
                 $mdToast.show(

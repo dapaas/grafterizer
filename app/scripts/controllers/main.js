@@ -28,12 +28,15 @@ angular.module('grafterizerApp')
         });
     };
     $scope.createCustomFunction = function () {
+        $scope.originalCustomFunctionDeclarations = [];
+        angular.copy($scope.transformation.customFunctionDeclarations, $scope.originalCustomFunctionDeclarations);
         $mdDialog.show({
             templateUrl: 'views/createcustomfunction.html',
             controller: 'CustomfunctionsdialogcontrollerCtrl',
             scope: $scope.$new(false, $scope)
         }).then(function() {
         }, function() {
+            angular.copy($scope.originalCustomFunctionDeclarations, $scope.transformation.customFunctionDeclarations);
         }); 
     };
     $scope.previewPipeline = function () {
