@@ -240,6 +240,10 @@ md-switch {
   font-size:1.8em;
 }
 
+md-tab-content .CodeMirror {
+  height:auto;
+}
+
 .pipeline-flow {
   $color: #bababa;
   position:relative;
@@ -292,4 +296,8 @@ md-switch {
 
 .show-upload-indicator .upload-indicator {
   display: flex;
+}
+
+.md-toolbar-tools .md-button {
+  margin:0;
 }

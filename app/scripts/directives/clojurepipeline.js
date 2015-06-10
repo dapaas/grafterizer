@@ -18,7 +18,7 @@ angular.module('grafterizerApp')
       	pre: function(scope) {
 		    scope.editorOptions = {
 		        lineWrapping : true, 
-		        lineNumbers: true,
+		        // lineNumbers: true,
 		        mode: 'clojure',
 		        readOnly: true
 		    };
