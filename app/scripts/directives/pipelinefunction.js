@@ -24,7 +24,7 @@ angular.module('grafterizerApp')
                     scope: scope,
                     preserveScope: true
                 }).then(function(pipeFunct) {
-                    scope.function = pipeFunct;
+                    angular.copy(pipeFunct, scope.function);
                 }, function() {
                     angular.copy(scope.originalFunction, scope.function);
                 });
