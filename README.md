@@ -22,7 +22,7 @@ Install the application dependencies:
 Start the development server:
 ```grunt serve```
 
-### Building
+### How to build
 
 Execute ```grunt build``` to build the application. The dist folder will then be filled with the compiled files.
 
