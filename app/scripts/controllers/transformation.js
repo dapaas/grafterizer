@@ -43,6 +43,7 @@ angular.module('grafterizerApp')
         update['dct:modified'] = moment().format("YYYY-MM-DD");
         delete update.title;
         delete update.description;
+        delete update['dct:publisher'];
         console.log(update);
         console.log(JSON.stringify(update));
 
