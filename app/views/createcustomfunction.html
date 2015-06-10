@@ -1,5 +1,16 @@
 <md-dialog aria-label='Define custom functions...'>
     <md-dialog-content class="sticky-container">
-        <md-subheader class="md-sticky-no-effect">Edit prefixes...</md-subheader>
+        <md-subheader class="md-sticky-no-effect">Define or edit custom functions...</md-subheader>
+        <div>
+            <md-select ng-model="selectedCustomFunction" ng-selected="{{emptyCustomFunction}}">
+                <md-select-label>{{ selectedCustomFunction.name ? selectedCustomFunction.name : 'Create new function...' }}</md-select-label>
+                <md-option ng-value="{{customFunct}}" ng-click="testMe()" ng-repeat="customFunct in $parent.transformation.customFunctionDeclarations">{{customFunct.name}}</md-option>
+                <md-option ng-value="{{emptyCustomFunction}}">Create new function...</md-option>
+            </md-select>
+        </div>
+        <ui-codemirror ng-model="selectedCustomFunction.clojureCode" ui-codemirror-opts="codemirrorOpts"></ui-codemirror>
+        <md-button class="md-raised" ng-click="saveCustomFunct()" ng-hide="!selectedCustomFunction.name==''">Save</md-button>
+        <md-button class="md-raised" ng-click="applyCustomFunctionChanges()">Done</md-button>
+        <md-button class="md-raised" ng-click="cancelCustomFunctionChanges()">Cancel</md-button>
     </md-dialog-content>
 </md-dialog>

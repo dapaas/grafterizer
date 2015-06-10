@@ -295,7 +295,7 @@ angular.module('grafterizerApp')
         }
         this.prefixers.push(new Prefixer(name.trim(), uri.trim()));
         return true;
-    }
+    };
     Transformation.prototype.removePrefixer = function(name) {
         for(var i=0; i < this.prefixers.length; ++i){
             if(this.prefixers[i].name === name.trim()){
@@ -304,8 +304,16 @@ angular.module('grafterizerApp')
             }
         }
         return false;
-    }
-
+    };
+    Transformation.prototype.addCustomFunctionDeclaration = function(name, clojureCode) {
+        for(var i = 0; i < this.customFunctionDeclarations.length; ++i){
+            if(this.customFunctionDeclarations[i].name === name.trim()){
+                return false;
+            }
+        }
+        this.customFunctionDeclarations.push(new CustomFunctionDeclaration(name, clojureCode));
+        return true;
+    };
 
     // AngularJS will instantiate a singleton by calling "new" on this function
 });
