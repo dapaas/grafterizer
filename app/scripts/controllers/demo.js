@@ -97,5 +97,5 @@ angular.module('grafterizerApp')
 				document.getElementsByTagName("iframe")[0].contentWindow.setJsonCode(data.model);
 			});
 		}
-	})
+	});
 });

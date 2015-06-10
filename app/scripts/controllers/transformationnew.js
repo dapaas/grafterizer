@@ -15,7 +15,7 @@ angular.module('grafterizerApp')
     $rootScope,
     $state,
     $mdToast,
-    $mdDialog) {
+    transformationDataModel) {
 
   	$scope.document = {
   		title: "New transformation",
@@ -23,9 +23,16 @@ angular.module('grafterizerApp')
   	};
 
   	$scope.clojure = "";
+    var prefixer = new transformationDataModel.Prefixer("examplePrefixer", "http://www.asdf.org/#/");
+    var customFunctionDeclaration = new transformationDataModel.CustomFunctionDeclaration("exampleCustomFunct", "(defn example asdf)");
+    $scope.pipeline = new transformationDataModel.Pipeline([]);
+    $scope.transformation = new transformationDataModel.Transformation([customFunctionDeclaration], [prefixer], [$scope.pipeline], []);
+
+    window.canard = $scope;
 
     $rootScope.actions = {
     	save: function(){
+        var transformationJSON = JSON.stringify($scope.transformation);
         ontotextAPI.newTransformation({
             '@context': ontotextAPI.getContextDeclaration(),
             '@type': 'dcat:Transformation',
@@ -33,7 +40,7 @@ angular.module('grafterizerApp')
             'dct:description': $scope.document.description,
             'dct:public': $scope.document['dct:public'],
             'dct:modified': moment().format("YYYY-MM-DD")
-          }, "this is clojure", {json: 'yeah'})
+          }, "this is clojure", transformationJSON)
           .success(function(data){
             $mdToast.show(
               $mdToast.simple()

@@ -8,7 +8,7 @@
  * Controller of the grafterizerApp
  */
 angular.module('grafterizerApp')
-  .controller('GridCtrl', function ($scope, fileUpload, $interval) {
+  .controller('GridCtrl', function ($scope, fileUpload) {
 
   	var data = fileUpload.getResults();
 
@@ -22,6 +22,6 @@ angular.module('grafterizerApp')
 
   	$scope.document = {
   		title: fileUpload.getTitle()
-  	}
+  	};
 
   });

@@ -1,3 +1,14 @@
+'use strict';
+
+/**
+ * @ngdoc service
+ * @name grafterizerApp.generateClojure
+ * @description
+ * # generateClojure
+ * Service in the grafterizerApp.
+ */
+angular.module('grafterizerApp')
+  .service('generateClojure', function () {
 /***************************************************************************
     Main Grafter/Clojure generation variables and functions.
 ****************************************************************************/
@@ -29,10 +40,14 @@ function isSupportedPrefix(prefixName){
     return false;
 }
 
+	console.log("caca")    
 var pipelineFunctions = new jsedn.List([]);
 
-var pipeline = new jsedn.List([jsedn.sym("defn"), jsedn.sym("pipeline"), new jsedn.Vector([new jsedn.sym("dataset")]), new jsedn.List([jsedn.sym("->"), jsedn.sym("dataset")])]);
+	console.log("caca")    
+var pipeline = new jsedn.List([jsedn.sym("defn"), jsedn.sym("pipeline"), new jsedn.Vector([new jsedn.sym("dataset")]),
+                               new jsedn.List([jsedn.sym("->"), jsedn.sym("dataset")])]);
 
+	console.log("caca")    
 /* Holds the individual declarations. Used to form the declarations object that can then be rendered in Clojure. */
 var declarationsList = new jsedn.List([
     jsedn.kw(":require"),
@@ -64,6 +79,7 @@ var declarationsList = new jsedn.List([
     
 ]);
 
+	console.log("caca")    
 /* Declarations object. Used to render the individual declarations with the needed enclosing definitions in Clojure. */
 var declarations;
 
@@ -99,6 +115,7 @@ function addGrafterDeclaration(aDeclaration){
 
 /* Adds a prefixer to the list of pre-defined prefixers */
 function addGrafterPrefixer(name, prefixString){
+	console.log(name, prefixString);
     var prefixer = new jsedn.List([jsedn.sym("def"), jsedn.sym(name), new jsedn.List([jsedn.sym("prefixer"), prefixString])]);
     prefixers.push(prefixer);
 }
@@ -136,6 +153,7 @@ function parseAndAddUserFunction(userFunctionString){
     return true;
 }
 
+	console.log("caca")    
 function constructUserFunctions(){
     // we make a copy of the user functions array that we eventually return
     var result = userFunctions.slice();
@@ -203,6 +221,7 @@ function parseEdnFromString(toParse, messageOnError){
     }
 }
 
+	console.log("caca")    
 /* Add a pipeline function (either user-defined or provided by Grafter) to an array which is used to construct the data transformation pipeline. */
 function addPipelineFunction(jsednFunction){
     pipelineFunctions.val.push(jsednFunction);
@@ -211,10 +230,13 @@ function addPipelineFunction(jsednFunction){
 /* Constructs and returns the data transformation pipeline. */
 function constructPipeline(){
     var readDatasetFunct = new jsedn.List([new jsedn.sym("read-dataset"), new jsedn.sym("data-file"), new jsedn.kw(":format"), new jsedn.kw(":csv")]); 
+    console.log("readDatasetFunct", readDatasetFunct);
     
     pipeline = null;
-    
+
+	console.log("caca")    
     pipeline = new jsedn.List([jsedn.sym("defpipe"), jsedn.sym("my-pipe"), "Pipeline to convert tabular persons data into a different tabular format.", new jsedn.Vector([new jsedn.sym("data-file")]), new jsedn.List([jsedn.sym("->"), readDatasetFunct])]);
+	console.log("caca acaca")    
 
     pipelineFunctions.map(function(arg){
         pipeline.val[4].val.push(arg);
@@ -256,7 +278,7 @@ function constructRDFGraphFunction(rdfControl){
 //        console.log("GRAPH " + i + " ENCODED:", currentGraphJsEdn.ednEncode());
         graphFunction.val.push(currentGraphJsEdn);
     }
-    var result = new jsedn.List([jsedn.sym("defn"), jsedn.sym("make-graph"), graphFunction]);
+    var result = new jsedn.List([jsedn.sym("def"), jsedn.sym("make-graph"), graphFunction]);
 
     return result;
 }
@@ -471,79 +493,78 @@ function createCustomCodeForPipeline(code, displayName){
     return customCodeEdn;
 }
 
-/***************************************************************************
-    Testing functionalities programatically
-***************************************************************************/
-//$(function() {
-//    /* Grafter Declarations */
-//
+function generateGrafterCode(transformation){
+
+    /* Grafter Declarations */
+// TODO those are not needed here; may be needed afterwards?
 //    var grafterDeclarations = constructGrafterDeclarations();
-//
-//    /* Prefixers */
-//
-//    addGrafterPrefixer("base-domain", "http://my-domain.com");
-//    addGrafterPrefixer("base-graph", "http://my-domain.com/graph/");
-//    addGrafterPrefixer("base-id", "http://my-domain.com/id/");
-//    addGrafterPrefixer("base-vocab", "http://my-domain.com/def/");
-//    addGrafterPrefixer("base-data", "http://my-domain.com/data/");
-//
-//    var grafterPrefixers = constructGrafterPrefixers();
-//
-//    /* User function. */
-//    var userFunctionString = '(defn ->integer \
-//"An example transformation function that converts a string to an integer" \
-//[s] \
-//(Integer/parseInt s) \
-//)';
-//
-//    var userFunctionJsedn = parseUserFunction(userFunctionString);
-//
-//    addUserFunction(userFunctionJsedn);
-//
-//    /* Graph Template */
-//
-//    var graphTriplesString = "[person-uri [rdf:a foaf:Person] [foaf:gender sex] [foaf:age age] [foaf:name (s name)]]";
-//
-//    addGraph("http://my-domain.com/example", graphTriplesString);
-//
-//    var graphFunctionKeysString = "[name sex age person-uri gender]";
-//
-//    createGraphFunction(graphFunctionKeysString);
-//
-//    var resultingTemplate = constructGraphTemplate();
-//
-//    /* Pipeline Function */
-//
-//    var dropRowsFunct = createDropRows(1);
-//    var makeDatasetFunc = createMakeDataset(new jsedn.Vector([jsedn.kw(":name"), jsedn.kw(":sex"), jsedn.kw(":age")]));
-//    var deriveColFunct = createDeriveColumn(jsedn.kw(":person-uri"), new jsedn.Vector([jsedn.sym("name")]), jsedn.sym("base-id"));
-//
-//    var mapcFunctSetString = '{:age ->integer :sex {"f" (s "female") "m" (s "male")}}';
-//    var mapcFunct = createMapc(parseEdnFromString(mapcFunctSetString, "error parsing"));
-//
-//    addPipelineFunction(dropRowsFunct);
-//    addPipelineFunction(makeDatasetFunc);
-//    addPipelineFunction(deriveColFunct);
-//    addPipelineFunction(mapcFunct);
-//
-//    var resultingPipeline = constructPipeline();
-//
-//    var textStr = "";
-////    console.log(grafterDeclarations.ednEncode());
+
+    /* Prefixers */
+
+    var prefixersInGUI = transformation.prefixers;
+    // add only custom prefixers - the Grafter ones are available by default
+    for(var i=0;i<prefixersInGUI.length;++i){
+        var name = prefixersInGUI[i].name;
+        var uri = prefixersInGUI[i].uri;
+        if(name == '' || uri == ''){
+            alertInterface("Name or URI of a prefix empty, ignoring...", "");
+            continue;
+        }
+        console.log(name, uri);
+        addGrafterPrefixer(name, uri);
+    }
+
+    var grafterPrefixers = constructGrafterPrefixersArray();
+
+    /* User functions */
+    var customFunctionsMap = transformation.customFonctionDeclarations;
+
+    for(var functionName in customFunctionsMap){
+        parseAndAddUserFunction(customFunctionsMap[functionName].code);
+    }
+
+    var grafterCustomFunctions = constructUserFunctions();
+
+    /* Graph Template */
+
+    //var graphTemplate = constructRDFGraphFunction(rdfControl);
+
+    /* Pipeline Function */
+
+    /*var rows = $("#pipeline")[0].rows;
+    for(i=0;i<rows.length;++i){
+        if(rows[i].id==="addElementAtEndRow"){
+            continue;
+        }
+
+        var pipelineFunct = jQuery.data(rows[i], "jsedn");
+        addPipelineFunction(pipelineFunct);
+    }*/
+
+    var resultingPipeline = constructPipeline();
+    var textStr = "";
 //    textStr += (grafterDeclarations.ednEncode() + '\n' + '\n');
-//    for(i=0;i<prefixers.length;++i){
-////        console.log(prefixers[i].ednEncode());
-//        textStr += (prefixers[i].ednEncode() + '\n');
-//    }
-////    console.log(userFunctions.val[0].ednEncode());
-//    textStr += ('\n' + '\n' + userFunctions.val[0].ednEncode() + '\n' + '\n');
-////    console.log(resultingTemplate.ednEncode());
-//    textStr += (resultingTemplate.ednEncode() + '\n' + '\n');
-////    console.log(resultingPipeline.ednEncode());
-//    textStr += (resultingPipeline.ednEncode() + '\n' + '\n');
-//
-//
-////    console.log(textStr);
-//    $("#output").text(textStr);
-//
-//});
+
+    for(i=0;i<grafterPrefixers.length;++i){
+        textStr += (grafterPrefixers[i].ednEncode() + '\n');
+    }
+    textStr += '\n';
+
+    for(i=0;i<grafterCustomFunctions.length;++i){
+        textStr += (grafterCustomFunctions[i].ednEncode() + '\n');
+    }
+    
+    // textStr += graphTemplate.ednEncode();
+
+    textStr += '\n';
+    textStr += '\n';
+    textStr += (resultingPipeline.ednEncode());
+
+    return textStr;
+};
+
+this.fromTransformation = function(transformation) {
+	return generateGrafterCode(transformation);
+};
+
+});

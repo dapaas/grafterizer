@@ -184,20 +184,21 @@ angular.module('grafterizerApp')
     };
     Pipeline.prototype.addAfter = function (funct, functionToAdd){
         var index = this.functions.indexOf(funct);
-        if(!functionToAdd || index == -1) {
-            this.functions.push(functionToAdd)
+        if(!functionToAdd || index === -1) {
+            this.functions.push(functionToAdd);
         } else {
-            if(index == this.functions.length - 1){
+            if(index === this.functions.length - 1){
                 this.functions.push(functionToAdd);
                 return true;
             }
-            else
+            else {
                 return this.functions.splice(index + 1, 0, functionToAdd);
+            }
         }
     };
     Pipeline.prototype.remove = function (funct) {
         var index = this.functions.indexOf(funct);
-        if(index ===-1 || funct == null || funct == undefined) {
+        if(index ===-1 || funct === null || funct === undefined) {
             console.log("tried to remove non-existing function");
             return false;
         }

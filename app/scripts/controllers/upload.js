@@ -11,7 +11,6 @@ angular.module('grafterizerApp')
   .controller('UploadCtrl', function ($scope, Upload, $mdToast, File, $state) {
   	$scope.$watch('file', function() {
   		if ($scope.file && $scope.file[0]) {
-  			var now = new Date();
   			var errorcallback = function(err){
 	  			$mdToast.show(
 			      $mdToast.simple()

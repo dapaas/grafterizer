@@ -12,13 +12,14 @@
   "newcap": true,
   "noarg": true,
   "undef": true,
-  "unused": true,
+  "unused": "vars",
   "strict": true,
   "trailing": true,
   "smarttabs": true,
   "globals": {
     "angular": false,
     "Papa": true,
-    "_": true
+    "_": true,
+    "moment": true
   }
 }

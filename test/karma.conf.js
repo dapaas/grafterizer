@@ -41,6 +41,7 @@ module.exports = function(config) {
       'bower_components/ng-sortable/dist/ng-sortable.js',
       'bower_components/codemirror/lib/codemirror.js',
       'bower_components/angular-ui-codemirror/ui-codemirror.js',
+      'bower_components/jsedn/jsedn.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

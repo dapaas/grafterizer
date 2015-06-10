@@ -49,7 +49,8 @@ angular
     // Workaround for https://github.com/angular-ui/ui-router/issues/1119
     var valToString = function(val) {
         return val !== null ? val.toString() : val;
-    }
+    };
+    
     $urlMatcherFactoryProvider.type('nonURIEncoded', {
         encode: valToString,
         decode: valToString,
@@ -243,6 +244,18 @@ angular
             label: '{{document.title || id}}'
         }
     })
+      .state('distribution', {
+        url: '/distribution/{id:nonURIEncoded}',
+        views: {
+          "main@": {
+            templateUrl: 'views/distribution.html',
+            controller: 'DistributionCtrl'
+          }
+        },
+        ncyBreadcrumb: {
+          label: '{{document.title || id}}'
+        }
+      });
 
     cfpLoadingBarProvider.includeSpinner = false;
 
@@ -256,8 +269,31 @@ angular
         '</ol>'
     });
 
+    var colors = [
+      'red',
+      'pink',
+      'purple',
+      'deep-purple',
+      'indigo',
+      'blue',
+      'light-blue',
+      'cyan',
+      'teal',
+      'green',
+      'light-green',
+      'lime',
+      'yellow',
+      'amber',
+      'orange',
+      'deep-orange',
+      'brown',
+      'grey',
+      'blue-grey'
+    ];
+
     $mdThemingProvider.theme('default')
-    // .dark()
-        .primaryPalette('indigo')
-        .accentPalette('blue');
+	    .primaryPalette(colors[Math.floor(Math.random()*colors.length)])
+	    .accentPalette(colors[Math.floor(Math.random()*colors.length)]);
+
+    jsedn.Symbol.prototype.validRegex = new RegExp(/.*/);
 });
