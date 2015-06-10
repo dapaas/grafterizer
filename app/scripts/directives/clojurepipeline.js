@@ -18,7 +18,7 @@ angular.module('grafterizerApp')
       	pre: function(scope) {
 		    scope.editorOptions = {
 		        lineWrapping : true, 
-		        lineNumbers: true,
+		        // lineNumbers: true,
 		        mode: 'clojure',
 		        readOnly: true
 		    };
@@ -28,7 +28,7 @@ angular.module('grafterizerApp')
       			if (!scope.transformation) return;
       			console.log(scope.transformation)
       			scope.clojure = generateClojure.fromTransformation(scope.transformation);
-      		});
+      		}, true);
       	}
       }
     };

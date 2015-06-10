@@ -9,7 +9,7 @@
 angular.module('grafterizerApp')
     .directive('pipelineFunction', function ($mdDialog) {
     return {
-        template: '<md-button class="md-raised" ng-click="editFunction()">{{function.displayName}}</md-button>',
+        template: '<md-button class="md-raised" flex ng-click="editFunction()">{{function.displayName}}</md-button>',
         restrict: 'E',
         scope: {
             function:'='
@@ -23,7 +23,7 @@ angular.module('grafterizerApp')
                     templateUrl: 'views/editPipelineFunctionDialog.html',
                     scope: scope.$new(false, scope)
                 }).then(function(pipeFunct) {
-                    scope.function = pipeFunct;
+                    angular.copy(pipeFunct, scope.function);
                 }, function() {
                     angular.copy(scope.originalFunction, scope.function);
                 });

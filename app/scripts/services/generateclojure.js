@@ -40,14 +40,11 @@ function isSupportedPrefix(prefixName){
     return false;
 }
 
-	console.log("caca")    
 var pipelineFunctions = new jsedn.List([]);
 
-	console.log("caca")    
 var pipeline = new jsedn.List([jsedn.sym("defn"), jsedn.sym("pipeline"), new jsedn.Vector([new jsedn.sym("dataset")]),
                                new jsedn.List([jsedn.sym("->"), jsedn.sym("dataset")])]);
 
-	console.log("caca")    
 /* Holds the individual declarations. Used to form the declarations object that can then be rendered in Clojure. */
 var declarationsList = new jsedn.List([
     jsedn.kw(":require"),
@@ -79,7 +76,6 @@ var declarationsList = new jsedn.List([
     
 ]);
 
-	console.log("caca")    
 /* Declarations object. Used to render the individual declarations with the needed enclosing definitions in Clojure. */
 var declarations;
 
@@ -153,7 +149,6 @@ function parseAndAddUserFunction(userFunctionString){
     return true;
 }
 
-	console.log("caca")    
 function constructUserFunctions(){
     // we make a copy of the user functions array that we eventually return
     var result = userFunctions.slice();
@@ -221,10 +216,11 @@ function parseEdnFromString(toParse, messageOnError){
     }
 }
 
-	console.log("caca")    
 /* Add a pipeline function (either user-defined or provided by Grafter) to an array which is used to construct the data transformation pipeline. */
 function addPipelineFunction(jsednFunction){
-    pipelineFunctions.val.push(jsednFunction);
+    if (angular.isFunction(jsednFunction.generateClojure)) {
+        pipelineFunctions.val.push(jsednFunction.generateClojure());
+    }
 }
 
 /* Constructs and returns the data transformation pipeline. */
@@ -234,9 +230,7 @@ function constructPipeline(){
     
     pipeline = null;
 
-	console.log("caca")    
     pipeline = new jsedn.List([jsedn.sym("defpipe"), jsedn.sym("my-pipe"), "Pipeline to convert tabular persons data into a different tabular format.", new jsedn.Vector([new jsedn.sym("data-file")]), new jsedn.List([jsedn.sym("->"), readDatasetFunct])]);
-	console.log("caca acaca")    
 
     pipelineFunctions.map(function(arg){
         pipeline.val[4].val.push(arg);
@@ -530,6 +524,13 @@ function generateGrafterCode(transformation){
     //var graphTemplate = constructRDFGraphFunction(rdfControl);
 
     /* Pipeline Function */
+    angular.forEach(transformation.pipelines, function(pipeline) {
+        console.log("CANARD", pipeline)
+        angular.forEach(pipeline.functions, function(genericFunction) {
+            console.log("LAPIN")
+            addPipelineFunction(genericFunction);
+        });
+    });
 
     /*var rows = $("#pipeline")[0].rows;
     for(i=0;i<rows.length;++i){

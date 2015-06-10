@@ -71,4 +71,15 @@ angular.module('grafterizerApp')
 	        });*/
     	}
     };
+    $scope.$watch('fileUpload', function(){
+      if ($scope.fileUpload) {
+        // TODO
+        $mdToast.show(
+          $mdToast.simple()
+            .content('You need to save the transformation first')
+            .position('bottom left')
+            .hideDelay(6000)
+          );
+      }
+    })
   });

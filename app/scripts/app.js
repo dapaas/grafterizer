@@ -30,7 +30,8 @@ angular
     'ui.codemirror',
     'ui.grid.selection', 
     'ui.grid.resizeColumns',
-    'ui.grid.exporter'
+    'ui.grid.exporter',
+    'ngMessages'
 ])
     .config(function (
             $mdThemingProvider,

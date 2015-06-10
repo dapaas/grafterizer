@@ -240,3 +240,64 @@ md-switch {
   font-size:1.8em;
 }
 
+md-tab-content .CodeMirror {
+  height:auto;
+}
+
+.pipeline-flow {
+  $color: #bababa;
+  position:relative;
+  &:before {
+    width: 6px;
+    background-color: $color;
+    position: absolute;
+    left: 50%;
+    z-index: -1;
+    display: block;
+    /* height: 100%; */
+    content: "";
+    top: -13px;
+    border-radius: 3px;
+    margin-left: -106px;
+    bottom: -7px;
+  }
+  &:after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    left: 50%;
+    width: 10px;
+    bottom: -22px;
+    margin-left: -112px;
+    text-align: center;
+    background-color: white;
+    border: 4px solid $color;
+    border-radius: 50%;
+    height: 10px;
+  }
+}
+
+.upload-indicator {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-size: 12em;
+  z-index: 2;
+  background-color:rgba(255,255,255,0.5);
+}
+
+.show-upload-indicator .upload-indicator {
+  display: flex;
+}
+
+.md-toolbar-tools .md-button {
+  margin:0;
+}
