@@ -31,8 +31,7 @@ function isSupportedPrefix(prefixName){
 
 var pipelineFunctions = new jsedn.List([]);
 
-var pipeline = new jsedn.List([jsedn.sym("defn"), jsedn.sym("pipeline"), new jsedn.Vector([new jsedn.sym("dataset")]),
-                               new jsedn.List([jsedn.sym("->"), jsedn.sym("dataset")])]);
+var pipeline = new jsedn.List([jsedn.sym("defn"), jsedn.sym("pipeline"), new jsedn.Vector([new jsedn.sym("dataset")]), new jsedn.List([jsedn.sym("->"), jsedn.sym("dataset")])]);
 
 /* Holds the individual declarations. Used to form the declarations object that can then be rendered in Clojure. */
 var declarationsList = new jsedn.List([
@@ -212,7 +211,6 @@ function addPipelineFunction(jsednFunction){
 /* Constructs and returns the data transformation pipeline. */
 function constructPipeline(){
     var readDatasetFunct = new jsedn.List([new jsedn.sym("read-dataset"), new jsedn.sym("data-file"), new jsedn.kw(":format"), new jsedn.kw(":csv")]); 
-    console.log("readDatasetFunct", readDatasetFunct);
     
     pipeline = null;
     
@@ -258,7 +256,7 @@ function constructRDFGraphFunction(rdfControl){
 //        console.log("GRAPH " + i + " ENCODED:", currentGraphJsEdn.ednEncode());
         graphFunction.val.push(currentGraphJsEdn);
     }
-    var result = new jsedn.List([jsedn.sym("def"), jsedn.sym("make-graph"), graphFunction]);
+    var result = new jsedn.List([jsedn.sym("defn"), jsedn.sym("make-graph"), graphFunction]);
 
     return result;
 }
@@ -549,21 +547,3 @@ function createCustomCodeForPipeline(code, displayName){
 //    $("#output").text(textStr);
 //
 //});
-
-function setJsonCode(code) {
-    console.log("json source code received", code);
-};
-
-function getJsonCode() {
-    return {
-        "test": true,
-        "answer": 42
-    };
-}
-
-function getCode() {
-    generateGrafterCode();
-//    console.log("getCode()", $("#output").val());
-    var result = $("#output").val();
-    return result; 
-};

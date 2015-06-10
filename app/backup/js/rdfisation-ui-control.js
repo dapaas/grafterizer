@@ -8,29 +8,6 @@
 //var ColorEnum = Object.freeze({RED: 0, GREEN: 1, BLUE: 2});
 
 // TODO this is a hack!! Must separate DOM from the rest of the code
-var StringifiableGraph = function (graphURI, graphRoots) {
-    var i, stringifiableGraphRoots;
-    
-    stringifiableGraphRoots = [];
-    // just a string
-    this.graphURI = graphURI;
-    // need to get stringifiable roots first
-    for (i = 0; i < graphRoots.length; ++i) {
-        stringifiableGraphRoots.push(getStringifiableElement(graphRoots[i]));
-    }
-    this.graphRoots = stringifiableGraphRoots;
-    this.__type = "StringifiableGraph";
-};
-StringifiableGraph.prototype.getDOMGraph = function (rdfControl) {
-    var resultingGraph, i, graphRoot;
-    resultingGraph = new Graph(this.graphURI, rdfControl);
-    for (i = 0; i < this.graphRoots.length; ++i) {
-        graphRoot = this.graphRoots[i];
-    }
-    // iterate roots
-    // create dom root
-    // add to resulting graph
-};
 
 var Graph = function (graphURI, rdfControl) {
     if (typeof rdfControl === 'undefined') {
@@ -38,7 +15,7 @@ var Graph = function (graphURI, rdfControl) {
     }
     this.rdfControl = rdfControl;
     this.graphURI = graphURI || "";
-
+    this.__type = "Graph";
     // create graph element
     var graphTableElement = document.createElement("table"),
         graphNameRow = graphTableElement.insertRow(0),
@@ -204,32 +181,10 @@ Graph.prototype.removeChild = function (child) {
         initialAddButton.show();
     }
 };
-//TODO hack!
-Graph.prototype.getStringifiableGraph = function () {
-    return new StringifiableGraph(this.graphURI, this.graphRoots);
+Graph.revive = function (data) {
+    return new StringifiableGraph(data.graphURI, data.graphRoots);
 };
 
-var StringifiableRDFElement = function (subElements) {
-    var i, subElement, stringifiableSubElements;
-    stringifiableSubElements = [];
-    if (subElements) {
-        for (i = 0; i < subElements.length; ++i) {
-            stringifiableSubElements.push(getStringifiableElement(subElements[i]));
-        }
-    }
-    this.subElements = stringifiableSubElements;
-};
-StringifiableRDFElement.prototype.getDOMElement = function () {
-    var i, subElement;
-    if (this.subElements) {
-        for (i = 0; i < this.subElements.length; ++i) {
-            subElement = this.subElements[i];
-            this.subElements[i] = subElement.getDOMElement();
-        }
-    }
-};
-
-//    Generic RDF element class
 var RDFElement = function (containingElement) {
     this.subElements = [];
     if (containingElement instanceof Graph) {
@@ -256,20 +211,12 @@ var RDFElement = function (containingElement) {
     //    this.htmlRepresentation = ;
 };
 
-var StringifiableProperty = function (prefix, propertyName, subElements) {
-    StringifiableRDFElement.call(this, subElements);
-    this.prefix = prefix;
-    this.propertyName = propertyName;
-    this.__type = "StringifiableProperty";
-};
-StringifiableProperty.prototype = Object.create(StringifiableRDFElement.prototype);
-
-// class representing a property (predicate) from the RDF mapping
 var Property = function (containingElement, prefix, propertyName) {
 
     RDFElement.call(this, containingElement);
     this.propertyName = propertyName;
     this.prefix = prefix;
+    this.__type = "Property";
     var propertyRow = this.tableElement.insertRow(0),
         propertyDataCell = propertyRow.insertCell(0),
         propertySubElementsCell = propertyRow.insertCell(1),
@@ -458,8 +405,8 @@ Property.prototype.addChild = function (child) {
     this.subElementsCell.appendChild(child.tableElement);
 
 };
-Property.prototype.getStringifiableProperty = function () {
-    return new StringifiableProperty(this.prefix, this.propertyName, this.subElements);
+Property.revive = function (data) {
+    return new StringifiableProperty(data.prefix, data.propertyName, data.subElements);
 };
 
 var LiteralNode = function (containingElement, value) {
@@ -492,49 +439,28 @@ var LiteralNode = function (containingElement, value) {
 LiteralNode.prototype = Object.create(RDFElement.prototype);
 LiteralNode.prototype.constructor = LiteralNode;
 
-var StringifiableConstantLiteral = function (literalText, subElements) {
-    StringifiableRDFElement.call(this, subElements);
-    this.literalValue = literalText;
-    this.__type = "StringifiableConstantLiteral";
-};
-StringifiableConstantLiteral.prototype = Object.create(StringifiableRDFElement.prototype);
-
-
 var ConstantLiteral = function (containingElement, literalText) {
     LiteralNode.call(this, containingElement, literalText);
+    this.__type = "ConstantLiteral";
     //<i class="fa fa-pencil-square-o"></i>
     //{Literal node}
 };
 ConstantLiteral.prototype = Object.create(LiteralNode.prototype);
 ConstantLiteral.prototype.constructor = ConstantLiteral;
-ConstantLiteral.prototype.getStringifiableConstantLiteral = function () {
-    return new StringifiableConstantLiteral(this.literalValue);
+ConstantLiteral.revive = function (data) {
+    return new StringifiableConstantLiteral(data.literalValue);
 };
-
-var StringifiableColumnLiteral = function (literalText, subElements) {
-    StringifiableRDFElement.call(this, subElements);
-    this.literalValue = literalText;
-    this.__type = "StringifiableColumnLiteral";
-};
-StringifiableColumnLiteral.prototype = Object.create(StringifiableRDFElement.prototype);
 
 var ColumnLiteral = function (containingElement, columnName) {
     LiteralNode.call(this, containingElement, columnName);
-
+    this.__type = "ColumnLiteral";
 };
 ColumnLiteral.prototype = Object.create(LiteralNode.prototype);
 ColumnLiteral.prototype.constructor = ColumnLiteral;
-ColumnLiteral.prototype.getStringifiableColumnLiteral = function () {
-    return new StringifiableColumnLiteral(this.literalValue);
+ColumnLiteral.revive = function (data) {
+    return new StringifiableColumnLiteral(data.literalValue);
 };
 
-var StringifiableURINode = function (prefix, subElements) {
-    StringifiableRDFElement.call(this, subElements);
-    this.prefix = prefix;
-};
-StringifiableURINode.prototype = Object.create(StringifiableRDFElement.prototype);
-
-// Generic URI node class - structural class used to reason based on the type of node (URI or literal)
 var URINode = function (containingElement, prefix, unqualifiedName) {
     RDFElement.call(this, containingElement);
 
@@ -746,77 +672,41 @@ URINode.prototype.removeChild = function (child) {
     }
 };
 
-var StringifiableColumnURI = function (prefix, columnName, subElements) {
-    StringifiableURINode.call(this, prefix, subElements);
-    this.column = columnName;
-    this.__type = "StringifiableColumnURI";
-};
-StringifiableColumnURI.prototype = Object.create(StringifiableURINode.prototype);
-
 var ColumnURI = function (containingElement, prefix, columnName) {
     // call parent constructor
     URINode.call(this, containingElement, prefix, columnName);
     // type-specific class attribute - column
     this.column = columnName;
+    this.__type = "ColumnURI";
 };
 ColumnURI.prototype = Object.create(URINode.prototype);
 ColumnURI.prototype.constructor = ColumnURI;
-ColumnURI.prototype.getStringifiableColumnURI = function () {
-    return new StringifiableColumnURI(this.prefix, this.column, this.subElements);
+ColumnURI.revive = function (data) {
+    return new StringifiableColumnURI(data.prefix, data.column, data.subElements);
 };
-
-var StringifiableConstantURI = function (prefix, constantURIText, subElements) {
-    StringifiableURINode.call(this, prefix, subElements);
-    this.constant = constantURIText;
-    this.__type = "StringifiableConstantURI";
-};
-StringifiableConstantURI.prototype = Object.create(StringifiableURINode.prototype);
-
 
 var ConstantURI = function (containingElement, prefix, constantURIText) {
     // call parent constructor
     URINode.call(this, containingElement, prefix, constantURIText);
     // type-specific class attribute - column
     this.constant = constantURIText;
+    this.__type = "ConstantURI";
 };
 ConstantURI.prototype = Object.create(URINode.prototype);
 ConstantURI.prototype.constructor = ConstantURI;
-ConstantURI.prototype.getStringifiableColumnURI = function () {
-    return new StringifiableConstantURI(this.prefix, this.constant, this.subElements);
+ConstantURI.revive = function (data) {
+    return new StringifiableConstantURI(data.prefix, data.constant, data.subElements);
 };
 
 var BlankNode = function () {
     //<i class="fa fa-dot-circle-o"></i>
     //{Blank node}
+    this.__type = "BlankNode";
 };
-
-function getStringifiableElement(inputElement) {
-    if (!(inputElement instanceof StringifiableRDFElement)) {
-        if (inputElement instanceof Property) {
-            return inputElement.getStringifiableProperty();
-        }
-        if (inputElement instanceof ColumnURI) {
-            return inputElement.getStringifiableColumnURI();
-        }
-        if (inputElement instanceof ColumnLiteral) {
-            return inputElement.getStringifiableColumnLiteral();
-        }
-        if (inputElement instanceof ConstantLiteral) {
-            return inputElement.getStringifiableConstantLiteral();
-        }
-        if (inputElement instanceof ConstantURI) {
-            return inputElement.getStringifiableConstantURI();
-        }
-        if (inputElement instanceof BlankNode) {
-            return inputElement.getStringifiableBlankNode();
-        }
-        return null;
-    } else {
-        return inputElement;
-    }
+BlankNode.revive = function (data) {
+    // TODO add support for blank nodes
+    return new BlankNode();
 }
-
-// generic literal node
 
 var RDFControl = function (divElement, widthPercent, heightPercent) {
     if (divElement.tagName === 'DIV') {
@@ -858,25 +748,21 @@ var RDFControl = function (divElement, widthPercent, heightPercent) {
         });
     }
 };
-
 RDFControl.prototype.addGraph = function (graph) {
-
+    console.log(graph);
     this.graphs.push(graph);
     this.holder.appendChild(graph.graphTableElement);
     $(".add-first-graph-button").hide();
 
 };
-
 RDFControl.prototype.addGraphAfterElement = function (element, graph) {
     this.graphs.push(graph);
     $(element).after(graph.graphTableElement);
 };
-
 RDFControl.prototype.removeGraph = function (graph) {
     if (typeof graph === 'undefined') {
         alertInterface("Removing RDF mapping failed - RDF mapping graph undefined", "");
     }
-
     // find and remove from graph objects in graphs array
     var graphIndex = this.graphs.indexOf(graph),
         initialAddButton = $(".add-first-graph-button");
