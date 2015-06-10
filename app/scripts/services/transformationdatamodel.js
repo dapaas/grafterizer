@@ -37,6 +37,11 @@ angular.module('grafterizerApp')
     Types.Prefixer = Prefixer;
 
     var GenericFunction = function () {
+        if (!this.generateClojure) {
+            this.generateClojure = function(){
+                return new jsedn.List([jsedn.kw(":todo")]);
+            };
+        }
     };
 
     var CustomFunctionDeclaration = function (name, clojureCode) {
@@ -58,6 +63,17 @@ angular.module('grafterizerApp')
     };
     CustomCode.revive = function (data) {
         return new CustomCode(data.name, data.clojureCode);
+    };
+    CustomCode.prototype.generateClojure = function(){
+        // return new jsedn.List([jsedn.kw(":canard")]);
+        try{
+            var ednObject = jsedn.parse(this.clojureCode);
+            return ednObject;
+        }catch(e){
+            // alertInterface(e, messageOnError);
+            return null;
+        }
+        // return parseEdnFromString(this.clojureCode, "Error parsing custom code in " + this.name); 
     };
     Types.CustomCode = CustomCode;
 
