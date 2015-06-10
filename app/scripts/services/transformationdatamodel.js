@@ -8,7 +8,7 @@
  * Service in the grafterizerApp.
  */
 angular.module('grafterizerApp')
-    .service('transformationDataModel', function () {
+    .service('transformationDataModel', function ($mdToast) {
     // TODO some day use JS6 class syntax
     // TODO VERY DIRTY HACK PLEASE FIXME
     var Types = this;
@@ -39,7 +39,7 @@ angular.module('grafterizerApp')
     var GenericFunction = function () {
         if (!this.generateClojure) {
             this.generateClojure = function(){
-                return new jsedn.List([jsedn.kw(":todo")]);
+                return new jsedn.List([jsedn.sym(this.name)]);
             };
         }
     };
@@ -64,16 +64,18 @@ angular.module('grafterizerApp')
     CustomCode.revive = function (data) {
         return new CustomCode(data.name, data.clojureCode);
     };
-    CustomCode.prototype.generateClojure = function(){
-        // return new jsedn.List([jsedn.kw(":canard")]);
+    CustomCode.prototype.generateClojure = function() {
         try{
-            var ednObject = jsedn.parse(this.clojureCode);
-            return ednObject;
+            return jsedn.parse(this.clojureCode);
         }catch(e){
-            // alertInterface(e, messageOnError);
+            $mdToast.show(
+                $mdToast.simple()
+                .content('Unable to parse custom code in '+this.name)
+                .position('bottom left')
+                .hideDelay(6000)
+            );
             return null;
         }
-        // return parseEdnFromString(this.clojureCode, "Error parsing custom code in " + this.name); 
     };
     Types.CustomCode = CustomCode;
 
@@ -86,6 +88,9 @@ angular.module('grafterizerApp')
     };
     DropRowsFunction.revive = function (data) {
         return new DropRowsFunction(data.numberOfRows);
+    };
+    DropRowsFunction.prototype.generateClojure = function() {
+        return new jsedn.List([jsedn.sym("drop-rows"), this.numberOfRows]);
     };
     Types.DropRowsFunction = DropRowsFunction;
 
@@ -109,6 +114,16 @@ angular.module('grafterizerApp')
     };
     DeriveColumnFunction.revive = function (data) {
         return new DeriveColumnFunction(data.newColName, data.colsToDeriveFrom, data.functionToDeriveWith);
+    };
+    DeriveColumnFunction.prototype.generateClojure = function() {
+        var values = [jsedn.sym("derive-column"),
+                this.newColName, this.colsToDeriveFrom];
+
+        if (this.functionToDeriveWith) {
+            values.push(this.functionToDeriveWith);
+        }
+
+        return new jsedn.List(values);
     };
     Types.DeriveColumnFunction = DeriveColumnFunction;
 
@@ -152,6 +167,9 @@ angular.module('grafterizerApp')
     };
     MapcFunction.revive = function (data) {
         return new MapcFunction(data.keyFunctionPairs);
+    };
+    MapcFunction.prototype.generateClojure = function() {
+        return new jsedn.List([jsedn.sym("mapc"), this.keyFunctionPairs]);
     };
     Types.MapcFunction = MapcFunction;
 
