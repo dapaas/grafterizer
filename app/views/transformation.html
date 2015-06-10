@@ -1,3 +1,9 @@
+<md-content flex layout="column"
+  ngf-drop ng-model="fileUpload" ngf-drag-over-class="show-upload-indicator"
+  ngf-accept="'.csv,.xsl,.xslx'">
+<md-button class="md-accent upload-indicator">
+  <i class="fa fa-upload"></i>
+</md-button>
 <md-tabs class="md-accent no-border-radius" flex>
   <md-tab label="Metadata">
     <md-tab-body>
@@ -36,3 +42,4 @@
     </md-tab-body>
   </md-tab>
 </md-tabs>
+</md-content>
