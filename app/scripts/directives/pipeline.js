@@ -22,9 +22,7 @@ angular.module('grafterizerApp')
             scope.dragControlListeners = {
                 accept: function () {return true;},
                 itemMoved: function (event) {},
-                orderChanged: function(event) {
-                    console.log(scope.pipeline);
-                }
+                orderChanged: function(event) {}
             };
             scope.clickAddAfter = function (funct) {
                 $mdDialog.show({
@@ -32,7 +30,6 @@ angular.module('grafterizerApp')
                 }).then( function(pipeFunct) {
                     if(pipeFunct){
                         scope.pipeline.addAfter(funct, pipeFunct);
-                        console.log(scope.pipeline);
                     }
                 });
             };
@@ -43,7 +40,8 @@ angular.module('grafterizerApp')
                     .content('Please confirm that you want to remove the element.')
                     .ariaLabel('Please confirm that you want to remove the element.')
                     .ok('Yes')
-                    .cancel('Cancel')).then(function() {
+                    .cancel('Cancel'))
+                    .then(function() {
                         scope.pipeline.remove(funct);
                 });
             };

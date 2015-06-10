@@ -13,29 +13,38 @@ angular.module('grafterizerApp')
     var prefixer = new transformationDataModel.Prefixer("examplePrefixer", "http://www.asdf.org/#/");
     var customFunctionDeclaration = new transformationDataModel.CustomFunctionDeclaration("exampleCustomFunct", "(defn example asdf)");
     $scope.transformation = new transformationDataModel.Transformation([customFunctionDeclaration], [prefixer], [], []);
-    console.log($scope);
 
     /************************ Temporary testing data END **************************/
-
-    $scope.$watch("selectedTransformationAction", function(selectedAction) {
-        if(selectedAction){
-            switch(selectedAction) {
-                case "edit-prefixes":
-                    $mdDialog.show({
-                        templateUrl: 'views/editPipelineFunctionDialog.html',
-                        // scope: $scope,
-                        preserveScope: true
-                    }).then(function(/*pipeFunct*/) {
-                    }, function() {
-                    }); 
-                    break;
-                case "create-custom-function":
-                    break;
-                case "preview-pipeline":
-                    break;
-                case "modify-rdf-mapping":
-                    break;
-            }
-        }
-    });
+    $scope.editPrefixers = function () {
+        $scope.originalPrefixers = [];
+        angular.copy($scope.transformation.prefixers, $scope.originalPrefixers);
+        $mdDialog.show({
+            templateUrl: 'views/editprefixes.html',
+            controller: 'EditprefixersCtrl',
+            scope: $scope.$new(false, $scope)
+        }).then(function() {
+        }, function() {
+            angular.copy($scope.originalPrefixers, $scope.transformation.prefixers);
+        });
+    };
+    $scope.createCustomFunction = function () {
+        $mdDialog.show({
+            templateUrl: 'views/createcustomfunction.html',
+            controller: 'CustomfunctionsdialogcontrollerCtrl',
+            scope: $scope.$new(false, $scope)
+        }).then(function() {
+        }, function() {
+        }); 
+    };
+    $scope.previewPipeline = function () {
+        $mdDialog.show({
+            templateUrl: 'views/previewpipeline.html',
+            controller: 'PreviewpipelinedialogCtrl',
+            scope: $scope.$new(false, $scope)
+        }).then(function() {
+        }, function() {
+        }); 
+    };
+    $scope.modifyMapping = function () {};
+    
 });
