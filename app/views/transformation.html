@@ -1,9 +1,14 @@
 <md-tabs class="md-accent no-border-radius" flex>
   <md-tab label="Metadata">
     <md-tab-body>
+      <form name="transformationForm">
       <md-input-container class="sin-no-shrink">
         <label>Title</label>
-        <input ng-model="document.title" required pattern="[a-zA-Z0-9\s]*">
+        <input ng-model="document.title" name="title" required pattern="[a-zA-Z0-9\s\-]*">
+        <div ng-messages="transformationForm.title.$error">
+          <div ng-message="required">This is required.</div>
+          <div ng-message="pattern">The title shouldn't contain special characters.</div>
+        </div>
       </md-input-container>
       <md-input-container class="sin-no-shrink">
         <label>Description</label>
@@ -17,6 +22,7 @@
           Publisher: <strong>{{document['dct:publisher']}}</strong> 
         </p>
       </div>
+      </form>
     </md-tab-body>
   </md-tab>
   <md-tab label="Pipeline">
