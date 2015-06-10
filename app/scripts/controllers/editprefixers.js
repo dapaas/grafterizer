@@ -37,25 +37,54 @@ angular.module('grafterizerApp')
         $mdDialog.cancel();
     }
     $scope.removeSelectedPrefixers = function () {
-        $mdToast.show();
-        var selectedRows = $scope.gridApi.selection.getSelectedRows(), i;
-
-        for(i =0; i<selectedRows.length; ++i){
+        var selectedRows = $scope.gridApi.selection.getSelectedRows(), i, indexInGrid;
+        //        console.log("$scope.gridApi");
+        //        console.log($scope.gridApi);
+        //        console.log("$scope.gridApi.selection");
+        //        console.log($scope.gridApi.selection);
+        for(i = 0; i < selectedRows.length; ++i){
             if(!$scope.transformation.removePrefixer(selectedRows[i].prefixName)){
-                
+                $mdToast.show(
+                    $mdToast.simple()
+                    .content("Error removing prefixer. Model out of sync (prefixer doesn't exist).")
+                    .position('bottom left')
+                    .hideDelay(3000)
+                );
             }
         }
+        angular.forEach(selectedRows, function (data, index) {
+            $scope.gridOpts.data.splice($scope.gridOpts.data.lastIndexOf(data), 1);
+        });
+
     }
     $scope.addPrefixer = function () {
         if(!$scope.prefixName){
-            console.error("No name provided for prefixer");
+            $mdToast.show(
+                $mdToast.simple()
+                .content("Error adding prefixer. No name provided for prefixer.")
+                .position('bottom left')
+                .hideDelay(3000)
+            );
             return;
         }
         if(!$scope.prefixUri){
-            console.error("No prefix URI provided for prefixer");
+            $mdToast.show(
+                $mdToast.simple()
+                .content("Error adding prefixer. No URI provided for prefixer.")
+                .position('bottom left')
+                .hideDelay(3000)
+            );
             return;
         }
-        $scope.transformation.prefixers.push(new transformationDataModel.Prefixer($scope.prefixName, $scope.prefixUri));
+        if(!$scope.transformation.addPrefixer($scope.prefixName, $scope.prefixUri)){
+            $mdToast.show(
+                $mdToast.simple()
+                .content("Error adding prefixer. Prefixer with the same name already exists.")
+                .position('bottom left')
+                .hideDelay(3000)
+            );
+            return;
+        }
         $scope.gridOpts.data.push({"prefixName": $scope.prefixName, "uri": $scope.prefixUri});
     };
 });

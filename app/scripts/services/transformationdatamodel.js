@@ -259,13 +259,13 @@ angular.module('grafterizerApp')
                 return false;
             }
         }
-        this.prefixers.push(new Prefixer(name.trim, uri.trim));
+        this.prefixers.push(new Prefixer(name.trim(), uri.trim()));
         return true;
     }
     Transformation.prototype.removePrefixer = function(name) {
         for(var i=0; i < this.prefixers.length; ++i){
             if(this.prefixers[i].name === name.trim()){
-                this.functions.splice(i, 1);
+                this.prefixers.splice(i, 1);
                 return true;
             }
         }
