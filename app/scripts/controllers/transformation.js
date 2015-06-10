@@ -72,6 +72,28 @@ angular.module('grafterizerApp')
             );
           });
         });
+      },
+      fork: function(ev) {
+        var transformationJSON = JSON.stringify($scope.transformation);
+        ontotextAPI.newTransformation({
+            '@context': ontotextAPI.getContextDeclaration(),
+            '@type': 'dcat:Transformation',
+            'dct:title': $scope.document.title+"-fork",
+            'dct:description': $scope.document.description,
+            'dct:public': $scope.document['dct:public'],
+            'dct:modified': moment().format("YYYY-MM-DD")
+          }, "this is clojure", transformationJSON)
+          .success(function(data){
+            $mdToast.show(
+              $mdToast.simple()
+                .content('Transformation forked')
+                .position('bottom left')
+                .hideDelay(6000)
+              );
+            $state.go('transformations.transformation', {
+              id: data['@id']
+            });
+          });
       }
     };
   });
