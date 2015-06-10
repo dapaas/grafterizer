@@ -201,7 +201,7 @@ angular.module('grafterizerApp')
             console.log("tried to remove non-existing function");
             return false;
         }
-        
+
         this.functions.splice(index, 1);
         return true;
     };
@@ -252,5 +252,25 @@ angular.module('grafterizerApp')
         return new Transformation(data.customFunctionDeclarations, data.prefixers, data.pipelines, data.grafts);
     };
     Types.Transformation = Transformation;
+    Transformation.prototype.addPrefixer = function(name, uri) {
+        for(var i=0; i < this.prefixers.length; ++i){
+            if(this.prefixers[i].name === name.trim()){
+                return false;
+            }
+        }
+        this.prefixers.push(new Prefixer(name.trim, uri.trim));
+        return true;
+    }
+    Transformation.prototype.removePrefixer = function(name) {
+        for(var i=0; i < this.prefixers.length; ++i){
+            if(this.prefixers[i].name === name.trim()){
+                this.functions.splice(i, 1);
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     // AngularJS will instantiate a singleton by calling "new" on this function
 });

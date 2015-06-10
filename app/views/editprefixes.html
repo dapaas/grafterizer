@@ -1,0 +1,16 @@
+<md-dialog aria-label='Specify prefixes...'>
+    <md-dialog-content class="sticky-container">
+        
+        <md-subheader class="md-sticky-no-effect">Edit prefixes...</md-subheader>
+        <div id="prefixesTable" ui-grid="gridOpts" class="grid" ui-grid-selection ui-grid-resize-columns ui-grid-exporter></div>
+        <input ng-model="prefixName" type="text" min="1" required>
+        <input ng-model="prefixUri" type="text" min="1" required>
+        <md-button class="md-raised" ng-click="addPrefixer()">Add prefixer</md-button>
+        <md-button class="md-raised" ng-click="removeSelectedPrefixers()">Remove selected</md-button>
+        <br/>
+        <md-button class="md-raised" ng-click="applyPrefixersChanges()">Done</md-button>
+        <md-button class="md-raised" ng-click="cancelPrefixersChanges()">Cancel</md-button>
+        
+        
+    </md-dialog-content>
+</md-dialog>

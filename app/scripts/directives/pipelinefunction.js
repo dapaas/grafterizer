@@ -20,9 +20,7 @@ angular.module('grafterizerApp')
                 scope.selectedFunctionName = scope.function.name;
                 angular.copy(scope.function, scope.originalFunction);
                 $mdDialog.show({
-                    templateUrl: 'views/editPipelineFunctionDialog.html',
-                    scope: scope,
-                    preserveScope: true
+                    templateUrl: 'views/editPipelineFunctionDialog.html'
                 }).then(function(pipeFunct) {
                     scope.function = pipeFunct;
                 }, function() {
