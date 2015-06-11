@@ -13,19 +13,6 @@ angular.module('grafterizerApp')
     // TODO VERY DIRTY HACK PLEASE FIXME
     var Types = this;
 
-    // TODO validate all class inputs
-
-    //Graph.prototype.save() = function () {};
-
-    var Graft = function (graph) {
-        this.graph = graph;
-        this.__type = "Graft";
-    };
-    Graft.revive = function (data) {
-        return new Graft(data.graph);
-    };
-    Types.Graft = Graft;
-
     var Prefixer = function (name, uri) {
         this.name = name;
         this.uri = uri;
@@ -117,7 +104,7 @@ angular.module('grafterizerApp')
     };
     DeriveColumnFunction.prototype.generateClojure = function() {
         var values = [jsedn.sym("derive-column"),
-                this.newColName, this.colsToDeriveFrom];
+                      this.newColName, this.colsToDeriveFrom];
 
         if (this.functionToDeriveWith) {
             values.push(this.functionToDeriveWith);
@@ -242,9 +229,149 @@ angular.module('grafterizerApp')
     };
     Types.Pipeline = Pipeline;
 
-    var Transformation = function (customFunctionDeclarations, prefixers, pipelines, grafts) {
+    this.getGraphElement = function(inputElement) {
+        if (!(inputElement instanceof RDFElement)) {
+            return Types[inputElement.__type].revive(inputElement);
+        } else {
+            return inputElement;
+        }
+    };
+
+    // TODO remove subElements and move to URINode (which are the only elements that can have subelements)
+    var RDFElement = function (subElements) {
+        var i, subElement, resolvedSubElements;
+        resolvedSubElements = [];
+        if (subElements) {
+            for (i = 0; i < subElements.length; ++i) {
+                resolvedSubElements.push(Types.getGraphElement(subElements[i]));
+            }
+        }
+        this.subElements = resolvedSubElements;
+    };
+
+    var URINode = function (prefix, subElements) {
+        RDFElement.call(this, subElements);
+        this.prefix = prefix;
+    };
+    URINode.prototype = Object.create(RDFElement.prototype);
+    URINode.revive = function (data) {
+        return new URINode(data.prefix, data.subElements);
+    };
+    URINode.prototype.addChild = function (child) {
+        this.subElements.push(child);
+    };
+    URINode.prototype.removeChild = function (child) {
+        var childIndex = this.subElements.indexOf(child);
+        if (childIndex !== -1) {
+            this.subElements.splice(childIndex, 1);
+        }
+    };
+    Types.URINode = URINode;
+
+    var ConstantURI = function (prefix, constantURIText, subElements) {
+        URINode.call(this, prefix, subElements);
+        this.constant = constantURIText;
+        this.__type = "ConstantURI";
+    };
+    ConstantURI.prototype = Object.create(URINode.prototype);
+    ConstantURI.revive = function (data) {
+        return new ConstantURI(data.prefix, data.constant, data.subElements);
+    };
+    Types.ConstantURI = ConstantURI;
+
+    var ColumnURI = function (prefix, columnName, subElements) {
+        URINode.call(this, prefix, subElements);
+        this.column = columnName;
+        this.__type = "ColumnURI";
+    };
+    ColumnURI.prototype = Object.create(URINode.prototype);
+    ColumnURI.revive = function (data) {
+        return new ColumnURI(data.prefix, data.column, data.subElements);
+    };
+    Types.StringifiableColumnURI = ColumnURI;
+
+    var Property = function (prefix, propertyName, subElements) {
+        RDFElement.call(this, subElements);
+        this.prefix = prefix;
+        this.propertyName = propertyName;
+        this.__type = "Property";
+    };
+    Property.prototype = Object.create(RDFElement.prototype);
+    Property.prototype.removeChild = function (child) {
+        var childIndex = this.subElements.indexOf(child);
+        if (childIndex !== -1) {
+            this.subElements.splice(childIndex, 1);
+        }
+    };
+    Property.prototype.addChild = function (child) {
+        this.subElements.push(child);
+    };
+    Property.revive = function (data) {
+        return new Property(data.prefix, data.propertyName, data.subElements);
+    };
+    Types.Property = Property;
+
+    var ColumnLiteral = function (literalText, subElements) {
+        RDFElement.call(this, subElements);
+        this.literalValue = literalText;
+        this.__type = "ColumnLiteral";
+    };
+    ColumnLiteral.prototype = Object.create(RDFElement.prototype);
+    ColumnLiteral.revive = function (data) {
+        return new ColumnLiteral(data.literalValue, data.subElements);
+    };
+    Types.ColumnLiteral = ColumnLiteral;
+
+    var ConstantLiteral = function (literalText, subElements) {
+        RDFElement.call(this, subElements);
+        this.literalValue = literalText;
+        this.__type = "ConstantLiteral";
+    };
+    ConstantLiteral.prototype = Object.create(RDFElement.prototype);
+    ConstantLiteral.revive = function (data) {
+        return new ConstantLiteral(data.literalText, data.subElements);
+    };
+    Types.StringifiableConstantLiteral = ConstantLiteral;
+
+    // TODO add support for blank nodes
+    var BlankNode = function () {
+        this.__type = "BlankNode";
+    };
+    BlankNode.revive = function (data) {
+        
+        return new BlankNode();
+    }
+
+    var Graph = function (graphURI, graphRoots) {
+        var i, graphRoots;
+
+        graphRoots = [];
+        // just a string
+        this.graphURI = graphURI;
+        // need to get stringifiable roots first
+        for (i = 0; i < graphRoots.length; ++i) {
+            graphRoots.push(Types.getGraphElement(graphRoots[i]));
+        }
+        this.graphRoots = graphRoots;
+        this.__type = "Graph";
+    };
+    Graph.prototype.addChild = function (child) {
+        this.graphRoots.push(child);
+    };
+    Graph.prototype.removeChild = function (child) {
+        var childIndex = this.graphRoots.indexOf(child);
+        if (childIndex !== -1) {
+            this.graphRoots.splice(childIndex, 1);
+        }
+    };
+    Graph.revive = function (data) {
+        return new Graph(data.graphURI, data.graphRoots);
+    };
+    Types.Graph = Graph;
+
+    var Transformation = function (customFunctionDeclarations, prefixers, pipelines, graphs) {
         // validate that inputs are revived
-        var i, cfd, prefixer, pipeline, graft;
+        var i, cfd, prefixer, pipeline, graph;
         for (i = 0; i < customFunctionDeclarations.length; ++i) {
             cfd = customFunctionDeclarations[i];
             if (!(cfd instanceof CustomFunctionDeclaration)  && cfd.__type === "CustomFunctionDeclaration") {
@@ -269,18 +396,23 @@ angular.module('grafterizerApp')
             }
         }
 
-        for (i = 0; i < prefixers.length; ++i) {
-            graft = grafts[i];
-            if (!(graft instanceof Graft) && prefixer.__type === "Graft") {
-                // TODO: validate
-                grafts[i] = Graft.revive(graft);
+        for (i = 0; i < graphs.length; ++i) {
+            graph = graphs[i];
+            if (!(graph instanceof Graph) && graph.__type === "StringifiableGraph") {
+                graphs[i] = Graph.revive(graphs[i]);
             }
         }
 
         this.customFunctionDeclarations = customFunctionDeclarations;
         this.prefixers = prefixers;
         this.pipelines = pipelines;
-        this.grafts = grafts;
+        this.graphs = graphs;
+        this.__type = "Transformation";
+
+        this.customFunctionDeclarations = customFunctionDeclarations;
+        this.prefixers = prefixers;
+        this.pipelines = pipelines;
+        this.grafts = graphs;
         this.__type = "Transformation";
     };
     Transformation.revive = function (data) {
