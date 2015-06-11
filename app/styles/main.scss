@@ -260,7 +260,7 @@ md-tab-content .CodeMirror {
 
 .pipeline-flow {
   position:relative;
-  padding:20px 0;
+  padding:24px 0;
 
   .pipeline-flow-line {
     $color: #bababa;
@@ -291,6 +291,12 @@ md-tab-content .CodeMirror {
     &:after {
       bottom: -5px;
       background-color:$color;
+    }
+  }
+
+  pipeline-function {
+    .md-button {
+        min-width: 9em;
     }
   }
 }

@@ -9,7 +9,7 @@
 angular.module('grafterizerApp')
     .directive('pipelineFunction', function ($mdDialog) {
     return {
-        template: '<md-button class="md-raised" flex ng-click="editFunction()">{{function.displayName}}</md-button>',
+        template: '<div flex layout="row" layout-align="center"><md-button class="md-raised" ng-click="editFunction()">{{function.displayName}}</md-button></div>',
         restrict: 'E',
         scope: {
             function:'='
