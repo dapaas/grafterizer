@@ -13,6 +13,6 @@
     <custom-code ng-if="selectedFunctionName=='custom-code'"></custom-code>
 </div>
 <div>
-    <md-button class="md-raised" ng-disabled="!selectedFunctionName" ng-click="add()">Create function</md-button>
+    <md-button class="md-raised" ng-disabled="!selectedFunctionName" ng-click="add()">{{function ? 'Edit' : 'Create'}} function</md-button>
     <md-button class="md-raised" ng-click="closeDialog()">Cancel</md-button>
 </div>
