@@ -226,13 +226,27 @@ md-sidenav {
   border-radius:0;
 }
 
-md-tab-content {
-  padding:8px;
+md-fab-trigger .fa {
+    z-index: 22;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  line-height: 56px;
+  font-size: 20px;
 }
+/*md-tab-content {
+  padding:8px;
+}*/
 
 // TODO
 md-switch {
   flex-wrap: wrap;
+}
+
+md-fab-toolbar .md-fab-toolbar-wrapper {
+  height:70px;
 }
 
 .fa-large {
@@ -245,35 +259,39 @@ md-tab-content .CodeMirror {
 }
 
 .pipeline-flow {
-  $color: #bababa;
   position:relative;
-  &:before {
-    width: 6px;
-    background-color: $color;
-    position: absolute;
-    left: 50%;
-    z-index: -1;
-    display: block;
-    /* height: 100%; */
-    content: "";
-    top: -13px;
-    border-radius: 3px;
-    margin-left: -106px;
-    bottom: -7px;
-  }
-  &:after {
-    content: "";
-    position: absolute;
-    z-index: 1;
-    left: 50%;
-    width: 10px;
-    bottom: -22px;
-    margin-left: -112px;
-    text-align: center;
-    background-color: white;
-    border: 4px solid $color;
-    border-radius: 50%;
-    height: 10px;
+  padding:20px 0;
+
+  .pipeline-flow-line {
+    $color: #bababa;
+    width:6px;
+    top:5px;
+    bottom:5px;
+    left:50%;
+    margin-left:-107px;
+    background:$color;
+    position:absolute;
+
+    &:before, &:after {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      left: 50%;
+      width: 10px;
+      margin-left: -9px;
+      text-align: center;
+      background-color: white;
+      border: 4px solid $color;
+      border-radius: 50%;
+      height: 10px;
+    }
+    &:before {
+      top: -5px;
+    }
+    &:after {
+      bottom: -5px;
+      background-color:$color;
+    }
   }
 }
 

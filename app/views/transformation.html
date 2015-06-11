@@ -7,7 +7,7 @@
 <md-tabs class="md-accent no-border-radius" flex md-no-disconnect>
   <md-tab label="Metadata">
     <md-tab-body>
-      <form name="transformationForm">
+      <form name="transformationForm" class="md-padding">
       <md-input-container class="sin-no-shrink">
         <label>Title</label>
         <input ng-model="document.title" name="title" required pattern="[a-zA-Z0-9\s\-]*">
@@ -33,7 +33,44 @@
   </md-tab>
   <md-tab label="Pipeline">
     <md-tab-body>
-      <pipeline pipeline="pipeline"></pipeline>
+<!--       <md-toolbar class="md-accent md-hue-1">
+        <div class="md-toolbar-tools">
+            <md-select ng-model="selectedTransformationAction">
+                <md-select-label>Action</md-select-label>
+                <md-option value="edit-prefixers" ng-click="editPrefixers()">Edit prefixes...</md-option>
+                <md-option value="create-custom-function" ng-click="createCustomFunction()">Define custom functions...</md-option>
+                <md-option value="preview-pipeline" ng-click="previewPipeline()">Preview code...</md-option>
+                <md-option value="modify-rdf-mapping" ng-click="modifyMapping()">Modify RDF mapping...</md-option>
+            </md-select>
+        </div>
+      </md-toolbar>
+ -->      <md-fab-toolbar md-open="demo.isOpen" ng-class="demo.selectedAlignment" class="md-accent">
+    <md-fab-trigger class="align-with-text">
+      <md-button aria-label="menu" class="md-fab md-primary md-hue-1">
+        <i class="fa fa-bars" ng-hide="demo.isOpen"></i>
+        <md-icon style="display:none"></md-icon>
+      </md-button>
+    </md-fab-trigger>
+    <md-toolbar>
+      <md-fab-actions class="md-toolbar-tools">
+        <md-button aria-label="comment">
+          <i class="fa fa-cubes"></i> Demo
+        </md-button>
+        <md-button aria-label="label">
+          <i class="fa fa-file"></i> Files
+        </md-button>
+        <md-button aria-label="photo">
+          <i class="fa fa-dashboard"></i> Datasets</md-button>
+        </md-button>
+      </md-fab-actions>
+    </md-toolbar>
+  </md-fab-toolbar>
+  <div class="md-padding">
+      <pipeline pipeline="pipeline"></pipeline></div>
+    </md-tab-body>
+  </md-tab>
+  <md-tab label="Mapping">
+    <md-tab-body>
     </md-tab-body>
   </md-tab>
   <md-tab label="Clojure">
