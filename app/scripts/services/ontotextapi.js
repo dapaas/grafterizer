@@ -205,9 +205,10 @@ angular.module('grafterizerApp')
 
       var headers = {
         'Content-Type': 'multipart/form-data',
-        'command': 'my-pipe',
-        'transformation-type': 'pipe',
-        // 'input-distribution': distributionID
+        // 'command': 'my-pipe',
+        // 'transformation-type': 'pipe',
+        // 'input-distribution': distributionID,
+        'transformation-id': 'http://dapaas.eu/users/1505271111/transformation/preview-872379-fork-1'
       };
 
       return $http({
@@ -215,7 +216,16 @@ angular.module('grafterizerApp')
         method: "POST",
         data: data,
         headers: headers,
-        transformRequest: transformRequest
+        transformRequest: transformRequest,
+        transformResponse: [function(data, headers) {
+          try {
+            return jsedn.parse(data);
+          } catch(e) {
+            $log.debug(data);
+            $log.error(e);
+            return false;
+          }
+        }]
       }).error(errorHandler);
     };
   });
