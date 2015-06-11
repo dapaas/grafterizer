@@ -4,7 +4,8 @@
 <md-button class="md-accent upload-indicator">
   <i class="fa fa-upload"></i>
 </md-button>
-<md-tabs class="md-accent no-border-radius" flex md-no-disconnect>
+<md-tabs class="md-accent no-border-radius" flex
+md-no-disconnect md-swipe-content="">
   <md-tab label="Metadata">
     <md-tab-body>
       <form name="transformationForm" class="md-padding">
@@ -44,10 +45,10 @@
             </md-select>
         </div>
       </md-toolbar>
- -->      <md-fab-toolbar md-open="demo.isOpen" ng-class="demo.selectedAlignment" class="md-accent">
+ -->      <md-fab-toolbar md-open="fabtoolbar.isOpen" class="md-accent md-left">
     <md-fab-trigger class="align-with-text">
       <md-button aria-label="menu" class="md-fab md-primary md-hue-1">
-        <i class="fa fa-bars" ng-hide="demo.isOpen"></i>
+        <i class="fa fa-bars" ng-hide="fabtoolbar.isOpen"></i>
         <md-icon style="display:none"></md-icon>
       </md-button>
     </md-fab-trigger>
