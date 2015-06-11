@@ -51,7 +51,7 @@ angular.module('grafterizerApp')
             var prefixer = new transformationDataModel.Prefixer("examplePrefixer", "http://www.asdf.org/#/");
             var customFunctionDeclaration = new transformationDataModel.CustomFunctionDeclaration("exampleCustomFunct", "(defn example asdf)");
             var pipeline = new transformationDataModel.Pipeline([]);
-            transformation = new transformationDataModel.Transformation([customFunctionDeclaration], [prefixer], [$scope.pipeline], []);
+            transformation = new transformationDataModel.Transformation([customFunctionDeclaration], [prefixer], [pipeline], []);
         }
 
         console.log(transformation);
