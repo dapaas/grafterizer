@@ -40,8 +40,10 @@ angular.module('grafterizerApp')
             '@type': 'dcat:Transformation',
             'dct:title': $scope.document.title,
             'dct:description': $scope.document.description,
-            'dct:public': $scope.document['dct:public'],
-            'dct:modified': moment().format("YYYY-MM-DD")
+            'dcat:public': $scope.document['dct:public'] ? 'true': 'false',
+            'dct:modified': moment().format("YYYY-MM-DD"),
+            'dcat:transformationType': 'pipe',
+            'dcat:transformationCommand': 'my-pipe'
           }, clojure, $scope.transformation)
           .success(function(data){
             $mdToast.show(

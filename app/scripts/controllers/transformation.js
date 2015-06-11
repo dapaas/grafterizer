@@ -70,6 +70,7 @@ angular.module('grafterizerApp')
         update['dct:title'] = update.title;
         update['dct:description'] = update.description;
         update['dct:modified'] = moment().format("YYYY-MM-DD");
+        update['dcat:public'] = $scope.document['dct:public'] ? 'true' : 'false';
         delete update.title;
         delete update.description;
         delete update['dct:clojureDataID'];
@@ -109,8 +110,10 @@ angular.module('grafterizerApp')
             '@type': 'dcat:Transformation',
             'dct:title': $scope.document.title+"-fork",
             'dct:description': $scope.document.description,
-            'dct:public': $scope.document['dct:public'],
-            'dct:modified': moment().format("YYYY-MM-DD")
+            'dcat:public': $scope.document['dct:public'] ? 'true' : 'false',
+            'dct:modified': moment().format("YYYY-MM-DD"),
+            'dcat:transformationType': 'pipe',
+            'dcat:transformationCommand': 'my-pipe'
           }, clojure, $scope.transformation)
           .success(function(data){
             $mdToast.show(
