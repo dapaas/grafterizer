@@ -8,7 +8,7 @@
  * Controller of the grafterizerApp
  */
 angular.module('grafterizerApp')
-  .controller('FilesCtrl', function ($scope, File) {
+  .controller('FilesCtrl', function ($scope, File, $state) {
   	File.find({
   		"filter[fields][content]": false,
       "filter[order]": "date DESC"
@@ -31,4 +31,9 @@ angular.module('grafterizerApp')
   	}, function(){
   		console.log("pas glop");
   	});
+    $scope.selectFile = function(file) {
+      $state.go('files.file', {
+        id: file.id
+      });
+    };
   });
