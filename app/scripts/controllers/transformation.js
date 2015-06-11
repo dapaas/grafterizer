@@ -16,7 +16,8 @@ angular.module('grafterizerApp')
     $state,
     $mdToast,
     $mdDialog,
-    transformationDataModel) {
+    transformationDataModel,
+    generateClojure) {
 
   	var id = $scope.id = $stateParams.id;
     $scope.document = {
@@ -56,12 +57,13 @@ angular.module('grafterizerApp')
         update['dct:modified'] = moment().format("YYYY-MM-DD");
         delete update.title;
         delete update.description;
-        // delete update['dct:clojureDataID'];
-        // delete update['dct:jsonDataID'];
+        delete update['dct:clojureDataID'];
+        delete update['dct:jsonDataID'];
         delete update['dct:publisher'];
 
-        ontotextAPI.updateTransformation(update,
-          $scope.clojure+"-*", $scope.transformation);
+        var clojure = generateClojure.fromTransformation($scope.transformation);
+
+        ontotextAPI.updateTransformation(update, clojure, $scope.transformation);
       },
       delete: function(ev) {
         var confirm = $mdDialog.confirm()
@@ -85,7 +87,8 @@ angular.module('grafterizerApp')
         });
       },
       fork: function(ev) {
-        var transformationJSON = JSON.stringify($scope.transformation);
+        var clojure = generateClojure.fromTransformation($scope.transformation);
+
         ontotextAPI.newTransformation({
             '@context': ontotextAPI.getContextDeclaration(),
             '@type': 'dcat:Transformation',
@@ -93,7 +96,7 @@ angular.module('grafterizerApp')
             'dct:description': $scope.document.description,
             'dct:public': $scope.document['dct:public'],
             'dct:modified': moment().format("YYYY-MM-DD")
-          }, "this is clojure", transformationJSON)
+          }, clojure, $scope.transformation)
           .success(function(data){
             $mdToast.show(
               $mdToast.simple()
