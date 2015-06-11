@@ -9,9 +9,6 @@
  */
 angular.module('grafterizerApp')
     .controller('CustomfunctionsdialogcontrollerCtrl', function ($scope, transformationDataModel, $mdToast, $mdDialog) {
-
-    $scope.$parent.transformation.prefixers.push(new transformationDataModel.Prefixer("test", "www.text.text/text"));
-    console.log($scope);
     $scope.codemirrorOpts = {
         lineWrapping : true, 
         lineNumbers: true,
@@ -62,9 +59,6 @@ angular.module('grafterizerApp')
 
         return {name: functionName, code: customCode};
     };
-    
-    
-    
     $scope.applyCustomFunctionChanges = function () {
         $mdDialog.hide();
     }
