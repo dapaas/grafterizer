@@ -32,7 +32,7 @@ angular.module('grafterizerApp')
 
     $rootScope.actions = {
     	save: function(){
-        var transformationJSON = JSON.stringify($scope.transformation);
+        // var transformationJSON = JSON.stringify($scope.transformation);
         ontotextAPI.newTransformation({
             '@context': ontotextAPI.getContextDeclaration(),
             '@type': 'dcat:Transformation',
@@ -40,7 +40,7 @@ angular.module('grafterizerApp')
             'dct:description': $scope.document.description,
             'dct:public': $scope.document['dct:public'],
             'dct:modified': moment().format("YYYY-MM-DD")
-          }, "this is clojure", transformationJSON)
+          }, "this is clojure", $scope.transformation)
           .success(function(data){
             $mdToast.show(
               $mdToast.simple()

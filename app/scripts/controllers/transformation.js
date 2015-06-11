@@ -15,7 +15,8 @@ angular.module('grafterizerApp')
     $rootScope,
     $state,
     $mdToast,
-    $mdDialog) {
+    $mdDialog,
+    transformationDataModel) {
 
   	var id = $scope.id = $stateParams.id;
     $scope.document = {
@@ -35,6 +36,18 @@ angular.module('grafterizerApp')
       $scope.clojure = data;
     });
 
+    ontotextAPI.getJson(id).success(function(data){
+      var transformation = transformationDataModel.
+        Transformation.revive(data);
+      $scope.transformation = transformation; 
+      if (transformation.pipelines && transformation.pipelines.length) {
+        $scope.pipeline = transformation.pipelines[0]; 
+      } else {
+        $scope.pipeline = new transformationDataModel.Pipeline([]);
+        transformation.pipelines = [$scope.pipeline];
+      }
+    });
+
     $rootScope.actions = {
       save: function(){
         var update = angular.copy($scope.document);
@@ -43,15 +56,12 @@ angular.module('grafterizerApp')
         update['dct:modified'] = moment().format("YYYY-MM-DD");
         delete update.title;
         delete update.description;
+        // delete update['dct:clojureDataID'];
+        // delete update['dct:jsonDataID'];
         delete update['dct:publisher'];
-        console.log(update);
-        console.log(JSON.stringify(update));
 
-        ontotextAPI.updateTransformation(update)
-          .success(function(data){
-            console.log(data);
-            console.log("oh yeah");
-          });
+        ontotextAPI.updateTransformation(update,
+          $scope.clojure+"-*", $scope.transformation);
       },
       delete: function(ev) {
         var confirm = $mdDialog.confirm()
