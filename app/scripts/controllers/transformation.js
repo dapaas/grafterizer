@@ -19,34 +19,49 @@ angular.module('grafterizerApp')
     transformationDataModel,
     generateClojure) {
 
-  	var id = $scope.id = $stateParams.id;
+    var id = $scope.id = $stateParams.id;
     $scope.document = {
-      title: 'loading'
+        title: 'loading'
     };
 
     ontotextAPI.transformation(id).success(function(data){
-      $scope.document = data;
-      $scope.document.title = data['dct:title'];
-      $scope.document.description = data['dct:description'];
+        $scope.document = data;
+        $scope.document.title = data['dct:title'];
+        $scope.document.description = data['dct:description'];
     }).error(function(){
-      $state.go('^');
+        $state.go('^');
     });
 
     ontotextAPI.getClojure(id).success(function(data){
-      console.log(data);
-      $scope.clojure = data;
+        console.log(data);
+        $scope.clojure = data;
     });
 
     ontotextAPI.getJson(id).success(function(data){
-      var transformation = transformationDataModel.
-        Transformation.revive(data);
-      $scope.transformation = transformation; 
-      if (transformation.pipelines && transformation.pipelines.length) {
-        $scope.pipeline = transformation.pipelines[0]; 
-      } else {
-        $scope.pipeline = new transformationDataModel.Pipeline([]);
-        transformation.pipelines = [$scope.pipeline];
-      }
+        var transformation;
+        if (data['__type'] === 'Transformation') {
+            transformation = transformationDataModel.Transformation.revive(data);
+        } else {
+            $mdToast.show(
+              $mdToast.simple()
+                .content('Transformation unfound in the save file')
+                .position('bottom left')
+                .hideDelay(6000)
+              );
+            var prefixer = new transformationDataModel.Prefixer("examplePrefixer", "http://www.asdf.org/#/");
+            var customFunctionDeclaration = new transformationDataModel.CustomFunctionDeclaration("exampleCustomFunct", "(defn example asdf)");
+            var pipeline = new transformationDataModel.Pipeline([]);
+            transformation = new transformationDataModel.Transformation([customFunctionDeclaration], [prefixer], [$scope.pipeline], []);
+        }
+
+        console.log(transformation);
+        $scope.transformation = transformation; 
+        if (transformation.pipelines && transformation.pipelines.length) {
+            $scope.pipeline = transformation.pipelines[0]; 
+        } else {
+            $scope.pipeline = new transformationDataModel.Pipeline([]);
+            transformation.pipelines = [$scope.pipeline];
+        }
     });
 
     $rootScope.actions = {
@@ -108,6 +123,6 @@ angular.module('grafterizerApp')
               id: data['@id']
             });
           });
-      }
+        }
     };
-  });
+});
