@@ -1,10 +1,10 @@
-<md-content flex layout="column"
+<md-content flex layout-sm="column" layout="row"
   ngf-drop ng-model="fileUpload" ngf-drag-over-class="show-upload-indicator"
   ngf-accept="'.csv,.xsl,.xslx'">
 <md-button class="md-accent upload-indicator">
   <i class="fa fa-upload"></i>
 </md-button>
-<md-tabs class="md-accent no-border-radius" flex
+<md-tabs class="md-accent no-border-radius md-whiteframe-z5" flex
 md-no-disconnect md-swipe-content="">
   <md-tab label="Metadata">
     <md-tab-body>
@@ -81,4 +81,7 @@ md-no-disconnect md-swipe-content="">
     </md-tab-body>
   </md-tab>
 </md-tabs>
+<div ng-show="showPreview" flex flex-gt-lg="66">
+    <div flex ui-view="preview" autoscroll="false"></div>
+</div> 
 </md-content>
