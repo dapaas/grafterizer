@@ -268,7 +268,7 @@ md-tab-content .CodeMirror {
     top:5px;
     bottom:5px;
     left:50%;
-    margin-left:-107px;
+    margin-left:-79px;
     background:$color;
     position:absolute;
 
@@ -295,10 +295,15 @@ md-tab-content .CodeMirror {
   }
 
   pipeline-function {
-    .md-button {
-        min-width: 9em;
+    .pipeline-button {
     }
   }
+
+}
+
+.pipeline-button {
+  min-width: 9em;
+  // transition: min-width 0.66s ease;
 }
 
 .upload-indicator {
@@ -324,4 +329,17 @@ md-tab-content .CodeMirror {
 
 .md-toolbar-tools .md-button {
   margin:0;
+}
+
+.button-tight {
+  min-width: 60px;
+}
+
+// Playing with shadows
+md-toolbar.md-whiteframe-z1 {
+  z-index: 3;
+}
+
+md-tabs.md-whiteframe-z5 {
+  z-index: 2;
 }

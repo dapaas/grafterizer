@@ -156,6 +156,18 @@ angular
             label: '{{document.title || "File "+id}}'
         }
     })
+        .state('transformations.transformation.preview', {
+            url: '^/preview/{id:nonURIEncoded}',
+            views: {
+                "preview": {
+                    templateUrl: 'views/preview.html',
+                    controller: 'PreviewCtrl'
+                }
+            },
+            ncyBreadcrumb: {
+                label: 'Preview'
+            }
+        })
         .state('files', {
         url: '/files',
         views: {
