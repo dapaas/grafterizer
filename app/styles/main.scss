@@ -343,3 +343,56 @@ md-toolbar.md-whiteframe-z1 {
 md-tabs.md-whiteframe-z5 {
   z-index: 2;
 }
+
+.vAccordion--default v-pane-header {
+  border-bottom:none;
+  margin-bottom:0;
+
+  .md-button {
+    width:100%;
+  }
+
+  & > div {
+    padding:0 10px;
+    flex-grow: 1;
+  }
+}
+
+.vAccordion--default v-pane-header::after,
+.vAccordion--default v-pane-header::before {
+  right:17px;
+  background-color:white;
+  z-index: 1;
+}
+
+.vAccordion--default v-pane-content > div {
+  padding-bottom:0;
+}
+
+v-pane-content {
+
+  md-radio-button, .empty-distribution {
+    margin:0;
+    padding:8px 40px;
+    word-break: break-word;
+  }
+
+  md-progress-circular {
+    margin:auto;
+  }
+
+  .empty-distribution {
+    text-align: center;
+  }
+}
+
+md-tab-content {
+  clojure-pipeline, preview-raw {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+  }
+}

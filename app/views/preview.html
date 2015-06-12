@@ -1,13 +1,28 @@
-<md-tabs class="md-accent no-border-radius" flex
-md-no-disconnect md-swipe-content="">
+<md-content flex layout="column">
+<md-tabs class="md-accent no-border-radius" flex layout="column"
+ md-swipe-content="">
     <md-tab label="Dataset">
         <md-tab-body>
-            perdu
-        </md-tab-body>
-    </md-tab>
-    <md-tab label="Perdu">
-        <md-tab-body>
-            perdu
+        <md-radio-group ng-model="selectedDistribution">
+        <v-accordion class="vAccordion--default md-margin" flex
+            onexpand="accordionExpandCallback(index)">
+          <v-pane ng-repeat="dataset in datasets">
+            <v-pane-header layout="row">
+              <md-button class="md-raised md-primary md-hue-1">
+                {{dataset['dct:title']}}
+              </md-button>
+            </v-pane-header>
+            <v-pane-content>
+                <md-progress-circular class="md-hue-2" md-mode="indeterminate" ng-if="dataset.distributionsLoading"></md-progress-circular>
+                <div ng-repeat="distribution in dataset.distributions">
+                  <md-radio-button ng-value="distribution">{{distribution}}</md-radio-button>
+                </div>
+                <div ng-if="!dataset.distributionsLoading &amp;&amp;dataset.distributions.length===0">
+                  <p class="empty-distribution md-body-1">This distribution doesn't contain datasets.</p>
+                </div>
+            </v-pane-content>
+          </v-pane>
+        </v-accordion>
         </md-tab-body>
     </md-tab>
     <md-tab label="Original">
@@ -15,9 +30,15 @@ md-no-disconnect md-swipe-content="">
             perdu
         </md-tab-body>
     </md-tab>
-    <md-tab label="Raw">
+    <md-tab label="Processed">
         <md-tab-body>
             perdu
         </md-tab-body>
     </md-tab>
+    <md-tab label="Raw">
+        <md-tab-body>
+            <preview-raw></preview-raw>
+        </md-tab-body>
+    </md-tab>
 </md-tabs>
+</md-content>

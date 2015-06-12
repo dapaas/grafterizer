@@ -77,11 +77,13 @@ md-no-disconnect md-swipe-content="">
   </md-tab>
   <md-tab label="Clojure">
     <md-tab-body>
-      <clojure-pipeline transformation="transformation"></clojure-pipeline>
+      <div flex>
+        <clojure-pipeline transformation="transformation"></clojure-pipeline>
+      </div>
     </md-tab-body>
   </md-tab>
 </md-tabs>
-<div ng-show="showPreview" flex flex-gt-lg="66">
-    <div flex ui-view="preview" autoscroll="false"></div>
+<div ng-show="showPreview" flex flex-gt-lg="66" layout="column">
+    <div layout="column" flex ui-view="preview" autoscroll="false"></div>
 </div> 
 </md-content>
