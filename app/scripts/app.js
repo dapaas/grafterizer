@@ -32,7 +32,8 @@ angular
     'ui.grid.resizeColumns',
     'ui.grid.exporter',
     'ngMessages',
-    'RecursionHelper'
+    'RecursionHelper',
+    'vAccordion'
 ])
     .config(function (
             $mdThemingProvider,

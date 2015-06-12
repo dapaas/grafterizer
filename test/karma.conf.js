@@ -45,6 +45,7 @@ module.exports = function(config) {
       'bower_components/angular-messages/angular-messages.js',
       'bower_components/angular-recursion/angular-recursion.js',
       'bower_components/angular-mocks/angular-mocks.js',
+      'bower_components/v-accordion/dist/v-accordion.js',
       // endbower
       'app/scripts/**/*.js',
       'test/mock/**/*.js',
