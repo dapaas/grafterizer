@@ -11,4 +11,7 @@ angular.module('grafterizerApp')
   .controller('PreviewCtrl', function ($scope) {
     // TODO IT DOES WORK
     $scope.$parent.showPreview = true;
+    $scope.$on('$destroy', function(){
+        $scope.$parent.showPreview = false;
+    });
   });
