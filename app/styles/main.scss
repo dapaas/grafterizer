@@ -170,6 +170,10 @@ md-sidenav .md-button {
   }
   md-switch {
     margin: 12px;
+    .fa {
+      line-height: 24px;
+      padding: 0 0 0 6px;
+    }
   }
 }
 
