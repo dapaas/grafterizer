@@ -12,7 +12,7 @@
     "ng-file-upload": "~5.0.3",
     "papaparse": "~4.1.0",
     "angular-ui-grid": "~3.0.0-rc.21",
-    "angular-material": "0.10.0-rc2",
+    "angular-material": "0.10.0-rc4",
     "components-font-awesome": "~4.3.0",
     "lodash": "~3.9.3",
     "angular-loading-bar": "~0.7.1",
