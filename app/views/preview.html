@@ -1,12 +1,13 @@
 <md-content flex layout="column">
 <md-tabs class="md-accent no-border-radius" flex layout="column"
- md-swipe-content="">
-    <md-tab label="Dataset">
+ md-swipe-content="" md-stretch-tabs="always"
+ md-selected="selectedTabIndex">
+    <md-tab label="Distribution">
         <md-tab-body>
-        <md-radio-group ng-model="selectedDistribution">
+        <md-radio-group ng-model="$parent.selectedDistribution">
         <v-accordion class="vAccordion--default md-margin" flex
             onexpand="accordionExpandCallback(index)">
-          <v-pane ng-repeat="dataset in datasets">
+          <v-pane ng-repeat="dataset in datasets" expanded="$first">
             <v-pane-header layout="row">
               <md-button class="md-raised md-primary md-hue-1">
                 {{dataset['dct:title']}}
@@ -25,19 +26,22 @@
         </v-accordion>
         </md-tab-body>
     </md-tab>
-    <md-tab label="Original">
+    <!-- TODO disabled looks like it's broken -->
+    <md-tab label="Original" disabled="!selectedDistribution"
+        md-on-select="loadOriginalData()">
         <md-tab-body>
-            perdu
+            <preview-table ng-model="originalData.edn" hide-headers></preview-table>
         </md-tab-body>
     </md-tab>
     <md-tab label="Processed">
         <md-tab-body>
-            perdu
+            <preview-table ng-model="data.edn"></preview-table>
         </md-tab-body>
     </md-tab>
     <md-tab label="Raw">
         <md-tab-body>
-            <preview-raw></preview-raw>
+        <!-- {{$parent.selectedDistribution}} -->
+            <preview-raw ng-model="data.raw"></preview-raw>
         </md-tab-body>
     </md-tab>
 </md-tabs>

@@ -159,6 +159,9 @@ angular
     })
         .state('transformations.transformation.preview', {
             url: '^/preview/{id:nonURIEncoded}',
+            params: {
+                'distribution': null
+            },
             views: {
                 "preview": {
                     templateUrl: 'views/preview.html',

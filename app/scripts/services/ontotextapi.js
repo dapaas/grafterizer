@@ -196,8 +196,8 @@ angular.module('grafterizerApp')
     this.graftwerk = function(distributionID) {
 
       var data = {
-        'transformation-code': new Blob(["(defpipe my-pipe [data-file] (-> (read-dataset data-file :format :csv)))"],
-        {type: "application/clojure"}),
+        // 'transformation-code': new Blob(["(defpipe my-pipe [data-file] (-> (read-dataset data-file :format :csv)))"],
+        // {type: "application/clojure"}),
         'input-file': new Blob(["name,sex,age\nalice,f,34\nbob,m,63"], {type: "text/csv"}),
         'command': "my-pipe",
         'transformation-type': "pipe"
@@ -208,7 +208,7 @@ angular.module('grafterizerApp')
         // 'command': 'my-pipe',
         // 'transformation-type': 'pipe',
         // 'input-distribution': distributionID,
-        'transformation-id': 'http://dapaas.eu/users/1505271111/transformation/preview-872379-fork-1'
+        'transformation-id': 'http://dapaas.eu/users/1505271111/transformation/toto-fork-1'
       };
 
       return $http({
@@ -219,11 +219,17 @@ angular.module('grafterizerApp')
         transformRequest: transformRequest,
         transformResponse: [function(data, headers) {
           try {
-            return jsedn.parse(data);
+            return {
+              raw: data,
+              jsedn: jsedn.parse(data)
+            };
           } catch(e) {
             $log.debug(data);
             $log.error(e);
-            return false;
+            return {
+              raw: data,
+              jsedn: null
+            };
           }
         }]
       }).error(errorHandler);

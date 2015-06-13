@@ -29,13 +29,20 @@ angular.module('grafterizerApp')
         $scope.document.title = data['dct:title'];
         $scope.document.description = data['dct:description'];
     }).error(function(){
-        $state.go('^');
+        $state.go('transformations');
     });
 
-    ontotextAPI.getClojure(id).success(function(data){
-        console.log(data);
-        $scope.clojure = data;
-    });
+    // ontotextAPI.getClojure(id).success(function(data){
+    //     $scope.clojure = data;
+    // });
+
+    var loadEmptyTransformation = function(){
+        var prefixer = new transformationDataModel.Prefixer("examplePrefixer", "http://www.asdf.org/#/");
+        var customFunctionDeclaration = new transformationDataModel.CustomFunctionDeclaration("exampleCustomFunct", "(defn example asdf)");
+        var pipeline = new transformationDataModel.Pipeline([]);
+        $scope.transformation = new transformationDataModel.Transformation([customFunctionDeclaration], [prefixer], [pipeline], []);
+        $scope.pipeline = pipeline;
+    };
 
     ontotextAPI.getJson(id).success(function(data){
         var transformation;
@@ -48,13 +55,9 @@ angular.module('grafterizerApp')
                 .position('bottom left')
                 .hideDelay(6000)
               );
-            var prefixer = new transformationDataModel.Prefixer("examplePrefixer", "http://www.asdf.org/#/");
-            var customFunctionDeclaration = new transformationDataModel.CustomFunctionDeclaration("exampleCustomFunct", "(defn example asdf)");
-            var pipeline = new transformationDataModel.Pipeline([]);
-            transformation = new transformationDataModel.Transformation([customFunctionDeclaration], [prefixer], [pipeline], []);
+            return loadEmptyTransformation();
         }
 
-        console.log(transformation);
         $scope.transformation = transformation; 
         if (transformation.pipelines && transformation.pipelines.length) {
             $scope.pipeline = transformation.pipelines[0]; 
@@ -62,6 +65,31 @@ angular.module('grafterizerApp')
             $scope.pipeline = new transformationDataModel.Pipeline([]);
             transformation.pipelines = [$scope.pipeline];
         }
+    }).error(loadEmptyTransformation);
+
+    $scope.$watch('fileUpload', function() {
+      if ($scope.fileUpload && $scope.fileUpload[0]) {
+        var file = $scope.fileUpload[0];
+
+        var metadata = {
+              '@context': ontotextAPI.getContextDeclaration(),
+              '@type': 'dcat:Distribution',
+              'dct:title': "preview",
+              'dct:description': "Distribution uploaded in preview mode",
+              'dcat:fileName': file.name,
+              'dcat:mediaType': file.type
+          };
+        ontotextAPI.uploadDistribution(
+          "http://dapaas.eu/users/1505271111/dataset/all_data_korea-2",
+          file, metadata).success(function(data){
+            $state.go("transformations.transformation.preview", {
+              id: $stateParams.id,
+              distribution: data['@id']
+            });
+        });
+
+        // $state.go
+      }
     });
 
     $rootScope.actions = {
@@ -79,7 +107,10 @@ angular.module('grafterizerApp')
 
         var clojure = generateClojure.fromTransformation($scope.transformation);
 
-        ontotextAPI.updateTransformation(update, clojure, $scope.transformation);
+        ontotextAPI.updateTransformation(update, clojure, $scope.transformation)
+          .success(function(){
+            $scope.$broadcast('preview-request');
+          });
       },
       delete: function(ev) {
         var confirm = $mdDialog.confirm()

@@ -1,4 +1,7 @@
 <div layout="row" class="actions-view">
+	<md-switch aria-label="Preview mode" ng-model="$parent.previewTransformation" ng-if="transformationState">
+		Preview
+	</md-switch>
 	<md-button class="md-icon-button" aria-label="Fork" ng-click="fork()" ng-if="fork">
 		<i class="fa fa-code-fork"></i>
 	</md-button>

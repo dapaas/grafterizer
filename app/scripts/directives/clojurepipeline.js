@@ -25,8 +25,10 @@ angular.module('grafterizerApp')
       	},
       	post: function(scope, element, attrs) {
       		scope.$watch('transformation', function(){
-      			if (!scope.transformation) return;
-      			console.log(scope.transformation)
+      			if (!scope.transformation) {
+              return;
+            }
+      			// console.log(scope.transformation)
       			scope.clojure = generateClojure.fromTransformation(scope.transformation);
       		}, true);
       	}

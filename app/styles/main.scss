@@ -70,22 +70,6 @@ md-sidenav .md-button.md-default-theme {
   text-transform: none;
 }
 
-.sin-no-shrink{
-  flex-shrink: 0;
-}
-
-.sin-grid {
-  min-height:20em;
-
-  .ui-grid-top-panel {
-      background: #3f51b5;
-
-    .ui-grid-header-cell {
-      color: white;
-      border-color: #303f9f;
-    }
-  }
-}
 
 .sin-grid-margin {
   margin-left:30px;
@@ -183,6 +167,9 @@ md-sidenav .md-button {
   .md-toolbar-tools .md-button {
     margin-left:0;
     margin-right:0;
+  }
+  md-switch {
+    margin: 12px;
   }
 }
 
@@ -387,7 +374,7 @@ v-pane-content {
 }
 
 md-tab-content {
-  clojure-pipeline, preview-raw {
+  clojure-pipeline, preview-raw, preview-table {
     display: block;
     position: absolute;
     left: 0;
@@ -395,4 +382,61 @@ md-tab-content {
     right: 0;
     bottom: 0;
   }
+  preview-raw {
+    left:8px; 
+  }
+}
+
+.sin-no-shrink{
+  flex-shrink: 0;
+}
+
+.sin-grid {
+  min-height:20em;
+  vertical-align: middle;
+
+  .ui-grid-top-panel {
+      // background: #3f51b5;
+      background:white;
+
+    .ui-grid-header-cell {
+      color: grey;
+      font-weight: normal;
+      // border-color: #303f9f;
+      border-color: white;
+
+    }
+  }
+  .ui-grid-cell {
+   border-color: transparent;
+  // border-color: #eee;
+  }
+  .ui-grid-cell-contents {
+    line-height:28px;
+    padding:5px 5px 5px 10px;
+  }
+  .ui-grid-header {
+    border-color: #eee;
+  }
+  .ui-grid-column-menu-button {
+    top: 6px;
+  }
+  .ui-grid-row:nth-child(odd) .ui-grid-cell {
+    background-color: white;
+  }
+  .ui-grid-row:nth-child(even) .ui-grid-cell {
+    background-color: #f5f5f5;
+  }
+  .ui-grid-row:hover .ui-grid-cell {
+    background-color: #eee;
+  }
+}
+
+preview-table .sin-grid {
+  position: absolute;
+  left: 28px;
+  top: 20px;
+  right: 20px;
+  bottom: 20px;
+  min-height: initial;
 }

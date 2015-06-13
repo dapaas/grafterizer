@@ -8,7 +8,7 @@
  * Controller of the grafterizerApp
  */
 angular.module('grafterizerApp')
-  .controller('PreviewCtrl', function ($scope, ontotextAPI) {
+  .controller('PreviewCtrl', function ($scope, ontotextAPI, PipeService, $timeout, $stateParams) {
     // TODO IT DOES WORK
     $scope.$parent.showPreview = true;
     $scope.$on('$destroy', function(){
@@ -34,5 +34,39 @@ angular.module('grafterizerApp')
         }).error(function(){
             selectedDataset.distributionsLoading = false;
         });
+    };
+
+
+    $scope.selectedDistribution = $stateParams.distribution;
+
+    var previewTransformation = function (redirect){
+        PipeService.preview($scope.selectedDistribution)
+            .success(function(data) {
+                $scope.data = data;
+                if (redirect) {
+                    $timeout(function () {
+                        $scope.selectedTabIndex = 2;
+                    });
+                }
+            });
+    };
+
+    $scope.$on('preview-request', function(){
+        previewTransformation(false);
+    });
+    $scope.$watch('selectedDistribution', function(){
+        if ($scope.selectedDistribution) {
+            delete $scope.originalData; 
+            previewTransformation(true);
+        }
+    });
+
+    $scope.loadOriginalData = function(){
+        if ($scope.selectedDistribution) {
+            PipeService.original($scope.selectedDistribution)
+                .success(function(data) {
+                    $scope.originalData = data;
+                });
+        }
     };
   });

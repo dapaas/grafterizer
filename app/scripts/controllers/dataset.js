@@ -36,7 +36,7 @@ angular.module('grafterizerApp')
   	$scope.$watch('file', function() {
   		if ($scope.file && $scope.file[0]) {
   			var file = $scope.file[0];
-  			console.log(file);
+  			// console.log(file);
 
   			var metadata = {
 	            '@context': ontotextAPI.getContextDeclaration(),
