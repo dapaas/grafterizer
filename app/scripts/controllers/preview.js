@@ -40,7 +40,7 @@ angular.module('grafterizerApp')
     $scope.selectedDistribution = $stateParams.distribution;
 
     var previewTransformation = function (redirect){
-        PipeService.preview($scope.selectedDistribution)
+        PipeService.preview($scope.selectedDistribution, $scope.$parent.id)
             .success(function(data) {
                 $scope.data = data;
                 if (redirect) {
@@ -48,11 +48,18 @@ angular.module('grafterizerApp')
                         $scope.selectedTabIndex = 2;
                     });
                 }
+            }).error(function(data) {
+                $scope.data = data;
+                $timeout(function () {
+                    $scope.selectedTabIndex = 3;
+                });
             });
     };
 
     $scope.$on('preview-request', function(){
-        previewTransformation(false);
+        if ($scope.selectedDistribution) {
+            previewTransformation(false);
+        }
     });
     $scope.$watch('selectedDistribution', function(){
         if ($scope.selectedDistribution) {
