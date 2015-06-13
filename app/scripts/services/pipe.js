@@ -44,14 +44,14 @@ angular.module('grafterizerApp')
         .hideDelay(3000)
       );
     };
-    this.preview = function(distributionUri) {
+    this.preview = function(distributionUri, transformationUri) {
         return $http({
             // url: urlBase+"/poney",
             url: urlBase+"/lapin",
             method: 'GET',
             params: {
                 distributionUri: distributionUri,
-                transformationUri: "http://dapaas.eu/users/1505271111/transformation/toto-fork-1"
+                transformationUri: transformationUri
             },
             transformResponse: [transformEdnResponse]
         }).error(errorHandler);;
