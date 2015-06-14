@@ -258,7 +258,28 @@ angular.module('grafterizerApp')
         return new URINode(data.prefix, data.subElements);
     };
     URINode.prototype.addChild = function (child) {
+        child.parent = this;
         this.subElements.push(child);
+    };
+    URINode.prototype.addNodeAfter = function (property, propertyToAdd) {
+        console.log("adding");
+        var index = this.subElements.indexOf(property);
+        if(!property || index === -1) {
+            propertyToAdd.parent = this;
+            this.subElements.push(propertyToAdd);
+        } else {
+            if(index === this.subElements.length - 1){
+                propertyToAdd.parent = this;
+                this.subElements.push(propertyToAdd);
+                return true;
+            }
+            else {
+                propertyToAdd.parent = this;
+                this.graphs.splice(index + 1, 0, propertyToAdd);
+                return true;
+            }
+        }
+        return false;
     };
     URINode.prototype.removeChild = function (child) {
         var childIndex = this.subElements.indexOf(child);
@@ -288,7 +309,7 @@ angular.module('grafterizerApp')
     ColumnURI.revive = function (data) {
         return new ColumnURI(data.prefix, data.column, data.subElements);
     };
-    Types.StringifiableColumnURI = ColumnURI;
+    Types.ColumnURI = ColumnURI;
 
     var Property = function (prefix, propertyName, subElements) {
         RDFElement.call(this, subElements);
@@ -304,6 +325,7 @@ angular.module('grafterizerApp')
         }
     };
     Property.prototype.addChild = function (child) {
+        child.parent = this;
         this.subElements.push(child);
     };
     Property.revive = function (data) {
@@ -331,38 +353,60 @@ angular.module('grafterizerApp')
     ConstantLiteral.revive = function (data) {
         return new ConstantLiteral(data.literalText, data.subElements);
     };
-    Types.StringifiableConstantLiteral = ConstantLiteral;
+    Types.ConstantLiteral = ConstantLiteral;
 
     // TODO add support for blank nodes
     var BlankNode = function () {
         this.__type = "BlankNode";
     };
     BlankNode.revive = function (data) {
-        
+
         return new BlankNode();
     }
 
-    var Graph = function (graphURI, graphRoots) {
-        var i, graphRoots;
+    var Graph = function (graphURI, existingGraphRoots) {
+        var i, graphRootsToAdd;
 
-        graphRoots = [];
+        graphRootsToAdd = [];
         // just a string
         this.graphURI = graphURI;
         // need to get stringifiable roots first
-        for (i = 0; i < graphRoots.length; ++i) {
-            graphRoots.push(Types.getGraphElement(graphRoots[i]));
+        for (i = 0; i < existingGraphRoots.length; ++i) {
+            graphRootsToAdd.push(Types.getGraphElement(existingGraphRoots[i]));
         }
-        this.graphRoots = graphRoots;
+        this.graphRoots = graphRootsToAdd;
         this.__type = "Graph";
     };
     Graph.prototype.addChild = function (child) {
+        child.parent = this;
         this.graphRoots.push(child);
     };
     Graph.prototype.removeChild = function (child) {
+        console.log("removing", child);
         var childIndex = this.graphRoots.indexOf(child);
         if (childIndex !== -1) {
             this.graphRoots.splice(childIndex, 1);
         }
+    };
+    Graph.prototype.addNodeAfter = function (root, rootToAdd) {
+        var index = this.graphRoots.indexOf(root);
+        if(!root || index === -1) {
+            rootToAdd.parent = this;
+            this.graphRoots.push(rootToAdd);
+            return true;
+        } else {
+            if(index === this.graphRoots.length - 1){
+                this.graphRoots.push(rootToAdd);
+                rootToAdd.parent = this;
+                return true;
+            }
+            else {
+                rootToAdd.parent = this;
+                return this.graphs.splice(index + 1, 0, rootToAdd);
+                return true;
+            }
+        }
+        return false;
     };
     Graph.revive = function (data) {
         return new Graph(data.graphURI, data.graphRoots);
@@ -409,16 +453,25 @@ angular.module('grafterizerApp')
         this.graphs = graphs;
         this.__type = "Transformation";
 
-        this.customFunctionDeclarations = customFunctionDeclarations;
-        this.prefixers = prefixers;
-        this.pipelines = pipelines;
-        this.grafts = graphs;
-        this.__type = "Transformation";
     };
     Transformation.revive = function (data) {
         return new Transformation(data.customFunctionDeclarations, data.prefixers, data.pipelines, data.grafts);
     };
     Types.Transformation = Transformation;
+    Transformation.prototype.addGraphAfter = function (graph, graphToAdd) {
+        var index = this.graphs.indexOf(graph);
+        if(!graph || index === -1) {
+            this.graphs.push(graphToAdd);
+        } else {
+            if(index === this.graphs.length - 1){
+                this.graphs.push(graphToAdd);
+                return true;
+            }
+            else {
+                return this.graphs.splice(index + 1, 0, graphToAdd);
+            }
+        }
+    };
     Transformation.prototype.addPrefixer = function(name, uri) {
         for(var i=0; i < this.prefixers.length; ++i){
             if(this.prefixers[i].name === name.trim()){

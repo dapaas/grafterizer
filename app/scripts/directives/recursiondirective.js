@@ -7,16 +7,16 @@
  * # recursionDirective
  */
 angular.module('grafterizerApp')
-  .directive('recursionDirective', function (RecursionHelper) {
+    .directive('recursionDirective', function (RecursionHelper) {
     return {
-      template: '<div layout="row"><div flex="5">test</div><div style="padding-top:8px" flex> <recursion-directive number-left="numberLeft-1" ng-if="numberLeft>0"></recursion-directive></div>',
-      restrict: 'E',
-      scope: {
-      	numberLeft: '='
-      },
-      compile: function(element) {
+        template: '<div layout="row"><div flex="5">test</div><div style="padding-top:8px" flex> <recursion-directive number-left="numberLeft-1" ng-if="numberLeft>0"></recursion-directive></div>',
+        restrict: 'E',
+        scope: {
+            numberLeft: '='
+        },
+        compile: function(element) {
             return RecursionHelper.compile(element, function(scope, iElement, iAttrs, controller, transcludeFn){
-		      	scope.showNext = Math.random()<0.1;
+                //		      	scope.showNext = Math.random()<0.1;
                 // Define your normal link function here.
                 // Alternative: instead of passing a function,
                 // you can also pass an object with 
@@ -24,4 +24,4 @@ angular.module('grafterizerApp')
             });
         }
     };
-  });
+});

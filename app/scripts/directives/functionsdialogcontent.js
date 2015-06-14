@@ -16,7 +16,6 @@ angular.module('grafterizerApp')
             selectedFunctionName: '='
         },
         link: function postLink(scope, element, attrs) {
-            //        element.text('this is the functionsDialog directive');
             scope.generateCurrFunction = function(){
                 console.error("todo");
             };
