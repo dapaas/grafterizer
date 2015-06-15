@@ -2,21 +2,18 @@
 
 /**
  * @ngdoc directive
- * @name grafterizerApp.directive:constantURINode
+ * @name grafterizerApp.directive:columnLiteralNode
  * @description
- * # constantURINode
+ * # columnLiteralNode
  */
 angular.module('grafterizerApp')
-    .directive('constantUriNode', function ($mdDialog, transformationDataModel, RecursionHelper) {
+    .directive('columnLiteralNode', function ($mdDialog, transformationDataModel, RecursionHelper) {
     return {
-        templateUrl: 'views/constanturinode.html',
+        templateUrl: 'views/columnliteralnode.html',
         restrict: 'E',
-        scope: {
-            node: '='  
-        },
         compile: function(element) {
+            // TODO may be different at the end but probably need to unify with the constant uri node directive and create a directive for edit/add/remove-s
             return RecursionHelper.compile(element, function(scope, iElement, iAttrs, controller, transcludeFn){
-                
                 scope.editNode = function () {
                     scope.originalNode = {};
                     angular.copy(scope.node, scope.originalNode);
@@ -42,6 +39,8 @@ angular.module('grafterizerApp')
                         .ariaLabel('Please confirm that you want to remove the element.')
                         .ok('Yes')
                         .cancel('Cancel')).then(function() {
+                        console.log("removing child....");
+                        console.log(scope);
                         node.parent.removeChild(node);
                     });
                 };
@@ -54,12 +53,10 @@ angular.module('grafterizerApp')
                         scope: newScope
                     }).then( function(graphNode) {
                         if(graphNode){
-                            console.log("graphNode", graphNode);
-                            console.log("graphNode", scope);
                             scope.node.parent.addNodeAfter(scope.node, graphNode);
                         }
                     }, function () {
-                        
+
                         newScope.$destroy();
                     });
                 };
@@ -85,5 +82,5 @@ angular.module('grafterizerApp')
                 };
             })
         }
-    }
+    };
 });

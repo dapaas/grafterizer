@@ -324,6 +324,26 @@ angular.module('grafterizerApp')
             this.subElements.splice(childIndex, 1);
         }
     };
+    Property.prototype.addNodeAfter = function (node, nodeToAdd) {
+        var index = this.subElements.indexOf(node);
+        if(!node || index === -1) {
+            nodeToAdd.parent = this;
+            this.subElements.push(nodeToAdd);
+            return true;
+        } else {
+            if(index === this.subElements.length - 1){
+                nodeToAdd.parent = this;
+                this.subElements.push(nodeToAdd);
+                return true;
+            }
+            else {
+                nodeToAdd.parent = this;
+                return this.subElements.splice(index + 1, 0, nodeToAdd);
+                return true;
+            }
+        }
+        return false;
+    };
     Property.prototype.addChild = function (child) {
         child.parent = this;
         this.subElements.push(child);
@@ -331,6 +351,7 @@ angular.module('grafterizerApp')
     Property.revive = function (data) {
         return new Property(data.prefix, data.propertyName, data.subElements);
     };
+    
     Types.Property = Property;
 
     var ColumnLiteral = function (literalText, subElements) {
@@ -362,7 +383,8 @@ angular.module('grafterizerApp')
     BlankNode.revive = function (data) {
 
         return new BlankNode();
-    }
+    };
+    Types.BlankNode = BlankNode;
 
     var Graph = function (graphURI, existingGraphRoots) {
         var i, graphRootsToAdd;
@@ -402,7 +424,7 @@ angular.module('grafterizerApp')
             }
             else {
                 rootToAdd.parent = this;
-                return this.graphs.splice(index + 1, 0, rootToAdd);
+                return this.graphRoots.splice(index + 1, 0, rootToAdd);
                 return true;
             }
         }
