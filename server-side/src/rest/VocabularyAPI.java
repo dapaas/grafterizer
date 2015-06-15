@@ -1,6 +1,7 @@
 package rest;
 
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -42,7 +43,7 @@ public class VocabularyAPI {
 			
 			JSONObject partsData = new JSONObject(data);
 			
-			int httpcode = dao.insertVocabulary(partsData.optString("vocabulary_name"), partsData.optString("namespace"), partsData.optString("path"));
+			int httpcode = dao.insertVocabulary(partsData.optString("name"), partsData.optString("namespace"), partsData.optString("path"));
 			
 			if( httpcode == 200 ) {
 				jsonObject.put("http_code", "200");
@@ -64,7 +65,7 @@ public class VocabularyAPI {
 	}
 	
 	//get a list of vocabulary name
-	@Path("/getAllVocabulary")
+	@Path("/getAll")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response returnAllVocabulary() throws Exception {
@@ -78,13 +79,26 @@ public class VocabularyAPI {
 			
 			VocabularyDAO dao = new VocabularyDAO();
 			
-			Iterator<String> it = dao.getAllVocabularyName();
+			Map<String, String> retMap = dao.getAllVocabularyName();
 			
-			json = getJsonFromObject(it, false);
+			Iterator<Map.Entry<String, String>> it = retMap.entrySet().iterator();
 			
+		    JSONArray jsonArray = new JSONArray();
+		    
+		    for(Map.Entry<String, String> entry : retMap.entrySet()) {
+		        String name = entry.getKey();
+		        String namespace = entry.getValue();
+		        
+		    	JSONObject formDetailsJson = new JSONObject();
+		    	
+				formDetailsJson.put("name", name);
+				formDetailsJson.put("namespace", namespace);
+				jsonArray.put(formDetailsJson).toString();
+		    }
+
 			jsonObject.put("http_code", "200");
 			jsonObject.put("Message", "Get Vocabulary successfully");
-			jsonObject.put("result", json);
+			jsonObject.put("result", jsonArray);
 			
 			returnString = jsonObject.toString();
 			
@@ -115,6 +129,11 @@ public class VocabularyAPI {
 		try {
 			VocabularyDAO dao = new VocabularyDAO();
 			
+			if( keyword.contains(":") ){
+				String prefix = keyword.substring(0, keyword.indexOf(":") - 1);
+				String name = keyword.substring(keyword.indexOf(":") + 1, keyword.length());
+			}
+			
 			Iterator<String> it = dao.searchVocabulary(keyword);
 			
 			json = getJsonFromObject(it, true);
@@ -134,20 +153,21 @@ public class VocabularyAPI {
 	}
 	
 	//delete vocabulary based on vocabulary name
-	@Path("/delete/{vocabulary_name}")
-	@DELETE
+	@Path("/delete")
+	@POST
+	@Consumes({MediaType.APPLICATION_FORM_URLENCODED,MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response deleteVocabulary(
-			@PathParam("vocabulary_name") String name)
-			throws Exception {
-		
-		logger.info( "invoke deleteVocabulary: " + name );
+	public Response deleteVocabulary(String data) throws Exception {
+		logger.info( "invoke deleteVocabulary: " + data );
 		int http_code;
 		String returnString = null;
 		JSONObject jsonObject = new JSONObject();
 		VocabularyDAO dao = new VocabularyDAO();
 		
-		try {			
+		try {	
+			JSONObject partsData = new JSONObject(data);
+			String name = partsData.optString("name") + "_" + partsData.optString("namespace");
+			
 			http_code = dao.deleteVocabulary(name);
 			
 			if(http_code == 200) {
@@ -184,7 +204,7 @@ public class VocabularyAPI {
 			JSONObject partsData = new JSONObject(data);
 			logger.info( "jsonData: " + partsData.toString() );
 			
-			int http_code = dao.updataVocabulary(partsData.optString("vocabulary_name"), partsData.optString("path"));
+			int http_code = dao.updataVocabulary(partsData.optString("name"), partsData.optString("namespace"), partsData.optString("path"));
 			
 			if(http_code == 200) {
 				jsonObject.put("http_code", "200");

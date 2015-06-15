@@ -88,8 +88,8 @@ public class VocabularyDAO {
 		//vocabularyModel is used for save all the triple about a vocabulary.
 		extractClassesandProperties(Vocabularymodel, searchModel, name);
 		
-		datasetSearch.addNamedModel(name, searchModel);
-		datasetVocab.addNamedModel(name, Vocabularymodel);
+		datasetSearch.addNamedModel(name + "_" + prefix, searchModel);
+		datasetVocab.addNamedModel(name + "_" + prefix, Vocabularymodel);
 
 		datasetVocab.commit();
 		datasetVocab.end();
@@ -130,9 +130,9 @@ public class VocabularyDAO {
 	}
 	
 	//update vocabulary with a new uri
-	public int updataVocabulary(String name, String newUri) throws Exception{
+	public int updataVocabulary(String name, String namespace, String newPath) throws Exception{
 		
-		if (name.isEmpty() || newUri.isEmpty()){
+		if (name.isEmpty() || newPath.isEmpty() || namespace.isEmpty()){
 			return FAIL;
 		}
 		
@@ -142,9 +142,9 @@ public class VocabularyDAO {
 		
 		if (dataset.containsNamedModel(name)){
 			Model model = ModelFactory.createDefaultModel();
-			com.hp.hpl.jena.util.FileManager.get().readModel( model, newUri, "RDF/XML" );
+			com.hp.hpl.jena.util.FileManager.get().readModel( model, newPath, "RDF/XML" );
 			
-			dataset.replaceNamedModel(name, model);
+			dataset.replaceNamedModel(name + "_" + namespace, model);
 		}
 		
 		dataset.commit();
@@ -208,10 +208,11 @@ public class VocabularyDAO {
 	}
 	
 	//get a list of vocabulary name
-	public Iterator<String> getAllVocabularyName() throws Exception{
+	public Map<String, String> getAllVocabularyName() throws Exception{
 		
 		Dataset dataset = getDataset();
 		Iterator<String> it;
+		Map<String, String> ret = new HashMap<>();
 		
 		dataset.begin(ReadWrite.READ);
 		
@@ -221,8 +222,17 @@ public class VocabularyDAO {
 	    } finally { dataset.end() ; }
 		
 		dataset.close();
+		
+		while( it.hasNext() ){
+			String str = it.next();
+			if(str.indexOf("_") > 0){
+				String name = str.substring(0, str.indexOf("_"));
+				String namespace = str.substring(str.indexOf("_") + 1, str.length());
+				ret.put(name, namespace);
+			}
+		}
 
-		return it;
+		return ret;
 	}
 	
 	static int teststatistic = 0;
