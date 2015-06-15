@@ -200,6 +200,12 @@ md-sidenav {
     font-family: monospace;
     background:#F44336;
     color:white;
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 19px;
+    right: 10px;
+    top: 10px;
 }
 
 .graftwerk-exception {
@@ -453,4 +459,16 @@ preview-table .sin-grid {
 
 rdf-mapping [flex] {
     flex-shrink: 0;
+}
+
+preview-table .watermark {
+    position: absolute;
+    color: #cdcdcd;
+    top: 50%;
+    font-size: 7em;
+    width: 100%;
+    text-align: center;
+    z-index: 1000;
+    line-height: 3em;
+    margin-top: -1.5em;
 }
