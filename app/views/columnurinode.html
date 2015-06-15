@@ -1,16 +1,11 @@
-<div layout="row">
-    <div flex>
+<div layout="row" layout-align="start start">
+    <div layout-align="start start">
         <md-button flex class="graph-button md-raised" ng-click="editNode()">
             {{node.prefix+':'+node.column}}
         </md-button>
-        <md-button flex class="md-primary button-tight" ng-click="clickAddNodeAfter(node)">
-            <i class="fa fa-large fa-plus-circle"></i>
-        </md-button>
-        <md-button flex class="md-primary button-tight" ng-click="clickRemoveNode(node)">
-            <i class="fa fa-large fa-minus-circle"></i>
-        </md-button>
+        <add-or-remove-node node="node"></add-or-remove-node>
     </div>
-    <div style="padding-top:8px" flex >
+    <div style="padding-top:8px" flex layout-align="start start">
         <md-button class="md-primary" ng-click="clickAddPropertyAfter(null)" ng-hide="node.subElements.length!=0">
             <i class="fa fa-large fa-plus-circle"></i>&nbsp;Add property
         </md-button>

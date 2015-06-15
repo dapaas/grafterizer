@@ -31,35 +31,6 @@ angular.module('grafterizerApp')
                         angular.copy(scope.originalNode, scope.node);
                         newScope.$destroy();
                     });
-                }
-                scope.clickRemoveNode = function (node) {
-                    $mdDialog.show(
-                        $mdDialog.confirm()
-                        .title('Are you sure you want to remove this element?')
-                        .content('Please confirm that you want to remove the element.')
-                        .ariaLabel('Please confirm that you want to remove the element.')
-                        .ok('Yes')
-                        .cancel('Cancel')).then(function() {
-                        console.log("removing child....");
-                        console.log(scope);
-                        node.parent.removeChild(node);
-                    });
-                };
-                scope.clickAddNodeAfter = function () {
-                    var newScope = scope.$new(false, scope);
-                    newScope.isCreate = true;
-                    $mdDialog.show({
-                        templateUrl: 'views/mappingNodeDefinitionDialog.html',
-                        controller: 'MappingnodedefinitiondialogCtrl',
-                        scope: newScope
-                    }).then( function(graphNode) {
-                        if(graphNode){
-                            scope.node.parent.addNodeAfter(scope.node, graphNode);
-                        }
-                    }, function () {
-
-                        newScope.$destroy();
-                    });
                 };
                 scope.clickAddPropertyAfter = function (property) {
                     scope.originalProperties = [];
