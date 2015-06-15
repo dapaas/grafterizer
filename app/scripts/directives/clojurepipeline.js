@@ -31,6 +31,17 @@ angular.module('grafterizerApp')
       			// console.log(scope.transformation)
       			scope.clojure = generateClojure.fromTransformation(scope.transformation);
       		}, true);
+
+          // TODO workaround random bug
+          scope.$watch("$parent.selectedTabIndex", function(){
+            if (scope['$parent'].selectedTabIndex) {
+              window.setTimeout(function(){
+              try {
+                element.children().children()[0].CodeMirror.refresh();
+              }catch(e){}
+            }, 1);
+            }
+          });
       	}
       }
     };
