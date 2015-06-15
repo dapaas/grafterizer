@@ -44,7 +44,7 @@ angular
              $breadcrumbProvider,
              $locationProvider) {
 
-    $urlRouterProvider.otherwise("/");
+    $urlRouterProvider.otherwise("/transformations/new");
 
     // TODO enable in production
     // $locationProvider.html5Mode(true);
