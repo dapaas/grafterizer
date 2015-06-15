@@ -2,21 +2,18 @@
 
 /**
  * @ngdoc directive
- * @name grafterizerApp.directive:constantURINode
+ * @name grafterizerApp.directive:constantLiteralNode
  * @description
- * # constantURINode
+ * # constantLiteralNode
  */
 angular.module('grafterizerApp')
-    .directive('constantUriNode', function ($mdDialog, transformationDataModel, RecursionHelper) {
+    .directive('constantLiteralNode', function ($mdDialog, transformationDataModel, RecursionHelper) {
     return {
-        templateUrl: 'views/constanturinode.html',
+        templateUrl: 'views/constantliteralnode.html',
         restrict: 'E',
-        scope: {
-            node: '='  
-        },
         compile: function(element) {
             return RecursionHelper.compile(element, function(scope, iElement, iAttrs, controller, transcludeFn){
-                
+
                 scope.editNode = function () {
                     scope.originalNode = {};
                     angular.copy(scope.node, scope.originalNode);
@@ -59,7 +56,7 @@ angular.module('grafterizerApp')
                             scope.node.parent.addNodeAfter(scope.node, graphNode);
                         }
                     }, function () {
-                        
+
                         newScope.$destroy();
                     });
                 };
@@ -85,5 +82,5 @@ angular.module('grafterizerApp')
                 };
             })
         }
-    }
+    };
 });

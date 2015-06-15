@@ -53,12 +53,15 @@ angular.module('grafterizerApp')
 
                 }
                 scope.clickAddNodeAfter = function (node) {
+                    var newScope = scope.$new(false, scope);
+                    newScope.isCreate = true;
                     $mdDialog.show({
                         templateUrl: 'views/mappingNodeDefinitionDialog.html',
-                        scope: scope.$new(false, scope)
+                        controller: 'MappingnodedefinitiondialogCtrl',
+                        scope: newScope
                     }).then( function(graphNode) {
                         if(graphNode){
-//                            scope.property.addNodeAfter(scope.node, graphNode);
+                            scope.property.addNodeAfter(null, graphNode);
                         }
                     });
                 }

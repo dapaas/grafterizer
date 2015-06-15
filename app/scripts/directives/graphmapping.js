@@ -24,13 +24,17 @@ angular.module('grafterizerApp')
 //            scope.graph.graphRoots.push(new transformationDataModel.ColumnLiteral("ColumnLiteral", []));
             
             scope.clickAddNodeAfter = function (node) {
+                var newScope = scope.$new(false, scope);
+                newScope.isCreate = true;
                 $mdDialog.show({
                     templateUrl: 'views/mappingnodedefinitiondialog.html',
-                    scope: scope.$new(false, scope)
+                    scope: newScope
                 }).then( function(graphNode) {
                     if(graphNode){
                         scope.$parent.node.addNodeAfter(scope.node, graphNode);
                     }
+                }, function () {
+                    newScope.$destroy();
                 });
             }
         }

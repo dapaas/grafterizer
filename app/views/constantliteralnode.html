@@ -1,0 +1,13 @@
+<div layout="row">
+    <div flex>
+        <md-button flex class="graph-button md-raised" ng-click="editNode()">
+            {{node.literalValue}}
+        </md-button>
+        <md-button flex class="md-primary button-tight" ng-click="clickAddNodeAfter(node)">
+            <i class="fa fa-large fa-plus-circle"></i>
+        </md-button>
+        <md-button flex class="md-primary button-tight" ng-click="clickRemoveNode(node)">
+            <i class="fa fa-large fa-minus-circle"></i>
+        </md-button>
+    </div>
+</div>
