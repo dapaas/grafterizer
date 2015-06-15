@@ -17,7 +17,8 @@ angular.module('grafterizerApp')
     $mdToast,
     $mdDialog,
     transformationDataModel,
-    generateClojure) {
+    generateClojure,
+    persistentTabs) {
 
     var id = $scope.id = $stateParams.id;
     $scope.document = {
@@ -159,4 +160,34 @@ angular.module('grafterizerApp')
           });
         }
     };
+
+    $scope.editPrefixers = function () {
+        $scope.originalPrefixers = [];
+        angular.copy($scope.transformation.prefixers, $scope.originalPrefixers);
+        $mdDialog.show({
+            templateUrl: 'views/editprefixes.html',
+            controller: 'EditprefixersCtrl',
+            scope: $scope.$new(false, $scope)
+        }).then(function() {
+        }, function() {
+            angular.copy($scope.originalPrefixers, $scope.transformation.prefixers);
+        });
+    };
+
+    $scope.defineCustomFunctions = function () {
+        $scope.originalCustomFunctionDeclarations = [];
+        angular.copy($scope.transformation.customFunctionDeclarations, $scope.originalCustomFunctionDeclarations);
+        $mdDialog.show({
+            templateUrl: 'views/createcustomfunction.html',
+            controller: 'CustomfunctionsdialogcontrollerCtrl',
+            scope: $scope.$new(false, $scope)
+        }).then(function() {
+        }, function() {
+            angular.copy($scope.originalCustomFunctionDeclarations, $scope.transformation.customFunctionDeclarations);
+        }); 
+    };
+
+    // TODO the scope is not updated correctly :/ (pipeline is empty)
+    // We should try again later, might be a bug with md-tabs 
+    //persistentTabs.bind($scope, "selectedTabIndex", "transformation");
 });

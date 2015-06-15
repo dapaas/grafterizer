@@ -20,12 +20,14 @@ angular.module('grafterizerApp')
 
     $rootScope.$on('$stateChangeSuccess', computeTransformationSwitch);
     computeTransformationSwitch();
-    
-    $scope.$watch('previewTransformation', function(){
-      if ($scope.previewTransformation) {
-        $state.go('transformations.transformation.preview');
-      } else {
-        $state.go('transformations.transformation');
-      }
-    });
+
+    if (!$state.is('transformations.new')) {
+      $scope.$watch('previewTransformation', function(){
+        if ($scope.previewTransformation) {
+          $state.go('transformations.transformation.preview');
+        } else {
+          $state.go('transformations.transformation');
+        }
+      });
+    }
   });
