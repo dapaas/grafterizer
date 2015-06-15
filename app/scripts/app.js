@@ -287,7 +287,7 @@ angular
         '</ol>'
     });
 
-    var colors = [
+    /*var colors = [
       'red',
       'pink',
       'purple',
@@ -311,7 +311,7 @@ angular
 
     $mdThemingProvider.theme('default')
 	    .primaryPalette(colors[Math.floor(Math.random()*colors.length)])
-	    .accentPalette(colors[Math.floor(Math.random()*colors.length)]);
+	    .accentPalette(colors[Math.floor(Math.random()*colors.length)]);*/
 
     jsedn.Symbol.prototype.validRegex = new RegExp(/.*/);
 });
