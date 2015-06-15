@@ -1,2 +1,3 @@
-FROM httpd:2.4
-COPY ./dist/ /usr/local/apache2/htdocs/
+FROM nginx:latest
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY dist /usr/share/nginx/html
