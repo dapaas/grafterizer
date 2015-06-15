@@ -200,31 +200,6 @@ angular
             label: '{{document.title || "File "+id}}'
         }
     })
-        .state('demo', {
-        url: '/demo',
-        views: {
-            "main@": {
-                templateUrl: 'views/demo.html',
-                controller: 'DemoCtrl'
-            },
-            "actions@": {
-                templateUrl: 'views/actions.html',
-                controller: 'ActionsCtrl'
-            }
-        },
-        ncyBreadcrumb: {
-            label: 'Demo'
-        }
-    })
-        .state('screenshot', {
-        url: '/screenshot',
-        views: {
-            "main@": {
-                templateUrl: 'views/screenshot.html',
-                controller: 'DemoCtrl'
-            }
-        }
-    })
         .state('distributions', {
         url: '/distributions',
         views: {
