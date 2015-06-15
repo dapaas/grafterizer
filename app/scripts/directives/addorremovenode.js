@@ -51,8 +51,6 @@ angular.module('grafterizerApp')
                         scope: newScope
                     }).then( function(graphNode) {
                         if(graphNode){
-                            console.log("graphNode", graphNode);
-                            console.log("graphNode", scope);
                             scope.node.parent.addNodeAfter(scope.node, graphNode);
                         }
                     }, function () {

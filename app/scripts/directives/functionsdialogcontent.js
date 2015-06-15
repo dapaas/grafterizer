@@ -13,7 +13,8 @@ angular.module('grafterizerApp')
         restrict: 'E',
         scope: {
             function: '=',
-            selectedFunctionName: '='
+            selectedFunctionName: '=',
+            transformation: '='
         },
         link: function postLink(scope, element, attrs) {
             scope.generateCurrFunction = function(){

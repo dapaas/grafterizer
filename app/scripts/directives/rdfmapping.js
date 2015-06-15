@@ -12,7 +12,6 @@ angular.module('grafterizerApp')
         templateUrl: 'views/rdfmapping.html',
         restrict: 'E',
         link: function postLink(scope, element, attrs) {
-            console.log(scope, "THIS IS MAPPING");
             // create and delete new graphs  
             scope.clickAddAfter = function (graph) {
                 if(graph){

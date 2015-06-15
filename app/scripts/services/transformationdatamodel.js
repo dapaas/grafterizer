@@ -82,6 +82,7 @@ angular.module('grafterizerApp')
     Types.DropRowsFunction = DropRowsFunction;
 
     var DeriveColumnFunction = function (newColName, colsToDeriveFrom, functionToDeriveWith) {
+        console.log(functionToDeriveWith);
         GenericFunction.call(this);
         this.newColName = newColName;
         this.colsToDeriveFrom = colsToDeriveFrom;
@@ -89,13 +90,14 @@ angular.module('grafterizerApp')
         this.displayName = "derive-column";
         if (functionToDeriveWith !== null) {
             if (!(functionToDeriveWith instanceof CustomFunctionDeclaration) && functionToDeriveWith.__type === "CustomFunctionDeclaration") {
+                console.log("here");
                 functionToDeriveWith = CustomFunctionDeclaration.revive(functionToDeriveWith);
             }
             if (!(functionToDeriveWith instanceof Prefixer) && functionToDeriveWith.__type === "Prefixer") {
                 functionToDeriveWith = Prefixer.revive(functionToDeriveWith);
             }
         }
-
+        
         this.functionToDeriveWith = functionToDeriveWith;
         this.__type = "DeriveColumnFunction";
     };
@@ -103,13 +105,21 @@ angular.module('grafterizerApp')
         return new DeriveColumnFunction(data.newColName, data.colsToDeriveFrom, data.functionToDeriveWith);
     };
     DeriveColumnFunction.prototype.generateClojure = function() {
-        var values = [jsedn.sym("derive-column"),
-                      this.newColName, this.colsToDeriveFrom];
-
-        if (this.functionToDeriveWith) {
-            values.push(this.functionToDeriveWith);
+        var colsToDeriveFromClj = new jsedn.Vector([]);
+        var flag = false;
+        for(var i = 0; i < this.colsToDeriveFrom.length; ++i){
+            colsToDeriveFromClj.val.push(new jsedn.kw(':' + this.colsToDeriveFrom[i]));
+            console.log(colsToDeriveFromClj);
+            flag=true;
         }
-
+        var values = [jsedn.sym("derive-column"),
+                      this.newColName ? new jsedn.kw(':' + this.newColName) : new jsedn.kw(':unnamed'), colsToDeriveFromClj];
+        
+        console.log(this.functionToDeriveWith.name);
+        console.log(this.functionToDeriveWith);
+        if (this.functionToDeriveWith) {
+            values.push(jsedn.sym(this.functionToDeriveWith.name));
+        }
         return new jsedn.List(values);
     };
     Types.DeriveColumnFunction = DeriveColumnFunction;
@@ -170,6 +180,15 @@ angular.module('grafterizerApp')
     };
     MakeDatasetFunction.revive = function (data) {
         return new MakeDatasetFunction(data.columnsArray);
+    };
+    MakeDatasetFunction.prototype.generateClojure = function() {
+        console.log("COLUMNS ARRAY", this.columnsArray);
+        //(make-dataset [:name :sex :age])
+        var i, colNamesClj = new jsedn.Vector([]);
+        for (i=0; i < this.columnsArray.length ; ++i){
+            colNamesClj.val.push(new jsedn.kw(':' + this.columnsArray[i]));
+        }
+        return new jsedn.List([jsedn.sym("make-dataset"), colNamesClj]);
     };
     Types.MakeDatasetFunction = MakeDatasetFunction;
 
@@ -351,7 +370,7 @@ angular.module('grafterizerApp')
     Property.revive = function (data) {
         return new Property(data.prefix, data.propertyName, data.subElements);
     };
-    
+
     Types.Property = Property;
 
     var ColumnLiteral = function (literalText, subElements) {
@@ -446,7 +465,7 @@ angular.module('grafterizerApp')
             pipelines=[];
         if(!graphs)
             graphs=[];
-            
+
         for (i = 0; i < customFunctionDeclarations.length; ++i) {
             cfd = customFunctionDeclarations[i];
             if (!(cfd instanceof CustomFunctionDeclaration)  && cfd.__type === "CustomFunctionDeclaration") {
@@ -529,6 +548,20 @@ angular.module('grafterizerApp')
         }
         this.customFunctionDeclarations.push(new CustomFunctionDeclaration(name, clojureCode));
         return true;
+    };
+    Transformation.prototype.findPrefixerOrCustomFunctionByName = function(name) {
+        var i;
+        for(i = 0; i < this.prefixers.length; ++i) {
+            if(this.prefixers[i].name == name){
+                return this.prefixers[i];
+            }
+        }
+        for(i = 0; i < this.customFunctionDeclarations.length; ++i) {
+            if(this.customFunctionDeclarations[i].name == name){
+                return this.customFunctionDeclarations[i];
+            }
+        }
+        return null;
     };
 
     // AngularJS will instantiate a singleton by calling "new" on this function

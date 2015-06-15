@@ -12,9 +12,20 @@ angular.module('grafterizerApp')
         templateUrl: 'views/deriveColumnFunction.html',
         restrict: 'E',
         link: function postLink(scope, element, attrs) {
+            if (!scope.function) {
+                scope.function = new transformationDataModel.DeriveColumnFunction('', [], null);
+            }
             scope.$parent.generateCurrFunction = function(){
-                return new transformationDataModel.DeriveColumnFunction("todo", "todo", "todo");
+                console.log(scope.$parent.transformation.findPrefixerOrCustomFunctionByName(scope.function.functionToDeriveWith));
+
+                // TODO fix selected function bug
+
+                return new transformationDataModel.DeriveColumnFunction(
+                    scope.function.newColName,
+                    scope.function.colsToDeriveFrom,
+                    scope.$parent.transformation.findPrefixerOrCustomFunctionByName(scope.function.functionToDeriveWith));
             };
+            console.log(scope);
         }
     };
 });
