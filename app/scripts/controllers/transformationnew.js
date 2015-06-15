@@ -26,7 +26,10 @@ angular.module('grafterizerApp')
   	$scope.clojure = "";
     var prefixer = new transformationDataModel.Prefixer("examplePrefixer", "http://www.asdf.org/#/");
     var customFunctionDeclaration = new transformationDataModel.CustomFunctionDeclaration("exampleCustomFunct", "(defn example asdf)");
-    $scope.pipeline = new transformationDataModel.Pipeline([]);
+    $scope.pipeline = new transformationDataModel.Pipeline([
+                    new transformationDataModel.CustomCode("roger", "bob"),
+                    new transformationDataModel.DropRowsFunction(4),
+                    new transformationDataModel.CustomCode("lapin", "lapin")]);
     $scope.transformation = new transformationDataModel.Transformation([customFunctionDeclaration], [prefixer], [$scope.pipeline], []);
 
     window.canard = $scope;
@@ -85,5 +88,31 @@ angular.module('grafterizerApp')
             .hideDelay(6000)
           );
       }
-    })
+    });
+
+    $scope.editPrefixers = function () {
+        $scope.originalPrefixers = [];
+        angular.copy($scope.transformation.prefixers, $scope.originalPrefixers);
+        $mdDialog.show({
+            templateUrl: 'views/editprefixes.html',
+            controller: 'EditprefixersCtrl',
+            scope: $scope.$new(false, $scope)
+        }).then(function() {
+        }, function() {
+            angular.copy($scope.originalPrefixers, $scope.transformation.prefixers);
+        });
+    };
+
+    $scope.defineCustomFunctions = function () {
+        $scope.originalCustomFunctionDeclarations = [];
+        angular.copy($scope.transformation.customFunctionDeclarations, $scope.originalCustomFunctionDeclarations);
+        $mdDialog.show({
+            templateUrl: 'views/createcustomfunction.html',
+            controller: 'CustomfunctionsdialogcontrollerCtrl',
+            scope: $scope.$new(false, $scope)
+        }).then(function() {
+        }, function() {
+            angular.copy($scope.originalCustomFunctionDeclarations, $scope.transformation.customFunctionDeclarations);
+        }); 
+    };
   });
