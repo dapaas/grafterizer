@@ -8,7 +8,7 @@
  * Controller of the grafterizerApp
  */
 angular.module('grafterizerApp')
-  .controller('PreviewCtrl', function ($scope, ontotextAPI, PipeService, $timeout, $stateParams) {
+  .controller('PreviewCtrl', function ($scope, ontotextAPI, PipeService, $timeout, $stateParams, generateClojure) {
     // TODO IT DOES WORK
     $scope.$parent.showPreview = true;
     $scope.$on('$destroy', function(){
@@ -40,8 +40,10 @@ angular.module('grafterizerApp')
     $scope.selectedDistribution = $stateParams.distribution;
 
     var previewTransformation = function (redirect){
-        PipeService.preview($scope.selectedDistribution, $scope.$parent.id)
+        var clojure = generateClojure.fromTransformation($scope.$parent.transformation);
+        PipeService.preview($scope.selectedDistribution, clojure)
             .success(function(data) {
+                delete $scope.graftwerkException;
                 $scope.data = data;
                 if (redirect) {
                     $timeout(function () {
@@ -49,18 +51,28 @@ angular.module('grafterizerApp')
                     });
                 }
             }).error(function(data) {
-                $scope.data = data;
+                $scope.graftwerkException = data.raw;
+                // $scope.data = data;
                 $timeout(function () {
-                    $scope.selectedTabIndex = 3;
+                    $scope.selectedTabIndex = 2;
                 });
             });
     };
 
-    $scope.$on('preview-request', function(){
+    var throttlePreview = _.throttle(function(){
         if ($scope.selectedDistribution) {
             previewTransformation(false);
         }
-    });
+    }, 1000);
+
+    $scope.$watch('transformation', function(){
+      if ($scope.transformation){
+        throttlePreview();
+      }
+    }, true);
+
+    $scope.$on('preview-request', throttlePreview);
+
     $scope.$watch('selectedDistribution', function(){
         if ($scope.selectedDistribution) {
             delete $scope.originalData; 

@@ -423,6 +423,11 @@ module.exports = function (grunt) {
           cwd: 'bower_components/components-font-awesome',
           src: 'fonts/*',
           dest: '<%= yeoman.dist %>'
+        }, {
+          expand: true,
+          cwd: 'bower_components/angular-ui-grid',
+          src: '*.{svg,ttf,woff,eot}',
+          dest: '<%= yeoman.dist %>/styles'
         }]
       },
       styles: {

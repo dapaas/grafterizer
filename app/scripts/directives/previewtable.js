@@ -9,7 +9,7 @@
 angular.module('grafterizerApp')
   .directive('previewTable', function () {
     return {
-      template: '<div ui-grid="gridOptions" class="sin-grid md-whiteframe-z1" ui-grid-auto-resize></div>',
+      template: '<div ui-grid="gridOptions" class="sin-grid md-whiteframe-z1" ui-grid-auto-resize><div class="watermark" ng-show="!gridOptions.data.length">\u2205</div></div>',
       restrict: 'E',
       scope: {
         data: '=ngModel'
@@ -25,7 +25,7 @@ angular.module('grafterizerApp')
 
         scope.$watch('data', function(){
             var data = scope.data;
-            if (!data) {
+            if (!data || !data.hasOwnProperty(":rows")) {
                 scope.gridOptions.data = null;
                 return;
             }

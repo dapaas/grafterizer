@@ -44,17 +44,20 @@ angular.module('grafterizerApp')
         .hideDelay(3000)
       );
     };
-    this.preview = function(distributionUri, transformationUri) {
+    this.preview = function(distributionUri, clojure) {
         return $http({
             // url: urlBase+"/poney",
             url: urlBase+"/lapin",
-            method: 'GET',
-            params: {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
                 distributionUri: distributionUri,
-                transformationUri: transformationUri
+                clojure: clojure
             },
             transformResponse: [transformEdnResponse]
-        }).error(errorHandler);;
+        });
     };
 
     this.original = function(distributionUri) {
@@ -65,12 +68,12 @@ angular.module('grafterizerApp')
                 distributionUri: distributionUri
             },
             transformResponse: [transformEdnResponse]
-        }).error(errorHandler);;
+        }).error(errorHandler);
     };
 
   	this.pipe = function(transformationId, fileId) {
   		var path = urlBase+"/pipe/"+transformationId+"/"+fileId+".json";
 
-  		return $http.get(path).error(errorHandler);;
+  		return $http.get(path).error(errorHandler);
   	};
   });
