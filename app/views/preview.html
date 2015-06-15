@@ -33,15 +33,12 @@
             <preview-table ng-model="originalData.edn" hide-headers></preview-table>
         </md-tab-body>
     </md-tab>
-    <md-tab label="Processed">
+    <md-tab label="Output">
         <md-tab-body>
+            <div class="md-whiteframe-z5 md-body-2 md-warm error-infos" ng-show="graftwerkException">
+                {{graftwerkException}}
+            </div>
             <preview-table ng-model="data.edn"></preview-table>
-        </md-tab-body>
-    </md-tab>
-    <md-tab label="Raw">
-        <md-tab-body>
-        <!-- {{$parent.selectedDistribution}} -->
-            <preview-raw ng-model="data.raw"></preview-raw>
         </md-tab-body>
     </md-tab>
 </md-tabs>
