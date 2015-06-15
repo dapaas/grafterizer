@@ -15,6 +15,7 @@ angular.module('grafterizerApp')
     $rootScope,
     $state,
     $mdToast,
+    $mdDialog,
     transformationDataModel,
     generateClojure) {
 
