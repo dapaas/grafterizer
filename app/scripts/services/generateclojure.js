@@ -568,4 +568,47 @@ this.fromTransformation = function(transformation) {
 	return generateGrafterCode(transformation);
 };
 
+this.fromTransformation = function(){
+    // return 'no';
+    return '(defn ->integer\n'+
+'  "An example transformation function that converts a string to an integer"\n'+
+'  [s]\n'+
+'  (Integer/parseInt s))\n'+
+'\n'+
+'(def base-domain (prefixer "http://my-domain.com"))\n'+
+'\n'+
+'(def base-graph (prefixer (base-domain "/graph/")))\n'+
+'\n'+
+'(def base-id (prefixer (base-domain "/id/")))\n'+
+'\n'+
+'(def base-vocab (prefixer (base-domain "/def/")))\n'+
+'\n'+
+'(def base-data (prefixer (base-domain "/data/")))\n'+
+'\n'+
+'(def make-graph\n'+
+'  (graph-fn [{:keys [name sex age person-uri gender]}]\n'+
+'            (graph (base-graph "example")\n'+
+'                   [person-uri\n'+
+'                    [rdf:a foaf:Person]\n'+
+'                    [foaf:gender sex]\n'+
+'                    [foaf:age age]\n'+
+'                    [foaf:name (s name)]])))\n'+
+'\n'+
+'(defpipe my-pipe\n'+
+'  "Pipeline to convert tabular persons data into a different tabular format."\n'+
+'  [data-file]\n'+
+'  (-> (read-dataset data-file :format :csv)\n'+
+'      (drop-rows 1)\n'+
+'      (make-dataset [:name :sex :age])\n'+
+'      (derive-column :person-uri [:name] base-id)\n'+
+'      (mapc {:age ->integer\n'+
+'             :sex {"f" (s "female")\n'+
+'                   "m" (s "male")}})))\n'+
+'\n'+
+'(defgraft my-graft\n'+
+'  "Pipeline to convert the tabular persons data sheet into graph data."\n'+
+'  my-pipe make-graph)';
+
+};
+
 });
