@@ -438,6 +438,15 @@ angular.module('grafterizerApp')
     var Transformation = function (customFunctionDeclarations, prefixers, pipelines, graphs) {
         // validate that inputs are revived
         var i, cfd, prefixer, pipeline, graph;
+        if(!customFunctionDeclarations)
+            customFunctionDeclarations=[];
+        if(!prefixers)
+            prefixers=[];
+        if(!pipelines)
+            pipelines=[];
+        if(!graphs)
+            graphs=[];
+            
         for (i = 0; i < customFunctionDeclarations.length; ++i) {
             cfd = customFunctionDeclarations[i];
             if (!(cfd instanceof CustomFunctionDeclaration)  && cfd.__type === "CustomFunctionDeclaration") {
