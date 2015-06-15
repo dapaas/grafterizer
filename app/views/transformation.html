@@ -34,37 +34,14 @@
         </md-tab>
         <md-tab label="Pipeline">
             <md-tab-body>
-                <!--       <md-toolbar class="md-accent md-hue-1">
-<div class="md-toolbar-tools">
-<md-select ng-model="selectedTransformationAction">
-<md-select-label>Action</md-select-label>
-<md-option value="edit-prefixers" ng-click="editPrefixers()">Edit prefixes...</md-option>
-<md-option value="create-custom-function" ng-click="createCustomFunction()">Define custom functions...</md-option>
-<md-option value="preview-pipeline" ng-click="previewPipeline()">Preview code...</md-option>
-<md-option value="modify-rdf-mapping" ng-click="modifyMapping()">Modify RDF mapping...</md-option>
-</md-select>
-</div>
-</md-toolbar>
--->      <md-fab-toolbar md-open="fabtoolbar.isOpen" class="md-accent md-left">
-                <md-fab-trigger class="align-with-text">
-                    <md-button aria-label="menu" class="md-fab md-primary md-hue-1">
-                        <i class="fa fa-wrench" ng-hide="fabtoolbar.isOpen"></i>
-                        <md-icon style="display:none"></md-icon>
-                    </md-button>
-                </md-fab-trigger>
-                <md-toolbar>
-                    <md-fab-actions class="md-toolbar-tools">
-                        <md-button aria-label="comment">
-                            <i class="fa fa-cubes"></i> Demo
+                <div class="md-padding">
+                    <md-button aria-label="Edit prefixes" ng-click="editPrefixers()">
+                        <i class="fa fa-cubes"></i> Edit prefixes
                         </md-button>
-                        <md-button aria-label="label">
-                            <i class="fa fa-file"></i> Files
+                    <md-button aria-label="Define custom functions" ng-click="defineCustomFunctions()">
+                        <i class="fa fa-code"></i> Define custom functions
                         </md-button>
-                        <md-button aria-label="photo">
-                            <i class="fa fa-dashboard"></i> Datasets</md-button>
-                    </md-fab-actions>
-                </md-toolbar>
-                </md-fab-toolbar>
+                </div>
                 <div class="md-padding">
                     <pipeline pipeline="pipeline"></pipeline></div>
             </md-tab-body>
