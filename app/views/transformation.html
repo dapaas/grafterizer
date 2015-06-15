@@ -5,7 +5,7 @@
         <i class="fa fa-upload"></i>
     </md-button>
     <md-tabs class="md-accent no-border-radius md-whiteframe-z5" flex
-             md-no-disconnect md-swipe-content="">
+             md-no-disconnect md-swipe-content="" md-selected="selectedTabIndex">
         <md-tab label="Metadata">
             <md-tab-body>
                 <form name="transformationForm" class="md-padding">
@@ -37,10 +37,10 @@
                 <div class="md-padding">
                     <md-button aria-label="Edit prefixes" ng-click="editPrefixers()">
                         <i class="fa fa-cubes"></i> Edit prefixes
-                        </md-button>
+                    </md-button>
                     <md-button aria-label="Define custom functions" ng-click="defineCustomFunctions()">
                         <i class="fa fa-code"></i> Define custom functions
-                        </md-button>
+                    </md-button>
                 </div>
                 <div class="md-padding">
                     <pipeline pipeline="pipeline"></pipeline></div>
