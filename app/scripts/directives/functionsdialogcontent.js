@@ -18,7 +18,7 @@ angular.module('grafterizerApp')
         },
         link: function postLink(scope, element, attrs) {
             scope.generateCurrFunction = function(){
-                console.error("todo");
+                console.error("generic generateCurrFunction");
             };
             scope.add = function(){
                 $mdDialog.hide(scope.generateCurrFunction());

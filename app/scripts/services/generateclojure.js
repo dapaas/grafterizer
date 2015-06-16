@@ -8,433 +8,434 @@
  * Service in the grafterizerApp.
  */
 angular.module('grafterizerApp')
-  .service('generateClojure', function () {
-/***************************************************************************
+    .service('generateClojure', function (transformationDataModel) {
+    /***************************************************************************
     Main Grafter/Clojure generation variables and functions.
 ****************************************************************************/
 
-var grafterSupportedRDFPrefixes = [
-    {name: 'dcat', text: ""},
-    {name: 'dcterms', text: ""},
-    {name: 'foaf', text: ""},
-    {name: 'org', text: ""},
-    {name: 'os', text: ""},
-    {name: 'owl', text: ""},
-    {name: 'pmd', text: ""},
-    {name: 'qb', text: ""},
-    {name: 'rdf', text: ""},
-    {name: 'sdmx-attribute', text: ""},
-    {name: 'sdmx-measure', text: ""},
-    {name: 'sdmx-concept', text: ""},
-    {name: 'skos', text: ""},
-    {name: 'vcard', text: ""},
-    {name: 'void', text: ""},
-    {name: 'xsd', text: ""}
-];
+    var grafterSupportedRDFPrefixes = [
+        {name: 'dcat', text: ""},
+        {name: 'dcterms', text: ""},
+        {name: 'foaf', text: ""},
+        {name: 'org', text: ""},
+        {name: 'os', text: ""},
+        {name: 'owl', text: ""},
+        {name: 'pmd', text: ""},
+        {name: 'qb', text: ""},
+        {name: 'rdf', text: ""},
+        {name: 'sdmx-attribute', text: ""},
+        {name: 'sdmx-measure', text: ""},
+        {name: 'sdmx-concept', text: ""},
+        {name: 'skos', text: ""},
+        {name: 'vcard', text: ""},
+        {name: 'void', text: ""},
+        {name: 'xsd', text: ""}
+    ];
 
-function isSupportedPrefix(prefixName){
-    for(i=0;i<grafterSupportedRDFPrefixes.length; ++i){
-        if(grafterSupportedRDFPrefixes[i]['name'] === prefixName)
-            return true;
+    function isSupportedPrefix(prefixName){
+        for(i=0;i<grafterSupportedRDFPrefixes.length; ++i){
+            if(grafterSupportedRDFPrefixes[i]['name'] === prefixName)
+                return true;
+        }
+        return false;
     }
-    return false;
-}
 
-var pipelineFunctions = new jsedn.List([]);
+    var pipelineFunctions = new jsedn.List([]);
 
-var pipeline = new jsedn.List([jsedn.sym("defn"), jsedn.sym("pipeline"), new jsedn.Vector([new jsedn.sym("dataset")]),
-                               new jsedn.List([jsedn.sym("->"), jsedn.sym("dataset")])]);
+    var pipeline = new jsedn.List([jsedn.sym("defn"), jsedn.sym("pipeline"), new jsedn.Vector([new jsedn.sym("dataset")]),
+                                   new jsedn.List([jsedn.sym("->"), jsedn.sym("dataset")])]);
 
-/* Holds the individual declarations. Used to form the declarations object that can then be rendered in Clojure. */
-var declarationsList = new jsedn.List([
-    jsedn.kw(":require"),
-    new jsedn.Vector([jsedn.sym("grafter.rdf"), jsedn.kw(":refer"), jsedn.kw(":all")]),
-    new jsedn.Vector([jsedn.sym("grafter.tabular"), jsedn.kw(":refer"), jsedn.kw(":all")]),
-    new jsedn.Vector([jsedn.sym("grafter.parse"), jsedn.kw(":refer"), jsedn.kw(":all")]),
-    new jsedn.Vector([jsedn.sym("grafter.sequences"), jsedn.kw(":refer"), jsedn.kw(":all")]),
-    new jsedn.Vector([jsedn.sym("grafter.rdf.sesame"), jsedn.kw(":as"), jsedn.sym("ses")]),
-    new jsedn.Vector([jsedn.sym("clojure-csv.core"), jsedn.kw(":as"), jsedn.sym("csv")]),
-    new jsedn.Vector([jsedn.sym("clojure.string"), jsedn.kw(":as"), jsedn.sym("cstr")]),
-    new jsedn.Vector([jsedn.sym("incanter.core")]),
-    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.dcat"), jsedn.kw(":refer"), jsedn.kw(":all")]),
-    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.dcterms"), jsedn.kw(":refer"), jsedn.kw(":all")]),
-    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.foaf"), jsedn.kw(":refer"), jsedn.kw(":all")]),
-    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.ons-geography"), jsedn.kw(":refer"), jsedn.kw(":all")]),
-    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.org"), jsedn.kw(":refer"), jsedn.kw(":all")]),
-    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.os"), jsedn.kw(":refer"), jsedn.kw(":all")]),
-    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.owl"), jsedn.kw(":refer"), jsedn.kw(":all")]),
-    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.pmd"), jsedn.kw(":refer"), jsedn.kw(":all")]),
-    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.qb"), jsedn.kw(":refer"), jsedn.kw(":all")]),
-    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.rdf"), jsedn.kw(":refer"), jsedn.kw(":all")]),
-    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.sdmx-attribute"), jsedn.kw(":refer"), jsedn.kw(":all")]),
-    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.sdmx-concept"), jsedn.kw(":refer"), jsedn.kw(":all")]),
-    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.sdmx-measure"), jsedn.kw(":refer"), jsedn.kw(":all")]),
-    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.skos"), jsedn.kw(":refer"), jsedn.kw(":all")]),
-    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.vcard"), jsedn.kw(":refer"), jsedn.kw(":all")]),
-    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.void"), jsedn.kw(":refer"), jsedn.kw(":all")]),
-    new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.xsd"), jsedn.kw(":refer"), jsedn.kw(":all")])
-    
-]);
+    /* Holds the individual declarations. Used to form the declarations object that can then be rendered in Clojure. */
+    var declarationsList = new jsedn.List([
+        jsedn.kw(":require"),
+        new jsedn.Vector([jsedn.sym("grafter.rdf"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+        new jsedn.Vector([jsedn.sym("grafter.tabular"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+        new jsedn.Vector([jsedn.sym("grafter.parse"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+        new jsedn.Vector([jsedn.sym("grafter.sequences"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+        new jsedn.Vector([jsedn.sym("grafter.rdf.sesame"), jsedn.kw(":as"), jsedn.sym("ses")]),
+        new jsedn.Vector([jsedn.sym("clojure-csv.core"), jsedn.kw(":as"), jsedn.sym("csv")]),
+        new jsedn.Vector([jsedn.sym("clojure.string"), jsedn.kw(":as"), jsedn.sym("cstr")]),
+        new jsedn.Vector([jsedn.sym("incanter.core")]),
+        new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.dcat"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+        new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.dcterms"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+        new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.foaf"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+        new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.ons-geography"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+        new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.org"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+        new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.os"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+        new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.owl"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+        new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.pmd"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+        new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.qb"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+        new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.rdf"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+        new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.sdmx-attribute"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+        new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.sdmx-concept"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+        new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.sdmx-measure"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+        new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.skos"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+        new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.vcard"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+        new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.void"), jsedn.kw(":refer"), jsedn.kw(":all")]),
+        new jsedn.Vector([jsedn.sym("grafter.rdf.ontologies.xsd"), jsedn.kw(":refer"), jsedn.kw(":all")])
 
-/* Declarations object. Used to render the individual declarations with the needed enclosing definitions in Clojure. */
-var declarations;
+    ]);
 
-/* Holds the individual declarations. Used to form the declarations object that can then be rendered in Clojure. */
-var prefixers = [];
+    /* Declarations object. Used to render the individual declarations with the needed enclosing definitions in Clojure. */
+    var declarations;
 
-/* Holds the jsedn list of user functions. Used to render them in Clojure code. */
-var userFunctions = [];
+    /* Holds the individual declarations. Used to form the declarations object that can then be rendered in Clojure. */
+    var prefixers = [];
 
-/* Jsedn definition of the graph-building function. */
-var graphBuilderTemplate;
+    /* Holds the jsedn list of user functions. Used to render them in Clojure code. */
+    var userFunctions = [];
 
-var graphFunction;
+    /* Jsedn definition of the graph-building function. */
+    var graphBuilderTemplate;
 
-/* List of the graphs that will be included in the graph-building function. */
-var graphs = new jsedn.List([]);
+    var graphFunction;
 
-/* List of column keys derived through the GUI pipeline functions */
-var columnKeys = new jsedn.Vector([]);
+    /* List of the graphs that will be included in the graph-building function. */
+    var graphs = new jsedn.List([]);
 
-/* Interface for alerts about errors. To be used to connect to other interface components when we integrate the GUI. */
-function alertInterface(error, errorString){
-    /*
+    /* List of column keys derived through the GUI pipeline functions */
+    var columnKeys = new jsedn.Vector([]);
+
+    /* Interface for alerts about errors. To be used to connect to other interface components when we integrate the GUI. */
+    function alertInterface(error, errorString){
+        /*
     TODO re-define me when integrating with the rest of the UI
     */
-    alert(error, errorString);
-}
+        console.log(error, errorString);
+    }
 
-/* Adds a namespace declaration to the  */
-function addGrafterDeclaration(aDeclaration){
-    declarationsList.val.push(aDeclaration);
-}
+    /* Adds a namespace declaration to the  */
+    function addGrafterDeclaration(aDeclaration){
+        declarationsList.val.push(aDeclaration);
+    }
 
-/* Adds a prefixer to the list of pre-defined prefixers */
-function addGrafterPrefixer(name, prefixString){
-	console.log(name, prefixString);
-    var prefixer = new jsedn.List([jsedn.sym("def"), jsedn.sym(name), new jsedn.List([jsedn.sym("prefixer"), prefixString])]);
-    prefixers.push(prefixer);
-}
+    /* Adds a prefixer to the list of pre-defined prefixers */
+    function addGrafterPrefixer(name, prefixString){
+        console.log(name, prefixString);
+        var prefixer = new jsedn.List([jsedn.sym("def"), jsedn.sym(name), new jsedn.List([jsedn.sym("prefixer"), prefixString])]);
+        prefixers.push(prefixer);
+    }
 
-/* Constructs the namespace declarations used by Grafter */
-function constructGrafterDeclarations(){
-    declarations = new jsedn.List([
-        jsedn.sym("ns"), jsedn.sym("sintef-grafter-gui-template.core"), declarationsList
-    ]);
-    return declarations;
-}
+    /* Constructs the namespace declarations used by Grafter */
+    function constructGrafterDeclarations(){
+        declarations = new jsedn.List([
+            jsedn.sym("ns"), jsedn.sym("sintef-grafter-gui-template.core"), declarationsList
+        ]);
+        return declarations;
+    }
 
-/* Constructs the collection of defined prefixers for RDF-isation */
-function constructGrafterPrefixersArray(){
-    // we make a copy of the prefixers array that we eventually return
-    var result = prefixers.slice();
+    /* Constructs the collection of defined prefixers for RDF-isation */
+    function constructGrafterPrefixersArray(){
+        // we make a copy of the prefixers array that we eventually return
+        var result = prefixers.slice();
 
-    /* the prefixers array needs to be re-initialized so that we don't append new values to it when generating the Grafter code */
-    prefixers=[];
-    return result;
-}
+        /* the prefixers array needs to be re-initialized so that we don't append new values to it when generating the Grafter code */
+        prefixers=[];
+        return result;
+    }
 
-/* Adds a user function rendered as a jsedn object to the collection of user functions */
-function addUserFunction(userFunctionEdn){
-    userFunctions.push(userFunctionEdn);
-}
+    /* Adds a user function rendered as a jsedn object to the collection of user functions */
+    function addUserFunction(userFunctionEdn){
+        userFunctions.push(userFunctionEdn);
+    }
 
-/* Calls the jsedn parser and returns the parsed user function */
-function parseAndAddUserFunction(userFunctionString){
-    var result = parseEdnFromString(userFunctionString, "Error parsing user function!");
-    if(result == null)
-        return false;
+    /* Calls the jsedn parser and returns the parsed user function */
+    function parseAndAddUserFunction(userFunctionString){
+        var result = parseEdnFromString(userFunctionString, "Error parsing user function!");
+        if(result == null)
+            return false;
 
-    addUserFunction(result);
-    return true;
-}
+        addUserFunction(result);
+        return true;
+    }
 
-function constructUserFunctions(){
-    // we make a copy of the user functions array that we eventually return
-    var result = userFunctions.slice();
+    function constructUserFunctions(){
+        // we make a copy of the user functions array that we eventually return
+        var result=[];
+        if(userFunctions)
+            result = userFunctions.slice();
 
-    /* the user functions array needs to be re-initialized so that we don't append new values to it when generating the Grafter code */
-    userFunctions = [];
+        /* the user functions array needs to be re-initialized so that we don't append new values to it when generating the Grafter code */
+        userFunctions = [];
 
-    return result;
-}
+        return result;
+    }
 
-/* Constructs and returns the function used for transforming data to RDF */
-function constructGraphTemplate(){
-    graphBuilderTemplate = new jsedn.List([
-        jsedn.sym("def"), jsedn.sym("make-graph"),
-        graphFunction
-    ]);
+    /* Constructs and returns the function used for transforming data to RDF */
+    function constructGraphTemplate(){
+        graphBuilderTemplate = new jsedn.List([
+            jsedn.sym("def"), jsedn.sym("make-graph"),
+            graphFunction
+        ]);
 
-    return graphBuilderTemplate;
-}
+        return graphBuilderTemplate;
+    }
 
-/* Creates the Grafter "graph-fn" function and encloses the separate graph-creating Grafter functions */
-function createGraphFunction(keysString){
+    /* Creates the Grafter "graph-fn" function and encloses the separate graph-creating Grafter functions */
+    function createGraphFunction(keysString){
 
-    graphFunction = new jsedn.List([
-        jsedn.sym("graph-fn"), new jsedn.Vector([
-            new jsedn.Map([
-                jsedn.kw(":keys"), 
-                parseEdnFromString(keysString, "Error parsing column keys Clojure string.")
+        graphFunction = new jsedn.List([
+            jsedn.sym("graph-fn"), new jsedn.Vector([
+                new jsedn.Map([
+                    jsedn.kw(":keys"), 
+                    parseEdnFromString(keysString, "Error parsing column keys Clojure string.")
+                ])
             ])
-        ])
-    ]);
-    graphs.map(function(arg){
-        graphFunction.val.push(arg);
-    });
-}
+        ]);
+        graphs.map(function(arg){
+            graphFunction.val.push(arg);
+        });
+    }
 
-/* Creates a new graph-creating Grafter function "graph" and adds it to an array used to create the "graph-fn" function */
-function addGraph(graphURI, triplesString){
-    var triplesObject = parseTriplesFromString(triplesString);
+    /* Creates a new graph-creating Grafter function "graph" and adds it to an array used to create the "graph-fn" function */
+    function addGraph(graphURI, triplesString){
+        var triplesObject = parseTriplesFromString(triplesString);
 
-    var graphToAdd = new jsedn.List([
-        jsedn.sym("graph"), graphURI,
-        triplesObject
-    ]);
+        var graphToAdd = new jsedn.List([
+            jsedn.sym("graph"), graphURI,
+            triplesObject
+        ]);
 
-    graphs.val.push(graphToAdd);
-}
+        graphs.val.push(graphToAdd);
+    }
 
-/* Temporary hack for the initial GUI implementation. Parses an input string (provided by the user) and creates
+    /* Temporary hack for the initial GUI implementation. Parses an input string (provided by the user) and creates
 the corresponding jsedn objects. */
-function parseTriplesFromString(triplesString){
-    return parseEdnFromString(triplesString, "Error parsing triples string.");
-}
+    function parseTriplesFromString(triplesString){
+        return parseEdnFromString(triplesString, "Error parsing triples string.");
+    }
 
-/* Generic clojure code parser. Outputs a message to the alertInterface function 
+    /* Generic clojure code parser. Outputs a message to the alertInterface function 
 in case an error occurs during parsing. 
 */
-function parseEdnFromString(toParse, messageOnError){
-    try{
-        var ednObject = jsedn.parse(toParse);
-        return ednObject;
-    }catch(e){
-        alertInterface(e, messageOnError);
-        return null;
-    }
-}
-
-/* Add a pipeline function (either user-defined or provided by Grafter) to an array which is used to construct the data transformation pipeline. */
-function addPipelineFunction(jsednFunction){
-    if (angular.isFunction(jsednFunction.generateClojure)) {
-        pipelineFunctions.val.push(jsednFunction.generateClojure());
-    }
-}
-
-/* Constructs and returns the data transformation pipeline. */
-function constructPipeline(){
-    var readDatasetFunct = new jsedn.List([new jsedn.sym("read-dataset"), new jsedn.sym("data-file"), new jsedn.kw(":format"), new jsedn.kw(":csv")]); 
-    console.log("readDatasetFunct", readDatasetFunct);
-    
-    pipeline = null;
-
-    pipeline = new jsedn.List([jsedn.sym("defpipe"), jsedn.sym("my-pipe"), "Pipeline to convert tabular persons data into a different tabular format.", new jsedn.Vector([new jsedn.sym("data-file")]), new jsedn.List([jsedn.sym("->"), readDatasetFunct])]);
-
-    pipelineFunctions.map(function(arg){
-        pipeline.val[4].val.push(arg);
-    });
-    
-    //(read-dataset data-file :format :csv)
-    pipelineFunctions=new jsedn.List([]);
-    return pipeline;
-}
-
-/* Removes a function from the pipeline. TODO IS THIS NEEDED AT ALL?? */
-function removeFunctionFromPipeline(index){
-    pipelineFunctions.val.splice(index, 1);
-}
-
-/* Constructs and returns the RDF creation function. */
-function constructRDFGraphFunction(rdfControl){
-    var graphsJsEdnArray = [];
-    var currentGraph = null;
-    var graphFunction = new jsedn.List([
-                                     new jsedn.sym("graph-fn"), 
-                                     new jsedn.Vector([
-                                         new jsedn.Map([new jsedn.kw(":keys"), columnKeys])
-                                     ])
-                                 ]);
-    var currentGraphJsEdn = null;
-    var currentRootJsEdn = null;
-    
-    for(i=0;i<rdfControl.graphs.length; ++i){
-        currentGraph = rdfControl.graphs[i];
-//        console.log(currentGraph);
-        currentGraphJsEdn = new jsedn.List([jsedn.sym("graph"), currentGraph.graphURI]);
-
-        // construct a vector for each of the roots and add it to the graph jsedn
-        for(j=0;j<currentGraph.graphRoots.length;++j){
-            currentRootJsEdn = constructNodeVectorEdn(currentGraph.graphRoots[j]);
-            currentGraphJsEdn.val.push(currentRootJsEdn);
+    function parseEdnFromString(toParse, messageOnError){
+        try{
+            var ednObject = jsedn.parse(toParse);
+            return ednObject;
+        }catch(e){
+            alertInterface(e, messageOnError);
+            return null;
         }
-//        console.log("GRAPH " + i + " ENCODED:", currentGraphJsEdn.ednEncode());
-        graphFunction.val.push(currentGraphJsEdn);
     }
-    var result = new jsedn.List([jsedn.sym("def"), jsedn.sym("make-graph"), graphFunction]);
 
-    return result;
-}
-
-function constructNodeVectorEdn(node){
-
-    if (node instanceof Property) {
-        if(node.subElements.length === 0){
-            alertInterface("Error found in RDF mapping for the sub-elements node " + node.propertyName + "!");
-            return;
+    /* Add a pipeline function (either user-defined or provided by Grafter) to an array which is used to construct the data transformation pipeline. */
+    function addPipelineFunction(jsednFunction){
+        if (angular.isFunction(jsednFunction.generateClojure)) {
+            pipelineFunctions.val.push(jsednFunction.generateClojure());
         }
-        var propertyValue = node.subElements[0];
-        // [name {either single node or URI node with sub-nodes (as vector)}
-//        console.log("returning prop value");
-        return new jsedn.Vector([constructPropertyJsEdn(node), constructNodeVectorEdn(propertyValue)]);
     }
-    if (node instanceof ColumnLiteral) {
-        if(node.literalValue.trim() === ""){
-            alertInterface("Empty column literal mapping found!");
-        }
-        // return the value as symbol
-        return new jsedn.sym(node.literalValue);
-    }
-    if (node instanceof ConstantLiteral) {
-        if(node.literalValue.trim() === ""){
-            alertInterface("Empty text literal found in RDF mapping!");
-        }
-        // return the value as string
-        return node.literalValue;
-    }
-    if (node instanceof ColumnURI) {
-        if (node.subElements.length == 0){
-            // we terminate by this URI, return the column
-            // TODO check in keywords array if this exists
-            return constructColumnURINodeJsEdn(node);
 
-        } else {
-//            console.log("more than one sub-elements of colURI");
-            // [node-uri-as-generated {sub-1's edn representation} {sub-2's edn representation} ... {sub-n's edn representation}]
-            var allSubElementsVector = new jsedn.Vector([constructColumnURINodeJsEdn(node)]);
-            var subElementEdn;
-//            console.log("node.subElements.length:", node.subElements.length);
-            for(k=0;k<node.subElements.length;++k){
-//                console.log("i", k);
-                subElementEdn = constructNodeVectorEdn(node.subElements[k]);
-//                console.log("subElementEdn:", subElementEdn.ednEncode());
-                allSubElementsVector.val.push(subElementEdn);
-//                console.log("allSubElementsVector:", allSubElementsVector.ednEncode());
+    /* Constructs and returns the data transformation pipeline. */
+    function constructPipeline(){
+        var readDatasetFunct = new jsedn.List([new jsedn.sym("read-dataset"), new jsedn.sym("data-file"), new jsedn.kw(":format"), new jsedn.kw(":csv")]); 
+        console.log("readDatasetFunct", readDatasetFunct);
+
+        pipeline = null;
+
+        pipeline = new jsedn.List([jsedn.sym("defpipe"), jsedn.sym("my-pipe"), "Pipeline to convert tabular persons data into a different tabular format.", new jsedn.Vector([new jsedn.sym("data-file")]), new jsedn.List([jsedn.sym("->"), readDatasetFunct])]);
+
+        pipelineFunctions.map(function(arg){
+            pipeline.val[4].val.push(arg);
+        });
+        //(read-dataset data-file :format :csv)
+        pipelineFunctions=new jsedn.List([]);
+        return pipeline;
+    }
+
+    /* Removes a function from the pipeline. TODO IS THIS NEEDED AT ALL?? */
+    function removeFunctionFromPipeline(index){
+        pipelineFunctions.val.splice(index, 1);
+    }
+
+    /* Constructs and returns the RDF creation function. */
+    function constructRDFGraphFunction(transformation){
+        var i, j, graphsJsEdnArray = [];
+        var currentGraph = null;
+        var graphFunction = new jsedn.List([
+            new jsedn.sym("graph-fn"), 
+            new jsedn.Vector([
+                new jsedn.Map([new jsedn.kw(":keys"), columnKeys])
+            ])
+        ]);
+        var currentGraphJsEdn = null;
+        var currentRootJsEdn = null;
+
+        for(i=0;i<transformation.graphs.length; ++i){
+            currentGraph = transformation.graphs[i];
+            //        console.log(currentGraph);
+            currentGraphJsEdn = new jsedn.List([jsedn.sym("graph"), currentGraph.graphURI]);
+
+            // construct a vector for each of the roots and add it to the graph jsedn
+            for(j=0;j<currentGraph.graphRoots.length;++j){
+                currentRootJsEdn = constructNodeVectorEdn(currentGraph.graphRoots[j]);
+                currentGraphJsEdn.val.push(currentRootJsEdn);
             }
-            return allSubElementsVector;
+            //        console.log("GRAPH " + i + " ENCODED:", currentGraphJsEdn.ednEncode());
+            graphFunction.val.push(currentGraphJsEdn);
         }
-    }
-    if (node instanceof ConstantURI) {
-        if (node.subElements.length == 0){
-            // we terminate by this URI, return the column
-            // TODO check in keywords array if this exists
-            return constructConstantURINodeJsEdn(node);
+        var result = new jsedn.List([jsedn.sym("def"), jsedn.sym("make-graph"), graphFunction]);
 
-        } else {
-            // [node-uri-as-generated {sub-1's edn representation} {sub-2's edn representation} ... {sub-n's edn representation}]
-            var allSubElementsVector = new jsedn.Vector([constructConstantURINodeJsEdn(node)]);
-            var subElementEdn;
-            for(i=0;i<node.subElements.length;++i){
-                subElementEdn = constructNodeVectorEdn(node.subElements[i]);
-                allSubElementsVector.val.push(subElementEdn);
+        return result;
+    }
+
+    function constructNodeVectorEdn(node){
+
+        if (node instanceof transformationDataModel.Property) {
+            if(node.subElements.length === 0){
+                alertInterface("Error found in RDF mapping for the sub-elements node " + node.propertyName + "!");
+                return;
             }
-            return allSubElementsVector;
+            var propertyValue = node.subElements[0];
+            // [name {either single node or URI node with sub-nodes (as vector)}
+            //        console.log("returning prop value");
+            return new jsedn.Vector([constructPropertyJsEdn(node), constructNodeVectorEdn(propertyValue)]);
         }
+        if (node instanceof transformationDataModel.ColumnLiteral) {
+            if(node.literalValue.trim() === ""){
+                alertInterface("Empty column literal mapping found!");
+            }
+            // return the value as symbol
+            return new jsedn.sym(node.literalValue);
+        }
+        if (node instanceof transformationDataModel.ConstantLiteral) {
+            if(node.literalValue.trim() === ""){
+                alertInterface("Empty text literal found in RDF mapping!");
+            }
+            // return the value as string
+            return node.literalValue;
+        }
+        if (node instanceof transformationDataModel.ColumnURI) {
+            if (node.subElements.length == 0){
+                // we terminate by this URI, return the column
+                // TODO check in keywords array if this exists
+                return constructColumnURINodeJsEdn(node);
 
-    }
-    if (node instanceof BlankNode) {
-        // TODO not supported yet
-    }
-}
+            } else {
+                //            console.log("more than one sub-elements of colURI");
+                // [node-uri-as-generated {sub-1's edn representation} {sub-2's edn representation} ... {sub-n's edn representation}]
+                var allSubElementsVector = new jsedn.Vector([constructColumnURINodeJsEdn(node)]);
+                var subElementEdn;
+                //            console.log("node.subElements.length:", node.subElements.length);
+                for(k=0;k<node.subElements.length;++k){
+                    //                console.log("i", k);
+                    subElementEdn = constructNodeVectorEdn(node.subElements[k]);
+                    //                console.log("subElementEdn:", subElementEdn.ednEncode());
+                    allSubElementsVector.val.push(subElementEdn);
+                    //                console.log("allSubElementsVector:", allSubElementsVector.ednEncode());
+                }
+                return allSubElementsVector;
+            }
+        }
+        if (node instanceof transformationDataModel.ConstantURI) {
+            if (node.subElements.length == 0){
+                // we terminate by this URI, return the column
+                // TODO check in keywords array if this exists
+                return constructConstantURINodeJsEdn(node);
 
-function constructPropertyJsEdn(property) {
-    // graph URI as prefix, add nothing
-    var propertyPrefix = property.prefix;
-    var propertyName = property.propertyName;
-    if(propertyPrefix == null) {
-        alertInterface("Property prefix cannot be null:" + propertyName);
-        return;
-    } else if (propertyPrefix == "") {
-        alertInterface("Property prefix cannot be omitted:" + propertyName);
-        return;
-    } else {
-        if(isSupportedPrefix(propertyPrefix.trim())){
-            // assume it's a supported property
-            return new jsedn.sym(propertyPrefix+':'+propertyName);
-        } else {
-            // TODO make a check if we have defined the prefix
-            // some custom prefix, that is hopefully defined in the UI (Edit Prefixes...)
-            return new jsedn.List([new jsedn.sym(propertyPrefix), propertyName]);
+            } else {
+                // [node-uri-as-generated {sub-1's edn representation} {sub-2's edn representation} ... {sub-n's edn representation}]
+                var allSubElementsVector = new jsedn.Vector([constructConstantURINodeJsEdn(node)]);
+                var subElementEdn;
+                for(i=0;i<node.subElements.length;++i){
+                    subElementEdn = constructNodeVectorEdn(node.subElements[i]);
+                    allSubElementsVector.val.push(subElementEdn);
+                }
+                return allSubElementsVector;
+            }
+
+        }
+        if (node instanceof transformationDataModel.BlankNode) {
+            // TODO not supported yet
         }
     }
 
-}
-
-function constructColumnURINodeJsEdn(colURINode) {
-    // graph URI as prefix, add nothing
-    var nodePrefix = colURINode.prefix;
-    var nodeValue = colURINode.column;
-    if(nodePrefix == null) {
-        // base graph URI
-        // ((prefixer "graphURI") nodeValue)
-        return new jsedn.List([new jsedn.List([new jsedn.sym("prefixer"), colURINode.containingGraph.graphURI]), new jsedn.sym(nodeValue)]);
-    } else if (nodePrefix == "") {
-//        console.log(colURINode);
-        // empty prefix - just take the column as symbol
-        // nodeValue
-        return new jsedn.sym(nodeValue);
-    } else {
-        if(isSupportedPrefix(nodePrefix.trim())){
-            // supported prefix - no need to use prefixer - simple library call
-            // nodePrefix:nodeValue (e.g. vcard:Address)
-            alertInterface("Cannot associate column '" + nodeValue + "' with prefix '" + nodePrefix + "'!");
+    function constructPropertyJsEdn(property) {
+        // graph URI as prefix, add nothing
+        var propertyPrefix = property.prefix;
+        var propertyName = property.propertyName;
+        if(propertyPrefix == null) {
+            alertInterface("Property prefix cannot be null:" + propertyName);
             return;
-            //            return new jsedn.sym(nodePrefix + ":" + nodeValue);
+        } else if (propertyPrefix == "") {
+            alertInterface("Property prefix cannot be omitted:" + propertyName);
+            return;
         } else {
-            // TODO make a check if we have defined the prefix
-            // some custom prefix, that is hopefully defined in the UI (Edit Prefixes...)
-            // both are symbols and we get (nodePrefix nodeValue) as a result
-            return new jsedn.List([new jsedn.sym(nodePrefix), new jsedn.sym(nodeValue)]);
+            if(isSupportedPrefix(propertyPrefix.trim())){
+                // assume it's a supported property
+                return new jsedn.sym(propertyPrefix+':'+propertyName);
+            } else {
+                // TODO make a check if we have defined the prefix
+                // some custom prefix, that is hopefully defined in the UI (Edit Prefixes...)
+                return new jsedn.List([new jsedn.sym(propertyPrefix), propertyName]);
+            }
         }
+
     }
 
-}
-
-function constructConstantURINodeJsEdn(constURINode) {
-    // graph URI as prefix, add nothing
-    var nodePrefix = constURINode.prefix;
-    var nodeValue = constURINode.constant;
-    if(nodePrefix == null) {
-        // base graph URI
-        // ((prefixer "graphURI") "nodeValue")
-        return new jsedn.List([new jsedn.List([new jsedn.sym("prefixer"), constURINode.containingGraph.graphURI]), nodeValue]);
-    } else if (nodePrefix == "") {
-        // empty prefix - just take the column as symbol
-        // nodeValue
-        return nodeValue;
-    } else {
-        if(isSupportedPrefix(nodePrefix.trim())){
-
-            // nodePrefix:nodeValue (e.g. vcard:Address)
-            return new jsedn.sym(nodePrefix + ":" + nodeValue);
+    function constructColumnURINodeJsEdn(colURINode) {
+        // graph URI as prefix, add nothing
+        var nodePrefix = colURINode.prefix;
+        var nodeValue = colURINode.column;
+        if(nodePrefix == null) {
+            // base graph URI
+            // ((prefixer "graphURI") nodeValue)
+            return new jsedn.List([new jsedn.List([new jsedn.sym("prefixer"), colURINode.containingGraph.graphURI]), new jsedn.sym(nodeValue)]);
+        } else if (nodePrefix == "") {
+            //        console.log(colURINode);
+            // empty prefix - just take the column as symbol
+            // nodeValue
+            return new jsedn.sym(nodeValue);
         } else {
-            // TODO make a check if we have defined the prefix
-            // some custom prefix, that is hopefully defined in the UI (Edit Prefixes...)
-            // both are symbols and we get (nodePrefix nodeValue) as a result
-            return nodePrefix + nodeValue;
+            if(isSupportedPrefix(nodePrefix.trim())){
+                // supported prefix - no need to use prefixer - simple library call
+                // nodePrefix:nodeValue (e.g. vcard:Address)
+                alertInterface("Cannot associate column '" + nodeValue + "' with prefix '" + nodePrefix + "'!");
+                return;
+                //            return new jsedn.sym(nodePrefix + ":" + nodeValue);
+            } else {
+                // TODO make a check if we have defined the prefix
+                // some custom prefix, that is hopefully defined in the UI (Edit Prefixes...)
+                // both are symbols and we get (nodePrefix nodeValue) as a result
+                return new jsedn.List([new jsedn.sym(nodePrefix), new jsedn.sym(nodeValue)]);
+            }
         }
+
     }
 
-    // prefix null, empty or undefined
-}
+    function constructConstantURINodeJsEdn(constURINode) {
+        // graph URI as prefix, add nothing
+        var nodePrefix = constURINode.prefix;
+        var nodeValue = constURINode.constant;
+        if(nodePrefix == null) {
+            // base graph URI
+            // ((prefixer "graphURI") "nodeValue")
+            return new jsedn.List([new jsedn.List([new jsedn.sym("prefixer"), constURINode.containingGraph.graphURI]), nodeValue]);
+        } else if (nodePrefix == "") {
+            // empty prefix - just take the column as symbol
+            // nodeValue
+            return nodeValue;
+        } else {
+            if(isSupportedPrefix(nodePrefix.trim())){
+
+                // nodePrefix:nodeValue (e.g. vcard:Address)
+                return new jsedn.sym(nodePrefix + ":" + nodeValue);
+            } else {
+                // TODO make a check if we have defined the prefix
+                // some custom prefix, that is hopefully defined in the UI (Edit Prefixes...)
+                // both are symbols and we get (nodePrefix nodeValue) as a result
+                return nodePrefix + nodeValue;
+            }
+        }
+
+        // prefix null, empty or undefined
+    }
 
 
-/***************************************************************************
+    /***************************************************************************
     Convenience functions for generating code corresponding to the Grafter API.
 ****************************************************************************/
 
-/* 
+    /* 
 Creates and returns a 'make-dataset' Grafter function. 
 Prototype:  (make-dataset)
             (make-dataset data)
@@ -442,96 +443,97 @@ Prototype:  (make-dataset)
 
             - dataset is implied 
 */
-function createMakeDataset(columnsJsednSet){
-    var jsednFunction = new jsedn.List([jsedn.sym("make-dataset"), columnsJsednSet]);
-    return jsednFunction;
-}
+    function createMakeDataset(columnsJsednSet){
+        var jsednFunction = new jsedn.List([jsedn.sym("make-dataset"), columnsJsednSet]);
+        return jsednFunction;
+    }
 
-/* 
+    /* 
 Creates and returns a 'drop-rows' Grafter function. 
 Prototype: (drop-rows dataset n) - dataset is implied 
 */
-function createDropRows(numberOfRows){
-    var jsednFunction = new jsedn.List([jsedn.sym("drop-rows"), numberOfRows]);
-    return jsednFunction;
-}
+    function createDropRows(numberOfRows){
+        var jsednFunction = new jsedn.List([jsedn.sym("drop-rows"), numberOfRows]);
+        return jsednFunction;
+    }
 
-/* 
+    /* 
 Creates and returns a 'derive-column' Grafter function. 
 Prototype: (derive-column dataset new-column-name from-cols f) - dataset is implied
 */
-function createDeriveColumn(newColNameJsedn, fromColsJsedn, functionJsedn){
+    function createDeriveColumn(newColNameJsedn, fromColsJsedn, functionJsedn){
 
-    if(typeof functionJsedn == 'undefined' || functionJsedn == null){
-        var jsednFunction = new jsedn.List([jsedn.sym("derive-column"), newColNameJsedn, fromColsJsedn]);
-    }else{
-        var jsednFunction = new jsedn.List([jsedn.sym("derive-column"), newColNameJsedn, fromColsJsedn, functionJsedn]);
+        if(typeof functionJsedn == 'undefined' || functionJsedn == null){
+            var jsednFunction = new jsedn.List([jsedn.sym("derive-column"), newColNameJsedn, fromColsJsedn]);
+        }else{
+            var jsednFunction = new jsedn.List([jsedn.sym("derive-column"), newColNameJsedn, fromColsJsedn, functionJsedn]);
+        }
+
+        return jsednFunction;
     }
 
-    return jsednFunction;
-}
-
-/* 
+    /* 
 Creates and returns a 'mapc' Grafter function in jsedn data model. Takes an array or a hashmap of functions and maps each to the key column of every row.
 Prototype: (mapc dataset fs) - dataset is implied
 */
-function createMapc(functionSetOrArrayJsedn){
-    var jsednFunction = new jsedn.List([jsedn.sym("mapc"), functionSetOrArrayJsedn]);
+    function createMapc(functionSetOrArrayJsedn){
+        var jsednFunction = new jsedn.List([jsedn.sym("mapc"), functionSetOrArrayJsedn]);
 
-    return jsednFunction;
-}
+        return jsednFunction;
+    }
 
-function createCustomCodeForPipeline(code, displayName){
-    var customCodeEdn = parseEdnFromString(code, "Error parsing custom code in " + displayName); 
+    function createCustomCodeForPipeline(code, displayName){
+        var customCodeEdn = parseEdnFromString(code, "Error parsing custom code in " + displayName); 
 
-    return customCodeEdn;
-}
+        return customCodeEdn;
+    }
 
-function generateGrafterCode(transformation){
+    function generateGrafterCode(transformation){
+        console.log("Here1");
+        /* Grafter Declarations */
+        // TODO those are not needed here; may be needed afterwards?
+        //    var grafterDeclarations = constructGrafterDeclarations();
 
-    /* Grafter Declarations */
-// TODO those are not needed here; may be needed afterwards?
-//    var grafterDeclarations = constructGrafterDeclarations();
+        /* Prefixers */
 
-    /* Prefixers */
-
-    var prefixersInGUI = transformation.prefixers;
-    // add only custom prefixers - the Grafter ones are available by default
-    for(var i=0;i<prefixersInGUI.length;++i){
-        var name = prefixersInGUI[i].name;
-        var uri = prefixersInGUI[i].uri;
-        if(name == '' || uri == ''){
-            alertInterface("Name or URI of a prefix empty, ignoring...", "");
-            continue;
+        var prefixersInGUI = transformation.prefixers;
+        // add only custom prefixers - the Grafter ones are available by default
+        for(var i=0;i<prefixersInGUI.length;++i){
+            var name = prefixersInGUI[i].name;
+            var uri = prefixersInGUI[i].uri;
+            if(name == '' || uri == ''){
+                alertInterface("Name or URI of a prefix empty, ignoring...", "");
+                continue;
+            }
+            console.log(name, uri);
+            addGrafterPrefixer(name, uri);
         }
-        console.log(name, uri);
-        addGrafterPrefixer(name, uri);
-    }
 
-    var grafterPrefixers = constructGrafterPrefixersArray();
+        var grafterPrefixers = constructGrafterPrefixersArray();
 
-    /* User functions */
-    var customFunctionsMap = transformation.customFonctionDeclarations;
-    console.log("customFunctionsMap", customFunctionsMap);
+        /* User functions */
+        //    var customFunctionsMap = transformation.customFunctionDeclarations;
+        //    console.log("customFunctionsMap", customFunctionsMap);
+        for(i=0;i<transformation.customFunctionDeclarations.length;++i){
+            parseAndAddUserFunction(
+                transformation.customFunctionDeclarations[i].clojureCode
+            );
+        }
+        console.log("Here2");
+        var grafterCustomFunctions = constructUserFunctions();
 
-    for(var functionName in customFunctionsMap){
-        parseAndAddUserFunction(customFunctionsMap[functionName].code);
-    }
+        /* Graph Template */
 
-    var grafterCustomFunctions = constructUserFunctions();
+//        var graphTemplate = constructRDFGraphFunction(transformation);
 
-    /* Graph Template */
-
-    //var graphTemplate = constructRDFGraphFunction(rdfControl);
-
-    /* Pipeline Function */
-    angular.forEach(transformation.pipelines, function(pipeline) {
-        angular.forEach(pipeline.functions, function(genericFunction) {
-            addPipelineFunction(genericFunction);
+        /* Pipeline Function */
+        angular.forEach(transformation.pipelines, function(pipeline) {
+            angular.forEach(pipeline.functions, function(genericFunction) {
+                addPipelineFunction(genericFunction);
+            });
         });
-    });
 
-    /*var rows = $("#pipeline")[0].rows;
+        /*var rows = $("#pipeline")[0].rows;
     for(i=0;i<rows.length;++i){
         if(rows[i].id==="addElementAtEndRow"){
             continue;
@@ -541,73 +543,73 @@ function generateGrafterCode(transformation){
         addPipelineFunction(pipelineFunct);
     }*/
 
-    var resultingPipeline = constructPipeline();
-    var textStr = "";
-//    textStr += (grafterDeclarations.ednEncode() + '\n' + '\n');
+        var resultingPipeline = constructPipeline();
+        var textStr = "";
+        //    textStr += (grafterDeclarations.ednEncode() + '\n' + '\n');
 
-    for(i=0;i<grafterPrefixers.length;++i){
-        textStr += (grafterPrefixers[i].ednEncode() + '\n');
-    }
-    textStr += '\n';
+        for(i=0;i<grafterPrefixers.length;++i){
+            textStr += (grafterPrefixers[i].ednEncode() + '\n');
+        }
+        textStr += '\n';
 
-    for(i=0;i<grafterCustomFunctions.length;++i){
-        textStr += (grafterCustomFunctions[i].ednEncode() + '\n');
-    }
-    
-    // textStr += graphTemplate.ednEncode();
+        for(i=0;i<grafterCustomFunctions.length;++i){
+            textStr += (grafterCustomFunctions[i].ednEncode() + '\n');
+        }
+        console.log("Here3");
+//        textStr += graphTemplate.ednEncode();
 
-    textStr += '\n';
-    textStr += '\n';
-    textStr += (resultingPipeline.ednEncode());
+        textStr += '\n';
+        textStr += '\n';
+        textStr += (resultingPipeline.ednEncode());
+        console.log("Here4");
+        return textStr;
+    };
 
-    return textStr;
-};
+    this.fromTransformation = function(transformation) {
+        return generateGrafterCode(transformation);
+    };
 
-this.fromTransformation = function(transformation) {
-	return generateGrafterCode(transformation);
-};
-
-//this.fromTransformation = function(){
-//    // return 'no';
-//    return '(defn ->integer\n'+
-//'  "An example transformation function that converts a string to an integer"\n'+
-//'  [s]\n'+
-//'  (Integer/parseInt s))\n'+
-//'\n'+
-//'(def base-domain (prefixer "http://my-domain.com"))\n'+
-//'\n'+
-//'(def base-graph (prefixer (base-domain "/graph/")))\n'+
-//'\n'+
-//'(def base-id (prefixer (base-domain "/id/")))\n'+
-//'\n'+
-//'(def base-vocab (prefixer (base-domain "/def/")))\n'+
-//'\n'+
-//'(def base-data (prefixer (base-domain "/data/")))\n'+
-//'\n'+
-//'(def make-graph\n'+
-//'  (graph-fn [{:keys [name sex age person-uri gender]}]\n'+
-//'            (graph (base-graph "example")\n'+
-//'                   [person-uri\n'+
-//'                    [rdf:a foaf:Person]\n'+
-//'                    [foaf:gender sex]\n'+
-//'                    [foaf:age age]\n'+
-//'                    [foaf:name (s name)]])))\n'+
-//'\n'+
-//'(defpipe my-pipe\n'+
-//'  "Pipeline to convert tabular persons data into a different tabular format."\n'+
-//'  [data-file]\n'+
-//'  (-> (read-dataset data-file :format :csv)\n'+
-//'      (drop-rows 1)\n'+
-//'      (make-dataset [:name :sex :age])\n'+
-//'      (derive-column :person-uri [:name] base-id)\n'+
-//'      (mapc {:age ->integer\n'+
-//'             :sex {"f" (s "female")\n'+
-//'                   "m" (s "male")}})))\n'+
-//'\n'+
-//'(defgraft my-graft\n'+
-//'  "Pipeline to convert the tabular persons data sheet into graph data."\n'+
-//'  my-pipe make-graph)';
-//
-//};
+    //this.fromTransformation = function(){
+    //    // return 'no';
+    //    return '(defn ->integer\n'+
+    //'  "An example transformation function that converts a string to an integer"\n'+
+    //'  [s]\n'+
+    //'  (Integer/parseInt s))\n'+
+    //'\n'+
+    //'(def base-domain (prefixer "http://my-domain.com"))\n'+
+    //'\n'+
+    //'(def base-graph (prefixer (base-domain "/graph/")))\n'+
+    //'\n'+
+    //'(def base-id (prefixer (base-domain "/id/")))\n'+
+    //'\n'+
+    //'(def base-vocab (prefixer (base-domain "/def/")))\n'+
+    //'\n'+
+    //'(def base-data (prefixer (base-domain "/data/")))\n'+
+    //'\n'+
+    //'(def make-graph\n'+
+    //'  (graph-fn [{:keys [name sex age person-uri gender]}]\n'+
+    //'            (graph (base-graph "example")\n'+
+    //'                   [person-uri\n'+
+    //'                    [rdf:a foaf:Person]\n'+
+    //'                    [foaf:gender sex]\n'+
+    //'                    [foaf:age age]\n'+
+    //'                    [foaf:name (s name)]])))\n'+
+    //'\n'+
+    //'(defpipe my-pipe\n'+
+    //'  "Pipeline to convert tabular persons data into a different tabular format."\n'+
+    //'  [data-file]\n'+
+    //'  (-> (read-dataset data-file :format :csv)\n'+
+    //'      (drop-rows 1)\n'+
+    //'      (make-dataset [:name :sex :age])\n'+
+    //'      (derive-column :person-uri [:name] base-id)\n'+
+    //'      (mapc {:age ->integer\n'+
+    //'             :sex {"f" (s "female")\n'+
+    //'                   "m" (s "male")}})))\n'+
+    //'\n'+
+    //'(defgraft my-graft\n'+
+    //'  "Pipeline to convert the tabular persons data sheet into graph data."\n'+
+    //'  my-pipe make-graph)';
+    //
+    //};
 
 });

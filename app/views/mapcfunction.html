@@ -1,1 +1,28 @@
-<p>This is the mapcFunction view.</p>
+<md-button class="md-raised" ng-click="addKeyFunctionPair()">Add prefixer</md-button>
+<div layout="column">
+    <div layout="row" ng-repeat="keyFunctionPair in function.keyFunctionPairs">
+        <div layout="column">
+            <div layout="row">
+                <md-button class="md-primary button-tight md-default-theme" ng-click="removeKeyFunctionPair(keyFunctionPair)">
+                    <i class="fa fa-trash fa-lg"></i>
+                </md-button>
+                <div layout = "column">
+                    <label>Column</label>
+                    <input ng-model="keyFunctionPair.key" type="text" required>
+                </div>
+            </div>
+        </div>
+
+        <div layout="column">
+            <label>Function</label>
+            <md-select placeholder="Choose a function..." ng-model="keyFunctionPair.func">
+                <md-optgroup label="Custom functions">
+                    <md-option ng-repeat="customFunct in transformation.customFunctionDeclarations" value="{{customFunct.name}}">{{customFunct.name}}</md-option>
+                </md-optgroup>
+                <md-optgroup label="Prefixers">
+                    <md-option  ng-repeat="prefixer in transformation.prefixers" value="{{prefixer.name}}">{{prefixer.name}}</md-option>
+                </md-optgroup>
+            </md-select>
+        </div>
+    </div>
+</div>

@@ -29,6 +29,7 @@ angular
     'ui.sortable',
     'ui.codemirror',
     'ui.grid.selection', 
+    'ui.grid.edit', 
     'ui.grid.resizeColumns',
     'ui.grid.exporter',
     'ngMessages',

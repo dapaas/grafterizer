@@ -97,7 +97,7 @@ angular.module('grafterizerApp')
                 functionToDeriveWith = Prefixer.revive(functionToDeriveWith);
             }
         }
-        
+
         this.functionToDeriveWith = functionToDeriveWith;
         this.__type = "DeriveColumnFunction";
     };
@@ -114,7 +114,7 @@ angular.module('grafterizerApp')
         }
         var values = [jsedn.sym("derive-column"),
                       this.newColName ? new jsedn.kw(':' + this.newColName) : new jsedn.kw(':unnamed'), colsToDeriveFromClj];
-        
+
         console.log(this.functionToDeriveWith.name);
         console.log(this.functionToDeriveWith);
         if (this.functionToDeriveWith) {
@@ -124,20 +124,33 @@ angular.module('grafterizerApp')
     };
     Types.DeriveColumnFunction = DeriveColumnFunction;
 
-    var KeyFunctionPair = function (key, func) {
+    var KeyFunctionPair = function (key, funcName) {
         this.key = key;
-        if (func !== null) {
-            if (!(func instanceof CustomFunctionDeclaration) && func.__type === "CustomFunctionDeclaration") {
-                func = CustomFunctionDeclaration.revive(func);
-            }
-            // Prefixers are also functions
-            if (!(func instanceof Prefixer)  && func.__type === "Prefixer") {
-                func = Prefixer.revive(func);
-            }
-        } else {
-            console.error("NULL function mapping");
-        }
-        this.func = func;
+        //        if (func !== null) {
+        //            console.log("mapc");
+        //            console.log(key, func);
+        //            try{
+        //                var tmp = JSON.parse(func);
+        //                func = tmp;
+        //            } catch(e) {
+        //                console.log("couldn't parse, moving on");
+        //            }
+        //            console.log("after parsing");
+        //            console.log(key, func);
+        //            funcName = func.name;
+        // TODO is reviving necessary here? we only need the name which we can get from parsing
+        ////            if(func)
+        //            if (!(func instanceof CustomFunctionDeclaration) && func.__type === "CustomFunctionDeclaration") {
+        //                func = CustomFunctionDeclaration.revive(func);
+        //            }
+        //            // Prefixers are also functions
+        //            if (!(func instanceof Prefixer)  && func.__type === "Prefixer") {
+        //                func = Prefixer.revive(func);
+        //            }
+        //        } else {
+        //            console.error("NULL function mapping");
+        //        }
+        this.func = funcName;
         this.__type = "KeyFunctionPair";
     };
     KeyFunctionPair.revive = function (data) {
@@ -154,8 +167,11 @@ angular.module('grafterizerApp')
         if (keyFunctionPairs !== null) {
             for (i = 0; i < keyFunctionPairs.length; ++i) {
                 kfPair = keyFunctionPairs[i];
-                if (!(kfPair instanceof KeyFunctionPair) && kfPair.__type === "KeyFunctionPair") {
-                    keyFunctionPairs[i] = KeyFunctionPair.revive(kfPair);
+                console.log(kfPair);
+                if(kfPair != null){
+                    if (!(kfPair instanceof KeyFunctionPair) && kfPair.__type === "KeyFunctionPair") {
+                        keyFunctionPairs[i] = KeyFunctionPair.revive(kfPair);
+                    }
                 }
             }
         }
@@ -166,7 +182,34 @@ angular.module('grafterizerApp')
         return new MapcFunction(data.keyFunctionPairs);
     };
     MapcFunction.prototype.generateClojure = function() {
-        return new jsedn.List([jsedn.sym("mapc"), this.keyFunctionPairs]);
+        var i, keyFunctionPairsClj = new jsedn.Map([]);
+        for (i = 0; i < this.keyFunctionPairs.length; ++i){
+            console.log(this.keyFunctionPairs[i]);
+            keyFunctionPairsClj.set(
+                new jsedn.kw(':' + this.keyFunctionPairs[i].key), 
+                new jsedn.sym(this.keyFunctionPairs[i].func)
+            );
+        }
+        //        console.log(keyFunctionPairsClj.ednEncode());
+        return new jsedn.List([jsedn.sym("mapc"), keyFunctionPairsClj]);
+    };
+    MapcFunction.prototype.removeKeyFunctionPair = function (kfPair) {
+        var index = this.keyFunctionPairs.indexOf(kfPair);
+        if(index ===-1 || kfPair === null || kfPair === undefined) {
+            console.log("tried to remove non-existing function");
+            return false;
+        }
+        this.keyFunctionPairs.splice(index, 1);
+        return true;
+    };
+    Types.Pipeline = Pipeline;
+
+    this.getGraphElement = function(inputElement) {
+        if (!(inputElement instanceof RDFElement)) {
+            return Types[inputElement.__type].revive(inputElement);
+        } else {
+            return inputElement;
+        }
     };
     Types.MapcFunction = MapcFunction;
 
@@ -277,23 +320,19 @@ angular.module('grafterizerApp')
         return new URINode(data.prefix, data.subElements);
     };
     URINode.prototype.addChild = function (child) {
-        child.parent = this;
         this.subElements.push(child);
     };
     URINode.prototype.addNodeAfter = function (property, propertyToAdd) {
         console.log("adding");
         var index = this.subElements.indexOf(property);
         if(!property || index === -1) {
-            propertyToAdd.parent = this;
             this.subElements.push(propertyToAdd);
         } else {
             if(index === this.subElements.length - 1){
-                propertyToAdd.parent = this;
                 this.subElements.push(propertyToAdd);
                 return true;
             }
             else {
-                propertyToAdd.parent = this;
                 this.graphs.splice(index + 1, 0, propertyToAdd);
                 return true;
             }
@@ -346,17 +385,14 @@ angular.module('grafterizerApp')
     Property.prototype.addNodeAfter = function (node, nodeToAdd) {
         var index = this.subElements.indexOf(node);
         if(!node || index === -1) {
-            nodeToAdd.parent = this;
             this.subElements.push(nodeToAdd);
             return true;
         } else {
             if(index === this.subElements.length - 1){
-                nodeToAdd.parent = this;
                 this.subElements.push(nodeToAdd);
                 return true;
             }
             else {
-                nodeToAdd.parent = this;
                 return this.subElements.splice(index + 1, 0, nodeToAdd);
                 return true;
             }
@@ -364,7 +400,6 @@ angular.module('grafterizerApp')
         return false;
     };
     Property.prototype.addChild = function (child) {
-        child.parent = this;
         this.subElements.push(child);
     };
     Property.revive = function (data) {
@@ -419,7 +454,6 @@ angular.module('grafterizerApp')
         this.__type = "Graph";
     };
     Graph.prototype.addChild = function (child) {
-        child.parent = this;
         this.graphRoots.push(child);
     };
     Graph.prototype.removeChild = function (child) {
@@ -432,17 +466,14 @@ angular.module('grafterizerApp')
     Graph.prototype.addNodeAfter = function (root, rootToAdd) {
         var index = this.graphRoots.indexOf(root);
         if(!root || index === -1) {
-            rootToAdd.parent = this;
             this.graphRoots.push(rootToAdd);
             return true;
         } else {
             if(index === this.graphRoots.length - 1){
                 this.graphRoots.push(rootToAdd);
-                rootToAdd.parent = this;
                 return true;
             }
             else {
-                rootToAdd.parent = this;
                 return this.graphRoots.splice(index + 1, 0, rootToAdd);
                 return true;
             }

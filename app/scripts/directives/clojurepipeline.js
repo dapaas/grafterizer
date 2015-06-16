@@ -7,42 +7,42 @@
  * # clojurePipeline
  */
 angular.module('grafterizerApp')
-  .directive('clojurePipeline', function (generateClojure) {
+    .directive('clojurePipeline', function (generateClojure) {
     return {
-      template: '<div ui-codemirror="editorOptions" ng-model="clojure"></div>',
-      restrict: 'E',
-      scope: {
-        transformation: '=',
-      },
-      link: {
-      	pre: function(scope) {
-		    scope.editorOptions = {
-		        lineWrapping : true, 
-		        // lineNumbers: true,
-		        mode: 'clojure',
-		        readOnly: true
-		    };
-      	},
-      	post: function(scope, element, attrs) {
-      		scope.$watch('transformation', function(){
-      			if (!scope.transformation) {
-              return;
-            }
-      			// console.log(scope.transformation)
-      			scope.clojure = generateClojure.fromTransformation(scope.transformation);
-      		}, true);
+        template: '<div ui-codemirror="editorOptions" ng-model="clojure"></div>',
+        restrict: 'E',
+        scope: {
+            transformation: '=',
+        },
+        link: {
+            pre: function(scope) {
+                scope.editorOptions = {
+                    lineWrapping : true, 
+                    // lineNumbers: true,
+                    mode: 'clojure',
+                    readOnly: true
+                };
+            },
+            post: function(scope, element, attrs) {
+                scope.$watch('transformation', function(){
+                    if (!scope.transformation) {
+                        return;
+                    }
+                    // console.log(scope.transformation)
+                    scope.clojure = generateClojure.fromTransformation(scope.transformation);
+                }, true);
 
-          // TODO workaround random bug
-          scope.$watch("$parent.selectedTabIndex", function(){
-            if (scope['$parent'].selectedTabIndex) {
-              window.setTimeout(function(){
-              try {
-                element.children().children()[0].CodeMirror.refresh();
-              }catch(e){}
-            }, 1);
+                // TODO workaround random bug
+                scope.$watch("$parent.selectedTabIndex", function(){
+                    if (scope['$parent'].selectedTabIndex) {
+                        window.setTimeout(function(){
+                            try {
+                                element.children().children()[0].CodeMirror.refresh();
+                            }catch(e){}
+                        }, 1);
+                    }
+                });
             }
-          });
-      	}
-      }
+        }
     };
-  });
+});

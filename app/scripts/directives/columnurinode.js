@@ -14,7 +14,6 @@ angular.module('grafterizerApp')
         compile: function(element) {
             // TODO may be different at the end but probably need to unify with the constant uri node directive
             return RecursionHelper.compile(element, function(scope, iElement, iAttrs, controller, transcludeFn){
-                console.log(scope.node);
                 scope.editNode = function () {
                     scope.originalNode = {};
                     angular.copy(scope.node, scope.originalNode);
@@ -29,6 +28,33 @@ angular.module('grafterizerApp')
                         angular.copy(graphNode, scope.node);
                     }, function() {
                         angular.copy(scope.originalNode, scope.node);
+                        newScope.$destroy();
+                    });
+                };
+                scope.clickRemoveNode = function (node) {
+                    $mdDialog.show(
+                        $mdDialog.confirm()
+                        .title('Are you sure you want to remove this element?')
+                        .content('Please confirm that you want to remove the element.')
+                        .ariaLabel('Please confirm that you want to remove the element.')
+                        .ok('Yes')
+                        .cancel('Cancel')).then(function() {
+                        node.parent.removeChild(node);
+                    });
+                };
+                scope.clickAddNodeAfter = function () {
+                    var newScope = scope.$new(false, scope);
+                    newScope.isCreate = true;
+                    $mdDialog.show({
+                        templateUrl: 'views/mappingNodeDefinitionDialog.html',
+                        controller: 'MappingnodedefinitiondialogCtrl',
+                        scope: newScope
+                    }).then( function(graphNode) {
+                        if(graphNode){
+                            scope.node.parent.addNodeAfter(scope.node, graphNode);
+                        }
+                    }, function () {
+
                         newScope.$destroy();
                     });
                 };

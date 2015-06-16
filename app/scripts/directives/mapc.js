@@ -7,12 +7,28 @@
  * # mapc
  */
 angular.module('grafterizerApp')
-  .directive('mapc', function () {
+    .directive('mapcFunction', function (transformationDataModel) {
     return {
-      template: '<div></div>',
-      restrict: 'E',
-      link: function postLink(scope, element, attrs) {
-        element.text('this is the mapc directive');
-      }
+        templateUrl: 'views/mapcfunction.html',
+        restrict: 'E',
+        link: function postLink(scope, element, attrs) {
+            if(!scope.function){
+                var keyfuncpair = new transformationDataModel.KeyFunctionPair("colName", scope.$parent.transformation.customFunctionDeclarations[0]);
+                scope.function = new transformationDataModel.MapcFunction([keyfuncpair]);
+            }
+
+            scope.$parent.generateCurrFunction = function(){
+                var keyFunctionPairs = [];
+                return new transformationDataModel.MapcFunction(scope.function.keyFunctionPairs);
+            };  
+            scope.addKeyFunctionPair = function () {
+                var newKeyFunctionPair = new transformationDataModel.KeyFunctionPair("", scope.$parent.transformation.customFunctionDeclarations[0].name);
+                this.function.keyFunctionPairs.push(newKeyFunctionPair);
+            };
+            scope.removeKeyFunctionPair = function (kfPair) {
+                console.log(kfPair);
+                scope.function.removeKeyFunctionPair(kfPair);
+            };
+        }
     };
-  });
+});
