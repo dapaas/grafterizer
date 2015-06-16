@@ -13,6 +13,7 @@ angular.module('grafterizerApp')
     ontotextAPI,
     PipeService,
     $timeout,
+    $rootScope,
     $stateParams,
     generateClojure,
     $mdToast) {
@@ -20,6 +21,7 @@ angular.module('grafterizerApp')
     // TODO IT DOES WORK
     $scope.$parent.showPreview = true;
     $scope.$on('$destroy', function(){
+        hideDownloadButton();
         $scope.$parent.showPreview = false;
     });
 
@@ -58,12 +60,13 @@ angular.module('grafterizerApp')
                         $scope.selectedTabIndex = 2;
                     });
                 }
+                showDownloadButton();
             }).error(function(data) {
                 if (data) {
                     if (data.edn && data.edn[":message"]) {
                         $scope.graftwerkException = data.edn[":message"];
                     } else {
-                    $scope.graftwerkException = data.raw;
+                        $scope.graftwerkException = data.raw;
                     }
                     // $scope.data = data;
                     $timeout(function () {
@@ -78,6 +81,7 @@ angular.module('grafterizerApp')
                         .hideDelay(6000)
                       );
                 }
+                hideDownloadButton();
             });
     };
 
@@ -109,5 +113,21 @@ angular.module('grafterizerApp')
                     $scope.originalData = data;
                 });
         }
+    };
+
+    var showDownloadButton = function(){
+        var link = PipeService.computeTuplesHref(
+            $scope.selectedDistribution, $scope.$parent.id);
+
+        $rootScope.$emit('addAction', {
+            name: 'download',
+            callback: function(){
+                window.open(link,'_blank');
+            }
+        });
+    };
+
+    var hideDownloadButton = function(){
+        $rootScope.$emit('removeAction', 'download');
     };
   });
