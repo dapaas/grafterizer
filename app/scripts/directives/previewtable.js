@@ -9,7 +9,9 @@
 angular.module('grafterizerApp')
   .directive('previewTable', function () {
     return {
-      template: '<div ui-grid="gridOptions" class="sin-grid md-whiteframe-z1" ui-grid-auto-resize><div class="watermark" ng-show="!gridOptions.data.length">\u2205</div></div>',
+      template: '<div ui-grid="gridOptions" class="sin-grid md-whiteframe-z1"'+
+      ' ui-grid-auto-resize ui-grid-resize-columns ui-grid-exporter'
+      +'><div class="watermark" ng-show="!gridOptions.data.length">\u2205</div></div>',
       restrict: 'E',
       scope: {
         data: '=ngModel'
@@ -72,7 +74,8 @@ angular.module('grafterizerApp')
                     return {
                         name: f,
                         width: widths[f]===largest ? '*' : Math.floor(widths[f]*100)+'%',
-                        minWidth: Math.min(80+rawWidths[f]*8, 250)
+                        minWidth: Math.min(80+rawWidths[f]*8, 250),
+                        cellTooltip: true
                     };
                 });
 
