@@ -165,7 +165,7 @@ angular.module('grafterizerApp')
     /* Constructs and returns the function used for transforming data to RDF */
     function constructGraphTemplate(){
         graphBuilderTemplate = new jsedn.List([
-            jsedn.sym("def"), jsedn.sym("make-graph"),
+            jsedn.sym("def"), jsedn.sym("my-graph-template"),
             graphFunction
         ]);
 
@@ -256,7 +256,7 @@ in case an error occurs during parsing.
         var colKeysClj = new jsedn.Vector([]);
         var columnKeysFromPipeline = transformation.getColumnKeysFromPipeline();
         for(i = 0; i < columnKeysFromPipeline.length; ++i){
-            colKeysClj.val.push(new jsedn.kw(':'+columnKeysFromPipeline[i]));
+            colKeysClj.val.push(new jsedn.sym(columnKeysFromPipeline[i]));
         }
 
         var graphFunction = new jsedn.List([
@@ -566,6 +566,12 @@ Prototype: (mapc dataset fs) - dataset is implied
         textStr += '\n';
         textStr += '\n';
         textStr += (resultingPipeline.ednEncode());
+        
+        textStr += '\n';
+        textStr += '\n';
+        
+        textStr += '(defgraft my-graft "Pipeline to convert the tabular persons data sheet into graph data." my-pipe make-graph)';
+        
         return textStr;
     };
 
@@ -589,6 +595,8 @@ Prototype: (mapc dataset fs) - dataset is implied
         overrideClojure = null;
         generatedClojureBeforeGeneration = null;
     };
+    
+    
 
     //this.fromTransformation = function(){
     //    // return 'no';
@@ -608,13 +616,13 @@ Prototype: (mapc dataset fs) - dataset is implied
     //'(def base-data (prefixer (base-domain "/data/")))\n'+
     //'\n'+
     //'(def make-graph\n'+
-    //'  (graph-fn [{:keys [name sex age person-uri gender]}]\n'+
-    //'            (graph (base-graph "example")\n'+
-    //'                   [person-uri\n'+
-    //'                    [rdf:a foaf:Person]\n'+
-    //'                    [foaf:gender sex]\n'+
-    //'                    [foaf:age age]\n'+
-    //'                    [foaf:name (s name)]])))\n'+
+//    '  (graph-fn [{:keys [name sex age person-uri gender]}]\n'+
+//    '            (graph (base-graph "example")\n'+
+//    '                   [person-uri\n'+
+//    '                    [rdf:a foaf:Person]\n'+
+//    '                    [foaf:gender sex]\n'+
+//    '                    [foaf:age age]\n'+
+//    '                    [foaf:name (s name)]])))\n'+
     //'\n'+
     //'(defpipe my-pipe\n'+
     //'  "Pipeline to convert tabular persons data into a different tabular format."\n'+

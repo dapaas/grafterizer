@@ -9,7 +9,6 @@
  */
 angular.module('grafterizerApp')
     .controller('CustomfunctionsdialogcontrollerCtrl', function ($scope, transformationDataModel, $mdToast, $mdDialog) {
-    console.log($scope);
     $scope.codemirrorOpts = {
         lineWrapping : true, 
         lineNumbers: true,
