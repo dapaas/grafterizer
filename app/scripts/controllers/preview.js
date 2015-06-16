@@ -94,10 +94,15 @@ angular.module('grafterizerApp')
     $scope.$watch('transformation', function(){
       if ($scope.transformation){
         throttlePreview();
+        fileSaved = false; 
       }
     }, true);
 
-    $scope.$on('preview-request', throttlePreview);
+    var fileSaved = false;
+    $scope.$on('preview-request', function(){
+        throttlePreview();
+        fileSaved = true;
+    });
 
     $scope.$watch('selectedDistribution', function(){
         if ($scope.selectedDistribution) {
@@ -116,6 +121,9 @@ angular.module('grafterizerApp')
     };
 
     var showDownloadButton = function(){
+        if (!fileSaved) {
+            return;
+        }
         var link = PipeService.computeTuplesHref(
             $scope.selectedDistribution, $scope.$parent.id);
 
