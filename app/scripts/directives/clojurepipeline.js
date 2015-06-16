@@ -37,6 +37,10 @@ angular.module('grafterizerApp')
                 var warningMsg = "; WARNING: Experimental feature\n"+
                     "; The changes will be lost if you edit the transformation\n\n";
 
+                var throttledPreviewRequest = _.throttle(function(){
+                    scope.$parent.$parent.$broadcast('preview-request');
+                }, 1000);
+
                 scope.$watch('clojure', function(){
                     if (generatedClojure != scope.clojure) {
                         scope.isOverrided = true;
@@ -44,7 +48,7 @@ angular.module('grafterizerApp')
                             scope.clojure = warningMsg + scope.clojure;
                         }
                         generateClojure.overrideClojure(scope.clojure, generatedClojure);
-                        scope.$parent.$parent.$broadcast('preview-request');
+                        throttledPreviewRequest();
                     }
                 });
 
