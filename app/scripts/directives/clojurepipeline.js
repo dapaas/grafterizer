@@ -20,17 +20,37 @@ angular.module('grafterizerApp')
                     lineWrapping : true, 
                     // lineNumbers: true,
                     mode: 'clojure',
-                    readOnly: true
+                    // readOnly: true
                 };
             },
             post: function(scope, element, attrs) {
+                var generatedClojure = null;
                 scope.$watch('transformation', function(){
                     if (!scope.transformation) {
                         return;
                     }
                     // console.log(scope.transformation)
-                    scope.clojure = generateClojure.fromTransformation(scope.transformation);
+                    scope.clojure = generatedClojure = generateClojure.fromTransformation(scope.transformation);
+                    scope.isOverrided = false;
                 }, true);
+
+                var warningMsg = "; WARNING: Experimental feature\n"+
+                    "; The changes will be lost if you edit the transformation\n\n";
+
+                var throttledPreviewRequest = _.throttle(function(){
+                    scope.$parent.$parent.$broadcast('preview-request');
+                }, 1000);
+
+                scope.$watch('clojure', function(){
+                    if (generatedClojure != scope.clojure) {
+                        scope.isOverrided = true;
+                        if (scope.clojure.indexOf(warningMsg) === -1) {
+                            scope.clojure = warningMsg + scope.clojure;
+                        }
+                        generateClojure.overrideClojure(scope.clojure, generatedClojure);
+                        throttledPreviewRequest();
+                    }
+                });
 
                 // TODO workaround random bug
                 scope.$watch("$parent.selectedTabIndex", function(){

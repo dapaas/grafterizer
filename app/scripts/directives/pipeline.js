@@ -16,10 +16,9 @@ angular.module('grafterizerApp')
             transformation: '='
         },
         link: function postLink(scope, element, attrs) {
-            console.log("pipe", scope);
-            if (!scope.pipeline) {
-                scope.pipeline = new transformationDataModel.Pipeline([]);
-            };
+            // if (!scope.pipeline) {
+                //scope.pipeline = new transformationDataModel.Pipeline([]);
+            // }
             
             scope.dragControlListeners = {
                 accept: function () {return true;},

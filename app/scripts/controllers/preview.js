@@ -8,7 +8,15 @@
  * Controller of the grafterizerApp
  */
 angular.module('grafterizerApp')
-  .controller('PreviewCtrl', function ($scope, ontotextAPI, PipeService, $timeout, $stateParams, generateClojure) {
+  .controller('PreviewCtrl', function (
+    $scope,
+    ontotextAPI,
+    PipeService,
+    $timeout,
+    $stateParams,
+    generateClojure,
+    $mdToast) {
+    
     // TODO IT DOES WORK
     $scope.$parent.showPreview = true;
     $scope.$on('$destroy', function(){
@@ -51,11 +59,20 @@ angular.module('grafterizerApp')
                     });
                 }
             }).error(function(data) {
-                $scope.graftwerkException = data.raw;
-                // $scope.data = data;
-                $timeout(function () {
-                    $scope.selectedTabIndex = 2;
-                });
+                if (data) {
+                    $scope.graftwerkException = data.raw;
+                    // $scope.data = data;
+                    $timeout(function () {
+                        $scope.selectedTabIndex = 2;
+                    });
+                } else {
+                    $mdToast.show(
+                      $mdToast.simple()
+                        .content('Unable to load the transformation')
+                        .position('bottom left')
+                        .hideDelay(6000)
+                      );
+                }
             });
     };
 
