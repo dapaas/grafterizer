@@ -11,6 +11,10 @@ angular.module('grafterizerApp')
     return {
         templateUrl: 'views/constantliteralnode.html',
         restrict: 'E',
+        scope: {
+            node: '=',
+            parent: '='
+        },
         compile: function(element) {
             return RecursionHelper.compile(element, function(scope, iElement, iAttrs, controller, transcludeFn){
 

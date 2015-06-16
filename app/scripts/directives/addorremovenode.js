@@ -11,6 +11,10 @@ angular.module('grafterizerApp')
     return {
         templateUrl: 'views/addorremovenode.html',
         restrict: 'E',
+        scope: {
+            property: '=',
+            parent: '='
+        },
         compile: function(element) {
             return RecursionHelper.compile(element, function(scope, iElement, iAttrs, controller, transcludeFn){
 
@@ -39,7 +43,7 @@ angular.module('grafterizerApp')
                         .ariaLabel('Please confirm that you want to remove the element.')
                         .ok('Yes')
                         .cancel('Cancel')).then(function() {
-                        node.parent.removeChild(node);
+                        scope.parent.removeChild(node);
                     });
                 };
                 scope.clickAddNodeAfter = function () {
@@ -51,7 +55,7 @@ angular.module('grafterizerApp')
                         scope: newScope
                     }).then( function(graphNode) {
                         if(graphNode){
-                            scope.node.parent.addNodeAfter(scope.node, graphNode);
+                            scope.parent.addNodeAfter(scope.node, graphNode);
                         }
                     }, function () {
 

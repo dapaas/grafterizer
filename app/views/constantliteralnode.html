@@ -3,6 +3,6 @@
         <md-button flex class="graph-button md-raised" ng-click="editNode()">
             {{node.literalValue}}
         </md-button>
-        <add-or-remove-node node="node"></add-or-remove-node>
+        <add-or-remove-node node="node" parent="parent" ng-if="parent.__type=='Graph'"></add-or-remove-node>
     </div>
 </div>
