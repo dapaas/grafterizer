@@ -14,6 +14,13 @@ angular.module('grafterizerApp')
         lineNumbers: true,
         mode: 'clojure'
     };
+
+    window.setTimeout(function(){
+        _.each(document.getElementsByClassName("CodeMirror"), function(el){
+            el.CodeMirror.refresh();
+        });
+    }, 250);
+    
     $scope.emptyCustomFunction = new transformationDataModel.CustomFunctionDeclaration("", "(defn YOUR_FUNCTION_NAME YOUR_FUNCTION_CODE)");
     $scope.saveCustomFunct = function () {
         var customFunctionData = $scope.parseCustomFunctionCode($scope.selectedCustomFunction.clojureCode);

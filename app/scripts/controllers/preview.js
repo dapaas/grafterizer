@@ -60,12 +60,17 @@ angular.module('grafterizerApp')
                 }
             }).error(function(data) {
                 if (data) {
+                    if (data.edn && data.edn[":message"]) {
+                        $scope.graftwerkException = data.edn[":message"];
+                    } else {
                     $scope.graftwerkException = data.raw;
+                    }
                     // $scope.data = data;
                     $timeout(function () {
                         $scope.selectedTabIndex = 2;
                     });
                 } else {
+                    delete $scope.graftwerkException;
                     $mdToast.show(
                       $mdToast.simple()
                         .content('Unable to load the transformation')
