@@ -46,8 +46,9 @@ angular
 
     $urlRouterProvider.otherwise("/transformations/new");
 
-    // TODO enable in production
-    // $locationProvider.html5Mode(true);
+    //if (!window.navigator.device) {
+    //    $locationProvider.html5Mode(true);
+    //}
 
     // Workaround for https://github.com/angular-ui/ui-router/issues/1119
     var valToString = function(val) {
