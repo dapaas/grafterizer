@@ -12,12 +12,13 @@ angular.module('grafterizerApp')
         templateUrl: 'views/pipeline.html',
         restrict: 'E',
         scope: {
-            pipeline: '='
+            pipeline: '=',
+            transformation: '='
         },
         link: function postLink(scope, element, attrs) {
-            if (!scope.pipeline) {
-                scope.pipeline = new transformationDataModel.Pipeline([]);
-            }
+            // if (!scope.pipeline) {
+                //scope.pipeline = new transformationDataModel.Pipeline([]);
+            // }
             
             scope.dragControlListeners = {
                 accept: function () {return true;},
@@ -25,8 +26,12 @@ angular.module('grafterizerApp')
                 orderChanged: function(event) {}
             };
             scope.clickAddAfter = function (funct) {
+                var newScope = scope.$new(false, scope);
+                newScope.transformation = scope.transformation;
                 $mdDialog.show({
-                    templateUrl: 'views/pipelineFunctionDialog.html'
+                    controller: 'PipelinefunctiondialogCtrl',
+                    templateUrl: 'views/pipelineFunctionDialog.html',
+                    scope: newScope
                 }).then( function(pipeFunct) {
                     if(pipeFunct){
                         scope.pipeline.addAfter(funct, pipeFunct);

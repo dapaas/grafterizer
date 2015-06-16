@@ -1,8 +1,10 @@
-<md-dialog aria-label='Choose function'>
-    <md-dialog-content class="sticky-container">
-        <md-subheader class="md-sticky-no-effect">Edit {{function.displayName}} function</md-subheader>
-        <functions-dialog-content function="function" selected-function-name="selectedFunctionName"></functions-dialog-content>
-        
-        <!-- -->
+<md-dialog aria-label='Edit {{function.displayName}} function' class="sin-function-dialog">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Edit {{function.displayName}} function</h2>
+        </div>
+    </md-toolbar>
+    </md-dialog-content>
+        <functions-dialog-content transformation="transformation" function="function" selected-function-name="selectedFunctionName"></functions-dialog-content>
     </md-dialog-content>
 </md-dialog>

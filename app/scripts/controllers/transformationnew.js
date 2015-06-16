@@ -15,7 +15,9 @@ angular.module('grafterizerApp')
     $rootScope,
     $state,
     $mdToast,
-    transformationDataModel) {
+    $mdDialog,
+    transformationDataModel,
+    generateClojure) {
 
   	$scope.document = {
   		title: "New transformation",
@@ -23,24 +25,25 @@ angular.module('grafterizerApp')
   	};
 
   	$scope.clojure = "";
-    var prefixer = new transformationDataModel.Prefixer("examplePrefixer", "http://www.asdf.org/#/");
-    var customFunctionDeclaration = new transformationDataModel.CustomFunctionDeclaration("exampleCustomFunct", "(defn example asdf)");
     $scope.pipeline = new transformationDataModel.Pipeline([]);
-    $scope.transformation = new transformationDataModel.Transformation([customFunctionDeclaration], [prefixer], [$scope.pipeline], []);
+    $scope.transformation = new transformationDataModel.Transformation([], [], [$scope.pipeline], []);
 
     window.canard = $scope;
 
     $rootScope.actions = {
     	save: function(){
-        var transformationJSON = JSON.stringify($scope.transformation);
+        // var transformationJSON = JSON.stringify($scope.transformation);
+        var clojure = generateClojure.fromTransformation($scope.transformation);
         ontotextAPI.newTransformation({
             '@context': ontotextAPI.getContextDeclaration(),
             '@type': 'dcat:Transformation',
             'dct:title': $scope.document.title,
             'dct:description': $scope.document.description,
-            'dct:public': $scope.document['dct:public'],
-            'dct:modified': moment().format("YYYY-MM-DD")
-          }, "this is clojure", transformationJSON)
+            'dcat:public': $scope.document['dct:public'] ? 'true': 'false',
+            'dct:modified': moment().format("YYYY-MM-DD"),
+            'dcat:transformationType': 'pipe',
+            'dcat:transformationCommand': 'my-pipe'
+          }, clojure, $scope.transformation)
           .success(function(data){
             $mdToast.show(
               $mdToast.simple()
@@ -81,5 +84,31 @@ angular.module('grafterizerApp')
             .hideDelay(6000)
           );
       }
-    })
+    });
+
+    $scope.editPrefixers = function () {
+        $scope.originalPrefixers = [];
+        angular.copy($scope.transformation.prefixers, $scope.originalPrefixers);
+        $mdDialog.show({
+            templateUrl: 'views/editprefixes.html',
+            controller: 'EditprefixersCtrl',
+            scope: $scope.$new(false, $scope)
+        }).then(function() {
+        }, function() {
+            angular.copy($scope.originalPrefixers, $scope.transformation.prefixers);
+        });
+    };
+
+    $scope.defineCustomFunctions = function () {
+        $scope.originalCustomFunctionDeclarations = [];
+        angular.copy($scope.transformation.customFunctionDeclarations, $scope.originalCustomFunctionDeclarations);
+        $mdDialog.show({
+            templateUrl: 'views/createcustomfunction.html',
+            controller: 'CustomfunctionsdialogcontrollerCtrl',
+            scope: $scope.$new(false, $scope)
+        }).then(function() {
+        }, function() {
+            angular.copy($scope.originalCustomFunctionDeclarations, $scope.transformation.customFunctionDeclarations);
+        }); 
+    };
   });

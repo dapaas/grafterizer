@@ -1,0 +1,30 @@
+<md-dialog aria-label='Specify property node...' class="sin-function-dialog">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Specify property node</h2> 
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="md-padding">
+        <md-input-container flex class="sin-no-shrink">
+            <label>Property prefix</label>
+            <input ng-model="property.prefix" name="prefix" type="text" required>
+            <div ng-messages="graphsForm.prefix.$error">
+                <div ng-message="required">Prefix is required.</div>
+                <div ng-message="pattern">Not a valid prefix.</div>
+            </div>
+        </md-input-container>
+        <md-input-container flex class="sin-no-shrink">
+            <label>Property name</label>
+            <input ng-model="property.propertyName" name="propertyName" type="text" required>
+            <div ng-messages="graphsForm.propertyName.$error">
+                <div ng-message="required">Property name is required.</div>
+                <div ng-message="pattern">Not a valid property name.</div>
+            </div>
+        </md-input-container>
+
+    </md-dialog-content>
+    <div class="md-actions" layout="row" layout-align="right">
+        <md-button class="md-primary" ng-click="addProperty()">{{isCreateNew ? 'Create' : 'Edit'}} property</md-button>
+        <md-button class="md-primary" ng-click="closeDialog()">Cancel</md-button>
+    </div>
+</md-dialog>

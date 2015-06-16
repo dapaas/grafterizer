@@ -29,9 +29,12 @@ angular
     'ui.sortable',
     'ui.codemirror',
     'ui.grid.selection', 
+    'ui.grid.edit', 
     'ui.grid.resizeColumns',
     'ui.grid.exporter',
-    'ngMessages'
+    'ngMessages',
+    'RecursionHelper',
+    'vAccordion'
 ])
     .config(function (
             $mdThemingProvider,
@@ -42,10 +45,11 @@ angular
              $breadcrumbProvider,
              $locationProvider) {
 
-    $urlRouterProvider.otherwise("/");
+    $urlRouterProvider.otherwise("/transformations/new");
 
-    // TODO enable in production
-    // $locationProvider.html5Mode(true);
+    //if (!window.navigator.device) {
+    //    $locationProvider.html5Mode(true);
+    //}
 
     // Workaround for https://github.com/angular-ui/ui-router/issues/1119
     var valToString = function(val) {
@@ -155,6 +159,21 @@ angular
             label: '{{document.title || "File "+id}}'
         }
     })
+        .state('transformations.transformation.preview', {
+            url: '^/preview/{id:nonURIEncoded}',
+            params: {
+                'distribution': null
+            },
+            views: {
+                "preview": {
+                    templateUrl: 'views/preview.html',
+                    controller: 'PreviewCtrl'
+                }
+            },
+            ncyBreadcrumb: {
+                label: 'Preview'
+            }
+        })
         .state('files', {
         url: '/files',
         views: {
@@ -181,31 +200,6 @@ angular
         },
         ncyBreadcrumb: {
             label: '{{document.title || "File "+id}}'
-        }
-    })
-        .state('demo', {
-        url: '/demo',
-        views: {
-            "main@": {
-                templateUrl: 'views/demo.html',
-                controller: 'DemoCtrl'
-            },
-            "actions@": {
-                templateUrl: 'views/actions.html',
-                controller: 'ActionsCtrl'
-            }
-        },
-        ncyBreadcrumb: {
-            label: 'Demo'
-        }
-    })
-        .state('screenshot', {
-        url: '/screenshot',
-        views: {
-            "main@": {
-                templateUrl: 'views/screenshot.html',
-                controller: 'DemoCtrl'
-            }
         }
     })
         .state('distributions', {
@@ -270,7 +264,7 @@ angular
         '</ol>'
     });
 
-    var colors = [
+    /*var colors = [
       'red',
       'pink',
       'purple',
@@ -294,7 +288,7 @@ angular
 
     $mdThemingProvider.theme('default')
 	    .primaryPalette(colors[Math.floor(Math.random()*colors.length)])
-	    .accentPalette(colors[Math.floor(Math.random()*colors.length)]);
+	    .accentPalette(colors[Math.floor(Math.random()*colors.length)]);*/
 
     jsedn.Symbol.prototype.validRegex = new RegExp(/.*/);
 });

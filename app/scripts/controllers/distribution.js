@@ -35,6 +35,6 @@ angular.module('grafterizerApp')
     });*/
 
     ontotextAPI.graftwerk(id).success(function(data) {
-      $scope.json = data;
+      $scope.json = JSON.stringify(data, null, '  ');
     });
   });

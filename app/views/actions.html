@@ -1,17 +1,22 @@
 <div layout="row" class="actions-view">
+	<md-switch aria-label="Preview mode" ng-model="$parent.previewTransformation" ng-if="transformationState">
+		<!-- <i class="fa fa-eye"></i> -->
+		<!-- <md-tooltip>Preview mode</md-tooltip> -->
+	</md-switch>
 	<md-button class="md-icon-button" aria-label="Fork" ng-click="fork()" ng-if="fork">
 		<i class="fa fa-code-fork"></i>
+		<md-tooltip>Fork</md-tooltip>
 	</md-button>
 	<md-button class="md-icon-button" aria-label="Delete" ng-click="delete()" ng-if="delete">
 		<i class="fa fa-trash"></i>
+		<md-tooltip>Delete</md-tooltip>
 	</md-button>
 	<md-button class="md-icon-button" aria-label="Send" ng-click="send()" ng-if="send">
 		<i class="fa fa-send"></i>
+		<md-tooltip>Send</md-tooltip>
 	</md-button>
 	<md-button class="md-icon-button" aria-label="Save" ng-click="save()" ng-if="save">
 		<i class="fa fa-save"></i>
-	</md-button>
-	<md-button class="md-icon-button" aria-label="Preview" ng-click="preview()" ng-if="preview">
-		<i class="fa fa-eye"></i>
+		<md-tooltip>Save</md-tooltip>
 	</md-button>
 </div>

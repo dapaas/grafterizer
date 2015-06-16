@@ -9,19 +9,24 @@
 angular.module('grafterizerApp')
     .directive('pipelineFunction', function ($mdDialog) {
     return {
-        template: '<md-button class="md-raised" flex ng-click="editFunction()">{{function.displayName}}</md-button>',
+        template: '<div flex layout="row" layout-align="center"><md-button class="pipeline-button md-raised" ng-click="editFunction()">{{function.displayName}}</md-button></div>',
         restrict: 'E',
         scope: {
-            function:'='
+            function:'=',
+            transformation: '='
         },
         link: function postLink(scope, element, attrs) {
+            console.log("pipelineFunction directive", scope);
             scope.editFunction = function() {
                 scope.originalFunction = {};
                 scope.selectedFunctionName = scope.function.name;
                 angular.copy(scope.function, scope.originalFunction);
+                var newScope = scope.$new(false, scope);
+                newScope.transformation = scope.transformation;
                 $mdDialog.show({
+                    controller: 'PipelinefunctiondialogCtrl',
                     templateUrl: 'views/editPipelineFunctionDialog.html',
-                    scope: scope.$new(false, scope)
+                    scope: newScope
                 }).then(function(pipeFunct) {
                     angular.copy(pipeFunct, scope.function);
                 }, function() {

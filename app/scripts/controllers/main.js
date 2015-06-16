@@ -9,12 +9,6 @@
  */
 angular.module('grafterizerApp')
     .controller('MainCtrl', function (transformationDataModel, $scope, $mdDialog) {
-    /************************ Temporary testing data BEGIN **************************/
-    var prefixer = new transformationDataModel.Prefixer("examplePrefixer", "http://www.asdf.org/#/");
-    var customFunctionDeclaration = new transformationDataModel.CustomFunctionDeclaration("exampleCustomFunct", "(defn example asdf)");
-    $scope.transformation = new transformationDataModel.Transformation([customFunctionDeclaration], [prefixer], [], []);
-
-    /************************ Temporary testing data END **************************/
     $scope.editPrefixers = function () {
         $scope.originalPrefixers = [];
         angular.copy($scope.transformation.prefixers, $scope.originalPrefixers);

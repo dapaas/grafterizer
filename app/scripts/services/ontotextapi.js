@@ -196,8 +196,8 @@ angular.module('grafterizerApp')
     this.graftwerk = function(distributionID) {
 
       var data = {
-        'transformation-code': new Blob(["(defpipe my-pipe [data-file] (-> (read-dataset data-file :format :csv)))"],
-        {type: "application/clojure"}),
+        // 'transformation-code': new Blob(["(defpipe my-pipe [data-file] (-> (read-dataset data-file :format :csv)))"],
+        // {type: "application/clojure"}),
         'input-file': new Blob(["name,sex,age\nalice,f,34\nbob,m,63"], {type: "text/csv"}),
         'command': "my-pipe",
         'transformation-type': "pipe"
@@ -205,9 +205,10 @@ angular.module('grafterizerApp')
 
       var headers = {
         'Content-Type': 'multipart/form-data',
-        'command': 'my-pipe',
-        'transformation-type': 'pipe',
-        // 'input-distribution': distributionID
+        // 'command': 'my-pipe',
+        // 'transformation-type': 'pipe',
+        // 'input-distribution': distributionID,
+        'transformation-id': 'http://dapaas.eu/users/1505271111/transformation/toto-fork-1'
       };
 
       return $http({
@@ -215,7 +216,22 @@ angular.module('grafterizerApp')
         method: "POST",
         data: data,
         headers: headers,
-        transformRequest: transformRequest
+        transformRequest: transformRequest,
+        transformResponse: [function(data, headers) {
+          try {
+            return {
+              raw: data,
+              jsedn: jsedn.parse(data)
+            };
+          } catch(e) {
+            $log.debug(data);
+            $log.error(e);
+            return {
+              raw: data,
+              jsedn: null
+            };
+          }
+        }]
       }).error(errorHandler);
     };
   });

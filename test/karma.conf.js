@@ -43,6 +43,8 @@ module.exports = function(config) {
       'bower_components/angular-ui-codemirror/ui-codemirror.js',
       'bower_components/jsedn/jsedn.js',
       'bower_components/angular-messages/angular-messages.js',
+      'bower_components/angular-recursion/angular-recursion.js',
+      'bower_components/v-accordion/dist/v-accordion.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

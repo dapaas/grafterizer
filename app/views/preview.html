@@ -1,0 +1,45 @@
+<md-content flex layout="column">
+<md-tabs class="md-accent no-border-radius" flex layout="column"
+ md-swipe-content="" md-stretch-tabs="always"
+ md-selected="selectedTabIndex">
+    <md-tab label="Distribution">
+        <md-tab-body>
+        <md-radio-group ng-model="$parent.selectedDistribution">
+        <v-accordion class="vAccordion--default md-margin" flex
+            onexpand="accordionExpandCallback(index)">
+          <v-pane ng-repeat="dataset in datasets" expanded="$first">
+            <v-pane-header layout="row">
+              <md-button class="md-raised md-primary md-hue-1">
+                {{dataset['dct:title']}}
+              </md-button>
+            </v-pane-header>
+            <v-pane-content>
+                <md-progress-circular class="md-hue-2" md-mode="indeterminate" ng-if="dataset.distributionsLoading"></md-progress-circular>
+                <div ng-repeat="distribution in dataset.distributions">
+                  <md-radio-button ng-value="distribution">{{distribution}}</md-radio-button>
+                </div>
+                <div ng-if="!dataset.distributionsLoading &amp;&amp;dataset.distributions.length===0">
+                  <p class="empty-distribution md-body-1">This distribution doesn't contain datasets.</p>
+                </div>
+            </v-pane-content>
+          </v-pane>
+        </v-accordion>
+        </md-tab-body>
+    </md-tab>
+    <!-- TODO disabled looks like it's broken -->
+    <md-tab label="Original" disabled="!selectedDistribution"
+        md-on-select="loadOriginalData()">
+        <md-tab-body>
+            <preview-table ng-model="originalData.edn" hide-headers></preview-table>
+        </md-tab-body>
+    </md-tab>
+    <md-tab label="Output">
+        <md-tab-body>
+            <div class="md-whiteframe-z5 md-body-2 md-warm error-infos" ng-show="graftwerkException">
+                {{graftwerkException}}
+            </div>
+            <preview-table ng-model="data.edn"></preview-table>
+        </md-tab-body>
+    </md-tab>
+</md-tabs>
+</md-content>

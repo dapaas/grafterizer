@@ -1,8 +1,10 @@
-<md-dialog aria-label='Choose function'>
-    <md-dialog-content class="sticky-container">
-        <md-subheader class="md-sticky-no-effect">Add a new pipeline function...</md-subheader>
-        <functions-dialog-content></functions-dialog-content>
-        
-        <!-- -->
+<md-dialog aria-label='Add a new pipeline function' class="sin-function-dialog">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Add a new pipeline function</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <functions-dialog-content transformation="transformation"></functions-dialog-content>
     </md-dialog-content>
 </md-dialog>

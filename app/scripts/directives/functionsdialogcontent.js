@@ -13,12 +13,12 @@ angular.module('grafterizerApp')
         restrict: 'E',
         scope: {
             function: '=',
-            selectedFunctionName: '='
+            selectedFunctionName: '=',
+            transformation: '='
         },
         link: function postLink(scope, element, attrs) {
-            //        element.text('this is the functionsDialog directive');
             scope.generateCurrFunction = function(){
-                console.error("todo");
+                console.error("generic generateCurrFunction");
             };
             scope.add = function(){
                 $mdDialog.hide(scope.generateCurrFunction());
