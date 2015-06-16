@@ -1,6 +1,10 @@
-<md-dialog aria-label='Define custom functions...'>
-    <md-dialog-content class="sticky-container">
-        <md-subheader class="md-sticky-no-effect">Define or edit custom functions...</md-subheader>
+<md-dialog aria-label='Define custom functions...' class="sin-function-dialog sin-width-function-dialog">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Define or edit custom functions</h2> 
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="md-padding">
         <div>
             <md-select ng-model="selectedCustomFunction" ng-selected="{{emptyCustomFunction}}">
                 <md-select-label>{{ selectedCustomFunction.name ? selectedCustomFunction.name : 'Create new function...' }}</md-select-label>
@@ -9,8 +13,12 @@
             </md-select>
         </div>
         <ui-codemirror ng-model="selectedCustomFunction.clojureCode" ui-codemirror-opts="codemirrorOpts"></ui-codemirror>
-        <md-button class="md-raised" ng-click="saveCustomFunct()" ng-hide="!selectedCustomFunction.name==''">Save</md-button>
-        <md-button class="md-raised" ng-click="applyCustomFunctionChanges()">Done</md-button>
-        <md-button class="md-raised" ng-click="cancelCustomFunctionChanges()">Cancel</md-button>
+        <md-button class="md-raised" ng-click="saveCustomFunct()" ng-hide="!selectedCustomFunction.name==''">Save function</md-button>
+
+
     </md-dialog-content>
+    <div class="md-actions" layout="row" layout-align="right">
+        <md-button class="md-primary" ng-click="applyCustomFunctionChanges()">Done</md-button>
+        <md-button class="md-primary" ng-click="cancelCustomFunctionChanges()">Cancel</md-button>
+    </div>
 </md-dialog>

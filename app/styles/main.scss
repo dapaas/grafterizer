@@ -446,6 +446,14 @@ md-tab-content {
     .ui-grid-row:hover .ui-grid-cell {
         background-color: #eee;
     }
+
+    .ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-header-cell:last-child,
+    .ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-cell:last-child {
+        border-right-color: #DBDBDB;
+    }
+    .ui-grid-selection-row-header-buttons {
+        margin: 0 -5px 0 -5px;
+    }
 }
 
 preview-table .sin-grid {
@@ -471,4 +479,28 @@ preview-table .watermark {
     z-index: 1000;
     line-height: 3em;
     margin-top: -1.5em;
+}
+
+.sin-function-dialog {
+    min-width:50%;
+
+    md-dialog-content:not(.md-padding) {
+        padding:0;
+    }
+}
+
+.sin-width-function-dialog {
+    min-width:75%;
+}
+
+// TODO WORKAROUND
+.ui-grid-menu-button {
+      height: 30px;
+  outline: -webkit-focus-ring-color auto 0;
+  padding-top: 7px;
+  padding-left: 6px;
+}
+
+.sin-mapping-tabs md-tab-content {
+    min-height:300px;
 }

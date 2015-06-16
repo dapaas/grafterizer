@@ -16,6 +16,8 @@ angular.module('grafterizerApp')
         exporterMenuCsv: true,
         exporterMenuPdf: false,
         enableGridMenu: true,
+        headerRowHeight: 82,
+        rowHeight: 38,
         columnDefs: [
             { name: 'prefixName' },
             { name: 'uri' }

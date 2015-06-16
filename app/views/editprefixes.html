@@ -1,16 +1,33 @@
-<md-dialog aria-label='Specify prefixes...'>
-    <md-dialog-content class="sticky-container">
-        
-        <md-subheader class="md-sticky-no-effect">Edit prefixes...</md-subheader>
-        <div id="prefixesTable" ui-grid="gridOpts" class="grid" ui-grid-selection ui-grid-resize-columns ui-grid-exporter></div>
-        <input ng-model="prefixName" type="text" min="1" required>
-        <input ng-model="prefixUri" type="text" min="1" required>
-        <md-button class="md-raised" ng-click="addPrefixer()">Add prefixer</md-button>
-        <md-button class="md-raised" ng-click="removeSelectedPrefixers()">Remove selected</md-button>
-        <br/>
-        <md-button class="md-raised" ng-click="applyPrefixersChanges()">Done</md-button>
-        <md-button class="md-raised" ng-click="cancelPrefixersChanges()">Cancel</md-button>
-        
-        
+<md-dialog aria-label='Edit prefixes' class="sin-function-dialog sin-width-function-dialog">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Edit prefixes</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="md-padding">
+        <div id="prefixesTable" ui-grid="gridOpts" class="grid sin-grid sin-prefixes-grid" ui-grid-selection ui-grid-resize-columns ui-grid-exporter></div>
+        <div>
+            <form name="prefixForm">
+                <div layout="row">
+                    <md-input-container flex>
+                        <label>Prefix name</label>
+                        <input ng-model="prefixName" type="text" min="1" required>
+                    </md-input-container>
+                    <md-input-container flex>
+                        <label>Prefix URI</label>
+                        <input ng-model="prefixUri" type="text" min="1" required>
+                    </md-input-container>
+                </div>
+            </form>
+            <div layout="row">
+                <md-button class="md-raised" ng-click="addPrefixer()">Add prefixer</md-button>
+                <md-button class="md-raised" ng-click="removeSelectedPrefixers()">Remove selected</md-button>
+            </div>
+        </div>
     </md-dialog-content>
+
+    <div class="md-actions" layout="row" layout-align="right">
+        <md-button class="md-primary" ng-click="applyPrefixersChanges()">Done</md-button>
+        <md-button class="md-primary" ng-click="cancelPrefixersChanges()">Cancel</md-button>
+    </div>
 </md-dialog>
