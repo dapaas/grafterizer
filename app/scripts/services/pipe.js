@@ -9,7 +9,7 @@
  */
 angular.module('grafterizerApp')
   .service('PipeService', function ($http, $log, $mdToast) {
-  	var urlBase = "http://ec2-52-17-93-160.eu-west-1.compute.amazonaws.com:8080";
+  	var urlBase = "http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8080";
 
     var transformEdnResponse = function(data, headers) {
       try {
