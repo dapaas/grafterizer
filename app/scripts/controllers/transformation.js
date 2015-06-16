@@ -38,10 +38,8 @@ angular.module('grafterizerApp')
     // });
 
     var loadEmptyTransformation = function(){
-        var prefixer = new transformationDataModel.Prefixer("examplePrefixer", "http://www.asdf.org/#/");
-        var customFunctionDeclaration = new transformationDataModel.CustomFunctionDeclaration("exampleCustomFunct", "(defn example asdf)");
         var pipeline = new transformationDataModel.Pipeline([]);
-        $scope.transformation = new transformationDataModel.Transformation([customFunctionDeclaration], [prefixer], [pipeline], []);
+        $scope.transformation = new transformationDataModel.Transformation([], [], [pipeline], []);
         $scope.pipeline = pipeline;
     };
 

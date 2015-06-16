@@ -25,13 +25,8 @@ angular.module('grafterizerApp')
   	};
 
   	$scope.clojure = "";
-    var prefixer = new transformationDataModel.Prefixer("examplePrefixer", "http://www.asdf.org/#/");
-    var customFunctionDeclaration = new transformationDataModel.CustomFunctionDeclaration("exampleCustomFunct", "(defn example asdf)");
-    $scope.pipeline = new transformationDataModel.Pipeline([
-                    new transformationDataModel.CustomCode("roger", "bob"),
-                    new transformationDataModel.DropRowsFunction(4),
-                    new transformationDataModel.CustomCode("lapin", "lapin")]);
-    $scope.transformation = new transformationDataModel.Transformation([customFunctionDeclaration], [prefixer], [$scope.pipeline], []);
+    $scope.pipeline = new transformationDataModel.Pipeline([]);
+    $scope.transformation = new transformationDataModel.Transformation([], [], [$scope.pipeline], []);
 
     window.canard = $scope;
 
