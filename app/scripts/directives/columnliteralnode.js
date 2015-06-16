@@ -11,6 +11,10 @@ angular.module('grafterizerApp')
     return {
         templateUrl: 'views/columnliteralnode.html',
         restrict: 'E',
+        scope: {
+            node: '=',
+            parent: '='
+        },
         compile: function(element) {
             // TODO may be different at the end but probably need to unify with the constant uri node directive and create a directive for edit/add/remove-s
             return RecursionHelper.compile(element, function(scope, iElement, iAttrs, controller, transcludeFn){

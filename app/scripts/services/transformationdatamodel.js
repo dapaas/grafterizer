@@ -82,7 +82,6 @@ angular.module('grafterizerApp')
     Types.DropRowsFunction = DropRowsFunction;
 
     var DeriveColumnFunction = function (newColName, colsToDeriveFrom, functionToDeriveWith) {
-        console.log(functionToDeriveWith);
         GenericFunction.call(this);
         this.newColName = newColName;
         this.colsToDeriveFrom = colsToDeriveFrom;
@@ -593,6 +592,29 @@ angular.module('grafterizerApp')
             }
         }
         return null;
+    };
+    Transformation.prototype.getColumnKeysFromPipeline = function() {
+        var i, j, currentFunction, availableColumnKeys=[];
+        
+        console.log("this.pipelines");
+        console.log(this.pipelines);
+        for (j = 0; j < this.pipelines.length; ++j){
+            for(i = 0; i < this.pipelines[j].functions.length; ++i) {
+                console.log(currentFunction);
+                currentFunction = this.pipelines[j].functions[i];
+                if(currentFunction instanceof DeriveColumnFunction){
+                    availableColumnKeys.push(currentFunction.newColName);
+                }
+                if(currentFunction instanceof MakeDatasetFunction){
+                    for(var k = 0; k < currentFunction.columnsArray.length; ++k){
+                        availableColumnKeys.push(currentFunction.columnsArray[k]);
+                    }
+                    
+                }
+            }
+        }
+        console.log("available keys:", availableColumnKeys);
+        return availableColumnKeys;
     };
 
     // AngularJS will instantiate a singleton by calling "new" on this function

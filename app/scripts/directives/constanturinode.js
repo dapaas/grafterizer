@@ -44,7 +44,7 @@ angular.module('grafterizerApp')
                         .ariaLabel('Please confirm that you want to remove the element.')
                         .ok('Yes')
                         .cancel('Cancel')).then(function() {
-                        node.parent.removeChild(node);
+                        scope.parent.removeChild(node);
                     });
                 };
                 scope.clickAddNodeAfter = function () {

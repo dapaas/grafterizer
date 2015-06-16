@@ -12,21 +12,22 @@ angular.module('grafterizerApp')
         templateUrl: 'views/addorremoveproperty.html',
         restrict: 'E',
         scope: {
-            property: '='
+            property: '=',
+            parent: '='
         },
         compile: function(element) {
             return RecursionHelper.compile(element, function(scope, iElement, iAttrs, controller, transcludeFn){
                 scope.node = scope.property;
                 scope.editProperty = function () {
                     scope.originalProperties = [];
-                    angular.copy(scope.node.parent.subElements, scope.originalProperties);
+                    angular.copy(scope.parent.subElements, scope.originalProperties);
                     $mdDialog.show({
                         templateUrl: 'views/propertydialog.html',
                         controller: 'PropertydialogCtrl',
                         scope: scope.$new(false, scope)
                     }).then( function(propertyNode) {
                     }, function () {
-                        angular.copy(scope.originalProperties, scope.node.parent.subElements);
+                        angular.copy(scope.originalProperties, scope.parent.subElements);
                     });
                 };
                 scope.clickAddPropertyAfter = function (property) {
@@ -37,7 +38,7 @@ angular.module('grafterizerApp')
                         controller: 'PropertydialogCtrl',
                         scope: newScope
                     }).then( function(propertyNode) {
-                        scope.node.parent.addNodeAfter(property, propertyNode);
+                        scope.parent.addNodeAfter(property, propertyNode);
                     });
                 };
                 scope.clickRemoveProperty = function (property) {
@@ -48,7 +49,7 @@ angular.module('grafterizerApp')
                         .ariaLabel('Please confirm that you want to remove the element.')
                         .ok('Yes')
                         .cancel('Cancel')).then(function() {
-                        scope.node.parent.removeChild(property);
+                        scope.parent.removeChild(property);
                     });
 
                 }
