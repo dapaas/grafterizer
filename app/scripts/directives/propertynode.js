@@ -10,7 +10,8 @@ angular.module('grafterizerApp')
     .directive('propertyNode', function (transformationDataModel, $mdDialog, RecursionHelper) {
     return {
         scope: {
-            property: '='
+            property: '=',
+            parent: '='
         },
         templateUrl: 'views/propertynode.html',
         restrict: 'E',
@@ -18,14 +19,14 @@ angular.module('grafterizerApp')
             return RecursionHelper.compile(element, function(scope, iElement, iAttrs, controller, transcludeFn){
                 scope.editProperty = function () {
                     scope.originalProperties = [];
-                    angular.copy(scope.$parent.node.subElements, scope.originalProperties);
+                    angular.copy(scope.parent.subElements, scope.originalProperties);
                     $mdDialog.show({
                         templateUrl: 'views/propertydialog.html',
                         controller: 'PropertydialogCtrl',
                         scope: scope.$new(false, scope)
                     }).then( function(propertyNode) {
                     }, function () {
-                        angular.copy(scope.originalProperties, scope.$parent.node.subElements);
+                        angular.copy(scope.originalProperties, scope.parent.subElements);
                     });
                 };
                 scope.clickAddNodeAfter = function (node) {

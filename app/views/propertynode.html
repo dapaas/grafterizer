@@ -11,9 +11,11 @@
         </md-button>
         <div layout="column" ng-repeat="node in property.subElements">
             <constant-uri-node ng-if="node.__type=='ConstantURI'" node="node"></constant-uri-node>
+<!--
             <column-uri-node ng-if="node.__type=='ColumnURI'" node="node"></column-uri-node>
             <constant-literal-node ng-if="node.__type=='ConstantLiteral'" node="node"></constant-literal-node>
             <column-literal-node ng-if="node.__type=='ColumnLiteral'" node="node"></column-literal-node>
+-->
         </div>
     </div>
 </div>
