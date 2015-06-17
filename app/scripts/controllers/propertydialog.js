@@ -17,6 +17,7 @@ angular.module('grafterizerApp')
         $mdDialog.hide($scope.property);
     };
     $scope.closeDialog = function () {
+        $mdDialog.cancel();
     };
     
 });
