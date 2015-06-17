@@ -15,13 +15,13 @@ angular.module('grafterizerApp')
         // we create a new node
         $scope.newNode = {};
     } else {
-        console.log("here");
         // put dialog in the proper state
         switch ($scope.newNode.__type) {
             case 'ConstantURI':
             case 'ColumnURI':
                 $scope.dialogState.selectedTab = 0;
                 $scope.dialogState.mappingType = $scope.newNode.__type == 'ConstantURI' ? 'free-defined' : 'dataset-col';
+                
                 break;
             case 'ColumnLiteral':
             case 'ConstantLiteral':
@@ -33,12 +33,14 @@ angular.module('grafterizerApp')
         }
     }
     $scope.changeType = function () {
+        console.log($scope);
         switch ($scope.dialogState.selectedTab){
             case 0:
                 if($scope.dialogState.mappingType == 'dataset-col') {
-                    $scope.newNode = new transformationDataModel.ColumnURI('', '', []);
+                    console.log("test");
+                    $scope.newNode = new transformationDataModel.ColumnURI($scope.newNode.prefix ? $scope.newNode.prefix : '', '', []);
                 } else {
-                    $scope.newNode = new transformationDataModel.ConstantURI('', '', []);
+                    $scope.newNode = new transformationDataModel.ConstantURI($scope.newNode.prefix ? $scope.newNode.prefix : '', '', []);
                 }
                 break;
             case 1:

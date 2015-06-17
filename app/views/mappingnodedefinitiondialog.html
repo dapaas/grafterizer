@@ -1,6 +1,6 @@
 <md-dialog aria-label='Choose mapping node...' class="sin-function-dialog">
     <md-dialog-content class="sticky-container">
-        <md-tabs class="md-primary no-border-radius sin-mapping-tabs" flex md-no-disconnect md-swipe-content="" md-selected="dialogState.selectedTab" ng-model="dialogState.selectedTab" ng-change="changeType()">
+        <md-tabs class="md-primary no-border-radius sin-mapping-tabs" flex md-no-disconnect md-swipe-content="" ng-model="dialogState.selectedTab" ng-change="changeType()" md-dynamic-height>
             <md-tab label="URI node" md-on-select="changeType()">
                 <md-tab-body>
                     <div class="md-padding" layout="column">
@@ -10,7 +10,7 @@
                         </md-input-container>
 
                         <label>Select mapping source type</label>
-                        <md-select ng-model="dialogState.mappingType" placeholder="Choose a type..." required ng-change="changeType()" md-selected="dialogState.mappingType">
+                        <md-select ng-model="dialogState.mappingType" placeholder="Choose a type..." required ng-change="changeType()">
                             <md-option value="dataset-col">From dataset column</md-option>
                             <md-option value="free-defined">Free-defined text</md-option>
                         </md-select>

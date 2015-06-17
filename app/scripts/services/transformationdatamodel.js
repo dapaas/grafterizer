@@ -332,7 +332,7 @@ angular.module('grafterizerApp')
                 return true;
             }
             else {
-                this.graphs.splice(index + 1, 0, propertyToAdd);
+                this.subElements.splice(index + 1, 0, propertyToAdd);
                 return true;
             }
         }
@@ -522,7 +522,7 @@ angular.module('grafterizerApp')
 
         for (i = 0; i < graphs.length; ++i) {
             graph = graphs[i];
-            if (!(graph instanceof Graph) && graph.__type === "StringifiableGraph") {
+            if (!(graph instanceof Graph) && graph.__type === "Graph") {
                 graphs[i] = Graph.revive(graphs[i]);
             }
         }
