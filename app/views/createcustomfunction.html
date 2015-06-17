@@ -12,8 +12,10 @@
                 <md-option ng-value="{{emptyCustomFunction}}">Create new function...</md-option>
             </md-select>
         </div>
-        <ui-codemirror ng-model="selectedCustomFunction.clojureCode" ui-codemirror-opts="codemirrorOpts"></ui-codemirror>
-        <md-button class="md-raised" ng-click="saveCustomFunct()">Save function</md-button>
+        <div class="background-stuff">
+            <ui-codemirror ng-model="selectedCustomFunction.clojureCode" ui-codemirror-opts="codemirrorOpts"></ui-codemirror>
+        </div>
+        <md-button class="md-padding md-raised" ng-click="saveCustomFunct()" ng-hide="!selectedCustomFunction.name==''">Save function</md-button>
 
 
     </md-dialog-content>

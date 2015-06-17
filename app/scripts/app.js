@@ -124,7 +124,7 @@ angular
             }
         },
         ncyBreadcrumb: {
-            label: 'Transformations'
+            label: 'Data transformations'
         }
     })
         .state('transformations.new', {
@@ -289,6 +289,8 @@ angular
     $mdThemingProvider.theme('default')
 	    .primaryPalette(colors[Math.floor(Math.random()*colors.length)])
 	    .accentPalette(colors[Math.floor(Math.random()*colors.length)]);*/
+    $mdThemingProvider.theme('default')
+        .accentPalette('blue');
 
     jsedn.Symbol.prototype.validRegex = new RegExp(/.*/);
 });

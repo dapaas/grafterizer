@@ -3,8 +3,8 @@
     <div class="pipeline-flow-line"></div>
     <div data-as-sortable="dragControlListeners" data-ng-model="pipeline.functions">
         <div data-as-sortable-item ng-repeat="funct in pipeline.functions" flex>
-            <div data-as-sortable-item-handle layout="row">
-                <pipeline-function transformation="transformation" function="funct" flex layout="row"></pipeline-function> 
+            <div data-as-sortable-item-handle layout="row" layout-align="center">
+                <pipeline-function transformation="transformation" function="funct"></pipeline-function> 
                 <md-button class="md-primary button-tight" ng-click="clickAddAfter(funct)">
                     <i class="fa fa-large fa-plus-circle"></i>
                 </md-button>
@@ -15,7 +15,9 @@
         </div>
     </div>
 
-    <md-button class="md-primary" ng-click="clickAddAfter(null)" ng-hide="pipeline.functions.length!=0">
-        <i class="fa fa-large fa-plus-circle"></i>
-    </md-button>
+    <div layout="row" layout-align="center" ng-hide="pipeline.functions.length!=0">
+        <md-button class="md-primary button-tight" ng-click="clickAddAfter(null)">
+            <i class="fa fa-large fa-plus-circle"></i>
+        </md-button>
+    </div>
 </div>

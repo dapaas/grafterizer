@@ -79,7 +79,7 @@ angular.module('grafterizerApp')
               'dcat:mediaType': file.type
           };
         ontotextAPI.uploadDistribution(
-          "http://dapaas.eu/users/1505271111/dataset/all_data_korea-2",
+          "http://dapaas.eu/users/1505271111/dataset/all_data_korea-1",
           file, metadata).success(function(data){
             $state.go("transformations.transformation.preview", {
               id: $stateParams.id,
