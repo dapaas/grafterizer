@@ -25,7 +25,7 @@ angular.module('grafterizerApp')
                     newScope.newNode = scope.node;
                     newScope.isCreate = false;
                     $mdDialog.show({
-                        templateUrl: 'views/mappingNodeDefinitionDialog.html',
+                        templateUrl: 'views/mappingnodedefinitiondialog.html',
                         controller: 'MappingnodedefinitiondialogCtrl',
                         scope: newScope
                     }).then(function(graphNode) {
@@ -51,7 +51,7 @@ angular.module('grafterizerApp')
                     var newScope = scope.$new(false, scope);
                     newScope.isCreate = true;
                     $mdDialog.show({
-                        templateUrl: 'views/mappingNodeDefinitionDialog.html',
+                        templateUrl: 'views/mappingnodedefinitiondialog.html',
                         controller: 'MappingnodedefinitiondialogCtrl',
                         scope: newScope
                     }).then( function(graphNode) {
