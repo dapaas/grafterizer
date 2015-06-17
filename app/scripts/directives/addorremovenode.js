@@ -12,7 +12,7 @@ angular.module('grafterizerApp')
         templateUrl: 'views/addorremovenode.html',
         restrict: 'E',
         scope: {
-            property: '=',
+            node: '=',
             parent: '='
         },
         compile: function(element) {
@@ -43,6 +43,7 @@ angular.module('grafterizerApp')
                         .ariaLabel('Please confirm that you want to remove the element.')
                         .ok('Yes')
                         .cancel('Cancel')).then(function() {
+                        console.log(node);
                         scope.parent.removeChild(node);
                     });
                 };

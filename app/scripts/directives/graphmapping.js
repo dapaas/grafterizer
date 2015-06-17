@@ -19,20 +19,20 @@ angular.module('grafterizerApp')
             if(scope.graph.graphRoots.length==0){
                 var property1 = new transformationDataModel.Property("rdf", "a");
                 var property2 = new transformationDataModel.Property("foaf", "name");
-                var property3 = new transformationDataModel.Property("foaf", "age");
+//                var property3 = new transformationDataModel.Property("foaf", "age");
                 var property4 = new transformationDataModel.Property("foaf", "gender");
                 
                 var subNode1 = new transformationDataModel.ConstantURI("foaf", "Person");
                 var subNode2 = new transformationDataModel.ColumnLiteral("name");
-                var subNode3 = new transformationDataModel.ColumnLiteral("age");
+//                var subNode3 = new transformationDataModel.ColumnLiteral("age");
                 var subNode4 = new transformationDataModel.ColumnLiteral("gender");
                 
                 property1.addChild(subNode1);
                 property2.addChild(subNode2);
-                property3.addChild(subNode3);
+//                property3.addChild(subNode3);
                 property4.addChild(subNode4);
                 
-                scope.graph.addNodeAfter(null, new transformationDataModel.ColumnURI("", "person-uri", [property1, property2, property3, property4]));
+                scope.graph.addNodeAfter(null, new transformationDataModel.ColumnURI("", "person-uri", [property1, property2,  property4]));
             }
 //            scope.graph.graphRoots.push(new transformationDataModel.ColumnURI("asd", "ColumnURI", []));
 //            scope.graph.graphRoots.push(new transformationDataModel.ConstantLiteral("ConstantLiteral", []));
