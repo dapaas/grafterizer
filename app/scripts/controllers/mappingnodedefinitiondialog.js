@@ -38,22 +38,17 @@ angular.module('grafterizerApp')
         switch ($scope.dialogState.selectedTab){
             case 0:
                 if($scope.dialogState.mappingType == 'dataset-col') {
-                    console.log("test");
                     $scope.newNode = new transformationDataModel.ColumnURI($scope.newNode.prefix ? $scope.newNode.prefix : '', '', []);
-                    console.log("$scope.newNode = new transformationDataModel.ColumnURI('', []);", $scope.newNode);
                 } else {
                     $scope.newNode = new transformationDataModel.ConstantURI($scope.newNode.prefix ? $scope.newNode.prefix : '', '', []);
-                    console.log("$scope.newNode = new transformationDataModel.ConstantURI('', []);", $scope.newNode);
                 }
                 break;
             case 1:
                 if($scope.dialogState.mappingType == 'dataset-col') {
                     $scope.newNode = new transformationDataModel.ColumnLiteral('', []);
-                    console.log("$scope.newNode = new transformationDataModel.ColumnLiteral('', []);", $scope.newNode);
 
                 } else {
                     $scope.newNode = new transformationDataModel.ConstantLiteral('', []);
-                    console.log("$scope.newNode = new transformationDataModel.ConstantLiteral('', []);", $scope.newNode);
                 }
                 break;
             case 2:
