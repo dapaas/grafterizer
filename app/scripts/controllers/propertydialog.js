@@ -18,5 +18,14 @@ angular.module('grafterizerApp')
     };
     $scope.closeDialog = function () {
     };
+	
+	$scope.SearchVocabulary = function(e) {
+	   
+	   $mdDialog.show({
+			templateUrl: 'views/searchVocabulary.html',
+            controller: 'SearchVocabularyController',
+			targetEvent: e,
+		});
+	};
     
 });
