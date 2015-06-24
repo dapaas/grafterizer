@@ -44,6 +44,13 @@ angular.module('grafterizerApp')
         .hideDelay(3000)
       );
     };
+
+    this.computeTuplesHref = function(distributionUri, transformationUri) {
+      return urlBase+"/download?transformation="+
+        window.encodeURIComponent(transformationUri)+
+        "&distribution="+window.encodeURIComponent(distributionUri);
+    };
+
     this.preview = function(distributionUri, clojure) {
         return $http({
             // url: urlBase+"/poney",

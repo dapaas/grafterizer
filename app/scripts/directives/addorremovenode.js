@@ -12,7 +12,7 @@ angular.module('grafterizerApp')
         templateUrl: 'views/addorremovenode.html',
         restrict: 'E',
         scope: {
-            property: '=',
+            node: '=',
             parent: '='
         },
         compile: function(element) {
@@ -25,7 +25,7 @@ angular.module('grafterizerApp')
                     newScope.newNode = scope.node;
                     newScope.isCreate = false;
                     $mdDialog.show({
-                        templateUrl: 'views/mappingNodeDefinitionDialog.html',
+                        templateUrl: 'views/mappingnodedefinitiondialog.html',
                         controller: 'MappingnodedefinitiondialogCtrl',
                         scope: newScope
                     }).then(function(graphNode) {
@@ -43,6 +43,7 @@ angular.module('grafterizerApp')
                         .ariaLabel('Please confirm that you want to remove the element.')
                         .ok('Yes')
                         .cancel('Cancel')).then(function() {
+                        console.log(node);
                         scope.parent.removeChild(node);
                     });
                 };
@@ -50,7 +51,7 @@ angular.module('grafterizerApp')
                     var newScope = scope.$new(false, scope);
                     newScope.isCreate = true;
                     $mdDialog.show({
-                        templateUrl: 'views/mappingNodeDefinitionDialog.html',
+                        templateUrl: 'views/mappingnodedefinitiondialog.html',
                         controller: 'MappingnodedefinitiondialogCtrl',
                         scope: newScope
                     }).then( function(graphNode) {

@@ -9,7 +9,7 @@
 angular.module('grafterizerApp')
     .directive('makeDataset', function (transformationDataModel) {
     return {
-        templateUrl: 'views/makeDatasetFunction.html',
+        templateUrl: 'views/makedatasetfunction.html',
         restrict: 'E',
         link: function postLink(scope, element, attrs) {
             if (!scope.function) {

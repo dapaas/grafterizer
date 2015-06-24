@@ -22,7 +22,10 @@ angular.module('grafterizerApp')
             columnDefs: [],
             headerRowHeight: 82,
             rowHeight: 38,
-            showHeader: !attrs.hasOwnProperty("hideHeaders")
+            showHeader: !attrs.hasOwnProperty("hideHeaders"),
+            exporterMenuCsv: true,
+            exporterMenuPdf: false,
+            enableGridMenu: true
         };
 
         scope.$watch('data', function(){

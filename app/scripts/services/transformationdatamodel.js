@@ -114,8 +114,6 @@ angular.module('grafterizerApp')
         var values = [jsedn.sym("derive-column"),
                       this.newColName ? new jsedn.kw(':' + this.newColName) : new jsedn.kw(':unnamed'), colsToDeriveFromClj];
 
-        console.log(this.functionToDeriveWith.name);
-        console.log(this.functionToDeriveWith);
         if (this.functionToDeriveWith) {
             values.push(jsedn.sym(this.functionToDeriveWith.name));
         }
@@ -166,7 +164,6 @@ angular.module('grafterizerApp')
         if (keyFunctionPairs !== null) {
             for (i = 0; i < keyFunctionPairs.length; ++i) {
                 kfPair = keyFunctionPairs[i];
-                console.log(kfPair);
                 if(kfPair != null){
                     if (!(kfPair instanceof KeyFunctionPair) && kfPair.__type === "KeyFunctionPair") {
                         keyFunctionPairs[i] = KeyFunctionPair.revive(kfPair);
@@ -183,13 +180,11 @@ angular.module('grafterizerApp')
     MapcFunction.prototype.generateClojure = function() {
         var i, keyFunctionPairsClj = new jsedn.Map([]);
         for (i = 0; i < this.keyFunctionPairs.length; ++i){
-            console.log(this.keyFunctionPairs[i]);
             keyFunctionPairsClj.set(
                 new jsedn.kw(':' + this.keyFunctionPairs[i].key), 
                 new jsedn.sym(this.keyFunctionPairs[i].func)
             );
         }
-        //        console.log(keyFunctionPairsClj.ednEncode());
         return new jsedn.List([jsedn.sym("mapc"), keyFunctionPairsClj]);
     };
     MapcFunction.prototype.removeKeyFunctionPair = function (kfPair) {
@@ -224,7 +219,6 @@ angular.module('grafterizerApp')
         return new MakeDatasetFunction(data.columnsArray);
     };
     MakeDatasetFunction.prototype.generateClojure = function() {
-        console.log("COLUMNS ARRAY", this.columnsArray);
         //(make-dataset [:name :sex :age])
         var i, colNamesClj = new jsedn.Vector([]);
         for (i=0; i < this.columnsArray.length ; ++i){
@@ -332,7 +326,7 @@ angular.module('grafterizerApp')
                 return true;
             }
             else {
-                this.graphs.splice(index + 1, 0, propertyToAdd);
+                this.subElements.splice(index + 1, 0, propertyToAdd);
                 return true;
             }
         }
@@ -456,7 +450,6 @@ angular.module('grafterizerApp')
         this.graphRoots.push(child);
     };
     Graph.prototype.removeChild = function (child) {
-        console.log("removing", child);
         var childIndex = this.graphRoots.indexOf(child);
         if (childIndex !== -1) {
             this.graphRoots.splice(childIndex, 1);
@@ -485,6 +478,7 @@ angular.module('grafterizerApp')
     Types.Graph = Graph;
 
     var Transformation = function (customFunctionDeclarations, prefixers, pipelines, graphs) {
+        console.log(graphs);
         // validate that inputs are revived
         var i, cfd, prefixer, pipeline, graph;
         if(!customFunctionDeclarations)
@@ -519,13 +513,16 @@ angular.module('grafterizerApp')
                 pipelines[i] = Pipeline.revive(pipeline);
             }
         }
-
+        console.log("graph", graphs[0]);
         for (i = 0; i < graphs.length; ++i) {
+            console.log("graph", graphs[i]);
             graph = graphs[i];
-            if (!(graph instanceof Graph) && graph.__type === "StringifiableGraph") {
+            if (!(graph instanceof Graph) && graph.__type === "Graph") {
                 graphs[i] = Graph.revive(graphs[i]);
+                console.log(graphs[i]);
             }
         }
+        console.log(graphs);
 
         this.customFunctionDeclarations = customFunctionDeclarations;
         this.prefixers = prefixers;
@@ -535,10 +532,11 @@ angular.module('grafterizerApp')
 
     };
     Transformation.revive = function (data) {
-        return new Transformation(data.customFunctionDeclarations, data.prefixers, data.pipelines, data.grafts);
+        return new Transformation(data.customFunctionDeclarations, data.prefixers, data.pipelines, data.graphs);
     };
     Types.Transformation = Transformation;
     Transformation.prototype.addGraphAfter = function (graph, graphToAdd) {
+        
         var index = this.graphs.indexOf(graph);
         if(!graph || index === -1) {
             this.graphs.push(graphToAdd);
@@ -596,11 +594,8 @@ angular.module('grafterizerApp')
     Transformation.prototype.getColumnKeysFromPipeline = function() {
         var i, j, currentFunction, availableColumnKeys=[];
         
-        console.log("this.pipelines");
-        console.log(this.pipelines);
         for (j = 0; j < this.pipelines.length; ++j){
             for(i = 0; i < this.pipelines[j].functions.length; ++i) {
-                console.log(currentFunction);
                 currentFunction = this.pipelines[j].functions[i];
                 if(currentFunction instanceof DeriveColumnFunction){
                     availableColumnKeys.push(currentFunction.newColName);
@@ -613,7 +608,6 @@ angular.module('grafterizerApp')
                 }
             }
         }
-        console.log("available keys:", availableColumnKeys);
         return availableColumnKeys;
     };
 
