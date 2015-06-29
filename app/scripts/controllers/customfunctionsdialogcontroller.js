@@ -21,18 +21,28 @@ angular.module('grafterizerApp')
         });
     }, 250);
     
-    $scope.emptyCustomFunction = new transformationDataModel.CustomFunctionDeclaration("", "(defn YOUR_FUNCTION_NAME YOUR_FUNCTION_CODE)");
+    $scope.emptyCustomFunction = new transformationDataModel.CustomFunctionDeclaration("", "");
     $scope.saveCustomFunct = function () {
-        var customFunctionData = $scope.parseCustomFunctionCode($scope.selectedCustomFunction.clojureCode);
-        var result = $scope.$parent.transformation.addCustomFunctionDeclaration(customFunctionData.name, customFunctionData.code);
+        var customFunctionData = $scope.parseCustomFunctionCode
+        ($scope.selectedCustomFunction.clojureCode);
+        
+        var result =  $scope.$parent.transformation
+        .addCustomFunctionDeclaration(
+            customFunctionData.name, 
+            customFunctionData.code);
+        
         if(!result){
             $mdToast.show(
                 $mdToast.simple()
-                .content("Couldn't add custom function. A function with the same name already exists.")
+                .content("Modified existing custom function.")
                 .position('bottom left')
-                .hideDelay(3000)
+                .hideDelay(2000)
             );
+        } else {
+            var indexOfNewFunct = $scope.$parent.transformation.customFunctionDeclarations.length - 1;
+        $scope.selectedCustomFunction = $scope.$parent.transformation.customFunctionDeclarations[indexOfNewFunct];
         }
+        
     };
     $scope.parseCustomFunctionCode = function (customCode){
         var functionName;
@@ -68,8 +78,19 @@ angular.module('grafterizerApp')
     };
     $scope.applyCustomFunctionChanges = function () {
         $mdDialog.hide();
-    }
+    };
     $scope.cancelCustomFunctionChanges = function () {
         $mdDialog.cancel();
-    }
+    };
+    $scope.removeCustomFunct = function (customFunct) {
+        $scope.$parent.transformation.removeCustomFunctionDeclaration(customFunct);
+        $scope.selectedCustomFunction = $scope.emptyCustomFunction;
+    };
+    $scope.createNewFunct = function () {
+        console.log("test");
+        $scope.emptyCustomFunction.name = "";
+        $scope.emptyCustomFunction.clojureCode = "";
+        console.log($scope.emptyCustomFunction);
+        $scope.selectedCustomFunction = $scope.emptyCustomFunction;
+    };
 });

@@ -571,11 +571,30 @@ angular.module('grafterizerApp')
     Transformation.prototype.addCustomFunctionDeclaration = function(name, clojureCode) {
         for(var i = 0; i < this.customFunctionDeclarations.length; ++i){
             if(this.customFunctionDeclarations[i].name === name.trim()){
+                this.customFunctionDeclarations[i].clojureCode = clojureCode;
+                console.log(clojureCode, this.customFunctionDeclarations[i]);
                 return false;
             }
         }
         this.customFunctionDeclarations.push(new CustomFunctionDeclaration(name, clojureCode));
         return true;
+    };
+    Transformation.prototype.removeCustomFunctionDeclaration = function(customFunct) {
+        for(var i=0; i < this.customFunctionDeclarations.length; ++i){
+            if(this.customFunctionDeclarations[i].name === customFunct.name.trim()){
+                this.customFunctionDeclarations.splice(i, 1);
+                return true;
+            }
+        }
+        return false;
+//        var index = this.customFunctionDeclarations.indexOf(customFunct);
+//        if(!customFunct || index === -1) {
+//            console.log("Nothing to do here");
+//            return false;
+//        } else {
+//            this.customFunctionDeclarations.splice(index, 1);
+//            return true;
+//        }
     };
     Transformation.prototype.findPrefixerOrCustomFunctionByName = function(name) {
         var i;
