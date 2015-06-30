@@ -85,7 +85,7 @@ app.controller('MappingnodedefinitiondialogCtrl', function ($scope, $http, $mdDi
 		
 		if($scope.propertyValue.value.indexOf(":") >= 0){
 			$scope.newNode.prefix = $scope.propertyValue.value.substring(0, $scope.propertyValue.value.indexOf(":"));
-			$scope.newNode.propertyName = $scope.propertyValue.value.substring($scope.propertyValue.value.indexOf(":") + 1, $scope.propertyValue.value.length);
+			$scope.newNode.constant = $scope.propertyValue.value.substring($scope.propertyValue.value.indexOf(":") + 1, $scope.propertyValue.value.length);
 		}
         console.log($scope.newNode);
         $mdDialog.hide($scope.newNode);
