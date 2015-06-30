@@ -60,9 +60,15 @@
 
 								<div ng-show="hideValue">
 									<md-list>
+				<!--
 										<md-list-item  ng-repeat="item in items | startFrom:currentPage*pageSize | limitTo:pageSize">
 											<p> {{ item.value }} </p>
 											<md-button class="md-primary md-icon-button fa fa-plus" ng-click="addResult(item.value)"></md-button>	
+										</md-list-item>
+				-->
+										<md-list-item  ng-repeat="item in itemslocal | startFrom:currentPage*pageSize | limitTo:pageSize">
+											<p> {{ item }} </p>
+											<md-button class="md-primary md-icon-button fa fa-plus" ng-click="addResult(item)"></md-button>	
 										</md-list-item>
 									</md-list>
 									
@@ -86,21 +92,21 @@
 								</md-button>
 
 								<div>
-								<!--
 									<md-list>
 										<md-list-item ng-click="" ng-repeat="item in VocabItems | startFrom:currentPage*pageSize | limitTo:pageSize">
 											<p> {{ item }} </p>
-											<md-button class="md-secondary  fa fa-minus" ng-click="deleteItem(item, item.namespace)"></md-button>
+											<md-button class="fa fa-trash md-icon-button md-primary" ng-click="deleteItem(item, item.namespace)"></md-button>
 										</md-list-item>
 									</md-list>
-								-->
 								
+								<!--
 									<md-list>
 										<md-list-item ng-click="" ng-repeat="item in VocabItems | startFrom:currentPage*pageSize | limitTo:pageSize">
 											<p> {{ item.name }} </p>
 											<md-button class="fa fa-trash md-icon-button md-primary" ng-click="deleteItem(item.name, item.namespace)"></md-button>	
 										</md-list-item>
 									</md-list>
+									-->
 									
 									<md-button class="md-icon-button fa fa-angle-double-left"  ng-disabled="currentPage == 0" ng-click="currentPage=0">
 									</md-button>
@@ -140,9 +146,7 @@
 									<div class="dropzone" file-dropzone="" file="text" file-name="fileName">
 										<span>Drop File Here</span>
 									</div>
-									<div class="image-container">
-										<span class="file-name">{{fileName}}</span>
-									</div>
+									<span>{{fileName.value}}</span>
 								</div>
 
 								<md-input-container ng-hide="localPath">

@@ -15,8 +15,18 @@ app. filter('startFrom', function() {
     }
 });
 
-app.controller('MappingnodedefinitiondialogCtrl', function ($scope, $http, $mdDialog, $timeout, $log, transformationDataModel) {
+var localClassAndProperty = new Array();
 	
+var localVocabulary = new Array();
+
+var object = new Array();
+
+app.controller('MappingnodedefinitiondialogCtrl', function ($scope, $http, $mdDialog, $timeout, $log, transformationDataModel) {
+	$scope.propertyValue= {
+        value: ''
+    };
+	
+	$scope.dragProcess = false;
 	$scope.hideSelect = false;
     $scope.dialogState = {};
     $scope.dialogState.selectedTab = 0;
@@ -90,10 +100,6 @@ app.controller('MappingnodedefinitiondialogCtrl', function ($scope, $http, $mdDi
 	$scope.showSearchDialogToolBar = false;
 	$scope.showAddDialogToolBar = false;
 	
-	var localClassAndProperty = [];
-	
-	var localVocabulary = [];
-	
     console.log("scope current property", $scope.property);
     if(!$scope.property){
         $scope.property = new transformationDataModel.Property("", "", []);
@@ -116,26 +122,31 @@ app.controller('MappingnodedefinitiondialogCtrl', function ($scope, $http, $mdDi
 	var keywordscope;
 	
 	$scope.search = function(Para) {
+		if(Para === undefined){
+			return;
+		}
 		$scope.showProgress = true;
-		//if(Para.indexOf(":") >= 0){
-		//	Para = Para.substring(Para.indexOf(":") + 1, Para.length);
-		//}
-		
+		$scope.itemslocal = [];
 		keywordscope = Para;
 		$http.get('http://localhost:8080/ManageVocabulary/api/vocabulary/search/' + Para).success(function(response){
 			$scope.items = response.result;
+			
+		for (var i = response.result.length - 1; i >= 0; i--) {
+			$scope.itemslocal.push(response.result[i].value);
+		}
+
 			$scope.showProgress = false;
 		}).error(function(data, status, headers, config) {
     		alert("error");
 			$scope.showProgress = false;
     	});
 		
-		var str;
-		for(str in localClassAndProperty){
-			if(str.value.indexOf(keywordscope) != -1){  
-				$scope.items.push(str);
-			}
-		}
+		for (var i = localClassAndProperty.length - 1; i >= 0; i--) {
+			var str = localClassAndProperty[i].value;
+        	if (str.indexOf(keywordscope) != -1) {
+        		$scope.itemslocal.push(localClassAndProperty[i].value);
+        	}
+        }
 
 		$scope.hideValue = true;
 	};
@@ -184,10 +195,19 @@ app.controller('MappingnodedefinitiondialogCtrl', function ($scope, $http, $mdDi
 
 	//local
 	$scope.addVocabToTable = function(vocabName, vocabPrefix, vocabLoc) {
-    	$http.post('http://localhost:8080/ManageVocabulary/api/vocabulary/getClassAndPropertyFromVocabulary', {name:vocabName, path:vocabLoc}).success(function(response){
+		if(vocabName === undefined || vocabPrefix === undefined){
+			return;
+		}
+		if(vocabLoc === undefined && object.length === 0){
+			return;
+		}
+		
+		$scope.showProgress = true;
+    	$http.post('http://localhost:8080/ManageVocabulary/api/vocabulary/getClassAndPropertyFromVocabulary', {name:vocabName, path:vocabLoc, data:object.data}).success(function(response){
 			localClassAndProperty = response.result;
 			localVocabulary.push(vocabName);
 			$scope.switchToManageDialog();
+			$scope.showProgress = false;
 		}).error(function(data, status, headers, config) {
 			alert("error");
 		});        

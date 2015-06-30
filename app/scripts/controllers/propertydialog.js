@@ -16,8 +16,11 @@ app.filter('startFrom', function() {
 });
 
 var localClassAndProperty = new Array();
-	
+
 var localVocabulary = new Array();
+
+//var localVocabulary = JSON.parse(localStorage['localVocabulary']);
+
 
 var object = new Array();
 
@@ -129,7 +132,12 @@ app.controller('PropertydialogCtrl', function ($scope, $http, $mdDialog, $timeou
         	}
         }
 		
-		
+		for (var i = localClassAndProperty.length - 1; i >= 0; i--) {
+			var str = localClassAndProperty[i];
+        	if (str.value.indexOf(name) === 0) {
+        		localClassAndProperty.splice(i, 1);
+        	}
+        }
     }
 	
 	/*
@@ -184,7 +192,10 @@ app.controller('PropertydialogCtrl', function ($scope, $http, $mdDialog, $timeou
 		
 		$scope.showProgress = true;
     	$http.post('http://localhost:8080/ManageVocabulary/api/vocabulary/getClassAndPropertyFromVocabulary', {name:vocabName, path:vocabLoc, data:object.data}).success(function(response){
-			localClassAndProperty = response.result;
+			for (var i = response.result.length - 1; i >= 0; i--) {
+				localClassAndProperty.push(response.result[i]);
+			}
+			
 			localVocabulary.push(vocabName);
 			$scope.switchToManageDialog();
 			$scope.showProgress = false;
