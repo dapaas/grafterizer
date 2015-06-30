@@ -7,8 +7,17 @@
  * # MappingnodedefinitiondialogCtrl
  * Controller of the grafterizerApp
  */
-angular.module('grafterizerApp')
-    .controller('MappingnodedefinitiondialogCtrl', function ($scope, $mdDialog, transformationDataModel) {
+var app = angular.module('grafterizerApp');
+app. filter('startFrom', function() {
+    return function(input, start) {
+        start = +start; //parse to int
+        return input.slice(start);
+    }
+});
+
+app.controller('MappingnodedefinitiondialogCtrl', function ($scope, $http, $mdDialog, $timeout, $log, transformationDataModel) {
+	
+	$scope.hideSelect = false;
     $scope.dialogState = {};
     $scope.dialogState.selectedTab = 0;
     if(!$scope.newNode){
@@ -61,8 +70,144 @@ angular.module('grafterizerApp')
     $scope.closeDialog = function () {
         $mdDialog.cancel();
     }
+
     $scope.addNode = function () {
+		
+		if($scope.propertyValue.value.indexOf(":") >= 0){
+			$scope.newNode.prefix = $scope.propertyValue.value.substring(0, $scope.propertyValue.value.indexOf(":"));
+			$scope.newNode.propertyName = $scope.propertyValue.value.substring($scope.propertyValue.value.indexOf(":") + 1, $scope.propertyValue.value.length);
+		}
         console.log($scope.newNode);
         $mdDialog.hide($scope.newNode);
     }
+	
+	$scope.propertyValue= {
+        value: ''
+    };
+	
+	$scope.showProgress = false;
+	$scope.showManageDialogToolBar = true;
+	$scope.showSearchDialogToolBar = false;
+	$scope.showAddDialogToolBar = false;
+	
+	var localClassAndProperty = [];
+	
+	var localVocabulary = [];
+	
+    console.log("scope current property", $scope.property);
+    if(!$scope.property){
+        $scope.property = new transformationDataModel.Property("", "", []);
+	}
+	else{
+		$scope.propertyValue.value = $scope.property.prefix + ":" + $scope.property.propertyName;
+	}
+	
+    $scope.closeDialog = function () {
+        $mdDialog.cancel();
+    };
+	
+	$scope.currentPage = 0;
+    $scope.pageSize = 5;
+    $scope.items = [];
+    $scope.numberOfPages=function(){
+        return Math.ceil($scope.items.length/$scope.pageSize);                
+    }
+	
+	var keywordscope;
+	
+	$scope.search = function(Para) {
+		$scope.showProgress = true;
+		//if(Para.indexOf(":") >= 0){
+		//	Para = Para.substring(Para.indexOf(":") + 1, Para.length);
+		//}
+		
+		keywordscope = Para;
+		$http.get('http://localhost:8080/ManageVocabulary/api/vocabulary/search/' + Para).success(function(response){
+			$scope.items = response.result;
+			$scope.showProgress = false;
+		}).error(function(data, status, headers, config) {
+    		alert("error");
+			$scope.showProgress = false;
+    	});
+		
+		var str;
+		for(str in localClassAndProperty){
+			if(str.value.indexOf(keywordscope) != -1){  
+				$scope.items.push(str);
+			}
+		}
+
+		$scope.hideValue = true;
+	};
+    
+    var VocabularCollection;
+    
+	//local
+	$scope.switchToManageDialog = function() {	
+    	$scope.selection = "manageDialog";
+		
+		//C:\Users\yexl\Desktop\skos.rdf
+		$scope.VocabItems = localVocabulary;
+		$scope.showManageDialogToolBar = true;
+		$scope.showSearchDialogToolBar = false;
+		$scope.showAddDialogToolBar = false;
+		
+		$scope.hideSelect = true;
+	}
+
+    $scope.switchToSearchDialog = function() {
+    	$scope.selection = "searchDialog";
+		$scope.showManageDialogToolBar = false;
+		$scope.showSearchDialogToolBar = true;
+		$scope.showAddDialogToolBar = false;
+    	
+		$scope.hideSelect = false;
+    }
+    
+    $scope.switchToAddDialog = function() {
+    	$scope.selection = "addVocabDialog";
+		$scope.showManageDialogToolBar = false;
+		$scope.showSearchDialogToolBar = false;
+		$scope.showAddDialogToolBar = true;
+		
+		$scope.hideSelect = true;
+    }
+    
+	//local
+    $scope.deleteItem = function(name, vocabNamespace) {
+		for (var i = localVocabulary.length - 1; i >= 0; i--) {
+        	if (localVocabulary[i] === name) {
+        		localVocabulary.splice(i, 1);
+        	}
+        }
+    }
+
+	//local
+	$scope.addVocabToTable = function(vocabName, vocabPrefix, vocabLoc) {
+    	$http.post('http://localhost:8080/ManageVocabulary/api/vocabulary/getClassAndPropertyFromVocabulary', {name:vocabName, path:vocabLoc}).success(function(response){
+			localClassAndProperty = response.result;
+			localVocabulary.push(vocabName);
+			$scope.switchToManageDialog();
+		}).error(function(data, status, headers, config) {
+			alert("error");
+		});        
+    }
+	
+	$scope.addResult = function(value) {
+		$scope.propertyValue.value = value;
+    };
+	
+	$scope.data = {
+		cb: true
+	};
+	
+	$scope.onChange = function(cbState) {
+		if(cbState === true){
+			$scope.localPath = false;
+		}
+		else{
+			$scope.localPath = true;
+		}
+	};
 });
+
