@@ -23,48 +23,53 @@ angular.module('grafterizerApp')
         title: "New transformation",
         description: "",
     };
-    var integerColumn = new transformationDataModel.CustomFunctionDeclaration("integerColumn", "(defn integerColumn [s] (Integer/parseInt s))");
-    var stringColumn = new transformationDataModel.CustomFunctionDeclaration("stringColumn", "(defn stringColumn [str] (s str))");
-   
-    var bool = new transformationDataModel.CustomFunctionDeclaration("boolean", "");
-    var count = new transformationDataModel.CustomFunctionDeclaration("count", "");
-    var cast = new transformationDataModel.CustomFunctionDeclaration("cast", ""); 
-    var dec = new transformationDataModel.CustomFunctionDeclaration("dec", "");
-    var toDouble = new transformationDataModel.CustomFunctionDeclaration("double", "");
-    var first = new transformationDataModel.CustomFunctionDeclaration("first", "");
-    var toFloat = new transformationDataModel.CustomFunctionDeclaration("float", "");
-    var inc = new transformationDataModel.CustomFunctionDeclaration("inc", "");
-    var keyword = new transformationDataModel.CustomFunctionDeclaration("keyword", "");
-    var last = new transformationDataModel.CustomFunctionDeclaration("last", "");
-    var toLong = new transformationDataModel.CustomFunctionDeclaration("long", "");
-    var name = new transformationDataModel.CustomFunctionDeclaration("name", "");
-    var second = new transformationDataModel.CustomFunctionDeclaration("second", "");
-    var toShort = new transformationDataModel.CustomFunctionDeclaration("short", "");
-  /*String functions*/
-      var capitalize = new transformationDataModel.CustomFunctionDeclaration("capitalize", "");
-      var join = new transformationDataModel.CustomFunctionDeclaration("join", '(defn join [& strings] (clojure.string/join " " strings))'); 
-      var lowerCase = new transformationDataModel.CustomFunctionDeclaration("lower-case", "");
-      var upperCase = new transformationDataModel.CustomFunctionDeclaration("upper-case", "");
-      var reverse = new transformationDataModel.CustomFunctionDeclaration("reverse", "");
-      var trim = new transformationDataModel.CustomFunctionDeclaration("trim", "");
-      var trimNewline = new transformationDataModel.CustomFunctionDeclaration("trim-newline", "");
-      var triml = new transformationDataModel.CustomFunctionDeclaration("triml", "");
-      var trimr = new transformationDataModel.CustomFunctionDeclaration("trimr", "");
-
-/*Numbers*/
-      
-      var rem = new transformationDataModel.CustomFunctionDeclaration("rem", "");
-      var add = new transformationDataModel.CustomFunctionDeclaration("+", "");
-      var subtr = new transformationDataModel.CustomFunctionDeclaration("-", "");
-      var prod = new transformationDataModel.CustomFunctionDeclaration("*", "");
-      var div = new transformationDataModel.CustomFunctionDeclaration("/", "");
+    var customfunctions = [new  transformationDataModel.CustomFunctionDeclaration("integerColumn", "(defn integerColumn [s] (Integer/parseInt s))"),
+                           new transformationDataModel.CustomFunctionDeclaration("integerColumn", "(defn integerColumn [s] (Integer/parseInt s))"),
+                           new transformationDataModel.CustomFunctionDeclaration("boolean", ""),
+                           new transformationDataModel.CustomFunctionDeclaration("count", ""),
+                           new transformationDataModel.CustomFunctionDeclaration("cast", ""),
+                           new transformationDataModel.CustomFunctionDeclaration("capitalize", ""),
+                           new transformationDataModel.CustomFunctionDeclaration("dec", ""),
+                           new transformationDataModel.CustomFunctionDeclaration("double", ""),
+                           new transformationDataModel.CustomFunctionDeclaration("first", ""),
+                           new transformationDataModel.CustomFunctionDeclaration("float", ""),
+                           new transformationDataModel.CustomFunctionDeclaration("inc", ""),
+                           new transformationDataModel.CustomFunctionDeclaration("keyword", ""),
+                           new transformationDataModel.CustomFunctionDeclaration("last", ""),
+                           new transformationDataModel.CustomFunctionDeclaration("long", ""),
+                           new transformationDataModel.CustomFunctionDeclaration("name", ""),
+                           new transformationDataModel.CustomFunctionDeclaration("second", ""),
+                           new transformationDataModel.CustomFunctionDeclaration("short", ""),
+                           new transformationDataModel.CustomFunctionDeclaration("join", '(defn join [& strings] (clojure.string/join " " strings))'),
+                           new transformationDataModel.CustomFunctionDeclaration("lower-case", ""),
+                           new transformationDataModel.CustomFunctionDeclaration("upper-case", ""),
+                           new transformationDataModel.CustomFunctionDeclaration("reverse", ""),
+                           new transformationDataModel.CustomFunctionDeclaration("trim", ""),
+                           new transformationDataModel.CustomFunctionDeclaration("trim-newline", ""),
+                           new transformationDataModel.CustomFunctionDeclaration("triml", ""),
+                           new transformationDataModel.CustomFunctionDeclaration("trimr", ""),
+                           new transformationDataModel.CustomFunctionDeclaration("rem", "")];
+      customfunctions.sort(function (a, b) {
+          if (a.name > b.name) {
+                return 1;
+                  
+           }
+           else {return -1;}
+                            
+           });;
+      var numericcustomfunctions = [new transformationDataModel.CustomFunctionDeclaration("+", ""),
+                                    new transformationDataModel.CustomFunctionDeclaration("-", ""),
+                                    new transformationDataModel.CustomFunctionDeclaration("*", ""),
+                                    new transformationDataModel.CustomFunctionDeclaration("/", "")];
+     var allcustomfunctions = customfunctions.concat(numericcustomfunctions);
     $scope.clojure = "";
     $scope.pipeline = new transformationDataModel.Pipeline([]);
-    $scope.transformation = new transformationDataModel.Transformation([integerColumn, 
+    $scope.transformation = new transformationDataModel.Transformation(allcustomfunctions, [], [$scope.pipeline], []);
+    /*$scope.transformation = new transformationDataModel.Transformation([integerColumn, 
         stringColumn, count, bool, cast, dec, toDouble, first, toFloat, inc, keyword, last, toLong, name, rem, second, toShort, 
         capitalize, join, lowerCase,upperCase, reverse,  trim, trimNewline, trimr, triml,
         add, subtr, prod, div], [], [$scope.pipeline], []);
-
+*/
     window.canard = $scope;
 
     $rootScope.actions = {
