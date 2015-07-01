@@ -25,40 +25,13 @@
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
   </head>
-  <body layout="row" ng-controller="NavigationCtrl as nav">
+  <body layout="row">
     <!--[if lt IE 9]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <!-- Add your site or application content here -->
-
-<!--
-    <md-sidenav class="md-whiteframe-z2" md-component-id="left" tabindex="-1">
-      <md-toolbar layout="column">
-        <md-button class="md-button dapaas-title" ui-sref="main" flex>
-          <h1>Grafterizer</h1>
-        </md-button>
-      </md-toolbar>
-      <br>
-      <md-content flex role="navigation" layout="column">
-        <md-button class="md-button md-primary" ui-sref="datasets">
-          <i class="fa fa-dashboard"></i> Datasets</md-button>
-        <md-button class="md-button md-primary" ui-sref="transformations">
-          <i class="fa fa-filter"></i> Transformations</md-button>
-        <md-button class="md-button md-primary" ui-sref="files">
-          <i class="fa fa-file"></i> Files
-        </md-button>
-      </md-content>
-    </md-sidenav>
--->
-
     <div flex role="main" tabindex="-1" layout="column">
       <md-toolbar layout="row" class="md-toolbar-tools md-whiteframe-z1">
-<!--
-        <md-button class="menu hamburger" ng-click="nav.toggleSideMenu()" aria-label="Show User List">
-          <i class="fa fa-bars"></i>
-        </md-button>
--->
         <div layout="row" flex class="fill-height">
           <div class="md-toolbar-item md-breadcrumb" ncy-breadcrumb></div>
          <span flex></span> <!-- use up the empty space -->
@@ -68,9 +41,6 @@
         
       <div flex layout="column" ui-view="main"></div>
     </div>
-
-
-
 
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
@@ -108,13 +78,11 @@
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/about.js"></script>
         <script src="scripts/controllers/upload.js"></script>
         <script src="scripts/controllers/grid.js"></script>
         <script src="scripts/services/fileupload.js"></script>
         <script src="scripts/services/fileparsing.js"></script>
-        <script src="scripts/controllers/navigation.js"></script>
         <script src="scripts/controllers/datapages.js"></script>
         <script src="scripts/services/datapagesresource.js"></script>
         <script src="scripts/services/loopback-services.js"></script>
@@ -162,6 +130,7 @@
         <script src="scripts/controllers/pipelinefunctiondialog.js"></script>
         <script src="scripts/directives/makedataset.js"></script>
         <script src="scripts/directives/mapc.js"></script>
+        <script src="scripts/controllers/computetriples.js"></script>
         <!-- endbuild -->
 </body>
 </html>

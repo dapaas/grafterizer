@@ -16,7 +16,8 @@ angular.module('grafterizerApp')
     $rootScope,
     $stateParams,
     generateClojure,
-    $mdToast) {
+    $mdToast,
+    $mdDialog) {
     
     // TODO IT DOES WORK
     $scope.$parent.showPreview = true;
@@ -29,8 +30,10 @@ angular.module('grafterizerApp')
         $scope.datasets = data['dcat:record'].reverse();
     });
 
+    var selectedDataset;
+
     $scope.accordionExpandCallback = function(index) {
-        var selectedDataset = $scope.datasets[index/*-1*/];
+        selectedDataset = $scope.datasets[index/*-1*/];
         if (!selectedDataset) {
             return;
         }
@@ -124,13 +127,28 @@ angular.module('grafterizerApp')
         if (!fileSaved) {
             return;
         }
-        var link = PipeService.computeTuplesHref(
-            $scope.selectedDistribution, $scope.$parent.id);
+        var distribution = $scope.selectedDistribution,
+            transformation = $scope.$parent.id,
+            downloadLink = PipeService.computeTuplesHref(
+            distribution, transformation);
 
         $rootScope.$emit('addAction', {
             name: 'download',
             callback: function(){
-                window.open(link,'_blank');
+
+                var scopeDialog = $scope.$new(false);
+                scopeDialog.downloadLink = downloadLink;
+                scopeDialog.distribution = distribution;
+                scopeDialog.transformation = transformation;
+
+                // TODO
+                scopeDialog.dataset = selectedDataset;
+
+                $mdDialog.show({
+                    templateUrl: 'views/computetriples.html',
+                    controller: 'ComputetriplesCtrl',
+                    scope: scopeDialog
+                });
             }
         });
     };

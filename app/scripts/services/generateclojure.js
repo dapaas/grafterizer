@@ -579,11 +579,16 @@ Prototype: (mapc dataset fs) - dataset is implied
     var overridedClojure = null, generatedClojureBeforeGeneration = null;
 
     this.fromTransformation = function(transformation, noOverride) {
-        var generatedCode = generateGrafterCode(transformation);
-        if (!noOverride && overridedClojure && generatedClojureBeforeGeneration === generatedCode) {
-            return overridedClojure;
+        try {
+            var generatedCode = generateGrafterCode(transformation);
+            if (!noOverride && overridedClojure && generatedClojureBeforeGeneration === generatedCode) {
+                return overridedClojure;
+            }
+            return generatedCode;
+        } catch(e) {
+            console.log(e);
+            return "";
         }
-        return generatedCode;
     };
 
     this.overrideClojure = function(overrided, before) {

@@ -71,8 +71,8 @@ angular
         url: '/',
         views: {
             main: {
-                templateUrl: 'views/main.html',
-                controller: 'MainCtrl'
+                templateUrl: 'views/computetriples.html',
+                controller: 'ComputetriplesCtrl'
             } 
         },
         ncyBreadcrumb: {
