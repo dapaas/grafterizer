@@ -45,11 +45,7 @@ angular.module('grafterizerApp')
       var join = new transformationDataModel.CustomFunctionDeclaration("join", ' (defn join [& strings] (clojure.string/join " " strings))'); 
       var lowerCase = new transformationDataModel.CustomFunctionDeclaration("lower-case", "");
       var upperCase = new transformationDataModel.CustomFunctionDeclaration("upper-case", "");
-      var replace = new transformationDataModel.CustomFunctionDeclaration("replace", "(defn replace [str] [strnew] ())");
-      var replaceFirst = new transformationDataModel.CustomFunctionDeclaration("replace-first", "(defn replace-first [str] [strnew] ())");
       var reverse = new transformationDataModel.CustomFunctionDeclaration("reverse", "");
-      var split = new transformationDataModel.CustomFunctionDeclaration("split", '(defn split [str] (clojure.string/split "," ))');
-      var splitLines = new transformationDataModel.CustomFunctionDeclaration("split-lines", "");
       var trim = new transformationDataModel.CustomFunctionDeclaration("trim", "");
       var trimNewline = new transformationDataModel.CustomFunctionDeclaration("trim-newline", "");
       var triml = new transformationDataModel.CustomFunctionDeclaration("triml", "");
