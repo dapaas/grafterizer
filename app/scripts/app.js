@@ -47,9 +47,9 @@ angular
 
     $urlRouterProvider.otherwise("/transformations/new");
 
-    //if (!window.navigator.device) {
-    //    $locationProvider.html5Mode(true);
-    //}
+    if (!window.navigator.device) {
+       $locationProvider.html5Mode(true);
+    }
 
     // Workaround for https://github.com/angular-ui/ui-router/issues/1119
     var valToString = function(val) {
