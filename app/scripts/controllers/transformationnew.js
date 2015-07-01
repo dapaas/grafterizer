@@ -26,23 +26,23 @@ angular.module('grafterizerApp')
     var integerColumn = new transformationDataModel.CustomFunctionDeclaration("integerColumn", "(defn integerColumn [s] (Integer/parseInt s))");
     var stringColumn = new transformationDataModel.CustomFunctionDeclaration("stringColumn", "(defn stringColumn [str] (s str))");
    
-    var boolean = new transformationDataModel.CustomFunctionDeclaration("boolean", "");
+    var bool = new transformationDataModel.CustomFunctionDeclaration("boolean", "");
     var count = new transformationDataModel.CustomFunctionDeclaration("count", "");
     var cast = new transformationDataModel.CustomFunctionDeclaration("cast", ""); 
     var dec = new transformationDataModel.CustomFunctionDeclaration("dec", "");
-    var double = new transformationDataModel.CustomFunctionDeclaration("double", "");
+    var toDouble = new transformationDataModel.CustomFunctionDeclaration("double", "");
     var first = new transformationDataModel.CustomFunctionDeclaration("first", "");
-    var float = new transformationDataModel.CustomFunctionDeclaration("float", "");
+    var toFloat = new transformationDataModel.CustomFunctionDeclaration("float", "");
     var inc = new transformationDataModel.CustomFunctionDeclaration("inc", "");
     var keyword = new transformationDataModel.CustomFunctionDeclaration("keyword", "");
     var last = new transformationDataModel.CustomFunctionDeclaration("last", "");
-    var long = new transformationDataModel.CustomFunctionDeclaration("long", "");
+    var toLong = new transformationDataModel.CustomFunctionDeclaration("long", "");
     var name = new transformationDataModel.CustomFunctionDeclaration("name", "");
     var second = new transformationDataModel.CustomFunctionDeclaration("second", "");
-    var short = new transformationDataModel.CustomFunctionDeclaration("short", "");
+    var toShort = new transformationDataModel.CustomFunctionDeclaration("short", "");
   /*String functions*/
       var capitalize = new transformationDataModel.CustomFunctionDeclaration("capitalize", "");
-      var join = new transformationDataModel.CustomFunctionDeclaration("join", ' (defn join [& strings] (clojure.string/join " " strings))'); 
+      var join = new transformationDataModel.CustomFunctionDeclaration("join", '(defn join [& strings] (clojure.string/join " " strings))'); 
       var lowerCase = new transformationDataModel.CustomFunctionDeclaration("lower-case", "");
       var upperCase = new transformationDataModel.CustomFunctionDeclaration("upper-case", "");
       var reverse = new transformationDataModel.CustomFunctionDeclaration("reverse", "");
@@ -61,7 +61,7 @@ angular.module('grafterizerApp')
     $scope.clojure = "";
     $scope.pipeline = new transformationDataModel.Pipeline([]);
     $scope.transformation = new transformationDataModel.Transformation([integerColumn, 
-        stringColumn, count, boolean, cast, dec, double, first, float, inc, keyword, last, long, name, rem, second, short, 
+        stringColumn, count, bool, cast, dec, toDouble, first, toFloat, inc, keyword, last, toLong, name, rem, second, toShort, 
         capitalize, join, lowerCase,upperCase, reverse,  trim, trimNewline, trimr, triml,
         add, subtr, prod, div], [], [$scope.pipeline], []);
 
