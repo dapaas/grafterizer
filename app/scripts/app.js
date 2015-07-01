@@ -46,6 +46,9 @@ angular
              $locationProvider) {
 
     $urlRouterProvider.otherwise("/transformations/new");
+	
+	sessionStorage.localClassAndProperty = JSON.stringify([]);
+	sessionStorage.localVocabulary = JSON.stringify([]);
 
     if (!window.navigator.device) {
        $locationProvider.html5Mode(true);
@@ -55,7 +58,7 @@ angular
     var valToString = function(val) {
         return val !== null ? val.toString() : val;
     };
-    
+
     $urlMatcherFactoryProvider.type('nonURIEncoded', {
         encode: valToString,
         decode: valToString,
@@ -160,20 +163,20 @@ angular
         }
     })
         .state('transformations.transformation.preview', {
-            url: '^/preview/{id:nonURIEncoded}',
-            params: {
-                'distribution': null
-            },
-            views: {
-                "preview": {
-                    templateUrl: 'views/preview.html',
-                    controller: 'PreviewCtrl'
-                }
-            },
-            ncyBreadcrumb: {
-                label: 'Preview'
+        url: '^/preview/{id:nonURIEncoded}',
+        params: {
+            'distribution': null
+        },
+        views: {
+            "preview": {
+                templateUrl: 'views/preview.html',
+                controller: 'PreviewCtrl'
             }
-        })
+        },
+        ncyBreadcrumb: {
+            label: 'Preview'
+        }
+    })
         .state('files', {
         url: '/files',
         views: {
@@ -239,18 +242,18 @@ angular
             label: '{{document.title || id}}'
         }
     })
-      .state('distribution', {
+        .state('distribution', {
         url: '/distribution/{id:nonURIEncoded}',
         views: {
-          "main@": {
-            templateUrl: 'views/distribution.html',
-            controller: 'DistributionCtrl'
-          }
+            "main@": {
+                templateUrl: 'views/distribution.html',
+                controller: 'DistributionCtrl'
+            }
         },
         ncyBreadcrumb: {
-          label: '{{document.title || id}}'
+            label: '{{document.title || id}}'
         }
-      });
+    });
 
     cfpLoadingBarProvider.includeSpinner = false;
 
@@ -289,8 +292,51 @@ angular
     $mdThemingProvider.theme('default')
 	    .primaryPalette(colors[Math.floor(Math.random()*colors.length)])
 	    .accentPalette(colors[Math.floor(Math.random()*colors.length)]);*/
+    //    $mdThemingProvider.theme('default')
+    //        .accentPalette('blue');
+
+    var customPrimary = {
+        '50': '#a9b2d7',
+        '100': '#97a2cf',
+        '200': '#8693c6',
+        '300': '#7583be',
+        '400': '#6374b6',
+        '500': '#5264AE',
+        '600': '#495a9d',
+        '700': '#41508c',
+        '800': '#39467a',
+        '900': '#313c69',
+        'A100': '#bac1df',
+        'A200': '#ccd1e7',
+        'A400': '#dde0ef',
+        'A700': '#293258',
+        'contrastDefaultColor': 'light'
+    };
+    $mdThemingProvider.definePalette('customPrimary', customPrimary);
+
+    var customAccent = {
+        '50': '#333333',
+        '100': '#333333',
+        '200': '#333333',
+        '300': '#f7fcfc',
+        '400': '#e4f4f5',
+        '500': '#EEEEEE',
+        '600': '#bfe6e7',
+        '700': '#addee0',
+        '800': '#9ad7d9',
+        '900': '#88cfd2',
+        'A100': '#EEEEEE',
+        'A200': '#EEEEEE',
+        'A400': '#EEEEEE',
+        'A700': '#75c8cb',
+        'contrastDefaultColor': 'dark',
+        //'contrastLightColors': ['50', '100', '200', '300', '400', 'A100']
+    };
+    $mdThemingProvider.definePalette('customAccent', customAccent);
+
     $mdThemingProvider.theme('default')
-        .accentPalette('blue');
+        .primaryPalette('customPrimary')
+        .accentPalette('customAccent');
 
     jsedn.Symbol.prototype.validRegex = new RegExp(/.*/);
 });
