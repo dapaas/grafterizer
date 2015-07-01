@@ -62,7 +62,7 @@ angular.module('grafterizerApp')
     $scope.pipeline = new transformationDataModel.Pipeline([]);
     $scope.transformation = new transformationDataModel.Transformation([integerColumn, 
         stringColumn, count, boolean, cast, dec, double, first, float, inc, keyword, last, long, name, rem, second, short, 
-        capitalize, join, lowerCase,upperCase, replace, replaceFirst, reverse, split, splitLines, trim, trimNewline, trimr, triml,
+        capitalize, join, lowerCase,upperCase, reverse,  trim, trimNewline, trimr, triml,
         add, subtr, prod, div], [], [$scope.pipeline], []);
 
     window.canard = $scope;
