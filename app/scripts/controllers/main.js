@@ -33,7 +33,7 @@ angular.module('grafterizerApp')
             angular.copy($scope.originalCustomFunctionDeclarations, $scope.transformation.customFunctionDeclarations);
         }); 
     };
-    $scope.previewPipeline = function () {
+    /*$scope.previewPipeline = function () {
         $mdDialog.show({
             templateUrl: 'views/previewpipeline.html',
             controller: 'PreviewpipelinedialogCtrl',
@@ -41,7 +41,7 @@ angular.module('grafterizerApp')
         }).then(function() {
         }, function() {
         }); 
-    };
+    };*/
     $scope.modifyMapping = function () {};
     
 });

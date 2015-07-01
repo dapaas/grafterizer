@@ -98,6 +98,19 @@ angular.module('grafterizerApp')
         update['dct:description'] = update.description;
         update['dct:modified'] = moment().format("YYYY-MM-DD");
         update['dcat:public'] = $scope.document['dct:public'] ? 'true' : 'false';
+
+        var transformationType = 'pipe',
+            transformationCommand = 'my-pipe';
+
+        if ($scope.transformation.graphs &&
+            $scope.transformation.graphs.length !== 0) {
+            transformationType = 'graft';
+            transformationCommand = 'my-graft';
+        }
+        
+        update['dcat:transformationType'] = transformationType;
+        update['dcat:transformationCommand'] = transformationCommand;
+
         delete update.title;
         delete update.description;
         delete update['dct:clojureDataID'];
@@ -135,6 +148,15 @@ angular.module('grafterizerApp')
       fork: function(ev) {
         var clojure = generateClojure.fromTransformation($scope.transformation);
 
+        var transformationType = 'pipe',
+            transformationCommand = 'my-pipe';
+
+        if ($scope.transformation.graphs &&
+            $scope.transformation.graphs.length !== 0) {
+            transformationType = 'graft';
+            transformationCommand = 'my-graft';
+        }
+
         ontotextAPI.newTransformation({
             '@context': ontotextAPI.getContextDeclaration(),
             '@type': 'dcat:Transformation',
@@ -142,8 +164,8 @@ angular.module('grafterizerApp')
             'dct:description': $scope.document.description,
             'dcat:public': $scope.document['dct:public'] ? 'true' : 'false',
             'dct:modified': moment().format("YYYY-MM-DD"),
-            'dcat:transformationType': 'pipe',
-            'dcat:transformationCommand': 'my-pipe'
+            'dcat:transformationType': transformationType,
+            'dcat:transformationCommand': transformationCommand
           }, clojure, $scope.transformation)
           .success(function(data){
             $mdToast.show(
