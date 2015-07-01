@@ -49,7 +49,7 @@ angular.module('grafterizerApp')
         this.__type = "CustomCode";
     };
     CustomCode.revive = function (data) {
-        return new CustomCode(data.name, data.clojureCode);
+        return new CustomCode(data.displayName, data.clojureCode);
     };
     CustomCode.prototype.generateClojure = function() {
         try{
