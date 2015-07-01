@@ -8,12 +8,6 @@
  * Controller of the grafterizerApp
  */
 var app = angular.module('grafterizerApp');
-app. filter('startFrom', function() {
-    return function(input, start) {
-        start = +start; //parse to int
-        return input.slice(start);
-    }
-});
 
 var localClassAndProperty = new Array();
 	
@@ -59,7 +53,16 @@ app.controller('MappingnodedefinitiondialogCtrl', function ($scope, $http, $mdDi
                 if($scope.dialogState.mappingType == 'dataset-col') {
                     $scope.newNode = new transformationDataModel.ColumnURI($scope.newNode.prefix ? $scope.newNode.prefix : '', '', []);
                 } else {
-                    $scope.newNode = new transformationDataModel.ConstantURI($scope.newNode.prefix ? $scope.newNode.prefix : '', '', []);
+					if( $scope.newNode.__type != "ConstantURI" ){
+						$scope.newNode = new transformationDataModel.ConstantURI($scope.newNode.prefix ? $scope.newNode.prefix : '', '', []);
+					}else{
+						if(!$scope.newNode){
+							$scope.newNode = new transformationDataModel.ConstantURI("", "", []);
+						}
+						else{
+							$scope.propertyValue.value = $scope.newNode.prefix + ":" + $scope.newNode.constant;
+						}
+					}
                 }
                 break;
             case 1:
@@ -100,14 +103,6 @@ app.controller('MappingnodedefinitiondialogCtrl', function ($scope, $http, $mdDi
 	$scope.showSearchDialogToolBar = false;
 	$scope.showAddDialogToolBar = false;
 	
-    console.log("scope current property", $scope.property);
-    if(!$scope.property){
-        $scope.property = new transformationDataModel.Property("", "", []);
-	}
-	else{
-		$scope.propertyValue.value = $scope.property.prefix + ":" + $scope.property.propertyName;
-	}
-	
     $scope.closeDialog = function () {
         $mdDialog.cancel();
     };
@@ -131,9 +126,9 @@ app.controller('MappingnodedefinitiondialogCtrl', function ($scope, $http, $mdDi
 		$http.get('http://localhost:8080/ManageVocabulary/api/vocabulary/search/' + Para).success(function(response){
 			$scope.items = response.result;
 			
-		for (var i = response.result.length - 1; i >= 0; i--) {
-			$scope.itemslocal.push(response.result[i].value);
-		}
+			for (var i = response.result.length - 1; i >= 0; i--) {
+				$scope.itemslocal.push(response.result[i].value);
+			}
 
 			$scope.showProgress = false;
 		}).error(function(data, status, headers, config) {
@@ -141,13 +136,15 @@ app.controller('MappingnodedefinitiondialogCtrl', function ($scope, $http, $mdDi
 			$scope.showProgress = false;
     	});
 		
+		
+		var localClassAndProperty = JSON.parse(window.sessionStorage['localClassAndProperty']);
+		
 		for (var i = localClassAndProperty.length - 1; i >= 0; i--) {
 			var str = localClassAndProperty[i].value;
         	if (str.indexOf(keywordscope) != -1) {
         		$scope.itemslocal.push(localClassAndProperty[i].value);
         	}
         }
-
 		$scope.hideValue = true;
 	};
     
@@ -157,7 +154,8 @@ app.controller('MappingnodedefinitiondialogCtrl', function ($scope, $http, $mdDi
 	$scope.switchToManageDialog = function() {	
     	$scope.selection = "manageDialog";
 		
-		//C:\Users\yexl\Desktop\skos.rdf
+		var localVocabulary = JSON.parse(sessionStorage["localVocabulary"]);
+		
 		$scope.VocabItems = localVocabulary;
 		$scope.showManageDialogToolBar = true;
 		$scope.showSearchDialogToolBar = false;
@@ -186,11 +184,26 @@ app.controller('MappingnodedefinitiondialogCtrl', function ($scope, $http, $mdDi
     
 	//local
     $scope.deleteItem = function(name, vocabNamespace) {
+		var localClassAndProperty = JSON.parse(window.sessionStorage['localVocabulary']);
+		window.sessionStorage.removeItem('localVocabulary');
 		for (var i = localVocabulary.length - 1; i >= 0; i--) {
         	if (localVocabulary[i] === name) {
         		localVocabulary.splice(i, 1);
         	}
         }
+		window.sessionStorage.setItem('localVocabulary', JSON.stringify(localVocabulary));
+		
+		var localClassAndProperty = JSON.parse(window.sessionStorage['localClassAndProperty']);
+		window.sessionStorage.removeItem('localClassAndProperty');
+		
+		for (var i = localClassAndProperty.length - 1; i >= 0; i--) {
+			var str = localClassAndProperty[i];
+        	if (str.value.indexOf(name) === 0) {
+        		localClassAndProperty.splice(i, 1);
+        	}
+        }
+		
+		window.sessionStorage.setItem('localClassAndProperty', JSON.stringify(localClassAndProperty));
     }
 
 	//local
@@ -204,13 +217,21 @@ app.controller('MappingnodedefinitiondialogCtrl', function ($scope, $http, $mdDi
 		
 		$scope.showProgress = true;
     	$http.post('http://localhost:8080/ManageVocabulary/api/vocabulary/getClassAndPropertyFromVocabulary', {name:vocabName, path:vocabLoc, data:object.data}).success(function(response){
-			localClassAndProperty = response.result;
+			var localClassAndProperty = JSON.parse(sessionStorage["localClassAndProperty"]);
+			for (var i = response.result.length - 1; i >= 0; i--) {
+				localClassAndProperty.push(response.result[i]);
+			}
+			window.sessionStorage.setItem('localClassAndProperty', JSON.stringify(localClassAndProperty));
+			
+			var localVocabulary = JSON.parse(sessionStorage["localVocabulary"]);
 			localVocabulary.push(vocabName);
+			window.sessionStorage.setItem('localVocabulary', JSON.stringify(localVocabulary));
+			
 			$scope.switchToManageDialog();
 			$scope.showProgress = false;
 		}).error(function(data, status, headers, config) {
 			alert("error");
-		});        
+		});      
     }
 	
 	$scope.addResult = function(value) {

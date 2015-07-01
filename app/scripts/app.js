@@ -46,6 +46,9 @@ angular
              $locationProvider) {
 
     $urlRouterProvider.otherwise("/transformations/new");
+	
+	sessionStorage.localClassAndProperty = JSON.stringify([]);
+	sessionStorage.localVocabulary = JSON.stringify([]);
 
     //if (!window.navigator.device) {
     //    $locationProvider.html5Mode(true);
