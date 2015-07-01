@@ -64,6 +64,42 @@ public class VocabularyAPI {
 		return Response.ok(returnString).build();
 	}
 	
+	//get class and property from vocabulary
+	@Path("/getClassAndPropertyFromVocabulary")
+	@POST
+	@Consumes({MediaType.APPLICATION_FORM_URLENCODED,MediaType.APPLICATION_JSON})
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getClassAndPropertyFromVocabulary(String data) throws Exception{
+		logger.info( "invoke getClassAndPropertyFromVocabulary: " + data );
+		
+		JSONObject jsonObject = new JSONObject();
+		JSONArray json = new JSONArray();
+		String returnString = null;
+		VocabularyDAO dao = new VocabularyDAO();
+		
+		try {
+			JSONObject partsData = new JSONObject(data);
+			
+			Iterator<String> it = dao.getClassAndPropertyFromVocabulary(partsData.optString("name"), partsData.optString("path"), partsData.optString("data"));
+			
+			json = getJsonFromObject(it, true);
+			
+			jsonObject.put("http_code", "200");
+			jsonObject.put("message", "Search sucessful");
+			jsonObject.put("result", json);
+			
+			returnString = jsonObject.toString();
+			
+			logger.info( "returnString: " + returnString );
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			return Response.status(500).entity("Server was not able to process your request").build();
+		}
+		
+		return Response.ok(returnString).build();
+	}
+	
 	//get a list of vocabulary name
 	@Path("/getAll")
 	@GET
@@ -129,11 +165,6 @@ public class VocabularyAPI {
 		try {
 			VocabularyDAO dao = new VocabularyDAO();
 			
-			if( keyword.contains(":") ){
-				String prefix = keyword.substring(0, keyword.indexOf(":") - 1);
-				String name = keyword.substring(keyword.indexOf(":") + 1, keyword.length());
-			}
-			
 			Iterator<String> it = dao.searchVocabulary(keyword);
 			
 			json = getJsonFromObject(it, true);
@@ -151,6 +182,74 @@ public class VocabularyAPI {
 		
 		return Response.ok(returnString).build();
 	}
+	
+	/*
+	//auto complete
+	@Path("/autocomplete/{firstletter}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response autoComplete(
+			@PathParam("firstletter") String firstletter)
+			throws Exception {
+		
+		logger.info( "invoke autoComplete: " + firstletter );
+		String returnString = null;
+		JSONArray json = new JSONArray();
+		JSONObject jsonObject = new JSONObject();
+		
+		try {
+			VocabularyDAO dao = new VocabularyDAO();
+			
+			Iterator<String> it = dao.searchVocabulary(firstletter);
+			
+			json = getJsonFromObject(it, true);
+			
+			jsonObject.put("http_code", "200");
+			jsonObject.put("message", "get autocomplete sucessful");
+			jsonObject.put("result", json);
+			
+			returnString = jsonObject.toString();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(500).entity("Server was not able to process your request").build();
+		}
+		
+		return Response.ok(returnString).build();
+	}
+	*/
+	
+	//auto complete
+		@Path("/autocomplete")
+		@GET
+		@Produces(MediaType.APPLICATION_JSON)
+		public Response autoComplete()
+				throws Exception {
+			
+			String returnString = null;
+			JSONArray json = new JSONArray();
+			JSONObject jsonObject = new JSONObject();
+			
+			try {
+				VocabularyDAO dao = new VocabularyDAO();
+				
+				Iterator<String> it = dao.getAutoComplete();
+				
+				json = getJsonFromObject(it, true);
+				
+				jsonObject.put("http_code", "200");
+				jsonObject.put("message", "get autocomplete sucessful");
+				jsonObject.put("result", json);
+				
+				returnString = jsonObject.toString();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				return Response.status(500).entity("Server was not able to process your request").build();
+			}
+			
+			return Response.ok(returnString).build();
+		}
 	
 	//delete vocabulary based on vocabulary name
 	@Path("/delete")

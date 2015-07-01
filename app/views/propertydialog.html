@@ -66,7 +66,7 @@
 							<md-button class="md-primary md-icon-button fa fa-plus" ng-click="addResult(item.value)"></md-button>	
 						</md-list-item>
 -->
-						<md-list-item  ng-repeat="item in itemslocal | startFrom:currentPage*pageSize | limitTo:pageSize">
+						<md-list-item  ng-repeat="item in items | startFrom:currentPage*pageSize | limitTo:pageSize">
 							<p> {{ item }} </p>
 							<md-button class="md-primary md-icon-button fa fa-plus" ng-click="addResult(item)"></md-button>	
 						</md-list-item>
@@ -102,16 +102,13 @@
 							<p> {{ item }} </p>
 							<md-button class="fa fa-trash md-icon-button md-primary" ng-click="deleteItem(item, item.namespace)"></md-button>
 						</md-list-item>
-					</md-list>
-				
-				<!--
-					<md-list>
-						<md-list-item ng-click="" ng-repeat="item in VocabItems | startFrom:currentPage*pageSize | limitTo:pageSize">
-							<p> {{ item.name }} </p>
-							<md-button class="fa fa-trash md-icon-button md-primary" ng-click="deleteItem(item.name, item.namespace)"></md-button>	
+
+						<md-list-item ng-click="" ng-repeat="item in VocabItemsServer | startFrom:currentPage*pageSize | limitTo:pageSize">
+							<p> {{ item }} </p>
+							<md-button class="fa  md-icon-button md-primary" ng-click="deleteItem(item.name, item.namespace)"></md-button>
 						</md-list-item>
 					</md-list>
-					-->
+
 					<md-button class="md-icon-button fa fa-angle-double-left"  ng-disabled="currentPage == 0" ng-click="currentPage=0">
 					</md-button>
 					<md-button class="md-icon-button fa fa-angle-left" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
@@ -166,6 +163,7 @@
 
 				<div class="md-actions" layout="row" layout-align="right">
 					<md-button class="md-primary" ng-click="addVocabToTable(vocabName, vocabPrefix, vocabLoc)">Add</md-button>
+					<!--<md-button class="md-primary" ng-click="addVocabToTableServer(vocabName, vocabPrefix, vocabLoc)">Add</md-button>-->
 					<md-button class="md-primary" ng-click="switchToManageDialog()">Cancel</md-button>
 				</div>
 			</div>

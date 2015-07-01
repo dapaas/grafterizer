@@ -58,7 +58,6 @@ app.controller('PropertydialogCtrl', function ($scope, $http, $mdDialog, $timeou
 	$scope.currentPage = 0;
     $scope.pageSize = 5;
     $scope.items = [];
-	$scope.itemslocal = [];
     $scope.numberOfPages=function(){
         return Math.ceil($scope.items.length/$scope.pageSize);                
     }
@@ -70,18 +69,18 @@ app.controller('PropertydialogCtrl', function ($scope, $http, $mdDialog, $timeou
 			return;
 		}
 		$scope.showProgress = true;
-		$scope.itemslocal = [];
+		$scope.items = [];
 		keywordscope = Para;
 		$http.get('http://localhost:8080/ManageVocabulary/api/vocabulary/search/' + Para).success(function(response){
 			$scope.items = response.result;
 			
 			for (var i = response.result.length - 1; i >= 0; i--) {
-				$scope.itemslocal.push(response.result[i].value);
+				$scope.items.push(response.result[i].value);
 			}
 
 			$scope.showProgress = false;
 		}).error(function(data, status, headers, config) {
-    		alert("error");
+    		console.log("error api/vocabulary/search");
 			$scope.showProgress = false;
     	});
 		
@@ -91,7 +90,7 @@ app.controller('PropertydialogCtrl', function ($scope, $http, $mdDialog, $timeou
 		for (var i = localClassAndProperty.length - 1; i >= 0; i--) {
 			var str = localClassAndProperty[i].value;
         	if (str.indexOf(keywordscope) != -1) {
-        		$scope.itemslocal.push(localClassAndProperty[i].value);
+        		$scope.items.push(localClassAndProperty[i].value);
         	}
         }
 
@@ -108,6 +107,16 @@ app.controller('PropertydialogCtrl', function ($scope, $http, $mdDialog, $timeou
 		var localVocabulary = JSON.parse(sessionStorage["localVocabulary"]);
 		
 		$scope.VocabItems = localVocabulary;
+		
+		$scope.VocabItemsServer = [];
+		$http.get('http://localhost:8080/ManageVocabulary/api/vocabulary/getAll').success(function(response){
+			for (var i = response.result.length - 1; i >= 0; i--) {
+				$scope.VocabItemsServer.push(response.result[i].name);
+			}
+    	}).error(function(data, status, headers, config) {
+    		console.log("error /api/vocabulary/getAll");
+    	});
+		
 		$scope.showManageDialogToolBar = true;
 		$scope.showSearchDialogToolBar = false;
 		$scope.showAddDialogToolBar = false;
@@ -152,11 +161,7 @@ app.controller('PropertydialogCtrl', function ($scope, $http, $mdDialog, $timeou
         	}
         }
 		
-		$scope.$apply();
-		
 		window.sessionStorage.setItem('localClassAndProperty', JSON.stringify(localClassAndProperty));
-		
-		switchToManageDialog();
     }
 	
 	/*
@@ -176,16 +181,16 @@ app.controller('PropertydialogCtrl', function ($scope, $http, $mdDialog, $timeou
 			alert("error");
 		});
     }
-
+*/
 	//server
-    $scope.addVocabToTable = function(vocabName, vocabPrefix, vocabLoc) {
+    $scope.addVocabToTableServer = function(vocabName, vocabPrefix, vocabLoc) {
     	$http.post('http://localhost:8080/ManageVocabulary/api/vocabulary/add', {name:vocabName, namespace:vocabPrefix, path:vocabLoc}).success(function(response){
 			$scope.switchToManageDialog();
 		}).error(function(data, status, headers, config) {
 			alert("error");
 		});        
     }
-
+/*
 	//server
 	$scope.switchToManageDialog = function() {	
     	$scope.selection = "manageDialog";
@@ -224,7 +229,7 @@ app.controller('PropertydialogCtrl', function ($scope, $http, $mdDialog, $timeou
 			$scope.switchToManageDialog();
 			$scope.showProgress = false;
 		}).error(function(data, status, headers, config) {
-			alert("error");
+			console.log("error api/vocabulary/getClassAndPropertyFromVocabulary");
 		});        
     }
 	

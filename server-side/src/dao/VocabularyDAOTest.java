@@ -3,6 +3,7 @@ package dao;
 import static org.junit.Assert.*;
 
 import java.util.Iterator;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,6 +27,16 @@ public class VocabularyDAOTest {
 		
 		assertEquals(200, ret);
 	}
+	
+	@Test
+	public void testAutoComplete() {
+		Iterator<String> ret;
+		try{
+			ret = dao.getAutoComplete();
+		}catch(Exception e){
+			
+		}
+	}
 
 	@Test
 	public void testDeleteVocabulary() {
@@ -43,7 +54,7 @@ public class VocabularyDAOTest {
 	public void testUpdataVocabulary() {
 		int ret = 500;
 		try{
-			ret = dao.updataVocabulary("foaf", "http://www.w3.org/2003/01/geo/wgs84_pos");
+			//ret = dao.updataVocabulary("foaf", "http://www.w3.org/2003/01/geo/wgs84_pos");
 		}catch(Exception e){
 			
 		}
@@ -63,7 +74,7 @@ public class VocabularyDAOTest {
 	@Test
 	public void testGetAllVocabularyName() {
 		try{
-			Iterator<String> strArray= dao.getAllVocabularyName();
+			Map<String, String> strArray= dao.getAllVocabularyName();
 		}catch(Exception e){
 			
 		}

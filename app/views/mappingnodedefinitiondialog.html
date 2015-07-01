@@ -97,16 +97,12 @@
 											<p> {{ item }} </p>
 											<md-button class="fa fa-trash md-icon-button md-primary" ng-click="deleteItem(item, item.namespace)"></md-button>
 										</md-list-item>
-									</md-list>
-								
-								<!--
-									<md-list>
-										<md-list-item ng-click="" ng-repeat="item in VocabItems | startFrom:currentPage*pageSize | limitTo:pageSize">
-											<p> {{ item.name }} </p>
-											<md-button class="fa fa-trash md-icon-button md-primary" ng-click="deleteItem(item.name, item.namespace)"></md-button>	
+
+										<md-list-item ng-click="" ng-repeat="item in VocabItemsServer | startFrom:currentPage*pageSize | limitTo:pageSize">
+											<p> {{ item }} </p>
+											<md-button class="fa  md-icon-button md-primary" ng-click="deleteItem(item.name, item.namespace)"></md-button>
 										</md-list-item>
 									</md-list>
-									-->
 									
 									<md-button class="md-icon-button fa fa-angle-double-left"  ng-disabled="currentPage == 0" ng-click="currentPage=0">
 									</md-button>

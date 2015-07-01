@@ -1,5 +1,6 @@
 package dao;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +32,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.tdb.TDBFactory;
 import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.RDFS;
+
 import org.apache.log4j.Logger; 
 
 public class VocabularyDAO {
@@ -40,14 +42,14 @@ public class VocabularyDAO {
 	private static Logger logger = Logger.getLogger(VocabularyDAO.class); 
 	
 	private static Dataset getDataset() throws Exception {
-		return TDBFactory.createDataset("D:\\VocabDataset");
+		return TDBFactory.createDataset("VocabDataset");
 	}
 	
 	// get a dataset with lucene index, lucene index is used for search.
 	private static Dataset getDatasetSearch(boolean addLuceneIndex) throws Exception {
 		TextQuery.init();
 		
-		Dataset datasetSearch = TDBFactory.createDataset("D:\\VocabDatasetSearch");
+		Dataset datasetSearch = TDBFactory.createDataset("VocabDatasetSearch");
 			
 	    // Define the index mapping 
 	    EntityDefinition entDef = new EntityDefinition("uri", "text", RDFS.label.asNode());
@@ -55,7 +57,7 @@ public class VocabularyDAO {
 	    Directory dir = null;
 	    try{
 		    // Lucene, index file
-	    	dir = FSDirectory.open(new File("D:\\index-directory"));
+	    	dir = FSDirectory.open(new File("index-directory"));
 	    }
 	    catch(Exception e){
 	        	
@@ -96,7 +98,7 @@ public class VocabularyDAO {
 		datasetVocab.close();
 		
 		datasetSearch.commit();
-		testDataset(datasetSearch);
+		//testDataset(datasetSearch);
 		datasetSearch.end();
 		datasetSearch.close();
 		
@@ -104,6 +106,128 @@ public class VocabularyDAO {
 		searchModel.close();
 		
 		return SUCCESS;
+	}
+	
+	public Iterator<String> getClassAndPropertyFromVocabulary(String name, String location, String fileContent){
+		Model model = ModelFactory.createDefaultModel();
+		Model resultModel = ModelFactory.createDefaultModel();
+		
+		if( location.isEmpty() ){
+			model.read(new ByteArrayInputStream(fileContent.getBytes()), null);
+		}
+		else{
+			FileManager.get().readModel( model, location, getFileExtension(location) );
+		}
+		
+		
+
+		ResultSet res;
+		List<String> list = new ArrayList<String>();
+		
+		String pre = StrUtils.strjoinNL
+	            ("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
+	            , "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
+	            , "PREFIX owl: <http://www.w3.org/2002/07/owl#>") ;
+		//get rdfs classes
+		String qs = StrUtils.strjoinNL
+	            ( "SELECT DISTINCT ?classname WHERE{ "
+	            , " ?classname a rdfs:Class. }") ;
+        
+		Query q = QueryFactory.create(pre+"\n"+qs) ;
+		QueryExecution qe = QueryExecutionFactory.create(q, model);
+		
+		try {
+			res = qe.execSelect();
+			
+			while( res.hasNext()) {
+				QuerySolution soln = res.next();
+				RDFNode a = soln.get("?classname");
+				list.add(name + ":" + a.asResource().getLocalName());
+			}
+		} finally {
+			qe.close();
+		}
+		
+		//get owl classes
+		String qs1 = StrUtils.strjoinNL
+	            ( "SELECT DISTINCT ?classname WHERE{ "
+	            , " ?classname a owl:Class. }") ;
+        
+		Query q1 = QueryFactory.create(pre+"\n"+qs1) ;
+		QueryExecution qe1 = QueryExecutionFactory.create(q1, model);
+		
+		try {
+			res = qe1.execSelect();
+			
+			while( res.hasNext()) {
+				QuerySolution soln = res.next();
+				RDFNode a = soln.get("?classname");
+				list.add(name + ":" + a.asResource().getLocalName());
+			}
+		} finally {
+			qe.close();
+		}
+		
+		//get rdf properties
+		String qs2 = StrUtils.strjoinNL
+	            ( "SELECT DISTINCT ?classname WHERE{ "
+	            , " ?classname a rdfs:Property. }") ;
+        
+		Query q2 = QueryFactory.create(pre+"\n"+qs2) ;
+		QueryExecution qe2 = QueryExecutionFactory.create(q2, model);
+		
+		try {
+			res = qe2.execSelect();
+			
+			while( res.hasNext()) {
+				QuerySolution soln = res.next();
+				RDFNode a = soln.get("?classname");
+				list.add(name + ":" + a.asResource().getLocalName());
+			}
+		} finally {
+			qe.close();
+		}
+		
+		//get owl properties
+		String qs3 = StrUtils.strjoinNL
+	            ( "SELECT DISTINCT ?classname WHERE{ "
+	            , " ?classname a owl:ObjectProperty. }") ;
+        
+		Query q3 = QueryFactory.create(pre+"\n"+qs3) ;
+		QueryExecution qe3 = QueryExecutionFactory.create(q3, model);
+		
+		try {
+			res = qe3.execSelect();
+			
+			while( res.hasNext()) {
+				QuerySolution soln = res.next();
+				RDFNode a = soln.get("?classname");
+				list.add(name + ":" + a.asResource().getLocalName());
+			}
+		} finally {
+			qe.close();
+		}
+		
+		String qs4 = StrUtils.strjoinNL
+	            ( "SELECT DISTINCT ?classname WHERE{ "
+	            , " ?classname a owl:DatatypeProperty. }") ;
+        
+		Query q4 = QueryFactory.create(pre+"\n"+qs4) ;
+		QueryExecution qe4 = QueryExecutionFactory.create(q4, model);
+		
+		try {
+			res = qe4.execSelect();
+			
+			while( res.hasNext()) {
+				QuerySolution soln = res.next();
+				RDFNode a = soln.get("?classname");
+				list.add(name + ":" + a.asResource().getLocalName());
+			}
+		} finally {
+			qe.close();
+		}
+		
+		return list.iterator();
 	}
 	
 	//delete vocabulary based on vocabulary name
@@ -156,6 +280,14 @@ public class VocabularyDAO {
 	
 	//search vocabulary based on keyword
 	public Iterator<String> searchVocabulary(String keyword) throws Exception{
+		
+		String prefix = "";
+		String name = keyword;
+		if( keyword.contains(":") ){
+			 prefix = keyword.substring(0, keyword.indexOf(":") - 1);
+			 name = keyword.substring(keyword.indexOf(":") + 1, keyword.length());
+		}
+		
 		//get dataset connection
 		Dataset dataset = getDatasetSearch(true);
 		dataset.begin(ReadWrite.READ);
@@ -169,9 +301,9 @@ public class VocabularyDAO {
 	            , "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>") ;
 	    String qs = StrUtils.strjoinNL
 	            ( "SELECT ?label "
-	            , "{{ ?s text:query (rdfs:label '*" + keyword + "*'). "
+	            , "{{ ?s text:query (rdfs:label '*" + name + "*'). "
 	            , "?s rdfs:label ?label.} UNION { GRAPH ?g {"
-	            , "?s text:query (rdfs:label '*" + keyword + "*')."
+	            , "?s text:query (rdfs:label '*" + name + "*')."
 	            , "?s rdfs:label ?label."
 	            , "}}}") ;
 	    
@@ -191,7 +323,10 @@ public class VocabularyDAO {
 				RDFNode label = soln.get("?label");
 				
 				if( null != label ){
-					resultList.add(label.toString());
+					String str = label.toString();
+					if(str.contains(prefix)){
+						resultList.add(str);
+					}
 				}
 			}
 		} finally {
@@ -235,6 +370,46 @@ public class VocabularyDAO {
 		return ret;
 	}
 	
+	//get a list of vocabulary name
+	public Iterator<String> getAutoComplete() throws Exception{
+		
+		//get dataset connection
+		Dataset dataset = getDatasetSearch(true);
+		dataset.begin(ReadWrite.READ);
+		
+		List<String> resultList = new ArrayList<String>();
+		ResultSet res;
+	    
+		String qs = StrUtils.strjoinNL
+	            ( "SELECT ?label {{?s ?o ?label. } UNION { GRAPH ?g { ?s ?o ?label } }}") ;
+		
+		Query q = QueryFactory.create(qs) ;
+		
+		QueryExecution qe = QueryExecutionFactory.create(q, dataset);
+		try {
+			res = qe.execSelect();
+			while( res.hasNext()) {
+				QuerySolution soln = res.next();
+				RDFNode label = soln.get("?label");
+				
+				if( null != label ){
+					System.out.println(label.toString());
+					resultList.add(label.toString());
+				}
+			}
+		} finally {
+			qe.close();
+		}
+		
+		dataset.commit();
+		
+		//testDataset(dataset);
+		dataset.end();
+		dataset.close();
+		
+		return resultList.iterator();
+	}
+	
 	static int teststatistic = 0;
 	
 	//test code: get all data from dataset
@@ -259,6 +434,7 @@ public class VocabularyDAO {
 				RDFNode p = soln.get("?p");
 				RDFNode o = soln.get("?o");
 
+				System.out.println(s.toString() + "  " + p.toString() + "  " + o.toString());
 				logger.info(s.toString() + "  " + p.toString() + "  " + o.toString());
 			}
 		} finally{
@@ -276,6 +452,7 @@ public class VocabularyDAO {
 	    	extentionmap.put("ttl", "TURTLE");
 	    	extentionmap.put("n3", "N3");
 	    	extentionmap.put("nt", "NTRIPLES");
+	    	extentionmap.put("", "RDF/XML");
 	    
 		String extension = "";
 		int i = fileName.lastIndexOf('.');
@@ -311,7 +488,6 @@ public class VocabularyDAO {
 		
 		try {
 			res = qe.execSelect();
-			
 			
 			while( res.hasNext()) {
 				QuerySolution soln = res.next();

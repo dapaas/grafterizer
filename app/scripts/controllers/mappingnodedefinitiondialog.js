@@ -110,8 +110,9 @@ app.controller('MappingnodedefinitiondialogCtrl', function ($scope, $http, $mdDi
 	$scope.currentPage = 0;
     $scope.pageSize = 5;
     $scope.items = [];
+	$scope.itemslocal = [];
     $scope.numberOfPages=function(){
-        return Math.ceil($scope.items.length/$scope.pageSize);                
+        return Math.ceil($scope.itemslocal.length/$scope.pageSize);                
     }
 	
 	var keywordscope;
@@ -132,7 +133,7 @@ app.controller('MappingnodedefinitiondialogCtrl', function ($scope, $http, $mdDi
 
 			$scope.showProgress = false;
 		}).error(function(data, status, headers, config) {
-    		alert("error");
+    		console.log("console.log("error /api/vocabulary/search");");
 			$scope.showProgress = false;
     	});
 		
@@ -155,6 +156,15 @@ app.controller('MappingnodedefinitiondialogCtrl', function ($scope, $http, $mdDi
     	$scope.selection = "manageDialog";
 		
 		var localVocabulary = JSON.parse(sessionStorage["localVocabulary"]);
+		
+		$scope.VocabItemsServer = [];
+		$http.get('http://localhost:8080/ManageVocabulary/api/vocabulary/getAll').success(function(response){
+			for (var i = response.result.length - 1; i >= 0; i--) {
+				$scope.VocabItemsServer.push(response.result[i].name);
+			}
+    	}).error(function(data, status, headers, config) {
+    		console.log("error /api/vocabulary/getAll");
+    	});
 		
 		$scope.VocabItems = localVocabulary;
 		$scope.showManageDialogToolBar = true;
@@ -191,6 +201,9 @@ app.controller('MappingnodedefinitiondialogCtrl', function ($scope, $http, $mdDi
         		localVocabulary.splice(i, 1);
         	}
         }
+		
+		$scope.VocabItems = localVocabulary;
+		
 		window.sessionStorage.setItem('localVocabulary', JSON.stringify(localVocabulary));
 		
 		var localClassAndProperty = JSON.parse(window.sessionStorage['localClassAndProperty']);
@@ -230,7 +243,7 @@ app.controller('MappingnodedefinitiondialogCtrl', function ($scope, $http, $mdDi
 			$scope.switchToManageDialog();
 			$scope.showProgress = false;
 		}).error(function(data, status, headers, config) {
-			alert("error");
+			console.log("error /api/vocabulary/getClassAndPropertyFromVocabulary");
 		});      
     }
 	
