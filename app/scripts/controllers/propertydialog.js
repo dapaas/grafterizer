@@ -71,11 +71,12 @@ app.controller('PropertydialogCtrl', function ($scope, $http, $mdDialog, $timeou
 		$scope.showProgress = true;
 		$scope.items = [];
 		keywordscope = Para;
-		$http.get('http://localhost:8080/ManageVocabulary/api/vocabulary/search/' + Para).success(function(response){
-			$scope.items = response.result;
+		$http.get('http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/search/' + Para).success(function(response){
 			
 			for (var i = response.result.length - 1; i >= 0; i--) {
-				$scope.items.push(response.result[i].value);
+				var tmp = response.result[i]
+				var str = tmp.value;
+				$scope.items.push(str);
 			}
 
 			$scope.showProgress = false;
@@ -109,7 +110,7 @@ app.controller('PropertydialogCtrl', function ($scope, $http, $mdDialog, $timeou
 		$scope.VocabItems = localVocabulary;
 		
 		$scope.VocabItemsServer = [];
-		$http.get('http://localhost:8080/ManageVocabulary/api/vocabulary/getAll').success(function(response){
+		$http.get('http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/getAll').success(function(response){
 			for (var i = response.result.length - 1; i >= 0; i--) {
 				$scope.VocabItemsServer.push(response.result[i].name);
 			}
@@ -168,7 +169,7 @@ app.controller('PropertydialogCtrl', function ($scope, $http, $mdDialog, $timeou
 	//server
 	$scope.deleteItem = function(name, vocabNamespace) {
 		
-        $http.post('http://localhost:8080/ManageVocabulary/api/vocabulary/delete/', {name: name, namespace: vocabNamespace}).success(function(response){
+        $http.post('http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/delete/', {name: name, namespace: vocabNamespace}).success(function(response){
         if(response.http_code == "200"){
         	for (var i = VocabularCollection.length - 1; i >= 0; i--) {
         		if (VocabularCollection[i].name === name) {
@@ -184,7 +185,7 @@ app.controller('PropertydialogCtrl', function ($scope, $http, $mdDialog, $timeou
 */
 	//server
     $scope.addVocabToTableServer = function(vocabName, vocabPrefix, vocabLoc) {
-    	$http.post('http://localhost:8080/ManageVocabulary/api/vocabulary/add', {name:vocabName, namespace:vocabPrefix, path:vocabLoc}).success(function(response){
+    	$http.post('http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/add', {name:vocabName, namespace:vocabPrefix, path:vocabLoc}).success(function(response){
 			$scope.switchToManageDialog();
 		}).error(function(data, status, headers, config) {
 			alert("error");
@@ -194,7 +195,7 @@ app.controller('PropertydialogCtrl', function ($scope, $http, $mdDialog, $timeou
 	//server
 	$scope.switchToManageDialog = function() {	
     	$scope.selection = "manageDialog";
-		$http.get('http://localhost:8080/ManageVocabulary/api/vocabulary/getAll').success(function(response){
+		$http.get('http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/getAll').success(function(response){
 			$scope.VocabItems = response.result;
     	}).error(function(data, status, headers, config) {
     		alert("error");
@@ -215,7 +216,7 @@ app.controller('PropertydialogCtrl', function ($scope, $http, $mdDialog, $timeou
 		}
 		
 		$scope.showProgress = true;
-    	$http.post('http://localhost:8080/ManageVocabulary/api/vocabulary/getClassAndPropertyFromVocabulary', {name:vocabName, path:vocabLoc, data:object.data}).success(function(response){
+    	$http.post('http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/getClassAndPropertyFromVocabulary', {name:vocabName, path:vocabLoc, data:object.data}).success(function(response){
 			var localClassAndProperty = JSON.parse(sessionStorage["localClassAndProperty"]);
 			for (var i = response.result.length - 1; i >= 0; i--) {
 				localClassAndProperty.push(response.result[i]);
@@ -264,7 +265,7 @@ app.controller('PropertydialogCtrl', function ($scope, $http, $mdDialog, $timeou
 		this.selectedItemChange = selectedItemChange;
 
 		function querySearch (query) {
-			return $http.get("http://localhost:8080/ManageVocabulary/api/vocabulary/autocomplete")
+			return $http.get("http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/autocomplete")
             .then(function(data){
 				var allStates = "";
                 var labels = data.data.result;

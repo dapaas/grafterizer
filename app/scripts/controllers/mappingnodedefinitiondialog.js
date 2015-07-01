@@ -124,8 +124,7 @@ app.controller('MappingnodedefinitiondialogCtrl', function ($scope, $http, $mdDi
 		$scope.showProgress = true;
 		$scope.itemslocal = [];
 		keywordscope = Para;
-		$http.get('http://localhost:8080/ManageVocabulary/api/vocabulary/search/' + Para).success(function(response){
-			$scope.items = response.result;
+		$http.get('http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/search/' + Para).success(function(response){
 			
 			for (var i = response.result.length - 1; i >= 0; i--) {
 				$scope.itemslocal.push(response.result[i].value);
@@ -133,7 +132,7 @@ app.controller('MappingnodedefinitiondialogCtrl', function ($scope, $http, $mdDi
 
 			$scope.showProgress = false;
 		}).error(function(data, status, headers, config) {
-    		console.log("console.log("error /api/vocabulary/search");");
+    		console.log("error /api/vocabulary/search");
 			$scope.showProgress = false;
     	});
 		
@@ -158,7 +157,7 @@ app.controller('MappingnodedefinitiondialogCtrl', function ($scope, $http, $mdDi
 		var localVocabulary = JSON.parse(sessionStorage["localVocabulary"]);
 		
 		$scope.VocabItemsServer = [];
-		$http.get('http://localhost:8080/ManageVocabulary/api/vocabulary/getAll').success(function(response){
+		$http.get('http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/getAll').success(function(response){
 			for (var i = response.result.length - 1; i >= 0; i--) {
 				$scope.VocabItemsServer.push(response.result[i].name);
 			}
@@ -229,7 +228,7 @@ app.controller('MappingnodedefinitiondialogCtrl', function ($scope, $http, $mdDi
 		}
 		
 		$scope.showProgress = true;
-    	$http.post('http://localhost:8080/ManageVocabulary/api/vocabulary/getClassAndPropertyFromVocabulary', {name:vocabName, path:vocabLoc, data:object.data}).success(function(response){
+    	$http.post('http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/getClassAndPropertyFromVocabulary', {name:vocabName, path:vocabLoc, data:object.data}).success(function(response){
 			var localClassAndProperty = JSON.parse(sessionStorage["localClassAndProperty"]);
 			for (var i = response.result.length - 1; i >= 0; i--) {
 				localClassAndProperty.push(response.result[i]);
