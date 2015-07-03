@@ -1,0 +1,16 @@
+<md-dialog aria-label='Choose download mode' class="sin-function-dialog">
+    <md-dialog-content class="sticky-container">
+
+        <div flex layout="row" class="md-padding" layout-align="center center">
+            <md-button class="md-raised md-primary sin-button-padding" aria-label="Download N-triples" ng-click="download()">
+                DOWNLOAD LOCALLY
+            </md-button>
+            <md-button class="md-raised md-primary sin-button-padding" aria-label="Download N-triples" ng-click="save()">
+                SAVE DISTRIBUTION
+            </md-button>
+        </div>
+    </md-dialog-content>
+    <div class="md-actions" layout="row" layout-align="right">
+        <md-button class="md-primary" ng-click="cancel()">Cancel</md-button>
+    </div>
+</md-dialog>
