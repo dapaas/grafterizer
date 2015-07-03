@@ -9,7 +9,6 @@
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, target-densitydpi=device-dpi" />
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css" />
@@ -34,7 +33,7 @@
       <md-toolbar layout="row" class="md-toolbar-tools md-whiteframe-z1">
         <div layout="row" flex class="fill-height">
           <div class="md-toolbar-item md-breadcrumb" ncy-breadcrumb></div>
-         <span flex></span> <!-- use up the empty space -->
+         <span flex></span>
          <div layout="column" class="flex-no-shrink" ui-view="actions"></div>
         </div>
        </md-toolbar>
@@ -76,61 +75,53 @@
         <script src="bower_components/codemirror/mode/clojure/clojure.js"></script>
     <!-- endbuild -->
 
-        <!-- build:js({.tmp,app}) scripts/scripts.js -->
-        <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/about.js"></script>
-        <script src="scripts/controllers/upload.js"></script>
-        <script src="scripts/controllers/grid.js"></script>
-        <script src="scripts/services/fileupload.js"></script>
-        <script src="scripts/services/fileparsing.js"></script>
-        <script src="scripts/controllers/datapages.js"></script>
-        <script src="scripts/services/datapagesresource.js"></script>
-        <script src="scripts/services/loopback-services.js"></script>
-        <script src="scripts/controllers/files.js"></script>
-        <script src="scripts/controllers/file.js"></script>
-        <script src="scripts/controllers/transformations.js"></script>
-        <script src="scripts/controllers/actions.js"></script>
-        <script src="scripts/controllers/transformation.js"></script>
-        <script src="scripts/controllers/transformationnew.js"></script>
-        <script src="scripts/services/pipe.js"></script>
-        <script src="scripts/services/ontotextapi.js"></script>
-        <script src="scripts/controllers/distributions.js"></script>
-        <script src="scripts/controllers/datasets.js"></script>
-        <script src="scripts/controllers/dataset.js"></script>
-        <script src="scripts/directives/pipeline.js"></script>
-        <script src="scripts/directives/pipelinefunction.js"></script>
-        <script src="scripts/directives/functionsdialogcontent.js"></script>
-        <script src="scripts/directives/droprowsfunction.js"></script>
-        <script src="scripts/directives/derivecolumnfunction.js"></script>
-        <script src="scripts/services/transformationdatamodel.js"></script>
-        <script src="scripts/directives/customfunction.js"></script>
-        <script src="scripts/directives/customcode.js"></script>
-        <script src="scripts/controllers/editprefixers.js"></script>
-        <script src="scripts/controllers/customfunctionsdialogcontroller.js"></script>
-        <script src="scripts/controllers/distribution.js"></script>
-        <script src="scripts/directives/clojurepipeline.js"></script>
-        <script src="scripts/services/generateclojure.js"></script>
-        <script src="scripts/directives/recursiondirective.js"></script>
-        <script src="scripts/controllers/preview.js"></script>
-        <script src="scripts/directives/previewraw.js"></script>
-        <script src="scripts/directives/rdfmapping.js"></script>
-        <script src="scripts/directives/previewtable.js"></script>
-        <script src="scripts/directives/graphmapping.js"></script>
-        <script src="scripts/controllers/mappingnodedefinitiondialog.js"></script>
-        <script src="scripts/directives/constanturinode.js"></script>
-        <script src="scripts/directives/propertynode.js"></script>
-        <script src="scripts/controllers/propertydialog.js"></script>
-        <script src="scripts/directives/columnurinode.js"></script>
-        <script src="scripts/directives/columnliteralnode.js"></script>
-        <script src="scripts/directives/constantliteralnode.js"></script>
-        <script src="scripts/directives/blanknode.js"></script>
-        <script src="scripts/directives/addorremovenode.js"></script>
-        <script src="scripts/services/persistenttabs.js"></script>
-        <script src="scripts/directives/addorremoveproperty.js"></script>
-        <script src="scripts/controllers/pipelinefunctiondialog.js"></script>
-        <script src="scripts/directives/makedataset.js"></script>
-        <script src="scripts/directives/mapc.js"></script>
-        <script src="scripts/controllers/computetriples.js"></script>
-        <!-- endbuild -->
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="scripts/app.js"></script>
+    <script src="scripts/controllers/transformations.js"></script>
+    <script src="scripts/controllers/actions.js"></script>
+    <script src="scripts/controllers/transformation.js"></script>
+    <script src="scripts/controllers/transformationnew.js"></script>
+    <script src="scripts/services/pipe.js"></script>
+    <script src="scripts/services/ontotextapi.js"></script>
+    <script src="scripts/controllers/datasets.js"></script>
+    <script src="scripts/controllers/dataset.js"></script>
+    <script src="scripts/directives/pipeline.js"></script>
+    <script src="scripts/directives/pipelinefunction.js"></script>
+    <script src="scripts/directives/functionsdialogcontent.js"></script>
+    <script src="scripts/directives/droprowsfunction.js"></script>
+    <script src="scripts/directives/derivecolumnfunction.js"></script>
+    <script src="scripts/services/transformationdatamodel.js"></script>
+    <script src="scripts/directives/customfunction.js"></script>
+    <script src="scripts/directives/customcode.js"></script>
+    <script src="scripts/controllers/editprefixers.js"></script>
+    <script src="scripts/controllers/customfunctionsdialogcontroller.js"></script>
+    <script src="scripts/controllers/distribution.js"></script>
+    <script src="scripts/directives/clojurepipeline.js"></script>
+    <script src="scripts/services/generateclojure.js"></script>
+    <script src="scripts/controllers/preview.js"></script>
+    <script src="scripts/directives/previewraw.js"></script>
+    <script src="scripts/directives/rdfmapping.js"></script>
+    <script src="scripts/directives/previewtable.js"></script>
+    <script src="scripts/directives/graphmapping.js"></script>
+    <script src="scripts/controllers/mappingnodedefinitiondialog.js"></script>
+    <script src="scripts/directives/constanturinode.js"></script>
+    <script src="scripts/directives/propertynode.js"></script>
+    <script src="scripts/controllers/propertydialog.js"></script>
+    <script src="scripts/directives/columnurinode.js"></script>
+    <script src="scripts/directives/columnliteralnode.js"></script>
+    <script src="scripts/directives/constantliteralnode.js"></script>
+    <script src="scripts/directives/blanknode.js"></script>
+    <script src="scripts/directives/addorremovenode.js"></script>
+    <script src="scripts/directives/addorremoveproperty.js"></script>
+    <script src="scripts/controllers/pipelinefunctiondialog.js"></script>
+    <script src="scripts/directives/makedataset.js"></script>
+    <script src="scripts/directives/mapc.js"></script>
+    <script src="scripts/controllers/computetriples.js"></script>
+    <script src="scripts/filters/startfrom.js"></script>
+    <script src="scripts/directives/filedropzone.js"></script>
+    <script src="scripts/controllers/demo.js"></script>
+    <script src="scripts/controllers/filetest.js"></script>
+    <script src="scripts/services/leobject.js"></script>
+    <!-- endbuild -->
 </body>
 </html>

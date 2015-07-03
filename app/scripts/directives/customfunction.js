@@ -7,7 +7,7 @@
  * # customFunction
  */
 angular.module('grafterizerApp')
-  .directive('customFunction', function () {
+  .directive('customFunction', function() {
     return {
       template: '<div></div>',
       restrict: 'E',

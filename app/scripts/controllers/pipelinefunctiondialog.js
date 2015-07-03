@@ -8,9 +8,5 @@
  * Controller of the grafterizerApp
  */
 angular.module('grafterizerApp')
-    .controller('PipelinefunctiondialogCtrl', function ($scope) {
-
-    console.log("controller", $scope);
-    
-
+    .controller('PipelinefunctiondialogCtrl', function($scope) {
 });

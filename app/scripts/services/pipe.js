@@ -8,8 +8,8 @@
  * Service in the grafterizerApp.
  */
 angular.module('grafterizerApp')
-  .service('PipeService', function ($http, $log, $mdToast) {
-  	var urlBase = "http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8080";
+  .service('PipeService', function($http, $log, $mdToast) {
+    var urlBase = 'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8080';
 
     var transformEdnResponse = function(data, headers) {
       try {
@@ -17,7 +17,7 @@ angular.module('grafterizerApp')
           raw: data,
           edn: jsedn.toJS(jsedn.parse(data))
         };
-      } catch(e) {
+      } catch (e) {
         $log.debug(data);
         $log.error(e);
         return {
@@ -27,14 +27,14 @@ angular.module('grafterizerApp')
       }
     };
 
-    var errorHandler = function(data, status, headers, config){
+    var errorHandler = function(data, status, headers, config) {
       var message;
       if (data && data.error) {
-        message = "API error: "+data.error;
+        message = 'API error: ' + data.error;
       } else if (status) {
-        message = "Error "+status+" while contacting the API";
+        message = 'Error ' + status + ' while contacting the API';
       } else {
-        message = "An error occured when contacting the API";
+        message = 'An error occured when contacting the API';
       }
 
       $mdToast.show(
@@ -46,41 +46,41 @@ angular.module('grafterizerApp')
     };
 
     this.computeTuplesHref = function(distributionUri, transformationUri) {
-      return urlBase+"/download?transformation="+
-        window.encodeURIComponent(transformationUri)+
-        "&distribution="+window.encodeURIComponent(distributionUri);
+      return urlBase + '/download?transformation=' +
+        window.encodeURIComponent(transformationUri) +
+        '&distribution=' + window.encodeURIComponent(distributionUri);
     };
 
     this.preview = function(distributionUri, clojure) {
-        return $http({
-            // url: urlBase+"/poney",
-            url: urlBase+"/lapin",
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            data: {
-                distributionUri: distributionUri,
-                clojure: clojure
-            },
-            transformResponse: [transformEdnResponse]
-        });
+      return $http({
+        // url: urlBase+'/poney',
+        url: urlBase + '/lapin',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: {
+          distributionUri: distributionUri,
+          clojure: clojure
+        },
+        transformResponse: [transformEdnResponse]
+      });
     };
 
     this.original = function(distributionUri) {
-        return $http({
-            url: urlBase+"/vache",
-            method: 'GET',
-            params: {
-                distributionUri: distributionUri
-            },
-            transformResponse: [transformEdnResponse]
-        }).error(errorHandler);
+      return $http({
+        url: urlBase + '/vache',
+        method: 'GET',
+        params: {
+          distributionUri: distributionUri
+        },
+        transformResponse: [transformEdnResponse]
+      }).error(errorHandler);
     };
 
-  	this.pipe = function(transformationId, fileId) {
-  		var path = urlBase+"/pipe/"+transformationId+"/"+fileId+".json";
+    this.pipe = function(transformationId, fileId) {
+      var path = urlBase + '/pipe/' + transformationId + '/' + fileId + '.json';
 
-  		return $http.get(path).error(errorHandler);
-  	};
+      return $http.get(path).error(errorHandler);
+    };
   });

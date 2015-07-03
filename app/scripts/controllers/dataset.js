@@ -8,56 +8,56 @@
  * Controller of the grafterizerApp
  */
 angular.module('grafterizerApp')
-  .controller('DatasetCtrl', function (
-  	$scope,
+  .controller('DatasetCtrl', function(
+    $scope,
     $stateParams,
     ontotextAPI,
     $state
-  	) {
+  ) {
 
-  	var id = $scope.id = $stateParams.id;
+    var id = $scope.id = $stateParams.id;
 
     $scope.document = {
       title: 'loading'
     };
 
-  	ontotextAPI.dataset(id).success(function(data){
-  		$scope.document = data;
-  		$scope.document.title = data['dct:title'];
-  		// $scope.json = JSON.stringify(data, null, '  ');
-  	}).error(function(){
-  		$state.go('^');
-  	});
+    ontotextAPI.dataset(id).success(function(data) {
+      $scope.document = data;
+      $scope.document.title = data['dct:title'];
+    }).error(function() {
+      $state.go('^');
+    });
 
-  	$scope.selectDistribution = function(distribution) {
-  		$state.go('distribution', {id: distribution});
-  	};
+    $scope.selectDistribution = function(distribution) {
+      $state.go('distribution', {
+        id: distribution
+      });
+    };
 
-  	$scope.$watch('file', function() {
-  		if ($scope.file && $scope.file[0]) {
-  			var file = $scope.file[0];
-  			// console.log(file);
+    $scope.$watch('file', function() {
+      if ($scope.file && $scope.file[0]) {
+        var file = $scope.file[0];
 
-  			var metadata = {
-	            '@context': ontotextAPI.getContextDeclaration(),
-	            '@type': 'dcat:Distribution',
-	            'dct:title': "undefined title",
-	            'dct:description': "undefined description",
-	            'dcat:fileName': file.name,
-	            'dcat:mediaType': file.type
-	            // 'dct:public': $scope.document['dct:public'],
-	            // 'dct:modified': moment().format("YYYY-MM-DD")
-	        };
-	  		ontotextAPI.uploadDistribution(id,
-	  			file, metadata).success(function(){
-	  			$state.transitionTo($state.current, $stateParams, {
-				    reload: true,
-				    inherit: false,
-				    notify: true
-				});
-	  		});
+        var metadata = {
+          '@context': ontotextAPI.getContextDeclaration(),
+          '@type': 'dcat:Distribution',
+          'dct:title': 'undefined title',
+          'dct:description': 'undefined description',
+          'dcat:fileName': file.name,
+          'dcat:mediaType': file.type
 
-	  		// $state.go
-  		}
-  	});
+          // 'dct:public': $scope.document['dct:public'],
+          // 'dct:modified': moment().format("YYYY-MM-DD")
+        };
+        ontotextAPI.uploadDistribution(id,
+          file, metadata).success(function() {
+          $state.transitionTo($state.current, $stateParams, {
+            reload: true,
+            inherit: false,
+            notify: true
+          });
+        });
+
+      }
+    });
   });
