@@ -138,7 +138,7 @@ module.exports = function (grunt) {
 
     jscs: {
       options: {
-        fix: true
+        fix: false
       },
       all: {
         src: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
