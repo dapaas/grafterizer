@@ -154,8 +154,8 @@ angular.module('grafterizerApp')
     /* Calls the jsedn parser and returns the parsed user function */
     function parseAndAddUserFunction(userFunctionString) {
       var result = parseEdnFromString(userFunctionString, 'Error parsing user function!');
-      if (result === null)
-        return false;
+
+      if (!result) return false;
 
       addUserFunction(result);
       return true;
@@ -408,7 +408,7 @@ angular.module('grafterizerApp')
       // graph URI as prefix, add nothing
       var propertyPrefix = property.prefix;
       var propertyName = property.propertyName;
-      if (propertyPrefix === null) {
+      if (!propertyPrefix) {
         alertInterface('Property prefix cannot be null:' + propertyName);
         return;
       } else if (propertyPrefix === '') {
@@ -431,7 +431,7 @@ angular.module('grafterizerApp')
       // graph URI as prefix, add nothing
       var nodePrefix = colURINode.prefix;
       var nodeValue = colURINode.column;
-      if (nodePrefix === null) {
+      if (!nodePrefix) {
         // base graph URI
         // ((prefixer "graphURI") nodeValue)
         return new jsedn.List([new jsedn.List([new jsedn.sym('prefixer'), containingGraph.graphURI]), new jsedn.sym(
@@ -463,7 +463,7 @@ angular.module('grafterizerApp')
       // graph URI as prefix, add nothing
       var nodePrefix = constURINode.prefix;
       var nodeValue = constURINode.constant;
-      if (nodePrefix === null) {
+      if (!nodePrefix) {
         // base graph URI
         // ((prefixer 'graphURI') 'nodeValue')
         return new jsedn.List([new jsedn.List([new jsedn.sym('prefixer'), containingGraph.graphURI]), nodeValue]);
