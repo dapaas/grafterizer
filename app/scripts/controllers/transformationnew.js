@@ -25,8 +25,8 @@ angular.module('grafterizerApp')
     };
 
     var customfunctions = [
-          new transformationDataModel.CustomFunctionDeclaration("integer-literal", "(defn integer-literal [s] (Integer/parseInt s))"),
-          new transformationDataModel.CustomFunctionDeclaration("transform-gender", '(def transform-gender {"f" (s "female") "m" (s "male")})'),
+          new transformationDataModel.CustomFunctionDeclaration('integer-literal', '(defn integer-literal [s] (Integer/parseInt s))'),
+          new transformationDataModel.CustomFunctionDeclaration('transform-gender', '(def transform-gender {"f" (s "female") "m" (s "male")})'),
           new transformationDataModel.CustomFunctionDeclaration('string-literal', '(def string-literal s)'),
           new transformationDataModel.CustomFunctionDeclaration('boolean', ''),
           new transformationDataModel.CustomFunctionDeclaration('count', ''),

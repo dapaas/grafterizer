@@ -37,11 +37,11 @@ angular.module('grafterizerApp')
           $scope.dataset['foaf:primaryTopic'],
           file,
           metadata).success(function(data) {
-//          console.log(data);
+            //          console.log(data);
 
-          // TODO TODO TODO TODO
-          window.alert(data['@id']);
-        });
+            // TODO TODO TODO TODO
+            window.alert(data['@id']);
+          });
 
         $mdDialog.hide();
       });

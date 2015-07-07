@@ -9,7 +9,7 @@
  */
 angular.module('grafterizerApp')
   .service('leObject', function() {
-    this.object = [];
+    this.object = {};
     this.localVocabulary = [];
     this.localClassAndProperty = [];
   });

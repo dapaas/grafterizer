@@ -32,7 +32,8 @@ angular.module('grafterizerApp')
     };
     for (var i = 0; i < $scope.$parent.transformation.prefixers.length; ++i) {
       var prefixer = $scope.$parent.transformation.prefixers[i];
-//      console.log($scope.$parent.transformation.prefixers);
+
+      //      console.log($scope.$parent.transformation.prefixers);
       $scope.gridOpts.data.push({
         prefixName: prefixer.name,
         uri: prefixer.uri

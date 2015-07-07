@@ -221,7 +221,7 @@ angular.module('grafterizerApp')
         return;
       }
 
-      if (vocabLoc === undefined && object.length === 0) {
+      if (vocabLoc === undefined && !object.data) {
         return;
       }
 

@@ -23,6 +23,7 @@ angular.module('grafterizerApp')
           if (scope.graph.graphRoots.length === 0) {
             var property1 = new transformationDataModel.Property('rdf',
               'a');
+              
             var property2 = new transformationDataModel.Property('foaf',
               'name');
 

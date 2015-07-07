@@ -27,6 +27,7 @@ angular.module('grafterizerApp')
             scope.originalNode = {};
             angular.copy(scope.node, scope.originalNode);
             var newScope = scope.$new(false, scope);
+            console.log(scope);
             newScope.newNode = scope.node;
             newScope.isCreate = false;
             $mdDialog.show({
