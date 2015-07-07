@@ -460,7 +460,7 @@ angular.module('grafterizerApp')
     // graph URI as prefix, add nothing
     var nodePrefix = constURINode.prefix;
     var nodeValue = constURINode.constant;
-x      if (!nodePrefix) {
+    if (!nodePrefix) {
       // base graph URI
       // ((prefixer 'graphURI') 'nodeValue')
       return new jsedn.List([new jsedn.List([new jsedn.sym('prefixer'), containingGraph.graphURI]), nodeValue]);
