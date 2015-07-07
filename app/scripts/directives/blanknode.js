@@ -7,7 +7,7 @@
  * # blankNode
  */
 angular.module('grafterizerApp')
-  .directive('blankNode', function () {
+  .directive('blankNode', function() {
     return {
       template: '<div></div>',
       restrict: 'E',

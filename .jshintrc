@@ -4,7 +4,7 @@
   "esnext": true,
   "bitwise": true,
   "camelcase": true,
-  "curly": true,
+  "curly": false,
   "eqeqeq": true,
   "immed": true,
   "indent": 2,
@@ -20,6 +20,7 @@
     "angular": false,
     "Papa": true,
     "_": true,
-    "moment": true
+    "moment": true,
+    "jsedn": true
   }
 }

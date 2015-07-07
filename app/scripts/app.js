@@ -4,12 +4,15 @@
  * @ngdoc overview
  * @name grafterizerApp
  * @description
- * # grafterizerApp
+ * # Grafterizer
  *
- * Main module of the application.
+ * This file contains the declaration of the application dependencies,
+ * and the modules settings.
+ *
+ * The theme is defined here, as well as the routing (using a state machine).
  */
 angular
-    .module('grafterizerApp', [
+  .module('grafterizerApp', [
     'ui.router',
     'ngMaterial',
     'ngAnimate',
@@ -22,321 +25,215 @@ angular
     'ui.grid',
     'ui.grid.autoResize',
     'angular-loading-bar',
-    'lbServices',
     'ncy-angular-breadcrumb',
     'angularMoment',
-    //'http-auth-interceptor',
     'ui.sortable',
     'ui.codemirror',
-    'ui.grid.selection', 
-    'ui.grid.edit', 
+    'ui.grid.selection',
+    'ui.grid.edit',
     'ui.grid.resizeColumns',
     'ui.grid.exporter',
     'ngMessages',
     'RecursionHelper',
     'vAccordion'
+
+    //'http-auth-interceptor'
 ])
-    .config(function (
-            $mdThemingProvider,
-             $stateProvider,
-             $urlRouterProvider,
-             $urlMatcherFactoryProvider,
-             cfpLoadingBarProvider,
-             $breadcrumbProvider,
-             $locationProvider) {
+  .config(function(
+    $mdThemingProvider,
+    $stateProvider,
+    $urlRouterProvider,
+    $urlMatcherFactoryProvider,
+    cfpLoadingBarProvider,
+    $breadcrumbProvider,
+    $locationProvider) {
 
-    $urlRouterProvider.otherwise("/transformations/new");
-	
-	sessionStorage.localClassAndProperty = JSON.stringify([]);
-	sessionStorage.localVocabulary = JSON.stringify([]);
+    $urlRouterProvider.otherwise('/transformations/new');
 
-    if (!window.navigator.device) {
-       $locationProvider.html5Mode(true);
+    sessionStorage.localClassAndProperty = JSON.stringify([]);
+    sessionStorage.localVocabulary = JSON.stringify([]);
+
+    if (!window.navigator.device &&
+      window.location.origin !== 'http://localhost:9000') {
+      $locationProvider.html5Mode(true);
     }
 
     // Workaround for https://github.com/angular-ui/ui-router/issues/1119
     var valToString = function(val) {
-        return val !== null ? val.toString() : val;
+      return val !== null ? val.toString() : val;
     };
 
     $urlMatcherFactoryProvider.type('nonURIEncoded', {
-        encode: valToString,
-        decode: valToString,
-        is: function () { return true; }
+      encode: valToString,
+      decode: valToString,
+      is: function() {
+        return true;
+      }
     });
-
 
     $stateProvider
-        .state('main', {
-        url: '/',
-        views: {
-            main: {
-                templateUrl: 'views/main.html',
-                controller: 'MainCtrl'
-            } 
-        },
-        ncyBreadcrumb: {
-            label: 'Home page'
-        }
-    })
-        .state('about', {
+      .state('about', {
         url: '/about',
         views: {
-            main: {
-                templateUrl: 'views/about.html',
-                controller: 'AboutCtrl'
-            }
-        }
-    })
-        .state('upload', {
-        url: '/upload',
-        views: {
-            main: {
-                templateUrl: 'views/upload.html',
-                controller: 'UploadCtrl'
-            }
-        }
-    })
-        .state('grid', {
-        url: '/grid',
-        views: {
-            main: {
-                templateUrl: 'views/grid.html',
-                controller: 'GridCtrl'
-            }
-        }
-    })
-        .state('datapages', {
-        url: '/datapages',
-        views: {
-            main: {
-                templateUrl: 'views/datapages.html',
-                controller: 'DatapagesCtrl'
-            }
+          main: {
+            templateUrl: 'views/about.html'
+          }
         },
         ncyBreadcrumb: {
-            label: 'Datapages'
+          label: 'About'
         }
-    })
-        .state('transformations', {
+      })
+      .state('transformations', {
         url: '/transformations',
         views: {
-            main: {
-                templateUrl: 'views/transformations.html',
-                controller: 'TransformationsCtrl'
-            }
+          main: {
+            templateUrl: 'views/transformations.html',
+            controller: 'TransformationsCtrl'
+          }
         },
         ncyBreadcrumb: {
-            label: 'Data transformations'
+          label: 'Data transformations'
         }
-    })
-        .state('transformations.new', {
+      })
+      .state('transformations.new', {
         url: '/new',
         views: {
-            "main@": {
-                controller: 'TransformationNewCtrl',
-                templateUrl: 'views/transformation.html'
-            },
-            "actions@": {
-                templateUrl: 'views/actions.html',
-                controller: 'ActionsCtrl'
-            }
+          'main@': {
+            controller: 'TransformationNewCtrl',
+            templateUrl: 'views/transformation.html'
+          },
+          'actions@': {
+            templateUrl: 'views/actions.html',
+            controller: 'ActionsCtrl'
+          }
         },
         ncyBreadcrumb: {
-            label: '{{document.title || "New transformation"}}'
+          label: '{{document.title || "New transformation"}}'
         }
-    })
-        .state('transformations.transformation', {
+      })
+      .state('transformations.transformation', {
         url: '/{id:nonURIEncoded}',
         views: {
-            "main@": {
-                templateUrl: 'views/transformation.html',
-                controller: 'TransformationCtrl'
-            },
-            "actions@": {
-                templateUrl: 'views/actions.html',
-                controller: 'ActionsCtrl'
-            }
+          'main@': {
+            templateUrl: 'views/transformation.html',
+            controller: 'TransformationCtrl'
+          },
+          'actions@': {
+            templateUrl: 'views/actions.html',
+            controller: 'ActionsCtrl'
+          }
         },
         ncyBreadcrumb: {
-            label: '{{document.title || "File "+id}}'
+          label: '{{document.title || "File "+id}}'
         }
-    })
-        .state('transformations.transformation.preview', {
+      })
+      .state('transformations.transformation.preview', {
         url: '^/preview/{id:nonURIEncoded}',
         params: {
-            'distribution': null
+          distribution: null
         },
         views: {
-            "preview": {
-                templateUrl: 'views/preview.html',
-                controller: 'PreviewCtrl'
-            }
-        },
-        ncyBreadcrumb: {
-            label: 'Preview'
-        }
-    })
-        .state('files', {
-        url: '/files',
-        views: {
-            main: {
-                templateUrl: 'views/files.html',
-                controller: 'FilesCtrl'
-            }
+          preview: {
+            templateUrl: 'views/preview.html',
+            controller: 'PreviewCtrl'
+          }
         },
         ncyBreadcrumb: {
-            label: 'Files'
+          label: 'Preview'
         }
-    })
-        .state('files.file', {
-        url: '/:id',
-        views: {
-            "main@": {
-                templateUrl: 'views/file.html',
-                controller: 'FileCtrl'
-            },
-            "actions@": {
-                templateUrl: 'views/actions.html',
-                controller: 'ActionsCtrl'
-            }
-        },
-        ncyBreadcrumb: {
-            label: '{{document.title || "File "+id}}'
-        }
-    })
-        .state('distributions', {
-        url: '/distributions',
-        views: {
-            "main@": {
-                templateUrl: 'views/distributions.html',
-                controller: 'DistributionsCtrl'
-            }
-        }
-    })
-        .state('datasets', {
+      })
+      .state('datasets', {
         url: '/datasets',
         views: {
-            "main@": {
-                templateUrl: 'views/datasets.html',
-                controller: 'DatasetsCtrl'
-            }
+          'main@': {
+            templateUrl: 'views/datasets.html',
+            controller: 'DatasetsCtrl'
+          }
         },
         ncyBreadcrumb: {
-            label: 'Datasets'
+          label: 'Datasets'
         }
-    })
-        .state('datasets.dataset', {
+      })
+      .state('datasets.dataset', {
         url: '/datasets/{id:nonURIEncoded}',
         views: {
-            "main@": {
-                templateUrl: 'views/dataset.html',
-                controller: 'DatasetCtrl'
-            }//,
-            // "actions@": {
-            //   templateUrl: 'views/actions.html',
-            //   controller: 'ActionsCtrl'
-            // }
+          'main@': {
+            templateUrl: 'views/dataset.html',
+            controller: 'DatasetCtrl'
+          }
         },
         ncyBreadcrumb: {
-            label: '{{document.title || id}}'
+          label: '{{document.title || id}}'
         }
-    })
-        .state('distribution', {
+      })
+      .state('distribution', {
         url: '/distribution/{id:nonURIEncoded}',
         views: {
-            "main@": {
-                templateUrl: 'views/distribution.html',
-                controller: 'DistributionCtrl'
-            }
+          'main@': {
+            templateUrl: 'views/distribution.html',
+            controller: 'DistributionCtrl'
+          }
         },
         ncyBreadcrumb: {
-            label: '{{document.title || id}}'
+          label: '{{document.title || id}}'
         }
-    });
+      });
 
+    // The spinner is a bit too much
     cfpLoadingBarProvider.includeSpinner = false;
 
+    // Breadcrumb settings using material-style
     $breadcrumbProvider.setOptions({
-        template:
-        '<ol class="breadcrumb">'+
-        '<li ng-repeat="step in steps" ng-class="{active: $last}" ng-switch="$last || !!step.abstract">'+
-        '<a ng-switch-when="false" href="{{step.ncyBreadcrumbLink}}">{{step.ncyBreadcrumbLabel}}</a>'+
-        '<span ng-switch-when="true">{{step.ncyBreadcrumbLabel}}</span>'+
-        '</li>'+
+      template: '<ol class="breadcrumb">' +
+        '<li ng-repeat="step in steps" ng-class="{active: $last}" ng-switch="$last || !!step.abstract">' +
+        '<a ng-switch-when="false" href="{{step.ncyBreadcrumbLink}}">{{step.ncyBreadcrumbLabel}}</a>' +
+        '<span ng-switch-when="true">{{step.ncyBreadcrumbLabel}}</span>' +
+        '</li>' +
         '</ol>'
     });
 
-    /*var colors = [
-      'red',
-      'pink',
-      'purple',
-      'deep-purple',
-      'indigo',
-      'blue',
-      'light-blue',
-      'cyan',
-      'teal',
-      'green',
-      'light-green',
-      'lime',
-      'yellow',
-      'amber',
-      'orange',
-      'deep-orange',
-      'brown',
-      'grey',
-      'blue-grey'
-    ];
+    // Theme settings
+
+    $mdThemingProvider.definePalette('customPrimary', {
+      50: '#a9b2d7',
+      100: '#97a2cf',
+      200: '#8693c6',
+      300: '#7583be',
+      400: '#6374b6',
+      500: '#5264AE',
+      600: '#495a9d',
+      700: '#41508c',
+      800: '#39467a',
+      900: '#313c69',
+      A100: '#bac1df',
+      A200: '#ccd1e7',
+      A400: '#dde0ef',
+      A700: '#293258',
+      contrastDefaultColor: 'light'
+    });
+
+    $mdThemingProvider.definePalette('customAccent', {
+      50: '#333333',
+      100: '#333333',
+      200: '#333333',
+      300: '#f7fcfc',
+      400: '#e4f4f5',
+      500: '#EEEEEE',
+      600: '#bfe6e7',
+      700: '#addee0',
+      800: '#9ad7d9',
+      900: '#88cfd2',
+      A100: '#EEEEEE',
+      A200: '#EEEEEE',
+      A400: '#EEEEEE',
+      A700: '#75c8cb',
+      contrastDefaultColor: 'dark'
+    });
 
     $mdThemingProvider.theme('default')
-	    .primaryPalette(colors[Math.floor(Math.random()*colors.length)])
-	    .accentPalette(colors[Math.floor(Math.random()*colors.length)]);*/
-    //    $mdThemingProvider.theme('default')
-    //        .accentPalette('blue');
+      .primaryPalette('customPrimary')
+      .accentPalette('customAccent');
 
-    var customPrimary = {
-        '50': '#a9b2d7',
-        '100': '#97a2cf',
-        '200': '#8693c6',
-        '300': '#7583be',
-        '400': '#6374b6',
-        '500': '#5264AE',
-        '600': '#495a9d',
-        '700': '#41508c',
-        '800': '#39467a',
-        '900': '#313c69',
-        'A100': '#bac1df',
-        'A200': '#ccd1e7',
-        'A400': '#dde0ef',
-        'A700': '#293258',
-        'contrastDefaultColor': 'light'
-    };
-    $mdThemingProvider.definePalette('customPrimary', customPrimary);
-
-    var customAccent = {
-        '50': '#333333',
-        '100': '#333333',
-        '200': '#333333',
-        '300': '#f7fcfc',
-        '400': '#e4f4f5',
-        '500': '#EEEEEE',
-        '600': '#bfe6e7',
-        '700': '#addee0',
-        '800': '#9ad7d9',
-        '900': '#88cfd2',
-        'A100': '#EEEEEE',
-        'A200': '#EEEEEE',
-        'A400': '#EEEEEE',
-        'A700': '#75c8cb',
-        'contrastDefaultColor': 'dark',
-        //'contrastLightColors': ['50', '100', '200', '300', '400', 'A100']
-    };
-    $mdThemingProvider.definePalette('customAccent', customAccent);
-
-    $mdThemingProvider.theme('default')
-        .primaryPalette('customPrimary')
-        .accentPalette('customAccent');
-
+    // JSEDN is too restrictive by default on valid symbols
     jsedn.Symbol.prototype.validRegex = new RegExp(/.*/);
-});
+  });
