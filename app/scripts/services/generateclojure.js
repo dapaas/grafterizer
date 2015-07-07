@@ -119,7 +119,6 @@ angular.module('grafterizerApp')
 
   /* Adds a prefixer to the list of pre-defined prefixers */
   function addGrafterPrefixer(name, prefixString) {
-    // console.log(name, prefixString);
     var prefixer = new jsedn.List([
       jsedn.sym('def'),
       jsedn.sym(name),
@@ -297,7 +296,6 @@ angular.module('grafterizerApp')
     for (i = 0; i < transformation.graphs.length; ++i) {
       currentGraph = transformation.graphs[i];
 
-      //        console.log(currentGraph);
       currentGraphJsEdn = new jsedn.List([jsedn.sym('graph'), currentGraph.graphURI]);
 
       // construct a vector for each of the roots and add it to the graph jsedn
@@ -306,7 +304,6 @@ angular.module('grafterizerApp')
         currentGraphJsEdn.val.push(currentRootJsEdn);
       }
 
-      //        console.log('GRAPH ' + i + ' ENCODED:', currentGraphJsEdn.ednEncode());
       graphFunction.val.push(currentGraphJsEdn);
     }
 
@@ -329,7 +326,6 @@ angular.module('grafterizerApp')
       var propertyValue = node.subElements[0];
 
       // [name {either single node or URI node with sub-nodes (as vector)}
-      //        console.log('returning prop value');
       return new jsedn.Vector([constructPropertyJsEdn(node), constructNodeVectorEdn(propertyValue, containingGraph)]);
     }
 
@@ -362,15 +358,11 @@ angular.module('grafterizerApp')
         allSubElementsVector = new jsedn.Vector([constructColumnURINodeJsEdn(node, containingGraph)]);
         var k;
 
-        //            console.log('node.subElements.length:', node.subElements.length);
         for (k = 0; k < node.subElements.length; ++k) {
-          //                console.log('i', k);
           subElementEdn = constructNodeVectorEdn(node.subElements[k]);
 
-          //                console.log('subElementEdn:', subElementEdn.ednEncode());
           allSubElementsVector.val.push(subElementEdn);
 
-          //                console.log('allSubElementsVector:', allSubElementsVector.ednEncode());
         }
 
         return allSubElementsVector;
@@ -434,7 +426,6 @@ angular.module('grafterizerApp')
       return new jsedn.List([new jsedn.List([new jsedn.sym('prefixer'), containingGraph.graphURI]), new jsedn.sym(
         nodeValue)]);
     } else if (nodePrefix === '') {
-      //        console.log(colURINode);
       // empty prefix - just take the column as symbol
       // nodeValue
       return new jsedn.sym(nodeValue);
@@ -567,7 +558,6 @@ angular.module('grafterizerApp')
     /* User functions */
 
     //    var customFunctionsMap = transformation.customFunctionDeclarations;
-    //    console.log('customFunctionsMap', customFunctionsMap);
     for (i = 0; i < transformation.customFunctionDeclarations.length; ++i) {
       parseAndAddUserFunction(
         transformation.customFunctionDeclarations[i].clojureCode
@@ -591,9 +581,9 @@ angular.module('grafterizerApp')
     var textStr = '';
 
     //    textStr += (grafterDeclarations.ednEncode() + '\n' + '\n');
-    
     for (i = 0; i < transformation.rdfVocabs.length; ++i) {
-      textStr += ('(def ' + transformation.rdfVocabs[i].prefixName + ' ' + transformation.rdfVocabs[i].namespaceURI +')');
+      
+      textStr += ('(def ' + transformation.rdfVocabs[i].prefixName + ' ' + '"' + transformation.rdfVocabs[i].namespaceURI + '"' +')');
     }
     
     for (i = 0; i < grafterPrefixers.length; ++i) {

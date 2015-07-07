@@ -32,7 +32,6 @@ angular.module('grafterizerApp')
               return;
             }
 
-            // console.log(scope.transformation)
             scope.clojure = generatedClojure = generateClojure.fromTransformation(
               scope.transformation);
             scope.isOverrided = false;
