@@ -11,10 +11,12 @@ angular.module('grafterizerApp')
     .service('ontotextAPI', function($http, $mdToast, Upload, $log) {
 
       var endpoint = 'http://ec2-54-76-140-62.eu-west-1.compute.amazonaws.com:8080';
+      var apiAuthorization = 'Basic ' + window.btoa('s4key:s4pass');
 
       var jsonLdConfig = {
         headers: {
-          Accept: 'application/ld+json'
+          Accept: 'application/ld+json',
+          Authorization: apiAuthorization
         }
       };
 
@@ -57,7 +59,8 @@ angular.module('grafterizerApp')
       this.dataset = function(id) {
         return $http.get(endpoint + '/catalog/datasets', angular.merge({
           headers: {
-            'dataset-id': id
+            'dataset-id': id,
+            Authorization: apiAuthorization
           }
         }, jsonLdConfig)).error(errorHandler);
       };
@@ -69,7 +72,8 @@ angular.module('grafterizerApp')
       this.transformation = function(id) {
         return $http.get(endpoint + '/catalog/transformations', angular.merge({
           headers: {
-            'transformation-id': id
+            'transformation-id': id,
+            Authorization: apiAuthorization
           }
         }, jsonLdConfig)).error(errorHandler);
       };
@@ -105,8 +109,11 @@ angular.module('grafterizerApp')
         }
 
         var headers = {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'multipart/form-data',
+          Authorization: 'Basic ' + window.btoa('s4key:s4pass')
         };
+
+        // Authorization: 'Basic ' + window.btoa('s4hbq7d9f8ep:cvtsj1jcaap4ggs')
 
         return $http({
           url: endpoint + '/catalog/transformations',
@@ -129,7 +136,8 @@ angular.module('grafterizerApp')
       this.deleteTransformation = function(id) {
         return $http.delete(endpoint + '/catalog/transformations', angular.merge({
           headers: {
-            'transformation-id': id
+            'transformation-id': id,
+            Authorization: apiAuthorization
           }
         }, jsonLdConfig)).error(errorHandler);
       };
@@ -137,7 +145,8 @@ angular.module('grafterizerApp')
       this.getClojure = function(id) {
         return $http.get(endpoint + '/catalog/transformations/code/clojure', {
           headers: {
-            'transformation-id': id
+            'transformation-id': id,
+            Authorization: apiAuthorization
           }
         }).error(errorHandler);
       };
@@ -145,7 +154,8 @@ angular.module('grafterizerApp')
       this.getJson = function(id) {
         return $http.get(endpoint + '/catalog/transformations/code/json', {
           headers: {
-            'transformation-id': id
+            'transformation-id': id,
+            Authorization: apiAuthorization
           },
 
           // TODO angular fails when the JSON document is invalid...
@@ -166,7 +176,8 @@ angular.module('grafterizerApp')
       this.distribution = function(id) {
         return $http.get(endpoint + '/catalog/distributions', angular.merge({
           headers: {
-            'distrib-id': id
+            'distrib-id': id,
+            Authorization: apiAuthorization
           }
         }, jsonLdConfig)).error(errorHandler);
       };
@@ -181,7 +192,8 @@ angular.module('grafterizerApp')
           file: [file, meta],
           fileFormDataName: ['file', 'meta'],
           headers: {
-            'dataset-id': distributionID
+            'dataset-id': distributionID,
+            Authorization: apiAuthorization
           }
         }).error(errorHandler);
       };
@@ -189,7 +201,8 @@ angular.module('grafterizerApp')
       this.distributionFile = function(distributionID) {
         return $http.get(endpoint + '/catalog/distributions/file', {
           headers: {
-            'distrib-id': distributionID
+            'distrib-id': distributionID,
+            Authorization: apiAuthorization
           }
         }).error(errorHandler);
       };
@@ -210,7 +223,8 @@ angular.module('grafterizerApp')
           // 'command': 'my-pipe',
           // 'transformation-type': 'pipe',
           // 'input-distribution': distributionID,
-          'transformation-id': 'http://dapaas.eu/users/1505271111/transformation/toto-fork-1'
+          'transformation-id': 'http://dapaas.eu/users/1505271111/transformation/toto-fork-1',
+          Authorization: apiAuthorization
         };
 
         return $http({
