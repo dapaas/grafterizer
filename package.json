@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "dependencies": {},
   "repository": {},
+  "license": "EPL-1.0",
   "devDependencies": {
     "autoprefixer-core": "^5.2.0",
     "csswring": "^3.0.5",
