@@ -1,7 +1,7 @@
 <md-content flex layout-sm="column" layout="row"
             ngf-drop ng-model="fileUpload" ngf-drag-over-class="show-upload-indicator"
             ngf-accept="'.csv,.xsl,.xslx'">
-    <md-button class="md-accent upload-indicator">
+    <md-button aria-label="Upload dataset" class="md-accent upload-indicator">
         <i class="fa fa-upload"></i>
     </md-button>
     <md-tabs class="md-accent no-border-radius md-whiteframe-z5" flex
@@ -43,11 +43,17 @@
                     </md-button>
                 </div>
                 <div class="md-padding">
-                    <pipeline pipeline="pipeline" transformation="transformation"></pipeline></div>
+                    <pipeline pipeline="pipeline" transformation="transformation"></pipeline>
+                </div>
             </md-tab-body>
         </md-tab>
         <md-tab label="RDF Mapping">
             <md-tab-body>
+                <div class="md-padding">
+                    <md-button aria-label="Edit RDF mapping prefixes" ng-click="editRDFPrefixes()">
+                        <i class="fa fa-cubes"></i> Edit RDF mapping prefixes
+                    </md-button>
+                </div>
                 <rdf-mapping></rdf-mapping>
             </md-tab-body>
         </md-tab>

@@ -1,6 +1,6 @@
 
 <div ng-model="transformation.graphs" layout="row">
-    <md-button class="md-primary" ng-click="clickAddAfter(null)" ng-hide="transformation.graphs.length!=0" flex>
+    <md-button class="md-primary" ng-click="clickAddAfter(null)" ng-hide="transformation.graphs.length!=0" flex aria-label="Add pipeline step">
         <i class="fa fa-large fa-plus-circle"></i>
     </md-button>
     <div ng-repeat="graph in transformation.graphs">

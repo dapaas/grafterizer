@@ -1,7 +1,7 @@
-<md-button class="md-raised" ng-click="addKeyFunctionPair()">Add mapping</md-button>
+<md-button class="md-raised" ng-click="addKeyFunctionPair()" aria-label="Add mapping">Add mapping</md-button>
 <div layout="row"  ng-repeat="keyFunctionPair in function.keyFunctionPairs">
     <div layout="row">
-        <md-button class="md-primary button-tight md-default-theme" ng-click="removeKeyFunctionPair(keyFunctionPair)">
+        <md-button class="md-primary button-tight md-default-theme" ng-click="removeKeyFunctionPair(keyFunctionPair)" aria-label="Remove column mapping">
             <i class="fa fa-trash fa-lg"></i>
         </md-button>
         <div layout="column">

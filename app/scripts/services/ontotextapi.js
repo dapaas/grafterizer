@@ -40,13 +40,11 @@ angular.module('grafterizerApp')
         var formData = new FormData();
         angular.forEach(data, function(value, key) {
           formData.append(key, value);
-          console.log(value, key);
         });
 
         var headers = headersGetter();
         delete headers['Content-Type'];
 
-        console.log(formData);
         return formData;
       };
 
@@ -118,7 +116,6 @@ angular.module('grafterizerApp')
       };
 
       this.newTransformation = function(meta, clojure, json) {
-        console.log(meta);
         return createOrUpdateTransformation(true, meta, clojure, json);
       };
 
@@ -152,7 +149,6 @@ angular.module('grafterizerApp')
           // lets use an amazing try catch
           transformResponse: [function(data, headers) {
             try {
-              console.log(JSON.parse(data));
               return JSON.parse(data);
             } catch (e) {
               $log.debug(data);

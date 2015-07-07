@@ -20,14 +20,14 @@
                 </div>
             </form>
             <div layout="row">
-                <md-button class="md-raised" ng-click="addPrefixer()">Add prefixer</md-button>
-                <md-button class="md-raised" ng-click="removeSelectedPrefixers()">Remove selected</md-button>
+                <md-button class="md-raised" ng-click="addPrefixer()" aria-label="Add prefixer">Add prefixer</md-button>
+                <md-button class="md-raised" ng-click="removeSelectedPrefixers()" aria-label="Remove selected prefixer">Remove selected</md-button>
             </div>
         </div>
     </md-dialog-content>
 
     <div class="md-actions" layout="row" layout-align="right">
-        <md-button class="md-primary" ng-click="applyPrefixersChanges()">Done</md-button>
-        <md-button class="md-primary" ng-click="cancelPrefixersChanges()">Cancel</md-button>
+        <md-button class="md-primary" ng-click="applyPrefixersChanges()" aria-label="Apply prefixers changes">Done</md-button>
+        <md-button class="md-primary" ng-click="cancelPrefixersChanges()" aria-label="Cancel changes to prefixers">Cancel</md-button>
     </div>
 </md-dialog>
