@@ -114,7 +114,7 @@ angular.module('grafterizerApp')
         var values = [jsedn.sym("derive-column"),
                       this.newColName ? new jsedn.kw(':' + this.newColName) : new jsedn.kw(':unnamed'), colsToDeriveFromClj];
 
-        if (this.functionToDeriveWith) {
+        if (this.functionToDeriveWith && this.functionToDeriveWith.name) {
             values.push(jsedn.sym(this.functionToDeriveWith.name));
         }
         return new jsedn.List(values);
