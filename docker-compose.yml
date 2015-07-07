@@ -1,0 +1,13 @@
+web:
+  image: dapaas/grafterizer
+  ports:
+    - "80:80"
+  links:
+    - backend
+backend:
+  image: dapaas/grafterizer-backend
+  expose:
+    - "8080"
+  environment:
+    GRAFTWERK: "http://ec2-54-77-10-112.eu-west-1.compute.amazonaws.com:8080"
+    ONTOTEXT: "http://ec2-54-76-140-62.eu-west-1.compute.amazonaws.com:8080"

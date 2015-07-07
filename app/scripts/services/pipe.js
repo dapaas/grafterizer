@@ -9,7 +9,9 @@
  */
 angular.module('grafterizerApp')
   .service('PipeService', function($http, $log, $mdToast) {
-    var urlBase = 'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8080';
+    var urlBase = window.location.origin === 'http://localhost:9000' ?
+      'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8080/backend'
+      : '/backend';
 
     var transformEdnResponse = function(data, headers) {
       try {
@@ -76,11 +78,5 @@ angular.module('grafterizerApp')
         },
         transformResponse: [transformEdnResponse]
       }).error(errorHandler);
-    };
-
-    this.pipe = function(transformationId, fileId) {
-      var path = urlBase + '/pipe/' + transformationId + '/' + fileId + '.json';
-
-      return $http.get(path).error(errorHandler);
     };
   });
