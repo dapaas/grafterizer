@@ -31,7 +31,6 @@ angular.module('grafterizerApp')
     $scope.showSearchDialogToolBar = true;
     $scope.showAddDialogToolBar = false;
 
-    console.log('scope current property', $scope.property);
     if (!$scope.property) {
       $scope.property = new transformationDataModel.Property('', '', []);
     } else {

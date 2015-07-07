@@ -163,7 +163,10 @@ angular.module('grafterizerApp')
 
     function constructUserFunctions() {
       // we make a copy of the user functions array that we eventually return
-      var result = [];
+      var result, i = [];
+      
+      userFunctions = userFunctions.filter(function (elem) { return elem != undefined; });
+      
       if (userFunctions)
         result = userFunctions.slice();
 
@@ -247,7 +250,6 @@ angular.module('grafterizerApp')
           new jsedn.kw(':format'),
           new jsedn.kw(':csv')]);
 
-      console.log('readDatasetFunct', readDatasetFunct);
 
       pipeline = null;
 
@@ -337,7 +339,6 @@ angular.module('grafterizerApp')
           alertInterface('Empty column literal mapping found!');
         }
 
-        console.log('ColumnLiteral', node);
 
         // return the value as symbol
         return new jsedn.sym(node.literalValue);
@@ -348,7 +349,6 @@ angular.module('grafterizerApp')
           alertInterface('Empty text literal found in RDF mapping!');
         }
 
-        console.log('ConstantLiteral');
 
         // return the value as string
         return node.literalValue;

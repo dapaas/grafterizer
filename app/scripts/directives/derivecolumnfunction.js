@@ -18,9 +18,6 @@ angular.module('grafterizerApp')
         }
 
         scope.$parent.generateCurrFunction = function() {
-          console.log(scope.$parent.transformation.findPrefixerOrCustomFunctionByName(
-            scope.function.functionToDeriveWith));
-
           // TODO fix selected function bug
 
           return new transformationDataModel.DeriveColumnFunction(

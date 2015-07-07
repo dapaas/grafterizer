@@ -98,7 +98,6 @@ angular.module('grafterizerApp')
       if (functionToDeriveWith !== null) {
         if (!(functionToDeriveWith instanceof CustomFunctionDeclaration) && functionToDeriveWith.__type ===
           'CustomFunctionDeclaration') {
-          console.log('here');
           functionToDeriveWith = CustomFunctionDeclaration.revive(functionToDeriveWith);
         }
 
@@ -120,7 +119,6 @@ angular.module('grafterizerApp')
       var flag = false;
       for (var i = 0; i < this.colsToDeriveFrom.length; ++i) {
         colsToDeriveFromClj.val.push(new jsedn.kw(':' + this.colsToDeriveFrom[i]));
-        console.log(colsToDeriveFromClj);
         flag = true;
       }
 
@@ -363,7 +361,6 @@ angular.module('grafterizerApp')
     };
 
     URINode.prototype.addNodeAfter = function(property, propertyToAdd) {
-      console.log('adding');
       var index = this.subElements.indexOf(property);
       if (!property || index === -1) {
         this.subElements.push(propertyToAdd);
@@ -544,7 +541,6 @@ angular.module('grafterizerApp')
     this.Graph = Graph;
 
     var Transformation = function(customFunctionDeclarations, prefixers, pipelines, graphs) {
-      console.log(graphs);
 
       // validate that inputs are revived
       var i;
@@ -585,17 +581,13 @@ angular.module('grafterizerApp')
         }
       }
 
-      console.log('graph', graphs[0]);
       for (i = 0; i < graphs.length; ++i) {
-        console.log('graph', graphs[i]);
         graph = graphs[i];
         if (!(graph instanceof Graph) && graph.__type === 'Graph') {
           graphs[i] = Graph.revive(graphs[i]);
-          console.log(graphs[i]);
         }
       }
 
-      console.log(graphs);
 
       this.customFunctionDeclarations = customFunctionDeclarations;
       this.prefixers = prefixers;
@@ -651,7 +643,6 @@ angular.module('grafterizerApp')
       for (var i = 0; i < this.customFunctionDeclarations.length; ++i) {
         if (this.customFunctionDeclarations[i].name === name.trim()) {
           this.customFunctionDeclarations[i].clojureCode = clojureCode;
-          console.log(clojureCode, this.customFunctionDeclarations[i]);
           return false;
         }
       }

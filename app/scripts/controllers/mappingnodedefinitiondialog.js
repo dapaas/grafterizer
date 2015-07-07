@@ -54,7 +54,6 @@ angular.module('grafterizerApp')
 
     $scope.changeType = function() {
 
-      console.log('call');
       switch ($scope.dialogState.selectedTab) {
         case 0:
           if ($scope.dialogState.mappingType === 'dataset-col') {
@@ -108,7 +107,6 @@ angular.module('grafterizerApp')
           .value.length);
       }
 
-      console.log($scope.newNode);
       $mdDialog.hide($scope.newNode);
     };
 

@@ -13,7 +13,7 @@
                 </md-select>
             </div>
 
-            <md-button class="md-primary button-tight md-default-theme" ng-click="removeCustomFunct(selectedCustomFunction)" ng-if="selectedCustomFunction.name">
+            <md-button class="md-primary button-tight md-default-theme" aria-label="selectedCustomFunction.name" ng-click="removeCustomFunct(selectedCustomFunction)" ng-if="selectedCustomFunction.name">
                 <i class="fa fa-trash fa-lg"></i>
             </md-button>
         </div>
@@ -22,12 +22,12 @@
         <div class="background-stuff">
             <ui-codemirror ng-model="selectedCustomFunction.clojureCode" ui-codemirror-opts="codemirrorOpts"></ui-codemirror>
         </div>
-        <md-button class="md-padding md-raised" ng-click="saveCustomFunct()">Save function</md-button>
+        <md-button class="md-padding md-raised" ng-click="saveCustomFunct()" aria-label="Save function">Save function</md-button>
 
 
     </md-dialog-content>
     <div class="md-actions" layout="row" layout-align="right">
-        <md-button class="md-primary" ng-click="applyCustomFunctionChanges()">Done</md-button>
-        <md-button class="md-primary" ng-click="cancelCustomFunctionChanges()">Cancel</md-button>
+        <md-button class="md-primary" ng-click="applyCustomFunctionChanges()" aria-label="Apply custom function changes">Done</md-button>
+        <md-button class="md-primary" ng-click="cancelCustomFunctionChanges()"  aria-label="Cancel changes to custom functions">Cancel</md-button>
     </div>
 </md-dialog>

@@ -17,6 +17,6 @@
     </div>
 </md-content>
 <div class="md-actions" layout="row" layout-align="right">
-    <md-button class="md-primary" ng-disabled="!selectedFunctionName" ng-click="add()">{{function ? 'Edit' : 'Create'}} function</md-button>
-    <md-button class="md-primary" ng-click="closeDialog()">Cancel</md-button>
+    <md-button class="md-primary" ng-disabled="!selectedFunctionName" ng-click="add()" aria-label="{{function ? 'Edit' : 'Create'}} function">{{function ? 'Edit' : 'Create'}} function</md-button>
+    <md-button class="md-primary" ng-click="closeDialog()" aria-label="Cancel changes to function">Cancel</md-button>
 </div>
