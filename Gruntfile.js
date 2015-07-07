@@ -396,6 +396,14 @@ module.exports = function (grunt) {
 
     // Copies remaining files to places other tasks can use
     copy: {
+      server: {
+        files: [{
+          expand: true,
+          cwd: 'bower_components/components-font-awesome',
+          src: 'fonts/*',
+          dest: '<%= yeoman.app %>'
+        }]
+      },
       dist: {
         files: [{
           expand: true,
@@ -473,6 +481,7 @@ module.exports = function (grunt) {
     grunt.task.run([
       'clean:server',
       'wiredep',
+      'copy:server',
       'concurrent:server',
       'postcss:server',
       'connect:livereload',
