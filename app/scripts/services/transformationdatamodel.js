@@ -558,7 +558,7 @@ angular.module('grafterizerApp')
 
     for (i = 0; i < rdfVocabs.length; ++i) {
       rdfVocab = rdfVocabs[i];
-      if (!(rdfVocab instanceof Graph) && rdfVocab.__type === 'RDFVocabulary') {
+      if (!(rdfVocab instanceof RDFVocabulary) && rdfVocab.__type === 'RDFVocabulary') {
         rdfVocabs[i] = RDFVocabulary.revive(rdfVocabs[i]);
       }
     }

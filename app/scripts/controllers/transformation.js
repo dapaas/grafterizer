@@ -40,6 +40,7 @@ angular.module('grafterizerApp')
       var pipeline = new transformationDataModel.Pipeline([]);
       $scope.transformation = new transformationDataModel.Transformation([], [], [
         pipeline], []);
+      $rootScope.transformation = $scope.transformation;
       $scope.pipeline = pipeline;
     };
 
@@ -59,6 +60,7 @@ angular.module('grafterizerApp')
       }
 
       $scope.transformation = transformation;
+      $rootScope.transformation = $scope.transformation;
       if (transformation.pipelines && transformation.pipelines.length) {
         $scope.pipeline = transformation.pipelines[0];
       } else {

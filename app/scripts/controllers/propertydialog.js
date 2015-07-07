@@ -16,11 +16,11 @@ angular.module('grafterizerApp')
     $timeout,
     $log,
     transformationDataModel,
-    leObject) {
+    leObject,
+    $rootScope) {
 
     var object = leObject.object;
     var localVocabulary = leObject.localVocabulary;
-
     $scope.propertyValue = {
       value: ''
     };

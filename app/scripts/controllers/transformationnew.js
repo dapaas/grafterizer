@@ -81,6 +81,8 @@ angular.module('grafterizerApp')
     $scope.pipeline = new transformationDataModel.Pipeline([]);
     $scope.transformation = new transformationDataModel.Transformation(
       allcustomfunctions, [], [$scope.pipeline], []);
+  $rootScope.transformation = $scope.transformation;
+  
 
     $rootScope.actions = {
       save: function() {

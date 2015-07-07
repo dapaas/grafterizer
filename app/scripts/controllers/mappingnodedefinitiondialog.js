@@ -21,7 +21,6 @@ angular.module('grafterizerApp')
   var localVocabulary = leObject.localVocabulary;
   var object = leObject.object;
   var test = $scope.$parent.transformation;
-  console.log($scope);
   $scope.propertyValue = {
     value: ''
   };
@@ -267,7 +266,6 @@ angular.module('grafterizerApp')
         data: object.data
       })
       .success(function(response) {
-      console.log("test");
 
       var localClassAndProperty = JSON.parse(
         window.sessionStorage.getItem('localClassAndProperty'));
