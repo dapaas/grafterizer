@@ -9,9 +9,10 @@
  */
 angular.module('grafterizerApp')
   .service('PipeService', function($http, $log, $mdToast) {
-    var urlBase = window.location.origin === 'http://localhost:9000' ?
-      'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8080/backend'
-      : '/backend';
+    var urlBase = /*window.location.origin === 'http://localhost:9000' ?*/
+      'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8080';
+      // : '/backend';
+      // urlBase = 'http://localhost:8080';
 
     var transformEdnResponse = function(data, headers) {
       try {
