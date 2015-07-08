@@ -1,4 +1,9 @@
 <div>
+
+    <md-tabs  flex
+             md-no-disconnect md-swipe-content="" md-selected="transformationSelectedTabIndex">
+        <md-tab label="Parameters">
+            <md-tab-body>
     <md-input-container flex>
         <label>Name of new column</label>
         <input ng-model="function.newColName" type="text" required>
@@ -20,6 +25,21 @@
             <md-option  ng-repeat="prefixer in transformation.prefixers" value="{{prefixer.name}}">{{prefixer.name}}</md-option>
         </md-optgroup>
     </md-select>
+            </md-tab-body>
+        </md-tab>
+        <md-tab label="Description">
+            <md-tab-body>
+            <md-content layout-padding>
+                
+            <p class="api-doc-usage"> (derive-column dataset new-column-name from-cols) </p>
+            <p class="api-doc-usage"> (derive-column dataset new-column-name from-cols f) </p>
+            <p class="api-doc-docstring"> Adds a new column to the end of the row which is derived from column with position col-n. f should just return the cells value.
+            
+            If no f is supplied the identity function is used, which results in the specified column being cloned. </p>
+            </md-content>
+            </md-tab-body>
+        </md-tab>
+<md-tabs>
 </div>
 
 <!--

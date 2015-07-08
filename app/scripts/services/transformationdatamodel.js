@@ -81,6 +81,21 @@ angular.module('grafterizerApp')
   };
   this.DropRowsFunction = DropRowsFunction;
 
+  var TakeRowsFunction = function(numberOfRows) {
+    GenericFunction.call(this);
+    this.numberOfRows = numberOfRows;
+    this.name = 'take-rows';
+    this.displayName = 'take-rows';
+    this.__type = 'TakeRowsFunction';
+  };
+  TakeRowsFunction.revive = function(data) {
+    return new TakeRowsFunction(data.numberOfRows);
+  };
+  TakeRowsFunction.prototype.generateClojure = function() {
+    return new jsedn.List([jsedn.sym('take-rows'), this.numberOfRows]);
+  };
+  this.TakeRowsFunction = TakeRowsFunction;
+  
   var DeriveColumnFunction = function(newColName, colsToDeriveFrom, functionToDeriveWith) {
     GenericFunction.call(this);
     this.newColName = newColName;
@@ -257,6 +272,10 @@ angular.module('grafterizerApp')
           functions[i] = DropRowsFunction.revive(funct);
         }
 
+        if (funct.__type === 'TakeRowsFunction') {
+          functions[i] = TakeRowsFunction.revive(funct);
+        }
+        
         if (funct.__type === 'DeriveColumnFunction') {
           functions[i] = DeriveColumnFunction.revive(funct);
         }

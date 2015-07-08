@@ -3,6 +3,7 @@
         <md-optgroup label="Grafter functions">
             <md-option value="derive-column">derive-column</md-option>
             <md-option value="drop-rows">drop-rows</md-option>
+            <md-option value="take-rows">take-rows</md-option>
             <md-option value="make-dataset">make-dataset</md-option>
             <md-option value="mapc">mapc</md-option>
         </md-optgroup>
@@ -10,6 +11,7 @@
     </md-select>
     <div flex>
         <drop-rows-function transformation="transformation" ng-if="selectedFunctionName=='drop-rows'"></drop-rows-function>
+        <take-rows-function transformation="transformation" ng-if="selectedFunctionName=='take-rows'"></take-rows-function>
         <derive-column-function transformation="transformation" ng-if="selectedFunctionName=='derive-column'"></derive-column-function>
         <make-dataset transformation="transformation" ng-if="selectedFunctionName=='make-dataset'"></make-dataset>
         <mapc-function transformation="transformation" ng-if="selectedFunctionName=='mapc'"></mapc-function>
