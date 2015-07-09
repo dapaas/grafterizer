@@ -177,6 +177,15 @@ angular
         ncyBreadcrumb: {
           label: '{{document.title || id}}'
         }
+      })
+      .state('embedded', {
+        url: '/embedded',
+        views: {
+          main: true
+        },
+        ncyBreadcrumb: {
+          label: 'Loading'
+        }
       });
 
     // The spinner is a bit too much
@@ -236,4 +245,6 @@ angular
 
     // JSEDN is too restrictive by default on valid symbols
     jsedn.Symbol.prototype.validRegex = new RegExp(/.*/);
+  }).run(function(datagraftPostMessage) {
+    datagraftPostMessage.setup();
   });
