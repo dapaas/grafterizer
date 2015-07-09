@@ -256,6 +256,31 @@ angular.module('grafterizerApp')
 
   this.MakeDatasetFunction = MakeDatasetFunction;
 
+  var ColumnsFunction = function(columnsArray) {
+    // array of column names
+    this.name = 'columns';
+    this.displayName = 'columns';
+    GenericFunction.call(this);
+    this.columnsArray = columnsArray;
+    this.__type = 'ColumnsFunction';
+  };
+  ColumnsFunction.revive = function(data) {
+    return new ColumnsFunction(data.columnsArray);
+  };
+  ColumnsFunction.prototype.generateClojure = function() {
+   
+    var i;
+    var colNamesClj = new jsedn.Vector([]);
+    for (i = 0; i < this.columnsArray.length; ++i) {
+      colNamesClj.val.push(new jsedn.kw(':' + this.columnsArray[i]));
+    }
+
+    return new jsedn.List([jsedn.sym('columns'), colNamesClj]);
+  };
+
+  this.ColumnsFunction = ColumnsFunction;
+  
+  
   var Pipeline = function(functions) {
     // functions that make up the pipeline
     // TODO: revive!
@@ -287,6 +312,11 @@ angular.module('grafterizerApp')
         if (funct.__type === 'MakeDatasetFunction') {
           functions[i] = MakeDatasetFunction.revive(funct);
         }
+        
+        if (funct.__type === 'ColumnsFunction') {
+          functions[i] = ColumnsFunction.revive(funct);
+        }
+
       }
     }
 
@@ -688,6 +718,13 @@ angular.module('grafterizerApp')
         }
 
         if (currentFunction instanceof MakeDatasetFunction) {
+          for (var k = 0; k < currentFunction.columnsArray.length; ++k) {
+            availableColumnKeys.push(currentFunction.columnsArray[k]);
+          }
+
+        }
+        
+        if (currentFunction instanceof ColumnsFunction) {
           for (var k = 0; k < currentFunction.columnsArray.length; ++k) {
             availableColumnKeys.push(currentFunction.columnsArray[k]);
           }
