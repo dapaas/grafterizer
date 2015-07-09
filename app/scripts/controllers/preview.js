@@ -70,6 +70,8 @@ angular.module('grafterizerApp')
               if (data) {
                 if (data.edn && data.edn[':message']) {
                   $scope.graftwerkException = data.edn[':message'];
+                } else if (data.json && data.json.error) {
+                  $scope.graftwerkException = data.json.error;
                 } else {
                   $scope.graftwerkException = data.raw;
                 }

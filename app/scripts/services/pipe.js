@@ -13,9 +13,22 @@ angular.module('grafterizerApp')
       'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8080';
       // : '/backend';
       // urlBase = 'http://localhost:8080';
+    var apiAuthorization = 'Basic ' + window.btoa('s4key:s4pass');
+    this.setAuthorization = function(keypass) {
+      apiAuthorization = 'Basic ' + window.btoa(keypass);
+    };
 
     var transformEdnResponse = function(data, headers) {
       try {
+        var contentType = headers('Content-Type');
+        if (contentType && contentType.indexOf('application/json') === 0) {
+          return {
+            raw: data,
+            jsedn: null,
+            json: JSON.parse(data)
+          };
+        }
+
         return {
           raw: data,
           edn: jsedn.toJS(jsedn.parse(data))
@@ -56,11 +69,11 @@ angular.module('grafterizerApp')
 
     this.preview = function(distributionUri, clojure) {
       return $http({
-        // url: urlBase+'/poney',
-        url: urlBase + '/lapin',
+        url: urlBase + '/preview',
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: apiAuthorization
         },
         data: {
           distributionUri: distributionUri,
@@ -72,10 +85,13 @@ angular.module('grafterizerApp')
 
     this.original = function(distributionUri) {
       return $http({
-        url: urlBase + '/vache',
+        url: urlBase + '/original',
         method: 'GET',
         params: {
           distributionUri: distributionUri
+        },
+        headers: {
+          Authorization: apiAuthorization
         },
         transformResponse: [transformEdnResponse]
       }).error(errorHandler);

@@ -20,6 +20,12 @@ angular.module('grafterizerApp')
         }
       };
 
+      this.setAuthorization = function(keypass) {
+        apiAuthorization = 'Basic ' + window.btoa(keypass);
+        console.log(apiAuthorization);
+        jsonLdConfig.headers.Authorization = apiAuthorization;
+      };
+
       var errorHandler = function(data, status, headers, config) {
         var message;
         if (data && data.error) {
@@ -108,7 +114,7 @@ angular.module('grafterizerApp')
 
         var headers = {
           'Content-Type': 'multipart/form-data',
-          Authorization: 'Basic ' + window.btoa('s4key:s4pass')
+          Authorization: apiAuthorization
         };
 
         // Authorization: 'Basic ' + window.btoa('s4hbq7d9f8ep:cvtsj1jcaap4ggs')
@@ -178,7 +184,7 @@ angular.module('grafterizerApp')
         }, jsonLdConfig)).error(errorHandler);
       };
 
-      this.uploadDistribution = function(distributionID, file, metadata) {
+      this.uploadDistribution = function(datasetId, file, metadata) {
         var meta = new Blob([JSON.stringify(metadata)],
                             {type: 'application/ld+json'});
 
@@ -188,7 +194,7 @@ angular.module('grafterizerApp')
           file: [file, meta],
           fileFormDataName: ['file', 'meta'],
           headers: {
-            'dataset-id': distributionID,
+            'dataset-id': datasetId,
             Authorization: apiAuthorization
           }
         }).error(errorHandler);
@@ -200,50 +206,6 @@ angular.module('grafterizerApp')
             'distrib-id': distributionID,
             Authorization: apiAuthorization
           }
-        }).error(errorHandler);
-      };
-
-      this.graftwerk = function(distributionID) {
-
-        var data = {
-          // 'transformation-code': new Blob(['(defpipe my-pipe [data-file] (-> (read-dataset data-file :format :csv)))'],
-          // {type: 'application/clojure'}),
-          'input-file': new Blob(['name,sex,age\nalice,f,34\nbob,m,63'], {type: 'text/csv'}),
-          command: 'my-pipe',
-          'transformation-type': 'pipe'
-        };
-
-        var headers = {
-          'Content-Type': 'multipart/form-data',
-
-          // 'command': 'my-pipe',
-          // 'transformation-type': 'pipe',
-          // 'input-distribution': distributionID,
-          'transformation-id': 'http://dapaas.eu/users/1505271111/transformation/toto-fork-1',
-          Authorization: apiAuthorization
-        };
-
-        return $http({
-          url: endpoint + '/dapaas-services/grafter/transformation/preview',
-          method: 'POST',
-          data: data,
-          headers: headers,
-          transformRequest: transformRequest,
-          transformResponse: [function(data, headers) {
-            try {
-              return {
-                raw: data,
-                jsedn: jsedn.parse(data)
-              };
-            } catch (e) {
-              $log.debug(data);
-              $log.error(e);
-              return {
-                raw: data,
-                jsedn: null
-              };
-            }
-          }]
         }).error(errorHandler);
       };
     });
