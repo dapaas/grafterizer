@@ -11,12 +11,13 @@
 angular.module('grafterizerApp')
   .filter('beautifyUri', function() {
     var m = /\/([^\/]*)$/;
-    var r = /[ \+.\-:]/g;
+    var r = /[ \+.\-_:]/g;
 
     return function(input) {
       var p = input.match(m);
       if (!p) return input;
 
-      return p[1].replace(r, ' ').replace(' csv ', ' ');
+      var b = p[1].replace(r, ' ').replace(' csv ', ' ');
+      return b.charAt(0).toUpperCase() + b.slice(1);
     };
   });
