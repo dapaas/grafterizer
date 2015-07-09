@@ -73,21 +73,42 @@ angular.module('grafterizerApp')
       if ($scope.fileUpload && $scope.fileUpload[0]) {
         var file = $scope.fileUpload[0];
 
-        var metadata = {
-          '@context': ontotextAPI.getContextDeclaration(),
-          '@type': 'dcat:Distribution',
-          'dct:title': 'preview',
-          'dct:description': 'Distribution uploaded in preview mode',
-          'dcat:fileName': file.name,
-          'dcat:mediaType': file.type
-        };
-        ontotextAPI.uploadDistribution(
-          'http://dapaas.eu/users/1505271111/dataset/all_data_korea-1',
-          file, metadata).success(function(data) {
-          $state.go('transformations.transformation.preview', {
-            id: $stateParams.id,
-            distribution: data['@id']
+        var callback = function(idDataset) {
+          var metadata = {
+            '@context': ontotextAPI.getContextDeclaration(),
+            '@type': 'dcat:Distribution',
+            'dct:title': moment(file.lastModified).format('MMMM') +  ' - ' + file.name,
+            'dct:description': 'File uploaded from Grafterizer in preview mode',
+            'dcat:fileName': file.name,
+            'dcat:mediaType': file.type
+          };
+          ontotextAPI.uploadDistribution(
+            idDataset, file, metadata).success(function(data) {
+            $state.go('transformations.transformation.preview', {
+              id: $stateParams.id,
+              distribution: data['@id']
+            });
           });
+        };
+
+        // First we need to check if we have a preview dataset
+        ontotextAPI.searchDataset('Previewed files').success(function(data) {
+          if (!data || !data['dcat:record'] || data['dcat:record'].length === 0) {
+            // we need to create a new one
+            ontotextAPI.newDataset({
+              '@context': ontotextAPI.getContextDeclaration(),
+              '@type': 'dcat:Dataset',
+              'dct:title': 'Previewed files',
+              'dct:description': 'Dataset containing the previewed files from Grafterizer',
+              'dcat:public': 'false'
+            })
+            .success(function(data) {
+              callback(data['@id']);
+            });
+          } else {
+            callback(data['dcat:record'][
+              data['dcat:record'].length - 1]['foaf:primaryTopic']);
+          }
         });
       }
     });

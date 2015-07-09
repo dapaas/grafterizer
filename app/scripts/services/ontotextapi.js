@@ -69,6 +69,30 @@ angular.module('grafterizerApp')
         }, jsonLdConfig)).error(errorHandler);
       };
 
+      this.searchDataset = function(search) {
+        return $http.get(endpoint + '/catalog/datasets/search', angular.merge({
+          params: {
+            q: search
+          }
+        }, jsonLdConfig)).error(errorHandler);
+      };
+
+      this.newDataset = function(meta) {
+        var data = JSON.stringify(meta);
+
+        var headers = {
+          'Content-Type': 'application/ld+json',
+          Authorization: apiAuthorization
+        };
+
+        return $http({
+          url: endpoint + '/catalog/datasets',
+          method: 'POST',
+          data: data,
+          headers: headers
+        }).error(errorHandler);
+      };
+
       this.transformations = function() {
         return $http.get(endpoint + '/catalog/transformations/catalog', jsonLdConfig).error(errorHandler);
       };
