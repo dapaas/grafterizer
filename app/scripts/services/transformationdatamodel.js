@@ -256,26 +256,33 @@ angular.module('grafterizerApp')
 
   this.MakeDatasetFunction = MakeDatasetFunction;
 
-  var ColumnsFunction = function(columnsArray) {
+  var ColumnsFunction = function(columnsArray,useLazy,numberOfColumns) {
     // array of column names
     this.name = 'columns';
     this.displayName = 'columns';
     GenericFunction.call(this);
     this.columnsArray = columnsArray;
+    this.useLazy = useLazy;
+    this.numberOfColumns = numberOfColumns;
     this.__type = 'ColumnsFunction';
   };
   ColumnsFunction.revive = function(data) {
-    return new ColumnsFunction(data.columnsArray);
+    return new ColumnsFunction(data.columnsArray,data.useLazy,data.numberOfColumns);
   };
   ColumnsFunction.prototype.generateClojure = function() {
-   
     var i;
     var colNamesClj = new jsedn.Vector([]);
-    for (i = 0; i < this.columnsArray.length; ++i) {
-      colNamesClj.val.push(new jsedn.kw(':' + this.columnsArray[i]));
+    if (this.useLazy === null) {
+        for (i = 0; i < this.columnsArray.length; ++i) {
+          colNamesClj.val.push(new jsedn.kw(':' + this.columnsArray[i]));
+        }
+
+        return new jsedn.List([jsedn.sym('columns'), colNamesClj]);
+    }
+    else {
+        return new jsedn.List([jsedn.sym('columns'), jsedn.sym('(vector (take '+this.numberOfColumns.toString()+' (alphabetical-column-names)))')]);
     }
 
-    return new jsedn.List([jsedn.sym('columns'), colNamesClj]);
   };
 
   this.ColumnsFunction = ColumnsFunction;
