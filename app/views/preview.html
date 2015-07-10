@@ -4,6 +4,7 @@
  md-selected="selectedTabIndex">
     <md-tab label="Distribution">
         <md-tab-body>
+        <p class="md-padding md-caption" ng-if="datasets.length === 0">You don't have distributions yet.</p>
         <md-radio-group ng-model="$parent.selectedDistribution">
         <v-accordion class="vAccordion--default md-margin" flex
             onexpand="accordionExpandCallback(index)">
@@ -16,7 +17,7 @@
             <v-pane-content>
                 <md-progress-circular class="md-hue-2" md-mode="indeterminate" ng-if="dataset.distributionsLoading"></md-progress-circular>
                 <div ng-repeat="distribution in dataset.distributions">
-                  <md-radio-button ng-value="distribution">{{distribution}}</md-radio-button>
+                  <md-radio-button ng-value="distribution">{{distribution | beautifyUri}}</md-radio-button>
                 </div>
                 <div ng-if="!dataset.distributionsLoading &amp;&amp;dataset.distributions.length===0">
                   <p class="empty-distribution md-body-1">This distribution doesn't contain datasets.</p>
