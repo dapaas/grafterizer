@@ -1,10 +1,17 @@
-<div>
-    <md-tabs  class="md-accent no-border-radius md-whiteframe-z5" flex
-    
-             md-no-disconnect md-swipe-content="" md-selected="columnsSelectedTabIndex">
-        <md-tab label="Parameters" >
-            <md-tab-body>
-    <label>Specify column names</label>
+<div layout="column">
+    <div>
+        <h3>Usage</h3>
+        <p class="api-doc-usage"> (columns dataset cols) </p>
+            <p class="api-doc-docstring"> Given a dataset and a sequence of column identifiers, columns narrows the dataset to just the supplied columns.
+            </p>
+            <p class="api-doc-docstring"> Columns specified in the selection that are not included in the Dataset will be silently ignored.</p>
+             <p class="api-doc-docstring">
+The supplied sequence of columns are first cropped to the number of columns in the dataset before being selected, this means that infinite sequences can safely supplied to this function.
+view source</p>
+        </div>
+        <div>
+        <h3>Parameters</h3>
+        <label>Specify column names</label>
     <md-chips ng-model="function.columnsArray" readonly="ctrl.readonly">
         <md-chip-template>
             <strong>{{$chip}}</strong>
@@ -17,21 +24,6 @@
         <label>Number of columns</label>
         <input ng-model="function.numberOfColumns" type="number" min="1" ng-disabled="!(function.useLazy)">
     </md-input-container>
-            </md-tab-body>
-        </md-tab>
-        <md-tab label="Description">
-            <md-tab-body>
-            <md-content layout-padding>
                 
-            <p class="api-doc-usage"> (columns dataset cols) </p>
-            <p class="api-doc-docstring"> Given a dataset and a sequence of column identifiers, columns narrows the dataset to just the supplied columns.
-            </p>
-            <p class="api-doc-docstring"> Columns specified in the selection that are not included in the Dataset will be silently ignored.</p>
-             <p class="api-doc-docstring">
-The supplied sequence of columns are first cropped to the number of columns in the dataset before being selected, this means that infinite sequences can safely supplied to this function.
-view source</p>
-            </md-content>
-            </md-tab-body>
-        </md-tab>
-<md-tabs>
+</div>
 </div>

@@ -1,0 +1,22 @@
+<md-content class="md-padding">
+<div layout="row">
+    <div>
+    <md-list>
+    <md-list-item class="md-2-line" ng-repeat="function in availableFunctions" ng-click="changeSelected(function.name)">
+        <p>{{function.name}}</p>
+        </md-list-item>
+    </md-list>
+</div>
+    <div flex>
+        <columns transformation="transformation" ng-if="availableFunctions[0].selected === true"></columns>
+        <derive-column transformation="transformation" ng-if="availableFunctions[1].selected === true"></derive-column>
+        <!--drop-rows transformation="transformation" ng-if="availableFunctions[2].selected"></drop-rows>
+        <make-dataset transformation="transformation" ng-if="availableFunctions[3].selected"></make-dataset>
+        <mapc transformation="transformation" ng-if="availableFunctions[4].selected"></mapc-->
+<div class="md-actions" layout="row" layout-align="right">
+    <md-button class="md-primary" ng-disabled="!selectedFunctionName" ng-click="add()" aria-label="{{function ? 'Edit' : 'Create'}} function">{{function ? 'Edit' : 'Create'}} function</md-button>
+    <md-button class="md-primary" ng-click="closeDialog()" aria-label="Cancel changes to function">Cancel</md-button>
+</div>
+    </div>
+</div>
+</md-content>

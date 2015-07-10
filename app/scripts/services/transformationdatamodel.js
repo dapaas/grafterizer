@@ -280,7 +280,7 @@ angular.module('grafterizerApp')
         return new jsedn.List([jsedn.sym('columns'), colNamesClj]);
     }
     else {
-        return new jsedn.List([jsedn.sym('columns'), jsedn.sym('(vector (take '+this.numberOfColumns.toString()+' (alphabetical-column-names)))')]);
+        return new jsedn.List([jsedn.sym('columns'), jsedn.sym('(into[] (take '+this.numberOfColumns.toString()+' (alphabetical-column-names)))')]);
     }
 
   };

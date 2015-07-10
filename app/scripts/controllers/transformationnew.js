@@ -146,6 +146,22 @@ angular.module('grafterizerApp')
       });
     };
 
+    $scope.editLibraries = function() {
+      $scope.originalLibraries = [];
+      angular.copy($scope.transformation.libraries, $scope.originalLibraries);
+      $mdDialog.show({
+        templateUrl: 'views/editlibraries.html',
+        controller: 'EditlibrariesCtrl',
+        scope: $scope.$new(false, $scope)
+      }).then(
+      function() {},
+
+      function() {
+        angular.copy($scope.originalLibraries, $scope.transformation.libraries);
+      });
+    };
+    
+    
     $scope.defineCustomFunctions = function() {
       $scope.originalCustomFunctionDeclarations = [];
       angular.copy($scope.transformation.customFunctionDeclarations, $scope
