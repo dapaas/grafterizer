@@ -67,6 +67,12 @@ angular.module('grafterizerApp')
               }, 1);
             }
           });
+          
+          window.setTimeout(function() {
+            try {
+              element.children().children()[0].CodeMirror.refresh();
+            } catch (e) {}
+          }, 1);
         }
       }
     };

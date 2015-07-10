@@ -9,10 +9,11 @@
  */
 angular.module('grafterizerApp')
   .service('PipeService', function($http, $log, $mdToast) {
-    var urlBase = /*window.location.origin === 'http://localhost:9000' ?*/
-      'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8080';
-      // : '/backend';
-      // urlBase = 'http://localhost:8080';
+    var urlBase = window.location.origin === 'http://localhost:9000' ?
+      'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8080'
+      // 'http://localhost:5001'
+      : '/backend';
+
     var apiAuthorization = 'Basic ' + window.btoa('s4key:s4pass');
     this.setAuthorization = function(keypass) {
       apiAuthorization = 'Basic ' + window.btoa(keypass);
@@ -62,9 +63,11 @@ angular.module('grafterizerApp')
     };
 
     this.computeTuplesHref = function(distributionUri, transformationUri) {
-      return urlBase + '/download?transformation=' +
+      return urlBase + '/download?authorization=' +
+        window.encodeURIComponent(apiAuthorization) +
+        '&transformationUri=' +
         window.encodeURIComponent(transformationUri) +
-        '&distribution=' + window.encodeURIComponent(distributionUri);
+        '&distributionUri=' + window.encodeURIComponent(distributionUri);
     };
 
     this.preview = function(distributionUri, clojure) {
