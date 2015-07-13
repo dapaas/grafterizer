@@ -13,7 +13,7 @@ angular.module('grafterizerApp')
       restrict: 'E',
       scope: {
         function: '=',
-        selectedFunctionName: '=',
+       // selectedFunctionName: '=',
         transformation: '='
       },
       link: function postLink(scope, element, attrs) {
@@ -24,23 +24,22 @@ angular.module('grafterizerApp')
         scope.availableFunctions = [
         {name: "columns", selected: false},    
         {name: "derive-column", selected: false},
-       /* {name: "drop-rows", selected: false},    
+        {name: "drop-rows", selected: false},
         {name: "make-dataset", selected: false},    
         {name: "mapc", selected: false},    
-        {name: "take-column", selected: false},    
-        {name: "custom-code", selected: false}    */
+        {name: "take-rows", selected: false},    
+        {name: "custom-code", selected: false}    
         ];
-
+        scope.selectedFunctionName = null;
         scope.changeSelected = function(f) {
-            console.log(f);
         var i;
         for (i=0;i<scope.availableFunctions.length; ++i) {
             if (scope.availableFunctions[i].name === f) {scope.availableFunctions[i].selected=true;
             
             }
             else {scope.availableFunctions[i].selected=false;}
-            console.log(scope.availableFunctions[i].selected);
         }
+        scope.selectedFunctionName=f;
         }
         scope.add = function() {
           $mdDialog.hide(scope.generateCurrFunction());

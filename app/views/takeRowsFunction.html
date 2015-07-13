@@ -1,22 +1,14 @@
-<div>
-    <md-tabs  flex
-             md-no-disconnect md-swipe-content="" md-selected="transformationSelectedTabIndex">
-        <md-tab label="Parameters">
-            <md-tab-body>
+<div layout="column">
+    <div>
+        <h3>Usage</h3>
+            <p class="api-doc-usage"> (take-rows dataset n) </p>
+            <p class="api-doc-docstring"> Takes only the first n rows from the dataset, discarding the rest. </p>
+        </div>
+        <div>
+        <h3>Parameters</h3>
   <md-input-container flex>
         <label>Number of rows</label>
         <input ng-model="function.numberOfRows" type="number" min="1" required>
     </md-input-container>
-            </md-tab-body>
-        </md-tab>
-        <md-tab label="Description">
-            <md-tab-body>
-            <md-content layout-padding>
-                
-            <p class="api-doc-usage"> (take-rows dataset n) </p>
-            <p class="api-doc-docstring"> Takes only the first n rows from the dataset, discarding the rest. </p>
-            </md-content>
-            </md-tab-body>
-        </md-tab>
-<md-tabs>
+</div>
 </div>

@@ -12,7 +12,7 @@ view source</p>
         <div>
         <h3>Parameters</h3>
         <label>Specify column names</label>
-    <md-chips ng-model="function.columnsArray" readonly="ctrl.readonly">
+    <md-chips ng-model="function.columnsArray" readonly="ctrl.readonly" ng-disabled="function.useLazy">
         <md-chip-template>
             <strong>{{$chip}}</strong>
         </md-chip-template>

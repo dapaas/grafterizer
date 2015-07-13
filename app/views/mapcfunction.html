@@ -1,7 +1,14 @@
-    <md-tabs  flex
-             md-no-disconnect md-swipe-content="" md-selected="mapcSelectedTabIndex">
-        <md-tab label="Parameters">
-            <md-tab-body>
+<div layout="column">
+    <div>
+        <h3>Usage</h3>
+            <p class="api-doc-usage"> (mapc dataset fs) </p>
+            <p class="api-doc-docstring"> Takes a vector or a hashmap of functions and maps each to the key column for every row. Each function should be from a cell to a cell, where as with apply-columns it should be from a column to a column i.e. its function from a collection of cells to a collection of cells. </p>
+            <p class="api-doc-docstring"> 
+            If the specified column does not exist in the source data a new column will be created, though the supplied function will need to either ignore its argument or handle a nil argument.
+            </p>
+        </div>
+        <div>
+        <h3>Parameters</h3>
 <md-button class="md-raised" ng-click="addKeyFunctionPair()" aria-label="Add mapping">Add mapping</md-button>
 <div layout="row"  ng-repeat="keyFunctionPair in function.keyFunctionPairs">
     <div layout="row">
@@ -29,18 +36,5 @@
     </div>
 
 </div>
-            </md-tab-body>
-        </md-tab>
-        <md-tab label="Description">
-            <md-tab-body>
-            <md-content layout-padding>
-                
-            <p class="api-doc-usage"> (mapc dataset fs) </p>
-            <p class="api-doc-docstring"> Takes a vector or a hashmap of functions and maps each to the key column for every row. Each function should be from a cell to a cell, where as with apply-columns it should be from a column to a column i.e. its function from a collection of cells to a collection of cells. </p>
-            <p class="api-doc-docstring"> 
-            If the specified column does not exist in the source data a new column will be created, though the supplied function will need to either ignore its argument or handle a nil argument.
-            </p>
-            </md-content>
-            </md-tab-body>
-        </md-tab>
-<md-tabs>
+</div>
+</div>

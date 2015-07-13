@@ -238,6 +238,8 @@ angular.module('grafterizerApp')
     this.displayName = 'make-dataset';
     GenericFunction.call(this);
     this.columnsArray = columnsArray;
+    this.useLazy = useLazy;
+    this.numberOfColumns = numberOfColumns;
     this.__type = 'MakeDatasetFunction';
   };
   MakeDatasetFunction.revive = function(data) {
@@ -247,11 +249,16 @@ angular.module('grafterizerApp')
     //(make-dataset [:name :sex :age])
     var i;
     var colNamesClj = new jsedn.Vector([]);
-    for (i = 0; i < this.columnsArray.length; ++i) {
-      colNamesClj.val.push(new jsedn.kw(':' + this.columnsArray[i]));
-    }
+    if (this.useLazy === null) {
+        for (i = 0; i < this.columnsArray.length; ++i) {
+          colNamesClj.val.push(new jsedn.kw(':' + this.columnsArray[i]));
+        }
 
-    return new jsedn.List([jsedn.sym('make-dataset'), colNamesClj]);
+        return new jsedn.List([jsedn.sym('make-dataset'), colNamesClj]);
+    }
+    else {
+        return new jsedn.List([jsedn.sym('make-dataset'), jsedn.sym('(into[] (take '+this.numberOfColumns.toString()+' (alphabetical-column-names)))')]);
+    }
   };
 
   this.MakeDatasetFunction = MakeDatasetFunction;

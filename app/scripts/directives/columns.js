@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc directive
- * @name grafterizerApp.directive:columns
+ * @name grafterizerApp.directive:columnsFunction
  * @description
- * # columns
+ * # columnsFunction
  */
 angular.module('grafterizerApp')
-  .directive('columns', function(transformationDataModel) {
+  .directive('columnsFunction', function(transformationDataModel) {
     return {
       templateUrl: 'views/columnsfunction.html',
       restrict: 'E',
