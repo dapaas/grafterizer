@@ -67,6 +67,23 @@ angular.module('grafterizerApp')
 
     });
 
+    var predicatefunctions = [new transformationDataModel.CustomFunctionDeclaration(
+        'empty?', ''),new transformationDataModel.CustomFunctionDeclaration(
+        'every?', ''),new transformationDataModel.CustomFunctionDeclaration(
+        'false?', ''),new transformationDataModel.CustomFunctionDeclaration(
+        'float?', ''),new transformationDataModel.CustomFunctionDeclaration(
+        'keyword?', ''),new transformationDataModel.CustomFunctionDeclaration(
+        'neg?', ''),new transformationDataModel.CustomFunctionDeclaration(
+        'nil?', ''),new transformationDataModel.CustomFunctionDeclaration(
+        'number?', ''),new transformationDataModel.CustomFunctionDeclaration(
+        'odd?', ''),new transformationDataModel.CustomFunctionDeclaration(
+        'pos?', ''),new transformationDataModel.CustomFunctionDeclaration(
+        'ratio?', ''),new transformationDataModel.CustomFunctionDeclaration(
+        'rational?', ''),new transformationDataModel.CustomFunctionDeclaration(
+        'string?', ''),new transformationDataModel.CustomFunctionDeclaration(
+        'true?', ''),new transformationDataModel.CustomFunctionDeclaration(
+        'zero?', '')];
+
     var numericcustomfunctions = [new transformationDataModel.CustomFunctionDeclaration(
         '+', ''),
                                     new transformationDataModel.CustomFunctionDeclaration(
@@ -76,7 +93,7 @@ angular.module('grafterizerApp')
                                     new transformationDataModel.CustomFunctionDeclaration(
         '/', '')];
 
-    var allcustomfunctions = customfunctions.concat(numericcustomfunctions);
+    var allcustomfunctions = customfunctions.concat(predicatefunctions.concat(numericcustomfunctions));
     $scope.clojure = '';
     $scope.pipeline = new transformationDataModel.Pipeline([]);
     $scope.transformation = new transformationDataModel.Transformation(
