@@ -48,14 +48,13 @@ angular.module('grafterizerApp')
           };
 
           reader.onload = function(evt) {
-            object = {};
             object.filename = file.name;
             object.data = evt.target.result;
             $scope.dragProcess = false;
             $scope.fileName.value = file.name;
             $scope.$apply();
           };
-          
+
           file = event.dataTransfer.files[0];
           name = file.name;
           type = file.type;
