@@ -15,7 +15,7 @@ angular.module('grafterizerApp')
     endpoint = newEndpoint;
   };
 
-  var apiAuthorization = 'Basic ' + window.btoa('s4key:s4pass');
+  var apiAuthorization = '';
 
   var jsonLdConfig = {
     headers: {
@@ -24,7 +24,7 @@ angular.module('grafterizerApp')
     }
   };
 
-  this.$get = function($http, $mdToast, Upload, $log) {
+  this.$get = function($http, $mdToast, Upload, $log, $state) {
     var api = {};
     api.setAuthorization = function(keypass) {
       apiAuthorization = 'Basic ' + window.btoa(keypass);
@@ -36,7 +36,12 @@ angular.module('grafterizerApp')
       if (data && data.error) {
         message = 'API error: ' + data.error;
       } else if (status) {
-        message = 'Error ' + status + ' while contacting ontotext\'s API';
+        if (status === 401) {
+          message = 'Unauthorized access to the API';
+          $state.go('apikey');
+        } else {
+          message = 'Error ' + status + ' while contacting ontotext\'s API';
+        }
       } else {
         message = 'An error occured when contacting ontotextAPI';
       }

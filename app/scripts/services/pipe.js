@@ -15,7 +15,7 @@ angular.module('grafterizerApp')
     endpoint = newEndpoint;
   };
 
-  var apiAuthorization = 'Basic ' + window.btoa('s4key:s4pass');
+  var apiAuthorization = '';
 
   this.$get = function($http, $log, $mdToast) {
 

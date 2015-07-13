@@ -195,6 +195,18 @@ angular
         ncyBreadcrumb: {
           label: 'Loading'
         }
+      })
+      .state('apikey', {
+        url: '/apiKey',
+        views: {
+          main: {
+            templateUrl: 'views/apikey.html',
+            controller: 'ApikeyCtrl'
+          }
+        },
+        ncyBreadcrumb: {
+          label: 'API Key'
+        }
       });
 
     // The spinner is a bit too much
