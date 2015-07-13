@@ -223,8 +223,8 @@ angular.module('grafterizerApp')
         //show server vocabulary
         $scope.VocabItemsServer = [];
         $http.get(
-            'http://localhost:8080/ManageVocabulary/api/vocabulary/getAll'
-            //'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/getAll'
+          //'http://localhost:8080/ManageVocabulary/api/vocabulary/getAll'
+            'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/getAll'
         ).success(
             function(response) {
                 for (var i = response.result.length - 1; i >= 0; i--) {
@@ -353,8 +353,8 @@ angular.module('grafterizerApp')
 
         $scope.showProgress = true;
         $http.post(
-            'http://localhost:8080/ManageVocabulary/api/vocabulary/getClassAndPropertyFromVocabulary'
-            //'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/getClassAndPropertyFromVocabulary'
+          //'http://localhost:8080/ManageVocabulary/api/vocabulary/getClassAndPropertyFromVocabulary'
+            'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/getClassAndPropertyFromVocabulary'
             , {
                 name: vocabName,
                 namespace: vocabNamespace,
