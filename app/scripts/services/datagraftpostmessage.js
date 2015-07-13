@@ -8,7 +8,7 @@
  * Service in the grafterizerApp.
  */
 angular.module('grafterizerApp')
-.service('datagraftPostMessage', function($state, ontotextAPI, PipeService) {
+.service('datagraftPostMessage', function($state, apiKeyService) {
 
   var channel = 'datagraft-post-message';
 
@@ -17,14 +17,12 @@ angular.module('grafterizerApp')
     if (!data || !data.channel || data.channel !== channel) return;
 
     try {
-      console.log(data.message);
       switch (data.message) {
         case 'state.go':
           $state.go(data.state, data.toParams);
           break;
         case 'set-authorization':
-          ontotextAPI.setAuthorization(data.keypass);
-          PipeService.setAuthorization(data.keypass);
+          apiKeyService.setKeyPass(data.keypass);
           break;
       };
     } catch (e) {
@@ -33,7 +31,6 @@ angular.module('grafterizerApp')
   };
 
   this.setup = function() {
-             console.log("setup")
     window.addEventListener('message', receiveMessage, false);
     window.parent.postMessage({
       channel: channel,

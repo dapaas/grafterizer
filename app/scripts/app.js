@@ -40,6 +40,8 @@ angular
     //'http-auth-interceptor'
 ])
   .config(function(
+    ontotextAPIProvider,
+    PipeServiceProvider,
     $mdThemingProvider,
     $stateProvider,
     $urlRouterProvider,
@@ -48,7 +50,14 @@ angular
     $breadcrumbProvider,
     $locationProvider) {
 
-    $urlRouterProvider.otherwise('/transformations/new');
+    ontotextAPIProvider.setEndpoint('http://ec2-54-76-140-62.eu-west-1.compute.amazonaws.com:8080');
+
+    PipeServiceProvider.setEndpoint(
+      window.location.origin === 'http://localhost:9000' ?
+      'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8080'
+      : '/backend');
+
+    var urlBase = $urlRouterProvider.otherwise('/transformations/new');
 
     sessionStorage.localClassAndProperty = JSON.stringify([]);
     sessionStorage.localVocabulary = JSON.stringify([]);
@@ -185,6 +194,18 @@ angular
         },
         ncyBreadcrumb: {
           label: 'Loading'
+        }
+      })
+      .state('apikey', {
+        url: '/apiKey',
+        views: {
+          main: {
+            templateUrl: 'views/apikey.html',
+            controller: 'ApikeyCtrl'
+          }
+        },
+        ncyBreadcrumb: {
+          label: 'API Key'
         }
       });
 

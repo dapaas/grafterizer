@@ -8,14 +8,19 @@
  * Service in the grafterizerApp.
  */
 angular.module('grafterizerApp')
-  .service('PipeService', function($http, $log, $mdToast) {
-    var urlBase = window.location.origin === 'http://localhost:9000' ?
-      'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8080'
-      // 'http://localhost:5001'
-      : '/backend';
+.provider('PipeService', function() {
 
-    var apiAuthorization = 'Basic ' + window.btoa('s4key:s4pass');
-    this.setAuthorization = function(keypass) {
+  var endpoint = '';
+  this.setEndpoint = function(newEndpoint) {
+    endpoint = newEndpoint;
+  };
+
+  var apiAuthorization = '';
+
+  this.$get = function($http, $log, $mdToast) {
+
+    var api = {};
+    api.setAuthorization = function(keypass) {
       apiAuthorization = 'Basic ' + window.btoa(keypass);
     };
 
@@ -62,17 +67,17 @@ angular.module('grafterizerApp')
       );
     };
 
-    this.computeTuplesHref = function(distributionUri, transformationUri) {
-      return urlBase + '/download?authorization=' +
+    api.computeTuplesHref = function(distributionUri, transformationUri) {
+      return endpoint + '/download?authorization=' +
         window.encodeURIComponent(apiAuthorization) +
         '&transformationUri=' +
         window.encodeURIComponent(transformationUri) +
         '&distributionUri=' + window.encodeURIComponent(distributionUri);
     };
 
-    this.preview = function(distributionUri, clojure) {
+    api.preview = function(distributionUri, clojure) {
       return $http({
-        url: urlBase + '/preview',
+        url: endpoint + '/preview',
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -86,9 +91,9 @@ angular.module('grafterizerApp')
       });
     };
 
-    this.original = function(distributionUri) {
+    api.original = function(distributionUri) {
       return $http({
-        url: urlBase + '/original',
+        url: endpoint + '/original',
         method: 'GET',
         params: {
           distributionUri: distributionUri
@@ -99,4 +104,7 @@ angular.module('grafterizerApp')
         transformResponse: [transformEdnResponse]
       }).error(errorHandler);
     };
-  });
+
+    return api;
+  };
+});
