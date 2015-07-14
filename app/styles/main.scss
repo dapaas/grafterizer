@@ -2,6 +2,7 @@
 @import "components-font-awesome/scss/font-awesome.scss";
 // endbower
 
+@import "theme-codemirror.css";
 $light-gray: #fafafa;
 $gray: rgb(178,178,178);
 
@@ -605,7 +606,8 @@ graph-mapping div {
 }
 
 .sin-functions-list {
-    background-color: #0DBC37;
+    // background-color: #0DBC37;
+    background-color:#414040;
   color: white;
   text-align: left;
 }
@@ -614,22 +616,30 @@ graph-mapping div {
   text-align: left;
   font-family: monospace;
   border-radius: 0;
-  white-space: normal;
-  overflow: hidden;
+  // white-space: normal;
+  // overflow: hidden;
   margin: 0;
   max-height: 40px;
   line-height: 40px;
   padding: 0 16px 0 16px; 
 
   &[disabled] {
-    background-color: #006400;
+    // background-color: #006400;
+    background-color:#272822;
     color: white;
     cursor: default;
+  }
+
+  &.md-primary {
+      max-height: 52px;
+      line-height: 52px;
+      text-align: center;
   }
 }
 
 .sin-function-dialog {
-    functions-dialog-content > div {
+    functions-dialog-content > div,
+    .content-stuff {
         height:500px;
         max-height:90%;
     }
@@ -639,4 +649,31 @@ graph-mapping div {
     background: url(../images/background.png) no-repeat;
     background-position: right 20px bottom 20px;
 
+}
+
+.code-mirror-container {
+    position:relative;
+    .CodeMirror {
+        position:absolute;
+        top:0;
+        left:0;
+        right:0;
+        bottom:0;
+        height:auto;
+    }
+}
+
+.utility-functions .sin-functions-list {
+    min-width:220px;
+
+    & > .md-button[disabled] {
+        padding-right:0;
+        .md-button {
+            float:right;
+        }
+    }
+}
+
+.cm-s-monokai .CodeMirror-linenumber {
+  color: #717171;
 }
