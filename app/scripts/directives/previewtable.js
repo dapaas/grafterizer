@@ -25,7 +25,8 @@ angular.module('grafterizerApp')
           showHeader: !attrs.hasOwnProperty('hideHeaders'),
           exporterMenuCsv: true,
           exporterMenuPdf: false,
-          enableGridMenu: true
+          enableGridMenu: true,
+          enableMinHeightCheck: false
         };
 
         scope.$watch('data', function() {
