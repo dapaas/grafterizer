@@ -14,12 +14,14 @@ angular.module('grafterizerApp')
       link: function postLink(scope, element, attrs) {
         if (!scope.function) {
           scope.function = new transformationDataModel.MakeDatasetFunction(
-            []);
+            [],null,0);
         }
 
         scope.$parent.generateCurrFunction = function() {
           return new transformationDataModel.MakeDatasetFunction(scope.function
-            .columnsArray);
+            .columnsArray,
+                  scope.function.useLazy,
+                  scope.function.numberOfColumns);
         };
       }
     };

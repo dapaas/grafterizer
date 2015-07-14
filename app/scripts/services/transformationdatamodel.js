@@ -71,13 +71,14 @@ angular.module('grafterizerApp')
     this.numberOfRows = numberOfRows;
     this.name = 'drop-rows';
     this.displayName = 'drop-rows';
+    this.docstring = 'Drop '+numberOfRows.toString()+' first row(s)';
     this.__type = 'DropRowsFunction';
   };
   DropRowsFunction.revive = function(data) {
     return new DropRowsFunction(data.numberOfRows);
   };
   DropRowsFunction.prototype.generateClojure = function() {
-    return new jsedn.List([jsedn.sym('drop-rows'), this.numberOfRows]);
+    return new jsedn.List([jsedn.sym('drop-rows') ,this.docstring.toString(), this.numberOfRows]);
   };
   this.DropRowsFunction = DropRowsFunction;
 
@@ -86,6 +87,7 @@ angular.module('grafterizerApp')
     this.numberOfRows = numberOfRows;
     this.name = 'take-rows';
     this.displayName = 'take-rows';
+    this.docstring = 'Take '+numberOfRows.toString()+' first row(s)';
     this.__type = 'TakeRowsFunction';
   };
   TakeRowsFunction.revive = function(data) {
@@ -115,6 +117,11 @@ angular.module('grafterizerApp')
 
     this.functionToDeriveWith = functionToDeriveWith;
     this.__type = 'DeriveColumnFunction';
+    this.docstring = 'Derive column '+newColName.toString()+' from columns ';
+    for (var i = 0; i < colsToDeriveFrom.length; ++i) {
+      this.docstring+=colsToDeriveFrom[i].toString()+', ';
+    }
+    if (functionToDeriveWith!== null) this.docstring+= 'with help of function '+functionToDeriveWith.toString() +'.';
   };
   DeriveColumnFunction.revive = function(data) {
     return new DeriveColumnFunction(data.newColName, data.colsToDeriveFrom, data.functionToDeriveWith);
@@ -232,7 +239,7 @@ angular.module('grafterizerApp')
   };
 
 
-  var MakeDatasetFunction = function(columnsArray) {
+  var MakeDatasetFunction = function(columnsArray,useLazy,numberOfColumns) {
     // array of column names
     this.name = 'make-dataset';
     this.displayName = 'make-dataset';
@@ -243,7 +250,7 @@ angular.module('grafterizerApp')
     this.__type = 'MakeDatasetFunction';
   };
   MakeDatasetFunction.revive = function(data) {
-    return new MakeDatasetFunction(data.columnsArray);
+    return new MakeDatasetFunction(data.columnsArray,data.useLazy,data.numberOfColumns);
   };
   MakeDatasetFunction.prototype.generateClojure = function() {
     //(make-dataset [:name :sex :age])
@@ -263,7 +270,7 @@ angular.module('grafterizerApp')
 
   this.MakeDatasetFunction = MakeDatasetFunction;
 
-  var ColumnsFunction = function(columnsArray,useLazy,numberOfColumns) {
+  var ColumnsFunction = function(columnsArray,uselazy,numberofcolumns) {
     // array of column names
     this.name = 'columns';
     this.displayName = 'columns';

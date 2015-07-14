@@ -84,8 +84,6 @@ angular.module('grafterizerApp')
   /* Declarations object. Used to render the individual declarations with the needed enclosing definitions in Clojure. */
   /*var declarations;*/
 
-  /*Holds libraries of Clojure code that should be loaded*/  
-  var libraries = [];
 
 
 
@@ -122,24 +120,8 @@ angular.module('grafterizerApp')
       declarationsList.val.push(aDeclaration);
     }*/
 
-  /* Adds a library to the list of libraries */
-  function addGrafterLib(name, libString) {
-    var lib = new jsedn.List([
-      jsedn.sym('def'),
-      jsedn.sym(name),
-      new jsedn.List([jsedn.sym('prefixer'), libString])]);
-
-    libraries.push(lib);
-  }
 
 
-  /* Constructs the collection of required libraries  */
-  function constructGrafterLibsArray() {
-    var result = libraries.slice();
-
-    libraries = [];
-    return result;
-  }
 
 
   /* Adds a prefixer to the list of pre-defined prefixers */
@@ -579,8 +561,6 @@ angular.module('grafterizerApp')
     }
 
     var grafterPrefixers = constructGrafterPrefixersArray();
-    /* Grafter libraries to load*/
-    var grafterLibs = constructGrafterLibsArray();
     /* User functions */
 
     //    var customFunctionsMap = transformation.customFunctionDeclarations;
