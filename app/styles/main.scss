@@ -629,7 +629,7 @@ graph-mapping div {
 }
 
 .sin-function-dialog {
-    functions-dialog-content md-content {
+    functions-dialog-content > md-content {
         height:500px;
         max-height:90%;
     }

@@ -1,5 +1,5 @@
 <md-content layout="row">
-    <md-content class="sin-functions-list" flex="20" layout="column" md-scroll-y>
+    <md-content class="sin-functions-list" layout="column" md-scroll-y ng-if="!function">
         <md-button flex ng-click="changeSelected(function.name)" ng-repeat="function in availableFunctions" ng-disabled="function.selected">{{function.name}}</md-button>
     </md-content>
     <div flex layout="column">
@@ -13,6 +13,7 @@
             <custom-code transformation="transformation" ng-if="availableFunctions[6].selected"></custom-code>
         </md-content>
         <div class="md-actions" layout="row" layout-align="right">
+            <!-- <md-button ng-if="function" class="md-primary" ng-click="delete()" aria-label="Remove function">Remove</md-button> -->
             <md-button class="md-primary" ng-disabled="!selectedFunctionName" ng-click="add()" aria-label="{{function ? 'Edit' : 'Create'}} function">{{function ? 'Edit' : 'Create'}} function</md-button>
             <md-button class="md-primary" ng-click="closeDialog()" aria-label="Cancel changes to function">Cancel</md-button>
         </div>
