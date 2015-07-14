@@ -1,9 +1,9 @@
-<md-content layout="row">
+<div layout="row">
     <md-content class="sin-functions-list" layout="column" md-scroll-y ng-if="!function">
         <md-button flex ng-click="changeSelected(function.name)" ng-repeat="function in availableFunctions" ng-disabled="function.selected">{{function.name}}</md-button>
     </md-content>
-    <div flex layout="column">
-        <md-content flex class="md-padding" md-scroll-y>
+    <div flex layout="column" >
+        <md-content ng-class="!selectedFunctionName ? 'sin-dapaas-background md-padding' : 'md-padding'" flex md-scroll-y>
             <columns-function transformation="transformation" ng-if="availableFunctions[0].selected === true"></columns-function>
             <derive-column-function transformation="transformation" ng-if="availableFunctions[1].selected === true"></derive-column-function>
             <drop-rows-function transformation="transformation" ng-if="availableFunctions[2].selected"></drop-rows-function>
@@ -18,4 +18,4 @@
             <md-button class="md-primary" ng-click="closeDialog()" aria-label="Cancel changes to function">Cancel</md-button>
         </div>
     </div>
-</md-content>
+</div>

@@ -629,8 +629,14 @@ graph-mapping div {
 }
 
 .sin-function-dialog {
-    functions-dialog-content > md-content {
+    functions-dialog-content > div {
         height:500px;
         max-height:90%;
     }
+}
+
+.sin-dapaas-background {
+    background: url(../images/background.png) no-repeat;
+    background-position: right 20px bottom 20px;
+
 }
