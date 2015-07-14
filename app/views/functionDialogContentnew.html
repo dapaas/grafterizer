@@ -1,7 +1,7 @@
 <md-content layout="row">
-    <div class="sin-functions-list" flex="20" layout="column">
+    <md-content class="sin-functions-list" flex="20" layout="column" md-scroll-y>
         <md-button flex ng-click="changeSelected(function.name)" ng-repeat="function in availableFunctions" ng-disabled="function.selected">{{function.name}}</md-button>
-    </div>
+    </md-content>
     <div flex layout="column">
         <md-content flex class="md-padding" md-scroll-y>
             <columns-function transformation="transformation" ng-if="availableFunctions[0].selected === true"></columns-function>
