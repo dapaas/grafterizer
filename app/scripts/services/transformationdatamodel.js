@@ -78,7 +78,7 @@ angular.module('grafterizerApp')
     return new DropRowsFunction(data.numberOfRows);
   };
   DropRowsFunction.prototype.generateClojure = function() {
-    return new jsedn.List([jsedn.sym('drop-rows') ,this.docstring.toString(), this.numberOfRows]);
+    return new jsedn.List([jsedn.sym('drop-rows'), this.numberOfRows]);
   };
   this.DropRowsFunction = DropRowsFunction;
 
