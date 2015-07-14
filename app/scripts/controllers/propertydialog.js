@@ -19,7 +19,9 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
     $rootScope) {
 
     var object = leObject.object;
-    var localVocabulary = leObject.localVocabulary;
+
+    var localVocabulary = new Array();;
+    window.sessionStorage.setItem('localVocabulary', JSON.stringify(localVocabulary));
     $scope.propertyValue = {
         value: ''
     };
@@ -31,11 +33,22 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
         properties: []
     };
 
+    var lowercaseTemplate = {
+        name: '',
+        lowercase:''
+    }
+
+    $scope.showSearchDialog = true;
     $scope.dragProcess = false;
     $scope.showProgress = false;
-    $scope.showManageDialogToolBar = false;
-    $scope.showSearchDialogToolBar = true;
-    $scope.showAddDialogToolBar = false;
+    $scope.showManageDialog = false;
+    $scope.showAddDialog = false;
+    $scope.showSearchResult  = false;
+    $scope.showSearchEmptyResult = false;
+    $scope.showEmptySearchResult = false;
+    $scope.showProgressCircular = false;
+    $scope.showSearchPagination = false;
+    $scope.namespaceInputDisable = false;
 
     if (!$scope.property) {
         $scope.property = new transformationDataModel.Property('', '', []);
@@ -71,16 +84,29 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
 
         $scope.showProgress = true;
         $scope.items = [];
+        //get search result from server
         $http.get(
-            'http://localhost:8080/ManageVocabulary/api/vocabulary/search/' +
-            //'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/search/' +
+          //'http://localhost:8080/ManageVocabulary/api/vocabulary/search/' +
+            'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/search/' +
         Para).success(
         function(response) {
+            for (var i = response.propertyResult.length - 1; i >= 0; i--) {
+                $scope.items.push(response.propertyResult[i].value);
+            }
+            if ($scope.items.length > $scope.pageSize){
+                $scope.showSearchPagination = true;
+            }
+            else{
+                $scope.showSearchPagination = false;
+            }
 
-            for( var i = response.propertyResult.length - 1; i >= 0; i-- ) {
-                var tmp = response.propertyResult[i];
-                var str = tmp.value;
-                $scope.items.push(str);
+            if ($scope.items.length > 0){
+                $scope.showSearchResult = true;
+                $scope.showSearchEmptyResult = false;
+            }
+            else{
+                $scope.showSearchResult = false;
+                $scope.showSearchEmptyResult = true;
             }
 
             $scope.showProgress = false;
@@ -89,112 +115,143 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
             $scope.showProgress = false;
         });
 
-        localVocabulary = JSON.parse(
+        //get search result from local
+        var localVocabulary = JSON.parse(
         window.sessionStorage.getItem('localVocabulary'));
 
-        for( var i = localVocabulary.length - 1; i >= 0; i-- ) {
+        for (var i = localVocabulary.length - 1; i >= 0; i--) {
             /*var classList = localVocabulary[i].classes;
             for( var item = classList.length - 1; item >= 0; item-- ){
-                if( classList[item].indexOf(Para) !== -1 ) {
+                if( classList[item].indexOf(Para) != -1 ) {
                     $scope.items.push(classList[item].value);
                 }
             }
             */
 
             var propertyList = localVocabulary[i].properties;
-            for( var item = propertyList.length - 1; item >= 0; item-- ){
-                if( propertyList[item].indexOf(Para) !== -1 ) {
-                    $scope.items.push(propertyList[item]);
+            if (propertyList != null){
+                for( var item = propertyList.length - 1; item >= 0; item-- ){
+                  if( propertyList[item].lowername.indexOf(Para.toLowerCase()) != -1 ) {
+                    $scope.items.push(propertyList[item].name);
+                  }
                 }
             }
         }
 
         $scope.currentPage = 0;
 
-        $scope.hideValue = true;
     };
 
     //show current saved vocabulary and operations
     $scope.switchToManageDialog = function() {
         $scope.selection = 'manageDialog';
 
-        localVocabulary = JSON.parse(sessionStorage.getItem('localVocabulary'));
+        //show local vocabulary
+        var localVocabulary = JSON.parse(sessionStorage.getItem('localVocabulary'));
 
         var VocabList = [];
-        for( var i = localVocabulary.length - 1; i >= 0; i-- ) {
+        if (localVocabulary != null){
+          for (var i = localVocabulary.length - 1; i >= 0; i--) {
             VocabList.push(localVocabulary[i]);
+          }
         }
-        $scope.VocabItems = VocabList;
 
+        $scope.VocabItems = VocabList;
+        $scope.showProgressCircular = true;
+
+        //show server vocabulary
         $scope.VocabItemsServer = [];
         $http.get(
-            'http://localhost:8080/ManageVocabulary/api/vocabulary/getAll'
-            //'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/getAll'
+          //'http://localhost:8080/ManageVocabulary/api/vocabulary/getAll'
+            'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/getAll'
         ).success(
             function(response) {
-              vocabItemTemplate = new Object();
               for (var i = response.result.length - 1; i >= 0; i--) {
+                  vocabItemTemplate = new Object();
                   vocabItemTemplate.name = response.result[i].name;
                   vocabItemTemplate.namespace = response.result[i].namespace;
+
                   $scope.VocabItemsServer.push(vocabItemTemplate);
+
+                  if ($scope.VocabItemsServer.length + $scope.VocabItems.length> $scope.pageSize){
+                      $scope.showVocabularyPagination = true;
+                  }
+                  else{
+                      $scope.showVocabularyPagination = false;
+                  }
               }
+              $scope.showProgressCircular = false;
             }).error(function(data, status, headers, config) {
             console.log('error /api/vocabulary/getAll');
+            $scope.showProgressCircular = false;
         });
 
-        $scope.showManageDialogToolBar = true;
-        $scope.showSearchDialogToolBar = false;
-        $scope.showAddDialogToolBar = false;
+        $scope.showManageDialog = true;
+        $scope.showSearchDialog = false;
+        $scope.showAddDialog = false;
     };
 
     $scope.switchToSearchDialog = function() {
         $scope.selection = 'searchDialog';
-        $scope.showManageDialogToolBar = false;
-        $scope.showSearchDialogToolBar = true;
-        $scope.showAddDialogToolBar = false;
+        $scope.showManageDialog = false;
+        $scope.showSearchDialog = true;
+        $scope.showAddDialog = false;
 
     };
 
     $scope.switchToAddDialog = function(name, namespace) {
         $scope.selection = 'addVocabDialog';
-        $scope.showManageDialogToolBar = false;
-        $scope.showSearchDialogToolBar = false;
-        $scope.showAddDialogToolBar = true;
+
+        $scope.showManageDialog = false;
+        $scope.showSearchDialog = false;
+        $scope.showAddDialog = true;
+
         $scope.vocabName = null;
         $scope.vocabNamespace = null;
+
+        // if namespace is not null, then we are editing vocabulary,
         if (name != undefined){
             $scope.vocabName = name;
         }
-        if (namespace != undefined) {
+
+        if (namespace != undefined && namespace != "") {
             $scope.vocabNamespace = namespace;
+            $scope.namespaceInputDisable = true;
+        }
+        else{
+            $scope.namespaceInputDisable = false;
         }
     };
 
     //delete local vocabulary
     $scope.deleteItem = function(vocabNamespace) {
-        localVocabulary = JSON.parse(window.sessionStorage.getItem('localVocabulary'));
-        window.sessionStorage.removeItem('localVocabulary');
-        for( var i = localVocabulary.length - 1; i >= 0; i-- ) {
+        //delete from local storage
+        var localVocabulary = JSON.parse(window.sessionStorage.getItem('localVocabulary'));
+        for (var i = localVocabulary.length - 1; i >= 0; i--) {
             if( localVocabulary[i].namespace === vocabNamespace ){
                 localVocabulary.splice(i, 1);
             }
         }
 
+        //delete from GUI
         var VocabList = [];
-        for( var i = localVocabulary.length - 1; i >= 0; i-- ) {
+        for (var i = localVocabulary.length - 1; i >= 0; i--) {
             vocabItemTemplate.name = localVocabulary[i].name;
             vocabItemTemplate.namespace = localVocabulary[i].namespace;
             VocabList.push(vocabItemTemplate);
         }
         $scope.VocabItems = VocabList;
+
+        window.sessionStorage.setItem('localVocabulary', JSON.stringify(localVocabulary));
     };
 
+    //editing vocabulary
     $scope.editItem = function(name, namespace){
         $scope.switchToAddDialog(name, namespace);
     };
-/*
+
     //delete vocabulary from server
-    $scope.deleteItem = function(name, vocabNamespace) {
+    $scope.deleteItemFromServer = function(name, vocabNamespace) {
 
           $http.post('http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/delete/', {name: name, namespace: vocabNamespace}).success(function(response){
           if(response.http_code == '200'){
@@ -209,12 +266,12 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
         alert('error');
       });
     }
-*/
+
     //add vocabulary to server
     $scope.addVocabtoServer = function(vocabName, vocabNamespace, vocabLoc) {
         $http.post(
-          'http://localhost:8080/ManageVocabulary/api/vocabulary/add'
-          //'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/add'
+          //'http://localhost:8080/ManageVocabulary/api/vocabulary/add'
+          'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/add'
           , {
           name: vocabName,
           namespace: vocabNamespace,
@@ -228,16 +285,30 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
 
     //add vocabulary to local
     $scope.addVocabtoLocal = function(vocabName, vocabNamespace, vocabLoc) {
-        if (vocabName === undefined || vocabNamespace === undefined) {
+        if (vocabName === "" || vocabNamespace === "") {
             return;
         }
 
         // if path is empty, just add vocabulary name to local storage.
         if (vocabLoc === undefined && !object.data) {
-            localVocabulary = JSON.parse(window.sessionStorage.getItem('localVocabulary'));
-            var jsonObject = '{"name":"' + vocabName + '","namespace":"'+ vocabNamespace +'","classes":"","properties": ""}';
-            localVocabulary.push(jsonObject);
-            $rootScope.transformation.rdfVocabs.push(new transformationDataModel.RDFVocabulary(vocabName, vocabNamespace, [], []));
+            var localVocabulary = JSON.parse(window.sessionStorage.getItem('localVocabulary'));
+
+            if ($scope.namespaceInputDisable === true){
+                for (var i = localVocabulary.length - 1; i >= 0; i--) {
+                    if( localVocabulary[i].namespace === vocabNamespace ){
+                        localVocabulary[i].name = vocabName;
+                    }
+                }
+            }
+            else{
+                vocabItemTemplate = new Object();
+
+                vocabItemTemplate.name = vocabName;
+                vocabItemTemplate.namespace = vocabNamespace;
+
+                localVocabulary.push(vocabItemTemplate);
+                $rootScope.transformation.rdfVocabs.push(new transformationDataModel.RDFVocabulary(vocabName, vocabNamespace, [], []));
+            }
 
             window.sessionStorage.setItem('localVocabulary', JSON.stringify(localVocabulary));
 
@@ -246,10 +317,14 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
             return;
         }
 
+        if(vocabLoc === undefined || vocabLoc === ""){
+            vocabLoc = object.filename;
+        }
+
         $scope.showProgress = true;
         $http.post(
-            'http://localhost:8080/ManageVocabulary/api/vocabulary/getClassAndPropertyFromVocabulary'
-            //'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/getClassAndPropertyFromVocabulary'
+          //'http://localhost:8080/ManageVocabulary/api/vocabulary/getClassAndPropertyFromVocabulary'
+            'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/getClassAndPropertyFromVocabulary'
             , {
                 name: vocabName,
                 namespace: vocabNamespace,
@@ -257,27 +332,49 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
                 data: object.data
             }).success(function(response) {
                 //add vocabulary name, a list of classes, a list of properties in local storage
-                localVocabulary = JSON.parse(window.sessionStorage.getItem('localVocabulary'));
+                var localVocabulary = JSON.parse(window.sessionStorage.getItem('localVocabulary'));
 
                 var classArray = [];
                 var propertyArray = [];
                 for (var i = response.classResult.length - 1; i >= 0; i--) {
-                    classArray.push(response.classResult[i].value);
+                    //lower case is easier for search
+                    lowercaseTemplate = new Object();
+                    lowercaseTemplate.name = response.classResult[i].value;
+                    lowercaseTemplate.lowername = response.classResult[i].value.toLowerCase();
+                    classArray.push(lowercaseTemplate);
+                    //console.log(response.classResult[i].value);
                 }
                 for (var i = response.propertyResult.length - 1; i >= 0; i--) {
-                    propertyArray.push(response.propertyResult[i].value);
+                    lowercaseTemplate = new Object();
+                    lowercaseTemplate.name = response.propertyResult[i].value;
+                    lowercaseTemplate.lowername = response.propertyResult[i].value.toLowerCase();
+                    propertyArray.push(lowercaseTemplate);
+                    //console.log(response.propertyResult[i].value);
                 }
-
-                var localVocabulary = [];
+                //console.log(response.classResult.length);
+                //console.log(response.propertyResult.length);
 
                 vocabItemTemplate = new Object();
 
-                vocabItemTemplate.name = vocabName;
-                vocabItemTemplate.namespace = vocabNamespace;
-                vocabItemTemplate.classes = classArray;
-                vocabItemTemplate.properties = propertyArray;
+                if ($scope.namespaceInputDisable === true){
+                    //editing vocabulary
+                    for (var i = localVocabulary.length - 1; i >= 0; i--) {
+                        if (localVocabulary[i].namespace === vocabNamespace){
+                            localVocabulary[i].name = vocabName;
+                            localVocabulary[i].classes = classArray;
+                            localVocabulary[i].properties = propertyArray;
+                        }
+                    }
+                }
+                else {
+                    //adding new vocabulary
+                    vocabItemTemplate.name = vocabName;
+                    vocabItemTemplate.namespace = vocabNamespace;
+                    vocabItemTemplate.classes = classArray;
+                    vocabItemTemplate.properties = propertyArray;
 
-                localVocabulary.push(vocabItemTemplate);
+                    localVocabulary.push(vocabItemTemplate);
+                }
 
                 window.sessionStorage.setItem('localVocabulary', JSON.stringify(localVocabulary));
 
@@ -293,6 +390,10 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
       $scope.propertyValue.value = value;
     };
 
+    $scope.noOperation = function(){
+
+    }
+
     // let us choose how to add vocabulary path
     //------------------------------------------
     $scope.choices = [
@@ -305,7 +406,7 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
     $scope.remotePath = false;
 
     $scope.onChange = function(choice) {
-        if( choice === "Add vocabulary path by url" ){
+        if (choice === "Add vocabulary path by url"){
             $scope.localPath = false;
             $scope.remotePath = true;
         }
