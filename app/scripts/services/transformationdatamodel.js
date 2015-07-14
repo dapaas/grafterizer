@@ -270,7 +270,7 @@ angular.module('grafterizerApp')
 
   this.MakeDatasetFunction = MakeDatasetFunction;
 
-  var ColumnsFunction = function(columnsArray,uselazy,numberofcolumns) {
+  var ColumnsFunction = function(columnsArray,useLazy,numberOfColumns) {
     // array of column names
     this.name = 'columns';
     this.displayName = 'columns';
