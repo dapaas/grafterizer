@@ -140,10 +140,53 @@ angular.module('grafterizerApp')
           var found = _.find($scope.$parent.transformation.customFunctionDeclarations, function(v) {
             return v.clojureCode !== $scope.selectedCustomFunction.clojureCode && v.name === name;
           });
-          
+
           $scope.selectedCustomFunction.nameWarning = !!found;
         }
       }
 
     });
+
+    $scope.$watchCollection('$parent.transformation.customFunctionDeclarations', function() {
+      $scope.functionsList = _.filter($scope.$parent.transformation.customFunctionDeclarations, function(f) {
+        return !ignoredKeyWords.hasOwnProperty(f.name) || f.clojureCode;
+      });
+    });
+
+    var ignoredKeyWords = {
+      '+': true,
+      '-': true,
+      '*': true,
+      '/': true,
+      'empty?': true,
+      'every?': true,
+      'false?': true,
+      'rational?': true,
+      'string?': true,
+      'true?': true,
+      'zero?': true,
+      'lower-case': true,
+      'upper-case': true,
+      reverse: true,
+      trim: true,
+      'trim-newline': true,
+      triml: true,
+      trimr: true,
+      rem: true,
+      boolean: true,
+      count: true,
+      cast: true,
+      capitalize: true,
+      dec: true,
+      double: true,
+      first: true,
+      float: true,
+      inc: true,
+      keyword: true,
+      last: true,
+      long: true,
+      name: true,
+      second: true,
+      short: true
+    };
   });

@@ -7,7 +7,7 @@
     <md-dialog-content>
         <div class="content-stuff utility-functions" layout="row">
             <md-content class="sin-functions-list" layout="column" md-scroll-y>
-                <md-button ng-click="$parent.selectedCustomFunction = function" ng-repeat="function in $parent.transformation.customFunctionDeclarations" ng-disabled="function == $parent.selectedCustomFunction">{{function.name}}
+                <md-button ng-click="$parent.selectedCustomFunction = function" ng-repeat="function in functionsList" ng-disabled="function == $parent.selectedCustomFunction">{{function.name}}
                     <md-button ng-if="function == $parent.selectedCustomFunction" class="button-tight" aria-label="Delete this function" ng-click="removeCustomFunct(selectedCustomFunction)">
                         <i class="fa fa-minus-circle"></i>
                         <md-tooltip>Delete this function</md-tooltip>
