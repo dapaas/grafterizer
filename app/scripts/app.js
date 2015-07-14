@@ -260,12 +260,58 @@ angular
       contrastDefaultColor: 'dark'
     });
 
+    $mdThemingProvider.definePalette('dapaasPrimary', {
+      '50': '#67ffa0',
+        '100': '#4eff90',
+        '200': '#34ff80',
+        '300': '#1bff70',
+        '400': '#01ff60',
+        '500': '#00E756',
+        '600': '#00cd4c',
+        '700': '#00b443',
+        '800': '#009a3a',
+        '900': '#008130',
+        'A100': '#81ffb0',
+        'A200': '#9affc0',
+        'A400': '#b4ffd0',
+        'A700': '#006727',
+      contrastDefaultColor: 'dark'
+    });
+
+    $mdThemingProvider.definePalette('dapaasAccent', {
+      50: '#333333',
+      100: '#333333',
+      200: '#333333',
+      300: '#f7fcfc',
+      400: '#e4f4f5',
+      500: '#EEEEEE',
+      600: '#bfe6e7',
+      700: '#addee0',
+      800: '#9ad7d9',
+      900: '#88cfd2',
+      A100: '#EEEEEE',
+      A200: '#EEEEEE',
+      A400: '#EEEEEE',
+      A700: '#75c8cb',
+      contrastDefaultColor: 'dark'
+    });
+
     $mdThemingProvider.theme('default')
-      .primaryPalette('customPrimary')
-      .accentPalette('customAccent');
+      // .primaryPalette('customPrimary')
+      // .accentPalette('customAccent');
+      .primaryPalette('dapaasPrimary')
+      .accentPalette('dapaasAccent');
 
     // JSEDN is too restrictive by default on valid symbols
     jsedn.Symbol.prototype.validRegex = new RegExp(/.*/);
-  }).run(function(datagraftPostMessage) {
+  }).run(function(datagraftPostMessage, apiKeyService, $state) {
     datagraftPostMessage.setup();
+
+    if (!apiKeyService.hasKeyPass()) {
+      window.setTimeout(function() {
+        if (!apiKeyService.hasKeyPass()) {
+          $state.go('apikey');
+        }
+      }, 2000);
+    }
   });

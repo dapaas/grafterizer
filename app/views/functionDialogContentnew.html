@@ -1,24 +1,20 @@
-<md-content class="md-padding">
-<div layout="row">
-    <div>
-    <md-list>
-    <md-list-item class="md-2-line" ng-repeat="function in availableFunctions" ng-click="changeSelected(function.name)">
-        <p>{{function.name}}</p>
-        </md-list-item>
-    </md-list>
-</div>
-    <div flex>
-        <columns-function transformation="transformation" ng-if="availableFunctions[0].selected === true"></columns-function>
-        <derive-column-function transformation="transformation" ng-if="availableFunctions[1].selected === true"></derive-column-function>
-        <drop-rows-function transformation="transformation" ng-if="availableFunctions[2].selected"></drop-rows-function>
-        <make-dataset transformation="transformation" ng-if="availableFunctions[3].selected"></make-dataset>
-        <mapc-function transformation="transformation" ng-if="availableFunctions[4].selected"></mapc-function>
-        <take-rows-function transformation="transformation" ng-if="availableFunctions[5].selected"></take-rows-function>
-        <custom-code transformation="transformation" ng-if="availableFunctions[6].selected"></custom-code>
-<div class="md-actions" layout="row" layout-align="right">
-    <md-button class="md-primary" ng-disabled="!selectedFunctionName" ng-click="add()" aria-label="{{function ? 'Edit' : 'Create'}} function">{{function ? 'Edit' : 'Create'}} function</md-button>
-    <md-button class="md-primary" ng-click="closeDialog()" aria-label="Cancel changes to function">Cancel</md-button>
-</div>
+<md-content layout="row">
+    <div class="sin-functions-list" flex="20" layout="column">
+        <md-button flex ng-click="changeSelected(function.name)" ng-repeat="function in availableFunctions" ng-disabled="function.selected">{{function.name}}</md-button>
     </div>
-</div>
+    <div flex layout="column">
+        <md-content flex class="md-padding" md-scroll-y>
+            <columns-function transformation="transformation" ng-if="availableFunctions[0].selected === true"></columns-function>
+            <derive-column-function transformation="transformation" ng-if="availableFunctions[1].selected === true"></derive-column-function>
+            <drop-rows-function transformation="transformation" ng-if="availableFunctions[2].selected"></drop-rows-function>
+            <make-dataset transformation="transformation" ng-if="availableFunctions[3].selected"></make-dataset>
+            <mapc-function transformation="transformation" ng-if="availableFunctions[4].selected"></mapc-function>
+            <take-rows-function transformation="transformation" ng-if="availableFunctions[5].selected"></take-rows-function>
+            <custom-code transformation="transformation" ng-if="availableFunctions[6].selected"></custom-code>
+        </md-content>
+        <div class="md-actions" layout="row" layout-align="right">
+            <md-button class="md-primary" ng-disabled="!selectedFunctionName" ng-click="add()" aria-label="{{function ? 'Edit' : 'Create'}} function">{{function ? 'Edit' : 'Create'}} function</md-button>
+            <md-button class="md-primary" ng-click="closeDialog()" aria-label="Cancel changes to function">Cancel</md-button>
+        </div>
+    </div>
 </md-content>

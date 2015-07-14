@@ -365,6 +365,10 @@ pipeline-function {
   padding: 0 4px;
   margin: 0;
 }
+
+.button-not-tight {
+  margin-left: 32px;
+}
 .mappingBtn { 
     min-width: 28px;
     padding: 0;
@@ -529,6 +533,7 @@ preview-table .watermark {
 }
 
 .sin-function-dialog {
+    width:960px;
     min-width:50%;
 }
 
@@ -597,4 +602,35 @@ graph-mapping div {
     position:absolute;
     left:20px;
     font-style:italic;
+}
+
+.sin-functions-list {
+    background-color: #0DBC37;
+  color: white;
+  text-align: left;
+}
+
+.sin-functions-list .md-button {
+  text-align: left;
+  font-family: monospace;
+  border-radius: 0;
+  white-space: normal;
+  overflow: hidden;
+  margin: 0;
+  max-height: 40px;
+  line-height: 40px;
+  padding: 0 16px 0 16px; 
+
+  &[disabled] {
+    background-color: #006400;
+    color: white;
+    cursor: default;
+  }
+}
+
+.sin-function-dialog {
+    functions-dialog-content md-content {
+        height:500px;
+        max-height:90%;
+    }
 }
