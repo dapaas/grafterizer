@@ -294,7 +294,8 @@ md-tab-content .CodeMirror {
         top:5px;
         bottom:5px;
         left:50%;
-        margin-left:-37px;
+        // margin-left:-37px;
+        margin-left:-22px;
         background:$color;
         position:absolute;
 
@@ -646,8 +647,8 @@ graph-mapping div {
 }
 
 .sin-dapaas-background {
-    background: url(../images/background.png) no-repeat;
-    background-position: right 20px bottom 20px;
+    // background: url(../images/background.png) no-repeat;
+    // background-position: right 20px bottom 20px;
 
 }
 
@@ -676,4 +677,9 @@ graph-mapping div {
 
 .cm-s-monokai .CodeMirror-linenumber {
   color: #717171;
+}
+
+.button-in-pipeline {
+    left:50%;
+    margin-left:-40px;
 }
