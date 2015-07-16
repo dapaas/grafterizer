@@ -1,13 +1,11 @@
 <div layout="column">
     <div>
-        <h3>Usage</h3>
-        <p class="api-doc-usage"> (columns dataset cols) </p>
-            <p class="api-doc-docstring"> Given a dataset and a sequence of column identifiers, columns narrows the dataset to just the supplied columns.
+        <md-button aria-label="Show/hide documentation" ng-click="switchShowUsage()"><i class="fa fa-angle-down"  >Show/hide documentation</i></md-button>
+            <div ng-show = "showUsage">
+            <p  class="api-doc-docstring"> Given a dataset and a sequence of column identifiers, narrows the dataset to just the specified columns.
             </p>
-            <p class="api-doc-docstring"> Columns specified in the selection that are not included in the Dataset will be silently ignored.</p>
-             <p class="api-doc-docstring">
-The supplied sequence of columns are first cropped to the number of columns in the dataset before being selected, this means that infinite sequences can safely supplied to this function.
-view source</p>
+            <img  src="../images/columns.png"></img>
+        </div>
         </div>
         <div>
         <h3>Parameters</h3>

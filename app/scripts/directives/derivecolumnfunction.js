@@ -26,6 +26,10 @@ angular.module('grafterizerApp')
             scope.$parent.transformation.findPrefixerOrCustomFunctionByName(
               scope.function.functionToDeriveWith));
         };
+        scope.showUsage=false;
+        scope.switchShowUsage=function() {
+        scope.showUsage=!scope.showUsage;
+        }
       }
     };
   });

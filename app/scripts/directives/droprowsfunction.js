@@ -22,6 +22,10 @@ angular.module('grafterizerApp')
           return new transformationDataModel.DropRowsFunction(parseInt(
             scope.function.numberOfRows));
         };
+        scope.showUsage=false;
+        scope.switchShowUsage=function() {
+        scope.showUsage=!scope.showUsage;
+        }
       }
     };
   });

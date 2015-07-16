@@ -1,19 +1,17 @@
 <div layout="column">
     <div>
-        <h3>Usage</h3>
-            <p class="api-doc-usage"> (make-dataset) </p>
-            <p class="api-doc-usage"> (make-dataset data) </p>
-            <p class="api-doc-usage"> (make-dataset data columns-or-f) </p>
-            <p class="api-doc-docstring"> Like incanter’s dataset function except it can take a lazy-sequence of column names which will get mapped to the source data.
-            </p>
-            <p class="api-doc-docstring"> Works by inspecting the amount of columns in the first row, and taking that many column names from the sequence. </p>
-             <p class="api-doc-docstring">
-            Inspects the first row of data to determine the number of columns, and creates an incanter dataset with columns named alphabetically as by grafter.sequences/column-names-seq. </p>
+        <md-button aria-label="Show/hide documentation" ng-click="switchShowUsage()"><i class="fa fa-angle-down"  >Show/hide documentation</i></md-button>
+            <div ng-show = "showUsage">
+            <p class="api-doc-docstring"> Creates a dataset either by taking specified number of columns or by inspecting the amount of columns in the first row, and taking that many column names from the sequence. </p>
+    </div>
     </div>
     <div>
         <h3>Parameters</h3>
+    <md-checkbox ng-model="function.moveFirstRowToHeader" aria-label="move first row to header">
+    move first row to header
+    </md-checkbox>
     <label>Specify column names</label>
-    <md-chips ng-model="function.columnsArray" readonly="ctrl.readonly">
+    <md-chips ng-disabled="function.useLazy" ng-model="function.columnsArray" readonly="ctrl.readonly">
         <md-chip-template>
             <strong>{{$chip}}</strong>
         </md-chip-template>

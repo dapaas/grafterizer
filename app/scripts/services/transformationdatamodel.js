@@ -239,7 +239,7 @@ angular.module('grafterizerApp')
   };
 
 
-  var MakeDatasetFunction = function(columnsArray,useLazy,numberOfColumns) {
+  var MakeDatasetFunction = function(columnsArray,useLazy,numberOfColumns,moveFirstRowToHeader) {
     // array of column names
     this.name = 'make-dataset';
     this.displayName = 'make-dataset';
@@ -247,23 +247,37 @@ angular.module('grafterizerApp')
     this.columnsArray = columnsArray;
     this.useLazy = useLazy;
     this.numberOfColumns = numberOfColumns;
+    this.moveFirstRowToHeader = moveFirstRowToHeader;
     this.__type = 'MakeDatasetFunction';
+    this.docstring = "Make dataset";
+    if (moveFirstRowToHeader) this.docstring+=", create header from the first row";
   };
   MakeDatasetFunction.revive = function(data) {
-    return new MakeDatasetFunction(data.columnsArray,data.useLazy,data.numberOfColumns);
+    return new MakeDatasetFunction(data.columnsArray,data.useLazy,data.numberOfColumns,data.moveFirstRowToHeader);
   };
   MakeDatasetFunction.prototype.generateClojure = function() {
     //(make-dataset [:name :sex :age])
     var i;
     var colNamesClj = new jsedn.Vector([]);
+    var moveFirst = this.moveFirstRowToHeader?" move-first-row-to-header":"";
     if (this.useLazy === null) {
-        for (i = 0; i < this.columnsArray.length; ++i) {
+        if (this.columnsArray.length>0) { 
+            // (make-dataset [columns])
+            for (i = 0; i < this.columnsArray.length; ++i) {
           colNamesClj.val.push(new jsedn.kw(':' + this.columnsArray[i]));
         }
 
         return new jsedn.List([jsedn.sym('make-dataset'), colNamesClj]);
+        }
+
+        else 
+        // (make-dataset)    
+        {
+            return new jsedn.List([jsedn.sym('make-dataset'+moveFirst)]);
+        }
     }
     else {
+        // make dataset with lazy naming
         return new jsedn.List([jsedn.sym('make-dataset'), jsedn.sym('(into[] (take '+this.numberOfColumns.toString()+' (alphabetical-column-names)))')]);
     }
   };
@@ -279,6 +293,17 @@ angular.module('grafterizerApp')
     this.useLazy = useLazy;
     this.numberOfColumns = numberOfColumns;
     this.__type = 'ColumnsFunction';
+
+    this.docstring="Narrow dataset to "; 
+    if (useLazy) this.docstring+=numberOfColumns.toString()+" columns"
+    else {
+        var i;
+        this.docstring+=" columns:";
+        for (i = 0; i < columnsArray.length; ++i) {
+            this.docstring+=" "+columnsArray[i].toString();
+        }
+    }
+
   };
   ColumnsFunction.revive = function(data) {
     return new ColumnsFunction(data.columnsArray,data.useLazy,data.numberOfColumns);
