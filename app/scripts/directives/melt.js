@@ -2,25 +2,23 @@
 
 /**
  * @ngdoc directive
- * @name grafterizerApp.directive:takeRowsFunction
+ * @name grafterizerApp.directive:meltFunction
  * @description
- * # takeRowsFunction
+ * # meltFunction
  */
 angular.module('grafterizerApp')
-  .directive('takeRowsFunction', function(transformationDataModel) {
+  .directive('meltFunction', function(transformationDataModel) {
     return {
-      templateUrl: 'views/takeRowsFunction.html',
+      templateUrl: 'views/meltfunction.html',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
         if (!scope.function) {
-          scope.function = {
-            numberOfRows: 1
-          };
+          scope.function = new transformationDataModel.MeltFunction(
+            []);
         }
 
         scope.$parent.generateCurrFunction = function() {
-          return new transformationDataModel.TakeRowsFunction(parseInt(
-            scope.function.numberOfRows));
+          return new transformationDataModel.MeltFunction(scope.function.columnsArray);
         };
         scope.showUsage=false;
         scope.switchShowUsage=function() {

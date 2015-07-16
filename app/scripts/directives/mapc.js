@@ -32,6 +32,10 @@ angular.module('grafterizerApp')
         scope.removeKeyFunctionPair = function(kfPair) {
           scope.function.removeKeyFunctionPair(kfPair);
         };
+        scope.showUsage=false;
+        scope.switchShowUsage=function() {
+        scope.showUsage=!scope.showUsage;
+        }
       }
     };
   });

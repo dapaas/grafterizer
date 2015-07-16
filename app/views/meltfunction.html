@@ -1,0 +1,20 @@
+<div layout="column">
+    <div>
+        <md-button aria-label="Show/hide documentation" ng-click="switchShowUsage()"><i class="fa fa-angle-down"  >Show/hide documentation</i></md-button>
+            <div ng-show = "showUsage">
+            <p  class="api-doc-docstring"> "Melts" dataset in a such way, that each row represents a unique combination of variables and values for given column array 
+            </p>
+            <img  src="../images/melt.png"></img>
+        </div>
+        </div>
+        <div>
+        <h3>Parameters</h3>
+        <label>Specify column names</label>
+    <md-chips ng-model="function.columnsArray" readonly="ctrl.readonly" >
+        <md-chip-template>
+            <strong>{{$chip}}</strong>
+        </md-chip-template>
+    </md-chips>
+                
+</div>
+</div>

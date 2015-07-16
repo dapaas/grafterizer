@@ -1,0 +1,26 @@
+<div layout="column">
+    <div>
+        <md-button aria-label="Show/hide documentation" ng-click="switchShowUsage()"><i class="fa fa-angle-down"  >Show/hide documentation</i></md-button>
+            <div ng-show = "showUsage">
+            <p class="api-doc-docstring"> Adds a new column to the end of the row, with specified value copied for all rows .
+            
+            <img src="../images/addcolumn.png"></img>
+    </div>
+    </div>
+<div>
+
+            <h3>Parameters</h3>
+    <md-input-container flex>
+        <label>Name of new column</label>
+        <input ng-model="function.newColName" type="text" required>
+    </md-input-container>
+        <label>Value</label>
+        <input ng-model="function.colValue" type="text" required>
+    </md-input-container>
+
+</div>
+
+</div>
+<!--
+ng-hide="transformation.customFunctionDeclarations"
+-->

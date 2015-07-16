@@ -4,11 +4,14 @@
     </md-content>
     <div flex layout="column" >
         <md-content ng-class="!selectedFunctionName ? 'sin-dapaas-background md-padding' : 'md-padding'" flex md-scroll-y>
+            <add-column-function transformation="transformation" ng-if="availableFunctions[0].selected === true"></add-column-function>
             <columns-function transformation="transformation" ng-if="availableFunctions[1].selected === true"></columns-function>
             <derive-column-function transformation="transformation" ng-if="availableFunctions[2].selected === true"></derive-column-function>
             <drop-rows-function transformation="transformation" ng-if="availableFunctions[3].selected"></drop-rows-function>
             <make-dataset transformation="transformation" ng-if="availableFunctions[4].selected"></make-dataset>
             <mapc-function transformation="transformation" ng-if="availableFunctions[5].selected"></mapc-function>
+            <melt-function transformation="transformation" ng-if="availableFunctions[6].selected === true"></melt-function>
+            <rename-columns-function transformation="transformation" ng-if="availableFunctions[7].selected === true"></rename-columns-function>
             <take-rows-function transformation="transformation" ng-if="availableFunctions[8].selected"></take-rows-function>
             <custom-code transformation="transformation" ng-if="availableFunctions[9].selected"></custom-code>
         </md-content>
