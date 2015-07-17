@@ -30,7 +30,7 @@ angular.module('grafterizerApp')
       };
     }
   };
-
+//TODO: add docstring
   var CustomFunctionDeclaration = function(name, clojureCode) {
     this.name = name;
     this.clojureCode = clojureCode;
@@ -98,6 +98,25 @@ angular.module('grafterizerApp')
   };
   this.TakeRowsFunction = TakeRowsFunction;
   
+  var AddColumnFunction = function(newColName,colValue) {
+    GenericFunction.call(this);
+    this.newColName = newColName;
+    this.colValue = colValue;
+    this.name = 'add-column';
+    this.displayName = 'add-column';
+    this.docstring = 'Add new column '+newColName.toString();
+    this.__type = 'AddColumnFunction';
+  };
+  AddColumnFunction.revive = function(data) {
+    return new AddColumnFunction(data.newColName,data.colValue);
+  };
+  AddColumnFunction.prototype.generateClojure = function() {
+    return new jsedn.List([jsedn.sym('add-column'), this.newColName, this.colValue]);
+  };
+  this.AddColumnFunction = AddColumnFunction;
+  
+  
+  
   var DeriveColumnFunction = function(newColName, colsToDeriveFrom, functionToDeriveWith) {
     GenericFunction.call(this);
     this.newColName = newColName;
@@ -145,6 +164,65 @@ angular.module('grafterizerApp')
     return new jsedn.List(values);
   };
   this.DeriveColumnFunction = DeriveColumnFunction;
+  
+  //TODO: allow to have map as a parameter
+  var RenameColumnsFunction = function(functionToRenameWith) {
+    GenericFunction.call(this);
+    this.name = 'rename-columns';
+    this.displayName = 'rename-columns';
+    var renameFun;
+   /* if (functionsToRenameWith!==null) for (var i=0; i< functionsToRenameWith.length; ++i) {
+         
+        if (functionsToRenameWith[i] !== null) {
+            if (!(functionsToRenameWith[i] instanceof CustomFunctionDeclaration) && functionsToRenameWith[i].__type ===
+           'CustomFunctionDeclaration') {
+            functionsToRenameWith[i] = CustomFunctionDeclaration.revive(functionsToRenameWith[i]);
+        }
+
+        if (!(functionsToRenameWith[i] instanceof Prefixer) && functionsToRenameWith[i].__type === 'Prefixer') {
+            functionsToRenameWith[i] = Prefixer.revive(functionsToRenameWith[i]);
+        }
+        }
+    }
+*/
+    if (functionToRenameWith!==null)  {
+         
+            if (!(functionToRenameWith instanceof CustomFunctionDeclaration) && functionToRenameWith.__type ===
+           'CustomFunctionDeclaration') {
+            functionToRenameWith = CustomFunctionDeclaration.revive(functionToRenameWith);
+        }
+
+        if (!(functionToRenameWith instanceof Prefixer) && functionToRenameWith.__type === 'Prefixer') {
+            functionToRenameWith = Prefixer.revive(functionToRenameWith);
+        }
+        }
+    
+this.functionToRenameWith = functionToRenameWith;
+    this.__type = 'RenameColumnsFunction';
+    //TODO:add all functions in docstring in case if composition
+    //if (functionsToRenameWith!==null) if (functionsToRenameWith[0]!== null) this.docstring = 'Rename columns by applying '+functionsToRenameWith[0].name+' function ';
+    this.docstring ="stub";
+  };
+  RenameColumnsFunction.revive = function(data) {
+    return new RenameColumnsFunction(data.functionToRenameWith);
+  };
+  RenameColumnsFunction.prototype.generateClojure = function() {
+   // if (this.functionsToRenameWith.length === 1) {
+//console.log(this.functionsToRenameWith[0].name.toString());
+        return new jsedn.List([jsedn.sym('rename-columns'),jsedn.sym(this.functionToRenameWith.name)]);
+  //  }
+/*    else {
+        // (rename-columns (comp funct1 funct2))
+        var comp="comp ";
+        for (var i=0; i<this.functionsToRenameWith.length;++i) comp+=this.functionsToRenameWith[i].name+" ";
+        return new jsedn.List([jsedn.sym('rename-columns'),jsedn.List([jsedn.sym(comp)])]);
+   
+   
+   
+    }*/
+  };
+  this.RenameColumnsFunction = RenameColumnsFunction;
+
 
   var KeyFunctionPair = function(key, funcName) {
     this.key = key;
@@ -239,7 +317,7 @@ angular.module('grafterizerApp')
   };
 
 
-  var MakeDatasetFunction = function(columnsArray,useLazy,numberOfColumns) {
+  var MakeDatasetFunction = function(columnsArray,useLazy,numberOfColumns,moveFirstRowToHeader) {
     // array of column names
     this.name = 'make-dataset';
     this.displayName = 'make-dataset';
@@ -247,23 +325,37 @@ angular.module('grafterizerApp')
     this.columnsArray = columnsArray;
     this.useLazy = useLazy;
     this.numberOfColumns = numberOfColumns;
+    this.moveFirstRowToHeader = moveFirstRowToHeader;
     this.__type = 'MakeDatasetFunction';
+    this.docstring = "Make dataset";
+    if (moveFirstRowToHeader) this.docstring+=", create header from the first row";
   };
   MakeDatasetFunction.revive = function(data) {
-    return new MakeDatasetFunction(data.columnsArray,data.useLazy,data.numberOfColumns);
+    return new MakeDatasetFunction(data.columnsArray,data.useLazy,data.numberOfColumns,data.moveFirstRowToHeader);
   };
   MakeDatasetFunction.prototype.generateClojure = function() {
     //(make-dataset [:name :sex :age])
     var i;
     var colNamesClj = new jsedn.Vector([]);
+    var moveFirst = this.moveFirstRowToHeader?" move-first-row-to-header":"";
     if (this.useLazy === null) {
-        for (i = 0; i < this.columnsArray.length; ++i) {
+        if (this.columnsArray.length>0) { 
+            // (make-dataset [columns])
+            for (i = 0; i < this.columnsArray.length; ++i) {
           colNamesClj.val.push(new jsedn.kw(':' + this.columnsArray[i]));
         }
 
         return new jsedn.List([jsedn.sym('make-dataset'), colNamesClj]);
+        }
+
+        else 
+        // (make-dataset)    
+        {
+            return new jsedn.List([jsedn.sym('make-dataset'+moveFirst)]);
+        }
     }
     else {
+        // make dataset with lazy naming
         return new jsedn.List([jsedn.sym('make-dataset'), jsedn.sym('(into[] (take '+this.numberOfColumns.toString()+' (alphabetical-column-names)))')]);
     }
   };
@@ -279,6 +371,17 @@ angular.module('grafterizerApp')
     this.useLazy = useLazy;
     this.numberOfColumns = numberOfColumns;
     this.__type = 'ColumnsFunction';
+
+    this.docstring="Narrow dataset to "; 
+    if (useLazy) this.docstring+=numberOfColumns.toString()+" columns"
+    else {
+        var i;
+        this.docstring+=" columns:";
+        for (i = 0; i < columnsArray.length; ++i) {
+            this.docstring+=" "+columnsArray[i].toString();
+        }
+    }
+
   };
   ColumnsFunction.revive = function(data) {
     return new ColumnsFunction(data.columnsArray,data.useLazy,data.numberOfColumns);
@@ -301,6 +404,38 @@ angular.module('grafterizerApp')
 
   this.ColumnsFunction = ColumnsFunction;
   
+  var MeltFunction = function(columnsArray) {
+    // array of column names
+    this.name = 'melt';
+    this.displayName = 'melt';
+    GenericFunction.call(this);
+    this.columnsArray = columnsArray;
+    this.__type = 'MeltFunction';
+
+    this.docstring="Reshape dataset on columns: "; 
+        var i;
+        for (i = 0; i < columnsArray.length; ++i) {
+            this.docstring+=" "+columnsArray[i].toString();
+        }
+    
+
+  };
+  MeltFunction.revive = function(data) {
+    return new MeltFunction(data.columnsArray);
+  };
+  MeltFunction.prototype.generateClojure = function() {
+    var i;
+    var colNamesClj = new jsedn.Vector([]);
+        for (i = 0; i < this.columnsArray.length; ++i) {
+          colNamesClj.val.push(new jsedn.kw(':' + this.columnsArray[i]));
+        }
+
+        return new jsedn.List([jsedn.sym('melt'), colNamesClj]);
+
+  };
+
+  this.MeltFunction = MeltFunction;
+  
   
   var Pipeline = function(functions) {
     // functions that make up the pipeline
@@ -322,8 +457,16 @@ angular.module('grafterizerApp')
           functions[i] = TakeRowsFunction.revive(funct);
         }
         
+        if (funct.__type === 'AddColumnFunction') {
+          functions[i] = AddColumnFunction.revive(funct);
+        }
+        
         if (funct.__type === 'DeriveColumnFunction') {
           functions[i] = DeriveColumnFunction.revive(funct);
+        }
+
+        if (funct.__type === 'RenameColumnsFunction') {
+          functions[i] = RenameColumnsFunction.revive(funct);
         }
 
         if (funct.__type === 'MapcFunction') {
@@ -336,6 +479,10 @@ angular.module('grafterizerApp')
         
         if (funct.__type === 'ColumnsFunction') {
           functions[i] = ColumnsFunction.revive(funct);
+        }
+        
+        if (funct.__type === 'MeltFunction') {
+          functions[i] = MeltFunction.revive(funct);
         }
 
       }
@@ -737,6 +884,16 @@ angular.module('grafterizerApp')
         if (currentFunction instanceof DeriveColumnFunction) {
           availableColumnKeys.push(currentFunction.newColName);
         }
+        
+        if (currentFunction instanceof AddColumnFunction) {
+          availableColumnKeys.push(currentFunction.newColName);
+        }
+        
+        if (currentFunction instanceof MeltFunction) {
+          availableColumnKeys.push("variable");
+          availableColumnKeys.push("value");
+        }
+//TODO: clean and get new availColKeys for RenameColumns
 
         if (currentFunction instanceof MakeDatasetFunction) {
           for (var k = 0; k < currentFunction.columnsArray.length; ++k) {

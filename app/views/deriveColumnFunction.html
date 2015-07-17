@@ -1,11 +1,11 @@
 <div layout="column">
     <div>
-        <h3>Usage</h3>
-            <p class="api-doc-usage"> (derive-column dataset new-column-name from-cols) </p>
-            <p class="api-doc-usage"> (derive-column dataset new-column-name from-cols f) </p>
-            <p class="api-doc-docstring"> Adds a new column to the end of the row which is derived from column with position col-n. f should just return the cells value.
+        <md-button aria-label="Show/hide documentation" ng-click="switchShowUsage()"><i class="fa fa-angle-down"  >Show/hide documentation</i></md-button>
+            <div ng-show = "showUsage">
+            <p class="api-doc-docstring"> Adds a new column to the end of the row which is derived from existing column(s) with help of specified function.
             
-            If no f is supplied the identity function is used, which results in the specified column being cloned. </p>
+            <img src="../images/derivecolumn.png"></img>
+    </div>
     </div>
 <div>
 

@@ -1,0 +1,27 @@
+<div layout="column">
+    <div>
+        <md-button aria-label="Show/hide documentation" ng-click="switchShowUsage()"><i class="fa fa-angle-down"  >Show/hide documentation</i></md-button>
+            <div ng-show = "showUsage">
+                <p class="api-doc-docstring">Renames the columns in the dataset. Takes either a map or a function.</p> 
+            
+            <img src="../images/renamecolumns.png"></img>
+    </div>
+    </div>
+<div>
+
+            <h3>Parameters</h3>
+    <label>Function to rename with</label>
+    <md-select ng-model="function.functionToRenameWith" placeholder="{{function.functionToRenameWith ? function.functionToRenameWith.name : 'Choose a function...'}}" ng-selected="{{function.functionToRenameWith}}">
+        <md-optgroup label="Custom functions">
+            <md-option ng-repeat="customFunct in transformation.customFunctionDeclarations" value="{{customFunct.name}}">{{customFunct.name}}</md-option>
+        </md-optgroup>
+        <md-optgroup label="Prefixers">
+            <md-option  ng-repeat="prefixer in transformation.prefixers" value="{{prefixer.name}}">{{prefixer.name}}</md-option>
+        </md-optgroup>
+    </md-select>
+</div>
+
+</div>
+<!--
+ng-hide="transformation.customFunctionDeclarations"
+-->

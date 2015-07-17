@@ -2,25 +2,23 @@
 
 /**
  * @ngdoc directive
- * @name grafterizerApp.directive:dropRowsFunction
+ * @name grafterizerApp.directive:addColumnFunction
  * @description
- * # dropRowsFunction
+ * # addColumnFunction
  */
 angular.module('grafterizerApp')
-  .directive('dropRowsFunction', function(transformationDataModel) {
+  .directive('addColumnFunction', function(transformationDataModel) {
     return {
-      templateUrl: 'views/dropRowsFunction.html',
+      templateUrl: 'views/addColumnFunction.html',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
         if (!scope.function) {
-          scope.function = {
-            numberOfRows: 1
-          };
+          scope.function = new transformationDataModel.MakeDatasetFunction("","");
         }
 
         scope.$parent.generateCurrFunction = function() {
-          return new transformationDataModel.DropRowsFunction(parseInt(
-            scope.function.numberOfRows));
+          return new transformationDataModel.AddColumnFunction(
+            scope.function.newColName,scope.function.colValue);
         };
         scope.showUsage=false;
         scope.switchShowUsage=function() {

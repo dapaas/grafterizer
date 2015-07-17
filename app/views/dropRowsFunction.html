@@ -1,8 +1,10 @@
 <div layout="column">
     <div>
-        <h3>Usage</h3>
-            <p class="api-doc-usage"> (drop-rows dataset n) </p>
+        <md-button aria-label="Show/hide documentation" ng-click="switchShowUsage()"><i class="fa fa-angle-down"  >Show/hide documentation</i></md-button>
+            <div ng-show = "showUsage">
             <p class="api-doc-docstring"> Drops the first n rows from the dataset, retaining the rest </p>
+            <img  src="../images/drop-rows.png"></img>
+        </div>
         </div>
         <div>
             <h3>Parameters</h3>

@@ -22,6 +22,10 @@ angular.module('grafterizerApp')
                   scope.function.useLazy,
                   scope.function.numberOfColumns);
         };
+        scope.showUsage=false;
+        scope.switchShowUsage=function() {
+        scope.showUsage=!scope.showUsage;
+        }
       }
     };
   });

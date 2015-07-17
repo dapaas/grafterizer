@@ -22,31 +22,53 @@ angular.module('grafterizerApp')
 
         scope.availableFunctions = [
           {
+            name: 'add-column',
+            displayName: 'Add column',
+            selected: false
+          },
+          {
             name: 'columns',
+            displayName: 'Columns',
             selected: false
           },
           {
             name: 'derive-column',
+            displayName: 'Derive column',
             selected: false
           },
           {
             name: 'drop-rows',
+            displayName: 'Drop rows',
             selected: false
           },
           {
             name: 'make-dataset',
+            displayName: 'Make dataset',
             selected: false
           },
           {
             name: 'mapc',
+            displayName: 'Map columns',
+            selected: false
+          },
+          {
+            name: 'melt',
+            displayName: 'Reshape dataset',
+            selected: false
+          },
+          {
+            name: 'rename-columns',
+            displayName: 'Rename columns',
             selected: false
           },
           {
             name: 'take-rows',
+            displayName: 'Take rows',
             selected: false
           },
           {
             name: 'custom-code',
+            displayName: 'Custom code',
             selected: false
           }
         ];
