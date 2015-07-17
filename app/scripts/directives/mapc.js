@@ -20,6 +20,7 @@ angular.module('grafterizerApp')
         }
 
         scope.$parent.generateCurrFunction = function() {
+            console.log(scope.function.keyFunctionPairs[0].func.toString());
           return new transformationDataModel.MapcFunction(scope.function.keyFunctionPairs);
         };
 

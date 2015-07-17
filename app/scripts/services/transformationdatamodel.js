@@ -11,14 +11,15 @@ angular.module('grafterizerApp')
   .service('transformationDataModel', function($mdToast) {
   var _this = this;
 
-  var Prefixer = function(name, uri) {
+  var Prefixer = function(name, uri, parentPrefix) {
     this.name = name;
     this.uri = uri;
+    this.parentPrefix=parentPrefix;
     this.__type = 'Prefixer';
   };
 
   Prefixer.revive = function(data) {
-    return new Prefixer(data.name, data.uri);
+    return new Prefixer(data.name, data.uri, data.parentPrefix);
   };
 
   this.Prefixer = Prefixer;
@@ -140,7 +141,7 @@ angular.module('grafterizerApp')
     for (var i = 0; i < colsToDeriveFrom.length; ++i) {
       this.docstring+=colsToDeriveFrom[i].toString()+', ';
     }
-    if (functionToDeriveWith!== null) this.docstring+= 'with help of function '+functionToDeriveWith.toString() +'.';
+   // if (functionToDeriveWith!== null) this.docstring+= 'with help of function '+functionToDeriveWith.toString() +'.';
   };
   DeriveColumnFunction.revive = function(data) {
     return new DeriveColumnFunction(data.newColName, data.colsToDeriveFrom, data.functionToDeriveWith);
@@ -166,26 +167,27 @@ angular.module('grafterizerApp')
   this.DeriveColumnFunction = DeriveColumnFunction;
   
   //TODO: allow to have map as a parameter
-  var RenameColumnsFunction = function(functionToRenameWith) {
+  var RenameColumnsFunction = function(functionsToRenameWith) {
     GenericFunction.call(this);
     this.name = 'rename-columns';
     this.displayName = 'rename-columns';
-    var renameFun;
-   /* if (functionsToRenameWith!==null) for (var i=0; i< functionsToRenameWith.length; ++i) {
-         
-        if (functionsToRenameWith[i] !== null) {
-            if (!(functionsToRenameWith[i] instanceof CustomFunctionDeclaration) && functionsToRenameWith[i].__type ===
+    var renameFunc;
+    if (functionsToRenameWith!==null) {
+        for (var i=0; i< functionsToRenameWith.length; ++i) {
+            renameFunc = functionsToRenameWith[i]; 
+        if (renameFunc !== null) {
+            if (!(renameFunc instanceof CustomFunctionDeclaration) && renameFunc.__type ===
            'CustomFunctionDeclaration') {
-            functionsToRenameWith[i] = CustomFunctionDeclaration.revive(functionsToRenameWith[i]);
+            functionsToRenameWith[i] = CustomFunctionDeclaration.revive(renameFunc);
         }
 
-        if (!(functionsToRenameWith[i] instanceof Prefixer) && functionsToRenameWith[i].__type === 'Prefixer') {
-            functionsToRenameWith[i] = Prefixer.revive(functionsToRenameWith[i]);
+        if (!(renameFunc instanceof Prefixer) && renameFunc.__type === 'Prefixer') {
+            functionsToRenameWith[i] = Prefixer.revive(renameFunc);
         }
         }
     }
-*/
-    if (functionToRenameWith!==null)  {
+    }
+/*    if (functionToRenameWith!==null)  {
          
             if (!(functionToRenameWith instanceof CustomFunctionDeclaration) && functionToRenameWith.__type ===
            'CustomFunctionDeclaration') {
@@ -195,31 +197,49 @@ angular.module('grafterizerApp')
         if (!(functionToRenameWith instanceof Prefixer) && functionToRenameWith.__type === 'Prefixer') {
             functionToRenameWith = Prefixer.revive(functionToRenameWith);
         }
-        }
+        }*/
     
-this.functionToRenameWith = functionToRenameWith;
+    this.functionsToRenameWith = functionsToRenameWith;
     this.__type = 'RenameColumnsFunction';
     //TODO:add all functions in docstring in case if composition
-    //if (functionsToRenameWith!==null) if (functionsToRenameWith[0]!== null) this.docstring = 'Rename columns by applying '+functionsToRenameWith[0].name+' function ';
-    this.docstring ="stub";
+    this.docstring = 'Rename columns by applying ';
+    if (functionsToRenameWith!==null) 
+        for (var i=0; i< functionsToRenameWith.length; ++i) {
+            if (i === 1) this.docstring += 'composed with ';
+            renameFunc = functionsToRenameWith[i]; 
+            if (renameFunc!== null) this.docstring += renameFunc.name+' ';
+        }
+    this.docstring+="function(s).";
   };
   RenameColumnsFunction.revive = function(data) {
-    return new RenameColumnsFunction(data.functionToRenameWith);
+    return new RenameColumnsFunction(data.functionsToRenameWith);
   };
+
   RenameColumnsFunction.prototype.generateClojure = function() {
-   // if (this.functionsToRenameWith.length === 1) {
-//console.log(this.functionsToRenameWith[0].name.toString());
-        return new jsedn.List([jsedn.sym('rename-columns'),jsedn.sym(this.functionToRenameWith.name)]);
-  //  }
-/*    else {
+      var renameFunc;
+      if (this.functionsToRenameWith.length === 1) {
+        renameFunc = this.functionsToRenameWith[0];
+        return new jsedn.List([jsedn.sym('rename-columns'),jsedn.sym(renameFunc.name)]);
+    }
+    else {
         // (rename-columns (comp funct1 funct2))
         var comp="comp ";
-        for (var i=0; i<this.functionsToRenameWith.length;++i) comp+=this.functionsToRenameWith[i].name+" ";
-        return new jsedn.List([jsedn.sym('rename-columns'),jsedn.List([jsedn.sym(comp)])]);
+        
+        for (var i=0; i<this.functionsToRenameWith.length;++i) {
+       // console.log(this.functionsToRenameWith[i].name.toString());
+            renameFunc=this.functionsToRenameWith[i];
+            comp+=renameFunc.name+" ";
+        }
+        return new jsedn.List([jsedn.sym('rename-columns'), new jsedn.List([jsedn.sym(comp)])]);
    
    
    
-    }*/
+    }
+  };
+  RenameColumnsFunction.prototype.removeRenameFunction = function(index) {
+
+    this.functionsToRenameWith.splice(index, 1);
+    return true;
   };
   this.RenameColumnsFunction = RenameColumnsFunction;
 
@@ -806,14 +826,14 @@ this.functionToRenameWith = functionToRenameWith;
       }
     }
   };
-  Transformation.prototype.addPrefixer = function(name, uri) {
+  Transformation.prototype.addPrefixer = function(name, uri, parentPrefix) {
     for (var i = 0; i < this.prefixers.length; ++i) {
       if (this.prefixers[i].name === name.trim()) {
         return false;
       }
     }
 
-    this.prefixers.push(new Prefixer(name.trim(), uri.trim()));
+    this.prefixers.push(new Prefixer(name.trim(), uri.trim(),parentPrefix.trim()));
     return true;
   };
   Transformation.prototype.removePrefixer = function(name) {

@@ -13,19 +13,31 @@ angular.module('grafterizerApp')
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
         if (!scope.function) {
-          scope.function = new transformationDataModel.RenameColumnsFunction(null);
+            var renfunc = scope.$parent.transformation.findPrefixerOrCustomFunctionByName(
+scope.$parent.transformation.customFunctionDeclarations[0].name);
+          scope.function = new transformationDataModel.RenameColumnsFunction([renfunc]);
         }
 
         scope.$parent.generateCurrFunction = function() {
-          // TODO fix selected function bug
-       
-        /*    var functArray = [];
+            
+            var functArray = [];
         for (var i=0;i<scope.function.functionsToRenameWith.length;++i)
-            functArray.push(scope.$parent.transformation.findPrefixerOrCustomFunctionByName(
-              scope.function.functionsToRenameWith[i]));
+        {
+            var newrenfunc = scope.function.functionsToRenameWith[i];
+            functArray.push(scope.$parent.transformation.findPrefixerOrCustomFunctionByName(newrenfunc.toString()));
+        }
           return new transformationDataModel.RenameColumnsFunction(
-            [functArray]);*/
-return new transformationDataModel.RenameColumnsFunction(scope.$parent.transformation.findPrefixerOrCustomFunctionByName(scope.function.functionToRenameWith));
+            functArray);
+        };
+
+        scope.addRenameFunction = function() {
+            var renfunc = scope.$parent.transformation.findPrefixerOrCustomFunctionByName(
+scope.$parent.transformation.customFunctionDeclarations[0].name);
+        this.function.functionsToRenameWith.push(renfunc);
+        }; 
+
+        scope.removeRenameFunction = function(index) {
+          scope.function.removeRenameFunction(index);
         };
         scope.showUsage=false;
         scope.switchShowUsage=function() {
