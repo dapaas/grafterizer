@@ -15,7 +15,8 @@ angular.module('grafterizerApp')
         if (!scope.function) {
           var derfunc = scope.$parent.transformation.customFunctionDeclarations[0];  
           scope.function = new transformationDataModel.DeriveColumnFunction(
-            '', [], [derfunc]);
+            '', [], [derfunc],null);
+          scope.function.docstring = null;
         }
 
         scope.$parent.generateCurrFunction = function() {
@@ -29,7 +30,8 @@ angular.module('grafterizerApp')
           return new transformationDataModel.DeriveColumnFunction(
             scope.function.newColName,
             scope.function.colsToDeriveFrom,
-            functArray);
+            functArray,
+            scope.function.docstring);
         };
         scope.addDeriveFunction = function() {
             var derfunc = scope.$parent.transformation.customFunctionDeclarations[0];

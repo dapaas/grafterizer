@@ -5,6 +5,7 @@
             <p  class="api-doc-docstring"> Given a dataset and a sequence of column identifiers, narrows the dataset to just the specified columns.
             </p>
             <img  src="../images/columns.png"></img>
+            <a href="http://api.grafter.org/master/grafter.tabular.html#var-columns" target="_blank"> view source</a>
         </div>
         </div>
         <div>
@@ -23,5 +24,10 @@
         <input ng-model="function.numberOfColumns" type="number" min="1" ng-disabled="!(function.useLazy)">
     </md-input-container>
                 
+    <md-input-container flex>
+        <label>Comment</label>
+
+        <input ng-model="function.docstring" type="text" >
+    </md-input-container>
 </div>
 </div>

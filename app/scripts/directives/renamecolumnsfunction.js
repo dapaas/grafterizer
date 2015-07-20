@@ -15,7 +15,8 @@ angular.module('grafterizerApp')
         if (!scope.function) {
             var renfunc = scope.$parent.transformation.findPrefixerOrCustomFunctionByName(
 scope.$parent.transformation.customFunctionDeclarations[0].name);
-          scope.function = new transformationDataModel.RenameColumnsFunction([renfunc], [null,null]);
+          scope.function = new transformationDataModel.RenameColumnsFunction([renfunc], [null,null],null);
+          scope.function.docstring = null;
         }
 
         scope.$parent.generateCurrFunction = function() {
@@ -28,7 +29,7 @@ scope.$parent.transformation.customFunctionDeclarations[0].name);
         }
            }
            return new transformationDataModel.RenameColumnsFunction(
-            functArray, scope.function.mappings);
+            functArray, scope.function.mappings,scope.function.docstring);
            
         };
 

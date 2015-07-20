@@ -16,11 +16,12 @@ angular.module('grafterizerApp')
           var keyfuncpair = new transformationDataModel.KeyFunctionPair(
             'colName', scope.$parent.transformation.customFunctionDeclarations[0]);
 
-          scope.function = new transformationDataModel.MapcFunction([keyfuncpair]);
+          scope.function = new transformationDataModel.MapcFunction([keyfuncpair],null);
+          scope.function.docstring = null;
         }
 
         scope.$parent.generateCurrFunction = function() {
-          return new transformationDataModel.MapcFunction(scope.function.keyFunctionPairs);
+          return new transformationDataModel.MapcFunction(scope.function.keyFunctionPairs,scope.function.docstring);
         };
 
         scope.addKeyFunctionPair = function() {
