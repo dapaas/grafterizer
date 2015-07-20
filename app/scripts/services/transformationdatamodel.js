@@ -32,13 +32,14 @@ angular.module('grafterizerApp')
     }
   };
 //TODO: add docstring
-  var CustomFunctionDeclaration = function(name, clojureCode) {
+  var CustomFunctionDeclaration = function(name, clojureCode, docstring) {
     this.name = name;
     this.clojureCode = clojureCode;
+    this.docstring = docstring;
     this.__type = 'CustomFunctionDeclaration';
   };
   CustomFunctionDeclaration.revive = function(data) {
-    return new CustomFunctionDeclaration(data.name, data.clojureCode);
+    return new CustomFunctionDeclaration(data.name, data.clojureCode, data.docstring);
   };
   this.CustomFunctionDeclaration = CustomFunctionDeclaration;
 
@@ -943,7 +944,7 @@ angular.module('grafterizerApp')
 
     return false;
   };
-  Transformation.prototype.addCustomFunctionDeclaration = function(name, clojureCode) {
+  Transformation.prototype.addCustomFunctionDeclaration = function(name, clojureCode,docstring) {
     for (var i = 0; i < this.customFunctionDeclarations.length; ++i) {
       if (this.customFunctionDeclarations[i].name === name.trim()) {
         this.customFunctionDeclarations[i].clojureCode = clojureCode;
@@ -951,7 +952,7 @@ angular.module('grafterizerApp')
       }
     }
 
-    this.customFunctionDeclarations.push(new CustomFunctionDeclaration(name, clojureCode));
+    this.customFunctionDeclarations.push(new CustomFunctionDeclaration(name, clojureCode, docstring));
     return true;
   };
   Transformation.prototype.removeCustomFunctionDeclaration = function(customFunct) {

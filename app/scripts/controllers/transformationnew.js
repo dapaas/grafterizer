@@ -25,38 +25,38 @@ angular.module('grafterizerApp')
     };
 
     var customfunctions = [
-          new transformationDataModel.CustomFunctionDeclaration('integer-literal', '(defn integer-literal [s] (Integer/parseInt s))'),
-          new transformationDataModel.CustomFunctionDeclaration('transform-gender', '(def transform-gender {"f" (s "female") "m" (s "male")})'),
-          new transformationDataModel.CustomFunctionDeclaration('string-literal', '(def string-literal s)'),
-          new transformationDataModel.CustomFunctionDeclaration('boolean', ''),
-          new transformationDataModel.CustomFunctionDeclaration('count', ''),
-          new transformationDataModel.CustomFunctionDeclaration('cast', ''),
+          new transformationDataModel.CustomFunctionDeclaration('integer-literal', '(defn integer-literal [s] (Integer/parseInt s))','Coerce to integer'),
+          new transformationDataModel.CustomFunctionDeclaration('transform-gender', '(def transform-gender {"f" (s "female") "m" (s "male")})','Maps "f" to "female" and "m" to "male"'),
+          new transformationDataModel.CustomFunctionDeclaration('string-literal', '(def string-literal s)','Coerce to string'),
+          new transformationDataModel.CustomFunctionDeclaration('boolean', '','Coerce to boolean'),
+          new transformationDataModel.CustomFunctionDeclaration('count', '','Returns the number of items in the collection'),
+          new transformationDataModel.CustomFunctionDeclaration('cast', '',' Throws a ClassCastException if x is not a c, else returns x'),
           new transformationDataModel.CustomFunctionDeclaration('capitalize',
-        ''),
-          new transformationDataModel.CustomFunctionDeclaration('dec', ''),
-          new transformationDataModel.CustomFunctionDeclaration('double', ''),
-          new transformationDataModel.CustomFunctionDeclaration('first', ''),
-          new transformationDataModel.CustomFunctionDeclaration('float', ''),
-          new transformationDataModel.CustomFunctionDeclaration('inc', ''),
-          new transformationDataModel.CustomFunctionDeclaration('keyword', ''),
-          new transformationDataModel.CustomFunctionDeclaration('last', ''),
-          new transformationDataModel.CustomFunctionDeclaration('long', ''),
-          new transformationDataModel.CustomFunctionDeclaration('name', ''),
-          new transformationDataModel.CustomFunctionDeclaration('second', ''),
-          new transformationDataModel.CustomFunctionDeclaration('short', ''),
+        '','Converts first character of the string to upper-case, all other characters to lower-case.'),
+          new transformationDataModel.CustomFunctionDeclaration('dec', '','Returns a number one less than num'),
+          new transformationDataModel.CustomFunctionDeclaration('double', '','Coerce to double'),
+          new transformationDataModel.CustomFunctionDeclaration('first', '','Returns the first item in the collection'),
+          new transformationDataModel.CustomFunctionDeclaration('float', '','Coerce to float'),
+          new transformationDataModel.CustomFunctionDeclaration('inc', '','Returns a number one greater than num'),
+          new transformationDataModel.CustomFunctionDeclaration('keyword', '','Returns a Keyword with the given namespace and name.  Do not use : in the keyword strings, it will be added automatically.'),
+          new transformationDataModel.CustomFunctionDeclaration('last', '','Return the last item in the collection'),
+          new transformationDataModel.CustomFunctionDeclaration('long', '','Coerce to long'),
+          new transformationDataModel.CustomFunctionDeclaration('name', '','Returns the name String of a string, symbol or keyword'),
+          new transformationDataModel.CustomFunctionDeclaration('second', '','Returns the second item in the collection'),
+          new transformationDataModel.CustomFunctionDeclaration('short', '','Coerce to short'),
           new transformationDataModel.CustomFunctionDeclaration('join',
-        '(defn join [& strings] (clojure.string/join " " strings))'),
+        '(defn join [& strings] (clojure.string/join " " strings))','Returns a string of all elements in the collection separated by space.'),
           new transformationDataModel.CustomFunctionDeclaration('lower-case',
-        ''),
+        '','Converts string to all lower-case'),
           new transformationDataModel.CustomFunctionDeclaration('upper-case',
-        ''),
-          new transformationDataModel.CustomFunctionDeclaration('reverse', ''),
-          new transformationDataModel.CustomFunctionDeclaration('trim', ''),
+        '','Converts string to all upper-case'),
+          new transformationDataModel.CustomFunctionDeclaration('reverse', '','Returns given string with its characters reversed'),
+          new transformationDataModel.CustomFunctionDeclaration('trim', '','Removes whitespace from both ends of string'),
           new transformationDataModel.CustomFunctionDeclaration('trim-newline',
-        ''),
-          new transformationDataModel.CustomFunctionDeclaration('triml', ''),
-          new transformationDataModel.CustomFunctionDeclaration('trimr', ''),
-          new transformationDataModel.CustomFunctionDeclaration('rem', '')];
+        '','Removes all trailing newline \n or return \r characters from string'),
+          new transformationDataModel.CustomFunctionDeclaration('triml', '','Removes whitespace from the left side of string'),
+          new transformationDataModel.CustomFunctionDeclaration('trimr', '','Removes whitespace from the right side of string'),
+          new transformationDataModel.CustomFunctionDeclaration('rem', '','Returns remainder of dividing numerator by denominator')];
     customfunctions.sort(function(a, b) {
       if (a.name > b.name) {
         return 1;
@@ -68,30 +68,30 @@ angular.module('grafterizerApp')
     });
 
     var predicatefunctions = [new transformationDataModel.CustomFunctionDeclaration(
-        'empty?', ''),new transformationDataModel.CustomFunctionDeclaration(
-        'every?', ''),new transformationDataModel.CustomFunctionDeclaration(
-        'false?', ''),new transformationDataModel.CustomFunctionDeclaration(
-        'float?', ''),new transformationDataModel.CustomFunctionDeclaration(
-        'keyword?', ''),new transformationDataModel.CustomFunctionDeclaration(
-        'neg?', ''),new transformationDataModel.CustomFunctionDeclaration(
-        'nil?', ''),new transformationDataModel.CustomFunctionDeclaration(
-        'number?', ''),new transformationDataModel.CustomFunctionDeclaration(
-        'odd?', ''),new transformationDataModel.CustomFunctionDeclaration(
-        'pos?', ''),new transformationDataModel.CustomFunctionDeclaration(
-        'ratio?', ''),new transformationDataModel.CustomFunctionDeclaration(
-        'rational?', ''),new transformationDataModel.CustomFunctionDeclaration(
-        'string?', ''),new transformationDataModel.CustomFunctionDeclaration(
-        'true?', ''),new transformationDataModel.CustomFunctionDeclaration(
-        'zero?', '')];
+        'empty?', '','Returns true if given collection has no items'),new transformationDataModel.CustomFunctionDeclaration(
+        'every?', '','Returns true if first argument predicate is logical true for every x in collection, else false'),new transformationDataModel.CustomFunctionDeclaration(
+        'false?', '','Returns true if given value is the value false, false otherwise'),new transformationDataModel.CustomFunctionDeclaration(
+        'float?', '','Returns true if given value is a floating point number'),new transformationDataModel.CustomFunctionDeclaration(
+        'keyword?', '','Return true if given argument is a Keyword'),new transformationDataModel.CustomFunctionDeclaration(
+        'neg?', '','Returns true if argument is less than zero, else false'),new transformationDataModel.CustomFunctionDeclaration(
+        'nil?', '','Returns true if argument is nil, false otherwise'),new transformationDataModel.CustomFunctionDeclaration(
+        'number?', '','Returns true if argument is a Number'),new transformationDataModel.CustomFunctionDeclaration(
+        'odd?', '','Returns true if argument is odd, throws an exception if it is not an integer'),new transformationDataModel.CustomFunctionDeclaration(
+        'pos?', '','Returns true if argument is greater than zero, else false'),new transformationDataModel.CustomFunctionDeclaration(
+        'ratio?', '','Returns true if argument is a Ratio'),new transformationDataModel.CustomFunctionDeclaration(
+        'rational?', '','Returns true if argument is a rational number'),new transformationDataModel.CustomFunctionDeclaration(
+        'string?', '','Return true if argument is a String'),new transformationDataModel.CustomFunctionDeclaration(
+        'true?', '','Returns true if argument is the value true, false otherwise'),new transformationDataModel.CustomFunctionDeclaration(
+        'zero?', '','Returns true if argument is zero, else false')];
 
     var numericcustomfunctions = [new transformationDataModel.CustomFunctionDeclaration(
-        '+', ''),
+        '+', '',''),
                                     new transformationDataModel.CustomFunctionDeclaration(
-        '-', ''),
+        '-', '',''),
                                     new transformationDataModel.CustomFunctionDeclaration(
-        '*', ''),
+        '*', '',''),
                                     new transformationDataModel.CustomFunctionDeclaration(
-        '/', '')];
+        '/', '','')];
 
     var allcustomfunctions = customfunctions.concat(predicatefunctions.concat(numericcustomfunctions));
     $scope.clojure = '';

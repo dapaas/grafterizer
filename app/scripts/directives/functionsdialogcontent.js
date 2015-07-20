@@ -47,6 +47,11 @@ angular.module('grafterizerApp')
             selected: false
           },
           {
+            name: 'grep',
+            displayName: 'Filter dataset',
+            selected: false
+          },
+          {
             name: 'make-dataset',
             displayName: 'Make dataset',
             selected: false
