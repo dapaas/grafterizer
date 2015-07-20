@@ -13,18 +13,30 @@ angular.module('grafterizerApp')
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
         if (!scope.function) {
+          var derfunc = scope.$parent.transformation.customFunctionDeclarations[0];  
           scope.function = new transformationDataModel.DeriveColumnFunction(
-            '', [], null);
+            '', [], [derfunc]);
         }
 
         scope.$parent.generateCurrFunction = function() {
           // TODO fix selected function bug
-
+          var functArray = [];
+          for (var i=0;i<scope.function.functionsToDeriveWith.length;++i)
+          {
+              var newderfunc = scope.function.functionsToDeriveWith[i];
+              functArray.push(scope.$parent.transformation.findPrefixerOrCustomFunctionByName(newderfunc.toString()));
+                      }
           return new transformationDataModel.DeriveColumnFunction(
             scope.function.newColName,
             scope.function.colsToDeriveFrom,
-            scope.$parent.transformation.findPrefixerOrCustomFunctionByName(
-              scope.function.functionToDeriveWith));
+            functArray);
+        };
+        scope.addDeriveFunction = function() {
+            var derfunc = scope.$parent.transformation.customFunctionDeclarations[0];
+            this.function.functionsToDeriveWith.push(derfunc);
+        };
+        scope.removeDeriveFunction = function(index) {
+            scope.function.functionsToDeriveWith.splice(index,1);
         };
         scope.showUsage=false;
         scope.switchShowUsage=function() {

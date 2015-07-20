@@ -27,6 +27,11 @@ angular.module('grafterizerApp')
             selected: false
           },
           {
+            name: 'apply-columns',
+            displayName: 'Apply columns',
+            selected: false
+          },
+          {
             name: 'columns',
             displayName: 'Columns',
             selected: false
@@ -59,6 +64,11 @@ angular.module('grafterizerApp')
           {
             name: 'rename-columns',
             displayName: 'Rename columns',
+            selected: false
+          },
+          {
+            name: 'split',
+            displayName: 'Split column',
             selected: false
           },
           {

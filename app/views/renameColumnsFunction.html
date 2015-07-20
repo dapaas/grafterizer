@@ -7,11 +7,13 @@
             <img src="../images/renamecolumns.png"></img>
         </div>
         </div>
+        <h3 style="padding-left: 20px;">Parameters</h3>
+        <div class="whiteframedemoBasicUsage" layout="row"  style="padding-bottom: 32px;">
         <div>
-        <h3>Parameters</h3>
-<md-button class="md-raised" ng-click="addRenameFunction()" aria-label="Compose with function">Compose with function</md-button>
-<div layout="row"  ng-repeat="renameFunction in function.functionsToRenameWith track by $index ">
-    <div layout="row">
+        <md-whiteframe  class="md-whiteframe-z1" layout="column" layout-align="left ">
+            <p> Transform current column names </p>
+<div   ng-repeat="renameFunction in function.functionsToRenameWith track by $index ">
+    <div >
         <md-button class="md-primary button-tight md-default-theme" ng-click="removeRenameFunction($index)" aria-label="Remove function">
             <i class="fa fa-trash fa-lg"></i>
         </md-button>
@@ -28,6 +30,36 @@
     </div>
 
 
+</div>
+        <md-button class="md-raised" ng-click="addRenameFunction()" aria-label="Compose with function">Compose with </md-button>
+</md-whiteframe>
+</div>
+
+        <div>
+        <md-whiteframe  class="md-whiteframe-z1" layout="column" layout-align="left ">
+            <p> Map values </p>
+<div layout="row"  ng-repeat="i in getMapLength(function.mappings.length) ">
+    <div layout="row">
+        <md-button class="md-primary button-tight md-default-theme" ng-click="removeMappingPair(i)" aria-label="Remove column mapping">
+            <i class="fa fa-trash fa-lg"></i>
+        </md-button>
+        <div layout="column">
+            <md-input-container>
+            <label>Column </label>
+                <input ng-model="function.mappings[i]" type="text" required>
+            </md-input-container>
+        </div>
+        <div layout="column">
+            <md-input-container>
+            <label>New column name </label>
+                <input ng-model="function.mappings[i+1]" type="text" required>
+            </md-input-container>
+        </div>
+    </div>
+
+</div>
+<md-button class="md-raised" ng-click="addRenameMapping()" aria-label="Add mapping pair">Add mapping pair</md-button>
+</md-whiteframe>
 </div>
 </div>
 </div>

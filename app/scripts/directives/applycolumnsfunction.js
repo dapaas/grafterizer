@@ -2,25 +2,25 @@
 
 /**
  * @ngdoc directive
- * @name grafterizerApp.directive:mapc
+ * @name grafterizerApp.directive:applyColumnsFunction
  * @description
- * # mapc
+ * # applyColumnsFunction
  */
 angular.module('grafterizerApp')
-  .directive('mapcFunction', function(transformationDataModel) {
+  .directive('applyColumnsFunction', function(transformationDataModel) {
     return {
-      templateUrl: 'views/mapcfunction.html',
+      templateUrl: 'views/applycolumnsfunction.html',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
         if (!scope.function) {
           var keyfuncpair = new transformationDataModel.KeyFunctionPair(
             'colName', scope.$parent.transformation.customFunctionDeclarations[0]);
 
-          scope.function = new transformationDataModel.MapcFunction([keyfuncpair]);
+          scope.function = new transformationDataModel.ApplyColumnsFunction([keyfuncpair]);
         }
 
         scope.$parent.generateCurrFunction = function() {
-          return new transformationDataModel.MapcFunction(scope.function.keyFunctionPairs);
+          return new transformationDataModel.ApplyColumnsFunction(scope.function.keyFunctionPairs);
         };
 
         scope.addKeyFunctionPair = function() {
