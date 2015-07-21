@@ -121,6 +121,69 @@ angular.module('grafterizerApp')
   };
   this.AddColumnFunction = AddColumnFunction;
   
+  var GrepFunction = function(colsToFilter, functionsToFilterWith, filterText, docstring) {
+    GenericFunction.call(this);
+    this.colsToFilter = colsToFilter;
+    this.name = 'grep';
+    this.displayName = 'grep';
+    var filterFunc;
+    if (functionsToFilterWith !== null) {
+        for (var i=0; i< functionsToFilterWith.length; ++i) {
+            filterFunc = functionsToFilterWith[i];
+            if (filterFunc !== null) {
+                if (!(filterFunc instanceof CustomFunctionDeclaration) && filterFunc.__type ===
+          'CustomFunctionDeclaration') {
+               functionsToFilterWith[i] = CustomFunctionDeclaration.revive(filterFunc);
+                }
+
+                if (!(filterFunc instanceof Prefixer) && filterFunc.__type === 'Prefixer') {
+                    functionsToFilterWith[i] = Prefixer.revive(filterFunc);
+                 }
+            }
+        }
+    }
+    this.functionsToFilterWith = functionsToFilterWith;
+    this.__type = 'GrepFunction';
+    if (!docstring) 
+        this.docstring = 'Filter dataset';
+        
+    
+    else this.docstring = docstring;
+    this.filterText = filterText;
+  };
+  GrepFunction.revive = function(data) {
+    return new GrepFunction(data.colsToFilter, data.functionsToFilterWith, data.filterText, data.docstring);
+  };
+  GrepFunction.prototype.generateClojure = function() {
+    var colsToFilter = new jsedn.Vector([]);
+    var flag = false;
+    var filterFunc;
+    if (this.colsToFilter.length>0) 
+        for (var i = 0; i < this.colsToFilter.length; ++i) {
+            colsToFilter.val.push(new jsedn.kw(':' + this.colsToFilter[i]));
+      flag = true;
+    }
+
+    var values = [jsedn.sym('grep')];
+
+    if (!this.filterText) {
+    if (this.functionsToFilterWith.length === 1) {
+      values.push(jsedn.sym(this.functionsToFilterWith[0].name));
+    }
+    else {
+        var comp = [jsedn.sym('comp')];
+        for (var i=0; i< this.functionsToFilterWith.length; ++i) {
+            filterFunc = this.functionsToFilterWith[i];
+            comp.push(jsedn.sym(filterFunc.name));
+        }
+        values.push(new jsedn.List(comp));
+    }
+    }
+    else values.push(this.filterText);
+    if (this.colsToFilter.length>0) values.push(colsToFilter);
+    return new jsedn.List(values);
+  };
+  this.GrepFunction = GrepFunction;
   
   
   var DeriveColumnFunction = function(newColName, colsToDeriveFrom, functionsToDeriveWith,docstring) {

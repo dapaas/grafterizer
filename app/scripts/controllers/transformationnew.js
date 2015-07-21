@@ -27,6 +27,7 @@ angular.module('grafterizerApp')
     var customfunctions = [
           new transformationDataModel.CustomFunctionDeclaration('integer-literal', '(defn integer-literal [s] (Integer/parseInt s))','Coerce to integer'),
           new transformationDataModel.CustomFunctionDeclaration('transform-gender', '(def transform-gender {"f" (s "female") "m" (s "male")})','Maps "f" to "female" and "m" to "male"'),
+          new transformationDataModel.CustomFunctionDeclaration('stringToNumeric', '(defn stringToNumeric    [x] (if (= "" x) nil  (if (.contains x ".") (Double/parseDouble x)(Integer/parseInt x))))','Convert string to numeric'),
           new transformationDataModel.CustomFunctionDeclaration('string-literal', '(def string-literal s)','Coerce to string'),
           new transformationDataModel.CustomFunctionDeclaration('boolean', '','Coerce to boolean'),
           new transformationDataModel.CustomFunctionDeclaration('count', '','Returns the number of items in the collection'),
