@@ -12,11 +12,12 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
     $scope,
     $http,
     $mdDialog,
-    $timeout,
     $log,
     transformationDataModel,
     leObject,
     $rootScope) {
+
+    var connection = leObject.serveraddress;
 
     var object = leObject.object;
 
@@ -30,7 +31,8 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
         name: '',
         namespace: '',
         classes: [],
-        properties: []
+        properties: [],
+        fromServer: false
     };
 
     var lowercaseTemplate = {
@@ -39,16 +41,22 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
     }
 
     $scope.showSearchDialog = true;
-    $scope.dragProcess = false;
-    $scope.showProgress = false;
     $scope.showManageDialog = false;
     $scope.showAddDialog = false;
+    $scope.showProgress = false;
+
+    //search dialog
     $scope.showSearchResult  = false;
     $scope.showSearchEmptyResult = false;
-    $scope.showEmptySearchResult = false;
+
+    //vocabulary edit dialog
     $scope.showProgressCircular = false;
+
+    //add vocabulary dialog
     $scope.showSearchPagination = false;
+    $scope.showVocabularyPagination = false;
     $scope.namespaceInputDisable = false;
+    $scope.dragProcess = false;
 
     if (!$scope.property) {
         $scope.property = new transformationDataModel.Property('', '', []);
@@ -77,6 +85,12 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
         return Math.ceil($scope.items.length / $scope.pageSize);
     };
 
+    $scope.vocabcurrentPage = 0;
+    $scope.vocabpageSize = 5;
+    $scope.vocabnumberOfPages = function() {
+        return Math.ceil($scope.VocabItems.length / $scope.vocabpageSize);
+    };
+
     $scope.search = function(Para) {
         if (Para === undefined) {
             return;
@@ -86,8 +100,7 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
         $scope.items = [];
         //get search result from server
         $http.get(
-          //'http://localhost:8080/ManageVocabulary/api/vocabulary/search/' +
-            'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/search/' +
+          connection+ 'search/' +
         Para).success(
         function(response) {
             for (var i = response.propertyResult.length - 1; i >= 0; i--) {
@@ -120,13 +133,6 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
         window.sessionStorage.getItem('localVocabulary'));
 
         for (var i = localVocabulary.length - 1; i >= 0; i--) {
-            /*var classList = localVocabulary[i].classes;
-            for( var item = classList.length - 1; item >= 0; item-- ){
-                if( classList[item].indexOf(Para) != -1 ) {
-                    $scope.items.push(classList[item].value);
-                }
-            }
-            */
 
             var propertyList = localVocabulary[i].properties;
             if (propertyList != null){
@@ -139,7 +145,6 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
         }
 
         $scope.currentPage = 0;
-
     };
 
     //show current saved vocabulary and operations
@@ -160,26 +165,25 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
         $scope.showProgressCircular = true;
 
         //show server vocabulary
-        $scope.VocabItemsServer = [];
         $http.get(
-          //'http://localhost:8080/ManageVocabulary/api/vocabulary/getAll'
-            'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/getAll'
+          connection + 'getAll'
         ).success(
             function(response) {
-              for (var i = response.result.length - 1; i >= 0; i--) {
-                  vocabItemTemplate = new Object();
-                  vocabItemTemplate.name = response.result[i].name;
-                  vocabItemTemplate.namespace = response.result[i].namespace;
+                for (var i = response.result.length - 1; i >= 0; i--) {
+                    vocabItemTemplate = new Object();
+                    vocabItemTemplate.name = response.result[i].name;
+                    vocabItemTemplate.namespace = response.result[i].namespace;
+                    vocabItemTemplate.fromServer = true;
 
-                  $scope.VocabItemsServer.push(vocabItemTemplate);
+                    $scope.VocabItems.push(vocabItemTemplate);
 
-                  if ($scope.VocabItemsServer.length + $scope.VocabItems.length> $scope.pageSize){
-                      $scope.showVocabularyPagination = true;
-                  }
-                  else{
-                      $scope.showVocabularyPagination = false;
-                  }
-              }
+                    if ($scope.VocabItems.length > $scope.pageSize){
+                        $scope.showVocabularyPagination = true;
+                    }
+                    else{
+                        $scope.showVocabularyPagination = false;
+                    }
+                }
               $scope.showProgressCircular = false;
             }).error(function(data, status, headers, config) {
             console.log('error /api/vocabulary/getAll');
@@ -209,6 +213,9 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
         $scope.vocabName = null;
         $scope.vocabNamespace = null;
 
+        $scope.localPath = false;
+        $scope.remotePath = false;
+
         // if namespace is not null, then we are editing vocabulary,
         if (name != undefined){
             $scope.vocabName = name;
@@ -217,9 +224,11 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
         if (namespace != undefined && namespace != "") {
             $scope.vocabNamespace = namespace;
             $scope.namespaceInputDisable = true;
+            $scope.addorEdit = "Edit";
         }
         else{
             $scope.namespaceInputDisable = false;
+            $scope.addorEdit = "Add";
         }
     };
 
@@ -233,14 +242,11 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
             }
         }
 
-        //delete from GUI
-        var VocabList = [];
-        for (var i = localVocabulary.length - 1; i >= 0; i--) {
-            vocabItemTemplate.name = localVocabulary[i].name;
-            vocabItemTemplate.namespace = localVocabulary[i].namespace;
-            VocabList.push(vocabItemTemplate);
+        for (var i = $scope.VocabItems.length - 1; i >= 0; i--) {
+            if ($scope.VocabItems[i].namespace === vocabNamespace){
+                $scope.VocabItems.splice(i, 1);
+            }
         }
-        $scope.VocabItems = VocabList;
 
         window.sessionStorage.setItem('localVocabulary', JSON.stringify(localVocabulary));
     };
@@ -253,7 +259,9 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
     //delete vocabulary from server
     $scope.deleteItemFromServer = function(name, vocabNamespace) {
 
-          $http.post('http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/delete/', {name: name, namespace: vocabNamespace}).success(function(response){
+          $http.post(
+            connection + 'delete/',
+            {name: name, namespace: vocabNamespace}).success(function(response){
           if(response.http_code == '200'){
             for (var i = VocabularCollection.length - 1; i >= 0; i--) {
               if (VocabularCollection[i].name === name) {
@@ -270,16 +278,16 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
     //add vocabulary to server
     $scope.addVocabtoServer = function(vocabName, vocabNamespace, vocabLoc) {
         $http.post(
-          //'http://localhost:8080/ManageVocabulary/api/vocabulary/add'
-          'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/add'
+          connection + 'add'
           , {
-          name: vocabName,
-          namespace: vocabNamespace,
-          path: vocabLoc
+            name: vocabName,
+            namespace: vocabNamespace,
+            path: vocabLoc,
+            data: object.data
         }).success(function(response) {
-          $scope.switchToManageDialog();
+            $scope.switchToManageDialog();
         }).error(function(data, status, headers, config) {
-          console.log('error', data);
+            console.log('error', data);
         });
     };
 
@@ -305,6 +313,7 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
 
                 vocabItemTemplate.name = vocabName;
                 vocabItemTemplate.namespace = vocabNamespace;
+                vocabItemTemplate.fromServer = false;
 
                 localVocabulary.push(vocabItemTemplate);
                 $rootScope.transformation.rdfVocabs.push(new transformationDataModel.RDFVocabulary(vocabName, vocabNamespace, [], []));
@@ -317,19 +326,22 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
             return;
         }
 
+        var isLocalfile = false;
+
         if(vocabLoc === undefined || vocabLoc === ""){
             vocabLoc = object.filename;
+            isLocalfile = true;
         }
 
         $scope.showProgress = true;
         $http.post(
-          //'http://localhost:8080/ManageVocabulary/api/vocabulary/getClassAndPropertyFromVocabulary'
-            'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/getClassAndPropertyFromVocabulary'
+          connection + 'getClassAndPropertyFromVocabulary'
             , {
                 name: vocabName,
                 namespace: vocabNamespace,
                 path: vocabLoc,
-                data: object.data
+                data: object.data,
+                islocal: isLocalfile
             }).success(function(response) {
                 //add vocabulary name, a list of classes, a list of properties in local storage
                 var localVocabulary = JSON.parse(window.sessionStorage.getItem('localVocabulary'));
@@ -372,6 +384,7 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
                     vocabItemTemplate.namespace = vocabNamespace;
                     vocabItemTemplate.classes = classArray;
                     vocabItemTemplate.properties = propertyArray;
+                    vocabItemTemplate.fromServer = false;
 
                     localVocabulary.push(vocabItemTemplate);
                 }
