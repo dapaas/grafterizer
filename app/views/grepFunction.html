@@ -19,16 +19,36 @@
         </md-chip-template>
     </md-chips>
     <br>
-
+        <div class="whiteframedemoBasicUsage" layout="column"  style="padding-bottom: 32px;">
+        <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">
+    <div layout="row">
+        <div>
     <md-input-container flex>
         <label>Text to match</label>
-        <input ng-model="function.filterText" type="text" required>
+        <input ng-model="function.filterText" type="text" >
     </md-input-container>
-
+        </div>
+        <div >
+    <md-checkbox  ng-model="function.ignoreCase" aria-label="ignore case">
+    ignore case
+    </md-checkbox>
+        </div>
+    </div>
+</md-whiteframe>
+        <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">
+        <label>Regular expression</label>
+        <input ng-model="function.filterRegex" type="text" > 
+        <md-button class="md-primary button-tight md-default-theme" ng-click="showRegexTutorial()" aria-label="Show tutorial" >
+            <i class="fa fa-question-circle fa-lg"></i>
+        </md-button>
+</md-whiteframe>
+        <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">
+    <br>
+    <!--TODO: first function - only predicates --> 
     <label>Function to filter with</label>
 <div   ng-repeat="filterFunction in function.functionsToFilterWith track by $index ">
     <div >
-        <md-button class="md-primary button-tight md-default-theme" ng-click="removeFilterFunction($index)" aria-label="Remove function">
+        <md-button class="md-primary button-tight md-default-theme" ng-click="removeFilterFunction($index)" aria-label="Remove function" ng-disabled="function.functionsToFilterWith.length===1">
             <i class="fa fa-trash fa-lg"></i>
         </md-button>
         <md-input-container> 
@@ -46,7 +66,8 @@
 
 </div>
         <md-button class="md-raised" ng-click="addFilterFunction()" aria-label="Compose with function">Compose with </md-button>
-    <md-input-container flex>
+</md-whiteframe>
+</div>    <md-input-container flex>
         <label>Comment</label>
 
         <input ng-model="function.docstring" type="text" >

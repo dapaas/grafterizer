@@ -10,12 +10,16 @@
         </div>
         <div>
         <h3>Parameters</h3>
+        <div class="whiteframedemoBasicUsage" layout="column"  style="padding-bottom: 32px;">
+        <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">
         <label>Specify column names</label>
     <md-chips ng-model="function.columnsArray" readonly="ctrl.readonly" ng-disabled="function.useLazy">
         <md-chip-template>
             <strong>{{$chip}}</strong>
         </md-chip-template>
     </md-chips>
+</md-whiteframe>
+        <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">
     <md-checkbox ng-model="function.useLazy" aria-label="or specify number of columns to fetch">
     ...or spesify number of columns to fetch
     </md-checkbox>
@@ -24,6 +28,8 @@
         <input ng-model="function.numberOfColumns" type="number" min="1" ng-disabled="!(function.useLazy)">
     </md-input-container>
                 
+</md-whiteframe>
+</div>
     <md-input-container flex>
         <label>Comment</label>
 

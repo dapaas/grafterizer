@@ -25,7 +25,9 @@ angular.module('grafterizerApp')
     };
 
     var customfunctions = [
+          new transformationDataModel.CustomFunctionDeclaration('organize-date', '(defn organize-date "Transform date dd/mm/yyyy ~> yyyy-mm-dd" [date] (when (seq date)  (let [[d m y] (clojure.string/split date  (read-string "#\\"/\\""))]  (apply str (interpose "-" [y m d])))))','Transform date dd/mm/yyyy ~> yyyy-mm-dd'),
           new transformationDataModel.CustomFunctionDeclaration('integer-literal', '(defn integer-literal [s] (Integer/parseInt s))','Coerce to integer'),
+          new transformationDataModel.CustomFunctionDeclaration('fill-when', '','Takes a sequence of values and copies a value through the sequence depending on the supplied predicate function'),
           new transformationDataModel.CustomFunctionDeclaration('transform-gender', '(def transform-gender {"f" (s "female") "m" (s "male")})','Maps "f" to "female" and "m" to "male"'),
           new transformationDataModel.CustomFunctionDeclaration('stringToNumeric', '(defn stringToNumeric    [x] (if (= "" x) nil  (if (.contains x ".") (Double/parseDouble x)(Integer/parseInt x))))','Convert string to numeric'),
           new transformationDataModel.CustomFunctionDeclaration('string-literal', '(def string-literal s)','Coerce to string'),

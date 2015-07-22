@@ -26,7 +26,7 @@
     <label>Function to derive with</label>
 <div   ng-repeat="deriveFunction in function.functionsToDeriveWith track by $index ">
     <div >
-        <md-button class="md-primary button-tight md-default-theme" ng-click="removeDeriveFunction($index)" aria-label="Remove function">
+        <md-button class="md-primary button-tight md-default-theme" ng-disabled="function.functionsToDeriveWith.length === 1" ng-click="removeDeriveFunction($index)" aria-label="Remove function">
             <i class="fa fa-trash fa-lg"></i>
         </md-button>
         <md-input-container> 

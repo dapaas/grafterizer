@@ -15,22 +15,24 @@ angular.module('grafterizerApp')
         if (!scope.function) {
           var filtfunc = scope.$parent.transformation.customFunctionDeclarations[0];  
           scope.function = new transformationDataModel.GrepFunction(
-            [],[filtfunc],null,null);
+            [],[filtfunc],null,null,null,null);
           scope.function.docstring = null;
         }
 
         scope.$parent.generateCurrFunction = function() {
           // TODO fix selected function bug
           var functArray = [];
-          for (var i=0;i<scope.function.functionsToFilterWith.length;++i)
+          if (scope.function.functionsToFilterWith)for (var i=0;i<scope.function.functionsToFilterWith.length;++i)
           {
               var newfiltfunc = scope.function.functionsToFilterWith[i];
-              functArray.push(scope.$parent.transformation.findPrefixerOrCustomFunctionByName(newfiltfunc.toString()));
+              if (newfiltfunc) functArray.push(scope.$parent.transformation.findPrefixerOrCustomFunctionByName(newfiltfunc.toString()));
                       }
           return new transformationDataModel.GrepFunction(
             scope.function.colsToFilter,
             functArray,
             scope.function.filterText,
+            scope.function.filterRegex,
+            scope.function.ignoreCase,
             scope.function.docstring);
         };
         scope.addFilterFunction = function() {

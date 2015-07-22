@@ -15,13 +15,13 @@
             <p> Transform current column names </p>
 <div   ng-repeat="renameFunction in function.functionsToRenameWith track by $index ">
     <div >
-        <md-button class="md-primary button-tight md-default-theme" ng-click="removeRenameFunction($index)" aria-label="Remove function">
+        <md-button class="md-primary button-tight md-default-theme" ng-click="removeRenameFunction($index)" ng-disabled="function.functionsToRenameWith.length === 1" aria-label="Remove function">
             <i class="fa fa-trash fa-lg"></i>
         </md-button>
         <md-input-container> 
         <md-select ng-model="function.functionsToRenameWith[$index]" placeholder="{{function.functionsToRenameWith[$index] ? function.functionsToRenameWith[$index].name : 'Choose a function...'}}" ng-selected="{{renameFunction}}">
                     <md-optgroup label="Custom functions">
-                        <md-option ng-repeat="customFunct in transformation.customFunctionDeclarations " value="{{customFunct.name}}">{{customFunct.name}}</md-option>
+                    <md-option ng-repeat="customFunct in transformation.customFunctionDeclarations " title="{{customFunct.docstring}}" value="{{customFunct.name}}">{{customFunct.name}}</md-option>
                     </md-optgroup>
                     <md-optgroup label="Prefixers">
                         <md-option  ng-repeat="prefixer in transformation.prefixers " value="{{prefixer.name}}">{{prefixer.name}}</md-option>
@@ -40,8 +40,8 @@
         <md-whiteframe  class="md-whiteframe-z1" layout="column" layout-align="left ">
             <p> Map values </p>
 <div layout="row"  ng-repeat="i in getMapLength(function.mappings.length) ">
-    <div layout="row">
-        <md-button class="md-primary button-tight md-default-theme" ng-click="removeMappingPair(i)" aria-label="Remove column mapping">
+    <div layout="row"> 
+        <md-button class="md-primary button-tight md-default-theme" ng-disabled="function.mappings.length === 2" ng-click="removeMappingPair(i)" aria-label="Remove column mapping">
             <i class="fa fa-trash fa-lg"></i>
         </md-button>
         <div layout="column">

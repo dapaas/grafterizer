@@ -31,7 +31,6 @@ angular.module('grafterizerApp')
       };
     }
   };
-//TODO: add docstring
   var CustomFunctionDeclaration = function(name, clojureCode, docstring) {
     this.name = name;
     this.clojureCode = clojureCode;
@@ -121,11 +120,13 @@ angular.module('grafterizerApp')
   };
   this.AddColumnFunction = AddColumnFunction;
   
-  var GrepFunction = function(colsToFilter, functionsToFilterWith, filterText, docstring) {
+  var GrepFunction = function(colsToFilter, functionsToFilterWith, filterText, filterRegex, ignoreCase, docstring) {
     GenericFunction.call(this);
     this.colsToFilter = colsToFilter;
     this.name = 'grep';
     this.displayName = 'grep';
+    this.filterRegex=filterRegex;
+    this.ignoreCase=ignoreCase;
     var filterFunc;
     if (functionsToFilterWith !== null) {
         for (var i=0; i< functionsToFilterWith.length; ++i) {
@@ -152,7 +153,7 @@ angular.module('grafterizerApp')
     this.filterText = filterText;
   };
   GrepFunction.revive = function(data) {
-    return new GrepFunction(data.colsToFilter, data.functionsToFilterWith, data.filterText, data.docstring);
+    return new GrepFunction(data.colsToFilter, data.functionsToFilterWith, data.filterText, data.filterRegex, data.ignoreCase, data.docstring);
   };
   GrepFunction.prototype.generateClojure = function() {
     var colsToFilter = new jsedn.Vector([]);
@@ -165,22 +166,39 @@ angular.module('grafterizerApp')
     }
 
     var values = [jsedn.sym('grep')];
+    var opt = this.filterText?"txt":(this.filterRegex?"regex":"funs");
+   
+    switch (opt){
+        
+        case ("txt"): 
+            values.push(this.filterText);
+            break;
+        
+        case ("regex"):
+            var regexParsed = '#\"' + this.filterRegex + '\"';
+            values.push(new jsedn.List([jsedn.sym("read-string"),regexParsed]));
+            break;
+        
+        case ("funs"):
+            if (this.functionsToFilterWith.length === 1) {
+                values.push(jsedn.sym(this.functionsToFilterWith[0].name));
+            }
+            else {
+                var comp = [jsedn.sym('comp')];
+                for (var i=0; i< this.functionsToFilterWith.length; ++i) {
+                filterFunc = this.functionsToFilterWith[i];
+                comp.push(jsedn.sym(filterFunc.name));
+                }
+                values.push(new jsedn.List(comp));
+            }
+            break;
 
-    if (!this.filterText) {
-    if (this.functionsToFilterWith.length === 1) {
-      values.push(jsedn.sym(this.functionsToFilterWith[0].name));
+        default:
+            console.log("Error in defining  grep option");
+            break;
     }
-    else {
-        var comp = [jsedn.sym('comp')];
-        for (var i=0; i< this.functionsToFilterWith.length; ++i) {
-            filterFunc = this.functionsToFilterWith[i];
-            comp.push(jsedn.sym(filterFunc.name));
-        }
-        values.push(new jsedn.List(comp));
-    }
-    }
-    else values.push(this.filterText);
     if (this.colsToFilter.length>0) values.push(colsToFilter);
+    
     return new jsedn.List(values);
   };
   this.GrepFunction = GrepFunction;
