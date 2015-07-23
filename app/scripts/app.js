@@ -148,7 +148,7 @@ angular
           }
         },
         ncyBreadcrumb: {
-          label: 'Preview'
+          label: '{{(selectedDistribution || "Preview")|beautifyUri}}'
         }
       })
       .state('datasets', {
