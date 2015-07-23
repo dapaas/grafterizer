@@ -18,6 +18,8 @@ angular.module('grafterizerApp')
     generateClojure,
     $mdToast,
     $mdDialog) {
+
+    $scope.livePreview = true;
     
     // TODO IT DOES WORK
     $scope.$parent.showPreview = true;
@@ -101,7 +103,7 @@ angular.module('grafterizerApp')
     }, 1000);
 
     $scope.$watch('transformation', function() {
-      if ($scope.transformation) {
+      if ($scope.livePreview && $scope.transformation) {
         throttlePreview();
         fileSaved = false;
       }

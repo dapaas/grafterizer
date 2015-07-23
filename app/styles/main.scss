@@ -704,3 +704,13 @@ graph-mapping div {
 .sin-dark-background-fix {
     background-color:rgb(39, 40, 34);
 }
+
+preview-table.with-bottom-switch {
+  bottom: 44px;
+}
+
+.live-preview-switch {
+    position: absolute;
+  bottom: 5px;
+  left: 20px;
+}
