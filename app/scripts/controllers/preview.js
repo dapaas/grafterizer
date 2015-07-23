@@ -18,6 +18,9 @@ angular.module('grafterizerApp')
     generateClojure,
     $mdToast,
     $mdDialog) {
+
+    $scope.livePreview = true;
+    $scope.selectedTabIndex = 2;
     
     // TODO IT DOES WORK
     $scope.$parent.showPreview = true;
@@ -53,6 +56,10 @@ angular.module('grafterizerApp')
 
     $scope.selectedDistribution = $stateParams.distribution;
 
+    if ($scope.selectedDistribution) {
+      $scope.selectedTabIndex = 0;
+    }
+
     var previewTransformation = function(redirect) {
       var clojure = generateClojure.fromTransformation($scope.$parent.transformation);
       PipeService.preview($scope.selectedDistribution, clojure)
@@ -61,7 +68,7 @@ angular.module('grafterizerApp')
               $scope.data = data;
               if (redirect) {
                 $timeout(function() {
-                  $scope.selectedTabIndex = 2;
+                  $scope.selectedTabIndex = 0;
                 });
               }
 
@@ -76,9 +83,11 @@ angular.module('grafterizerApp')
                   $scope.graftwerkException = data.raw;
                 }
 
-                // $scope.data = data;
+                // Delete the outdated data
+                $scope.data = null;
+
                 $timeout(function() {
-                  $scope.selectedTabIndex = 2;
+                  $scope.selectedTabIndex = 0;
                 });
               } else {
                 delete $scope.graftwerkException;
@@ -101,7 +110,7 @@ angular.module('grafterizerApp')
     }, 1000);
 
     $scope.$watch('transformation', function() {
-      if ($scope.transformation) {
+      if ($scope.livePreview && $scope.transformation) {
         throttlePreview();
         fileSaved = false;
       }
@@ -116,6 +125,7 @@ angular.module('grafterizerApp')
     $scope.$watch('selectedDistribution', function() {
       if ($scope.selectedDistribution) {
         delete $scope.originalData;
+        delete $scope.data;
         previewTransformation(true);
       }
     });
@@ -130,10 +140,6 @@ angular.module('grafterizerApp')
     };
 
     var showDownloadButton = function() {
-      if (!fileSaved) {
-        return;
-      }
-
       var distribution = $scope.selectedDistribution;
       var transformation = $scope.$parent.id;
       var downloadLink = PipeService.computeTuplesHref(
@@ -142,6 +148,10 @@ angular.module('grafterizerApp')
       $rootScope.$emit('addAction', {
         name: 'download',
         callback: function() {
+          if ($rootScope.actions && $rootScope.actions.save) {
+            // Save but without a preview
+            $rootScope.actions.save(true);
+          }
 
           var scopeDialog = $scope.$new(false);
           scopeDialog.downloadLink = downloadLink;

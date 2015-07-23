@@ -92,13 +92,13 @@ angular.module('grafterizerApp')
         };
 
         // First we need to check if we have a preview dataset
-        ontotextAPI.searchDataset('Previewed files').success(function(data) {
+        ontotextAPI.searchDataset('Previewed datasets').success(function(data) {
           if (!data || !data['dcat:record'] || data['dcat:record'].length === 0) {
             // we need to create a new one
             ontotextAPI.newDataset({
               '@context': ontotextAPI.getContextDeclaration(),
               '@type': 'dcat:Dataset',
-              'dct:title': 'Previewed files',
+              'dct:title': 'Previewed datasets',
               'dct:description': 'Dataset containing the previewed files from Grafterizer',
               'dcat:public': 'false'
             })
@@ -114,7 +114,7 @@ angular.module('grafterizerApp')
     });
 
     $rootScope.actions = {
-      save: function() {
+      save: function(noPreviewRequest) {
         var update = angular.copy($scope.document);
         update['dct:title'] = update.title;
         update['dct:description'] = update.description;
@@ -144,7 +144,9 @@ angular.module('grafterizerApp')
 
         ontotextAPI.updateTransformation(update, clojure, $scope.transformation)
           .success(function() {
-            $scope.$broadcast('preview-request');
+            if (!noPreviewRequest) {
+              $scope.$broadcast('preview-request');
+            }
           });
       },
 

@@ -1,12 +1,19 @@
 <md-dialog aria-label='Choose download mode' class="sin-function-dialog">
+    <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>Process your data</h2>
+    </div>
+  </md-toolbar>
     <md-dialog-content class="sticky-container">
 
         <div flex layout="row" class="md-padding" layout-align="center center">
-            <md-button class="md-raised md-primary sin-button-padding" aria-label="Download N-triples" ng-click="download()">
-                DOWNLOAD LOCALLY
-            </md-button>
             <md-button class="md-raised md-primary sin-button-padding" aria-label="Download N-triples" ng-click="save()">
-                SAVE DISTRIBUTION
+                <i class="fa fa-large fa-cloud-upload"></i>
+                save online
+            </md-button>
+            <md-button class="md-raised md-primary sin-button-padding" aria-label="Download N-triples" ng-click="download()">
+                <i class="fa fa-large fa-cloud-download"></i>
+                download
             </md-button>
         </div>
     </md-dialog-content>

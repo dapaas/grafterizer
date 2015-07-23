@@ -330,7 +330,7 @@ md-tab-content .CodeMirror {
 
 .pipeline-button {
     min-width: 9em;
-    margin-left: 50px;
+    margin-left: 40px;
     // transition: min-width 0.66s ease;
 }
 
@@ -643,10 +643,20 @@ graph-mapping div {
     functions-dialog-content > div,
     .content-stuff {
         height:500px;
-        max-height:90%;
+        // max-height:90%;
     }
 }
 
+@media (max-height: 710px) {
+
+.sin-function-dialog {
+    functions-dialog-content > div,
+    .content-stuff {
+        height:auto;
+        // max-height:90%;
+    }
+}
+}
 .sin-dapaas-background {
     // background: url(../images/background.png) no-repeat;
     // background-position: right 20px bottom 20px;
@@ -688,4 +698,19 @@ graph-mapping div {
 .whiteframedemoBasicUsage md-whiteframe {
       background: #fff;
         margin: 20px;
-          padding: 20px; }
+          padding: 20px;
+}
+
+.sin-dark-background-fix {
+    background-color:rgb(39, 40, 34);
+}
+
+preview-table.with-bottom-switch {
+  bottom: 44px;
+}
+
+.live-preview-switch {
+    position: absolute;
+  bottom: 5px;
+  left: 20px;
+}

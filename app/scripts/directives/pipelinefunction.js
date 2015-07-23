@@ -9,7 +9,7 @@
 angular.module('grafterizerApp')
   .directive('pipelineFunction', function($mdDialog) {
     return {
-        template: '<p class="pipeline-description">{{(function.docstring.length<$scope.showChar)?function.docstring:function.docstring.substr(0,$scope.showChar)+"...&nbsp;&nbsp; more"}}</p><div flex layout="row" layout-align="center"><md-button class="pipeline-button md-raised" aria-label="Edit pipeline step" ng-click="editFunction()">{{function.displayName}}</md-button></div>',
+      templateUrl: 'views/pipelinefunction.html',
       restrict: 'E',
       scope: {
         function: '=',
