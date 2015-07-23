@@ -1,0 +1,8 @@
+<div flex layout="row" layout-align="center">
+    <md-button class="pipeline-button md-raised" aria-label="Edit pipeline step" ng-click="editFunction()">
+        {{function.displayName}}
+        <md-tooltip>
+            {{(function.docstring.length<$scope.showChar)?function.docstring:function.docstring.substr(0,$scope.showChar)+"...&nbsp;&nbsp; more"}}
+        </md-tooltip>
+    </md-button>
+</div>
