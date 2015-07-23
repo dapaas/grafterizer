@@ -12,6 +12,5 @@ angular.module('grafterizerApp')
     $scope.fileName = {
       value: ''
     };
-    $scope.image = null;
     $scope.fileName.value = leObject.object.filename;
   });

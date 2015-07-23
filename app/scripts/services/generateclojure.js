@@ -252,9 +252,8 @@ angular.module('grafterizerApp')
   function constructPipeline() {
     var readDatasetFunct = new jsedn.List([
       new jsedn.sym('read-dataset'),
-      new jsedn.sym('data-file'),
-      new jsedn.kw(':format'),
-      new jsedn.kw(':csv')]);
+      new jsedn.sym('data-file')
+      ]);
 
     pipeline = null;
 

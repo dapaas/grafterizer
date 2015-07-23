@@ -1,14 +1,14 @@
 <md-dialog aria-label='Specify property node...' class="sin-function-dialog">
-	<style type="text/css">
-	.dropzone {
-	  width: 250px;
-	  height: 15px;
-	  border: 1px dashed #ccc;
-	  text-align: center;
-	  padding: 30px;
-	  margin: 20px;
-	  font-family: Arial;
-	}
+    <style type="text/css">
+        .dropzone {
+          width: 250px;
+          height: 15px;
+          border: 1px dashed #ccc;
+          text-align: center;
+          padding: 30px;
+          margin: 20px;
+          font-family: Arial;
+        }
     </style>
     <md-toolbar>
         <div class="md-toolbar-tools" ng-show="showSearchDialog">
@@ -26,35 +26,35 @@
 	<md-dialog-content>
 		<div class="modal-dialog animate-switch-container" ng-switch on="selection" >
 			<div class="modal-content animate-switch" ng-switch-default>
-        <form name="graphsForm" class="md-padding" >
-				<div layout="row" >
-					<md-input-container flex class="sin-no-shrink">
-						<label>Property name</label>
-						<input ng-model="propertyValue.value" type="text" name="searchInput" required>
-						<div ng-messages="graphsForm.searchInput.$error">
-							<div ng-message="required">keyword is required.</div>
-							<div ng-message="pattern">Not a valid keyword.</div>
-						</div>
-					</md-input-container>
-<!--
-					<div ng-controller="DemoCtrl as ctrl" flex = "80">
-						<md-autocomplete
-							md-selected-item="ctrl.selectedItem"
-							md-search-text="ctrl.searchText"
-							md-items="item in ctrl.querySearch(ctrl.searchText)"
-							md-item-text="item.display"
-							md-selected-item-change="ctrl.selectedItemChange(item)"
-							md-floating-label ="Property name">
-							<md-item-template>
-								<span md-highlight-text="ctrl.searchText">{{item.display}}</span>
-							</md-item-template>
-						</md-autocomplete>
+        <form name="graphsForm" >
+          <div layout="row" class="md-padding" >
+            <md-input-container flex class="sin-no-shrink">
+              <label>Property name</label>
+              <input ng-model="propertyValue.value" type="text" name="searchInput" required>
+              <div ng-messages="graphsForm.searchInput.$error">
+                <div ng-message="required">property is required.</div>
+                <div ng-message="pattern">Not a valid property.</div>
+              </div>
+            </md-input-container>
+            <!--
+            <div ng-controller="DemoCtrl as ctrl" flex = "80">
+              <md-autocomplete
+                md-selected-item="ctrl.selectedItem"
+                md-search-text="ctrl.searchText"
+                md-items="item in ctrl.querySearch(ctrl.searchText)"
+                md-item-text="item.display"
+                md-selected-item-change="ctrl.selectedItemChange(item)"
+                md-floating-label ="Property name">
+                <md-item-template>
+                  <span md-highlight-text="ctrl.searchText">{{item.display}}</span>
+                </md-item-template>
+              </md-autocomplete>
 
-					</div>
-					-->
-					<md-button aria-label='search' class="md-icon-button fa fa-search" ng-click="search(propertyValue.value)">
-					</md-button>
-				</div>
+            </div>
+            -->
+            <md-button aria-label='search' class="md-icon-button fa fa-search" ng-click="search(propertyValue.value)"></md-button>
+            <md-button aria-label='vocabulary' class="md-icon-button fa fa-database" ng-click="switchToManageDialog()"></md-button>
+          </div>
         </form>
         <h5 align="center" ng-show="showSearchEmptyResult">No matched result</h5>
 				<div ng-show="showSearchResult" >
@@ -64,7 +64,6 @@
 							<md-button aria-label='add' class="md-primary md-icon-button fa fa-plus" ng-click="addResult(item)"></md-button>
 						</md-list-item>
 					</md-list>
-
           <div ng-show="showSearchPagination">
             <md-button aria-label='<<' class="md-icon-button fa fa-angle-double-left"  ng-disabled="currentPage == 0" ng-click="currentPage=0">
             </md-button>
@@ -76,11 +75,9 @@
             <md-button aria-label='>>' class="md-icon-button fa fa-angle-double-right" ng-disabled="currentPage >= numberOfPages() - 1" ng-click="currentPage=numberOfPages() - 1">
             </md-button>
           </div>
-					<!--<label>total: {{numberOfPages()}}</label>-->
 				</div>
 
 				<div class="md-actions" layout="row" layout-align="right">
-          <md-button class="md-primary" ng-click="switchToManageDialog()">Edit Prefix</md-button>
 					<md-button class="md-primary" ng-click="addProperty()">{{isCreateNew ? 'Create' : 'Edit'}} property</md-button>
 					<md-button class="md-primary" ng-click="closeDialog()">Cancel</md-button>
 				</div>
@@ -89,38 +86,24 @@
 			<div class="modal-content animate-switch" ng-switch-when="manageDialog">
 				<div>
 					<md-list>
-						<md-list-item ng-click="noOperation()" ng-repeat="item in VocabItems | startFrom:currentPage*pageSize | limitTo:pageSize">
+						<md-list-item ng-click="noOperation()" ng-repeat="item in VocabItems | startFrom:vocabcurrentPage*vocabpageSize | limitTo:vocabpageSize track by $index">
               <p> {{ item.name }} <small style="color:#C0C0C0"> ( {{item.namespace}} )</small></p>
-							<md-button aria-label='edit' class="fa fa-pencil-square-o md-icon-button md-primary" ng-click="editItem(item.name, item.namespace)"></md-button>
-              <md-button aria-label='delete' class="fa fa-trash md-icon-button md-primary" ng-click="deleteItem(item.namespace)"></md-button>
+							<md-button ng-hide="item.fromServer" aria-label='edit' class="fa fa-pencil-square-o md-icon-button md-primary" ng-click="editItem(item.name, item.namespace)"></md-button>
+              <md-button ng-hide="item.fromServer" aria-label='delete' class="fa fa-trash md-icon-button md-primary" ng-click="deleteItem(item.namespace)"></md-button>
             </md-list-item>
-
-						<md-list-item ng-click="noOperation()" ng-repeat="item in VocabItemsServer | startFrom:currentPage*pageSize | limitTo:pageSize">
-							<p> {{ item.name }} <small style="color:#C0C0C0"> ( {{item.namespace}} )</small></p>
-            </md-list-item>
-<!--
-            <md-list-item ng-click="noOperation()" ng-repeat="item in VocabItemsServer | startFrom:currentPage*pageSize | limitTo:pageSize">
-              <p> {{ item.name }} <small style="color:#C0C0C0"> ( {{item.namespace}} )</small></p>
-
-              <md-button aria-label='edit' class="fa fa-pencil-square-o md-icon-button md-primary md-avatar" ng-click="editItem(item.name, item.namespace)"></md-button>
-              <md-button aria-label='delete' class="fa fa-trash md-icon-button md-primary md-avatar" ng-click="deleteItem(item.namespace)"></md-button>
-
-            </md-list-item>
--->
 					</md-list>
-          <md-progress-circular align="center" ng-show="showProgressCircular" class="md-hue-2" md-mode="indeterminate"></md-progress-circular>
+          <div align="center"><md-progress-circular ng-show="showProgressCircular" class="md-hue-2" md-mode="indeterminate"></md-progress-circular></div>
           <div ng-show="showVocabularyPagination" >
-            <md-button aria-label='<<' class="md-icon-button fa fa-angle-double-left"  ng-disabled="currentPage == 0" ng-click="currentPage=0">
+            <md-button aria-label='<<' class="md-icon-button fa fa-angle-double-left"  ng-disabled="vocabcurrentPage == 0" ng-click="vocabcurrentPage = 0">
             </md-button>
-            <md-button aria-label='<' class="md-icon-button fa fa-angle-left" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+            <md-button aria-label='<' class="md-icon-button fa fa-angle-left" ng-disabled="vocabcurrentPage == 0" ng-click="vocabcurrentPage = vocabcurrentPage-1">
             </md-button>
-            <label>{{currentPage + 1}}</label>
-            <md-button aria-label='>' class="md-icon-button fa fa-angle-right" ng-disabled="currentPage >= numberOfPages() - 1" ng-click="currentPage=currentPage+1">
+            <label>{{vocabcurrentPage + 1}}</label>
+            <md-button aria-label='>' class="md-icon-button fa fa-angle-right" ng-disabled="vocabcurrentPage >= vocabnumberOfPages() - 1" ng-click="vocabcurrentPage=vocabcurrentPage+1">
             </md-button>
-            <md-button aria-label='>>' class="md-icon-button fa fa-angle-double-right" ng-disabled="currentPage >= numberOfPages() - 1" ng-click="currentPage=numberOfPages() - 1">
+            <md-button aria-label='>>' class="md-icon-button fa fa-angle-double-right" ng-disabled="vocabcurrentPage >= vocabnumberOfPages() - 1" ng-click="vocabcurrentPage=vocabnumberOfPages() - 1">
             </md-button>
           </div>
-					<!--<label>total: {{numberOfPages()}}</label>-->
 				</div>
 
         <div class="md-actions" layout="row" layout-align="right">
@@ -154,9 +137,11 @@
 
           <div ng-controller="FiletestCtrl" ng-show="localPath">
             <div class="dropzone" file-dropzone="" file="text" file-name="fileName">
-              <span>Drag rdf file here</span><br>
-              <!--<small>(support rdf/ttl/nt/jsonld..)</small><br> -->
-              <span>{{fileName.value}}</span>
+              <span ng-hide="fileName.value" style="color:#C0C0C0">Drag rdf file here</span>
+              <div ng-show="fileName.value">
+                <span class="fa fa-file-text-o"></span>
+                <span style="color:#C0C0C0">{{fileName.value}}</span>
+              </div>
             </div>
           </div>
 
@@ -168,7 +153,7 @@
           </md-input-container>
 
           <div class="md-actions" layout="row" layout-align="right">
-              <md-button class="md-primary" ng-click="addVocabtoLocal(vocabName, vocabNamespace, vocabLoc)">Add</md-button>
+              <md-button class="md-primary" ng-click="addVocabtoLocal(vocabName, vocabNamespace, vocabLoc)">{{addorEdit}}</md-button>
               <md-button class="md-primary" ng-click="switchToManageDialog()">Cancel</md-button>
           </div>
           </form>
