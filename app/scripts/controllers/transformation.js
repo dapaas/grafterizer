@@ -92,13 +92,13 @@ angular.module('grafterizerApp')
         };
 
         // First we need to check if we have a preview dataset
-        ontotextAPI.searchDataset('Previewed files').success(function(data) {
+        ontotextAPI.searchDataset('Previewed datasets').success(function(data) {
           if (!data || !data['dcat:record'] || data['dcat:record'].length === 0) {
             // we need to create a new one
             ontotextAPI.newDataset({
               '@context': ontotextAPI.getContextDeclaration(),
               '@type': 'dcat:Dataset',
-              'dct:title': 'Previewed files',
+              'dct:title': 'Previewed datasets',
               'dct:description': 'Dataset containing the previewed files from Grafterizer',
               'dcat:public': 'false'
             })
