@@ -137,7 +137,6 @@ angular
         }
       })
       .state('transformations.transformation.preview', {
-        url: '^/preview/{id:nonURIEncoded}',
         url: '^/transform/{id:nonURIEncoded}',
         params: {
           distribution: null
@@ -281,9 +280,10 @@ angular
 
     $mdThemingProvider.theme('default')
       .primaryPalette('customPrimary')
-      .accentPalette('customAccent');
+      .accentPalette('blue');
 
-      // .primaryPalette('dapaasPrimary')
+    // .primaryPalette('dapaasPrimary')
+    // .accentPalette('customAccent');
 
     // JSEDN is too restrictive by default on valid symbols
     jsedn.Symbol.prototype.validRegex = new RegExp(/.*/);
