@@ -20,6 +20,7 @@ angular.module('grafterizerApp')
     $mdDialog) {
 
     $scope.livePreview = true;
+    $scope.selectedTabIndex = 2;
     
     // TODO IT DOES WORK
     $scope.$parent.showPreview = true;
@@ -55,6 +56,10 @@ angular.module('grafterizerApp')
 
     $scope.selectedDistribution = $stateParams.distribution;
 
+    if ($scope.selectedDistribution) {
+      $scope.selectedTabIndex = 0;
+    }
+
     var previewTransformation = function(redirect) {
       var clojure = generateClojure.fromTransformation($scope.$parent.transformation);
       PipeService.preview($scope.selectedDistribution, clojure)
@@ -63,7 +68,7 @@ angular.module('grafterizerApp')
               $scope.data = data;
               if (redirect) {
                 $timeout(function() {
-                  $scope.selectedTabIndex = 2;
+                  $scope.selectedTabIndex = 0;
                 });
               }
 
@@ -80,7 +85,7 @@ angular.module('grafterizerApp')
 
                 // $scope.data = data;
                 $timeout(function() {
-                  $scope.selectedTabIndex = 2;
+                  $scope.selectedTabIndex = 0;
                 });
               } else {
                 delete $scope.graftwerkException;
