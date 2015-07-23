@@ -207,6 +207,18 @@ angular
         ncyBreadcrumb: {
           label: 'API Key'
         }
+      })
+      .state('help', {
+        url: '/help',
+        views: {
+          main: {
+            templateUrl: 'views/help.html',
+            controller: 'HelpCtrl'
+          }
+        },
+        ncyBreadcrumb: {
+          label: 'Help'
+        }
       });
 
     // The spinner is a bit too much
