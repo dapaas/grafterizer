@@ -114,7 +114,7 @@ angular.module('grafterizerApp')
     });
 
     $rootScope.actions = {
-      save: function() {
+      save: function(noPreviewRequest) {
         var update = angular.copy($scope.document);
         update['dct:title'] = update.title;
         update['dct:description'] = update.description;
@@ -144,7 +144,9 @@ angular.module('grafterizerApp')
 
         ontotextAPI.updateTransformation(update, clojure, $scope.transformation)
           .success(function() {
-            $scope.$broadcast('preview-request');
+            if (!noPreviewRequest) {
+              $scope.$broadcast('preview-request');
+            }
           });
       },
 
