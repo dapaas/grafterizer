@@ -111,25 +111,29 @@ angular.module('grafterizerApp')
     var randomB = ['method', 'value', 'object', 'world', 'data', 'data', 'life', 'rabbit'];
     $scope.createNewFunct = function() {
       var name = '';
+      var docstring = '';
       var cpt = 0;
       do {
         name = randomA[Math.floor(Math.random() * randomA.length)] + '-' + randomB[Math.floor(Math.random() * randomB.length)];
       } while (_.find($scope.$parent.transformation.customFunctionDeclarations, function(v) { return v.name === name; }) && ++cpt < 10);
 
       $scope.emptyCustomFunction.name = name;
-      $scope.emptyCustomFunction.clojureCode = '(defn ' + name + ' [] ())';
+      $scope.emptyCustomFunction.clojureCode = '(defn ' + name + ' "" [] ())';
+      //$scope.emptyCustomFunction.docstring = docstring;
       $scope.selectedCustomFunction = $scope.emptyCustomFunction;
       $scope.saveCustomFunct();
     };
 
     var functionName = /\(defn?\s+([^\s\)]+)/i;
-
     $scope.$watch('selectedCustomFunction.clojureCode', function() {
       if (!$scope.selectedCustomFunction) return;
       var code = $scope.selectedCustomFunction.clojureCode;
       if (!code) return;
 
       var m = code.match(functionName);
+      var d = code.match(/".*?"/g); 
+      if (d) $scope.selectedCustomFunction.docstring = d[0].replace(/^"|"$/g, "");
+      //console.log($scope.selectedCustomFunction.docstring);
       if (m) {
         var name = m[1];
         if (!$scope.selectedCustomFunction.name) {

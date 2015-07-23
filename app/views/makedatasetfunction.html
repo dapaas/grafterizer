@@ -3,25 +3,38 @@
         <md-button aria-label="Show/hide documentation" ng-click="switchShowUsage()"><i class="fa fa-angle-down"  >Show/hide documentation</i></md-button>
             <div ng-show = "showUsage">
             <p class="api-doc-docstring"> Creates a dataset either by taking specified number of columns or by inspecting the amount of columns in the first row, and taking that many column names from the sequence. </p>
+            <a href="http://api.grafter.org/master/grafter.tabular.html#var-make-dataset" target="_blank"> view source</a>
     </div>
     </div>
     <div>
         <h3>Parameters</h3>
+        <div class="whiteframedemoBasicUsage" layout="column"  style="padding-bottom: 32px;">
+        <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">
     <md-checkbox ng-model="function.moveFirstRowToHeader" aria-label="move first row to header">
     move first row to header
     </md-checkbox>
+</md-whiteframe>
+        <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">
     <label>Specify column names</label>
     <md-chips ng-disabled="function.useLazy" ng-model="function.columnsArray" readonly="ctrl.readonly">
         <md-chip-template>
             <strong>{{$chip}}</strong>
         </md-chip-template>
     </md-chips>
+</md-whiteframe>
+        <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">
     <md-checkbox ng-model="function.useLazy" aria-label="or specify number of columns to fetch">
     ...or spesify number of columns to fetch
     </md-checkbox>
     <md-input-container flex>
         <label>Number of columns</label>
         <input ng-model="function.numberOfColumns" type="number" min="1" ng-disabled="!(function.useLazy)">
+    </md-input-container>
+</md-whiteframe>
+</div>    <md-input-container flex>
+        <label>Comment</label>
+
+        <input ng-model="function.docstring" type="text" >
     </md-input-container>
                 
 </div>

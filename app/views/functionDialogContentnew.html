@@ -1,19 +1,22 @@
 <div layout="row">
     <md-content class="sin-functions-list" layout="column" md-scroll-y ng-if="!function">
-    <md-button flex ng-click="changeSelected(function.name)" ng-repeat="function in availableFunctions" ng-disabled="function.selected">{{function.displayName}} ({{function.name}})</md-button>
+    <md-button flex ng-click="changeSelected(function.name)" ng-repeat="function in availableFunctions" ng-disabled="function.selected">{{function.displayName}} ({{(function.name==='split')?'combined':function.name}})</md-button>
     </md-content>
     <div flex layout="column" >
         <md-content ng-class="!selectedFunctionName ? 'sin-dapaas-background md-padding' : 'md-padding'" flex md-scroll-y>
             <add-column-function transformation="transformation" ng-if="availableFunctions[0].selected === true"></add-column-function>
-            <columns-function transformation="transformation" ng-if="availableFunctions[1].selected === true"></columns-function>
-            <derive-column-function transformation="transformation" ng-if="availableFunctions[2].selected === true"></derive-column-function>
-            <drop-rows-function transformation="transformation" ng-if="availableFunctions[3].selected"></drop-rows-function>
-            <make-dataset transformation="transformation" ng-if="availableFunctions[4].selected"></make-dataset>
-            <mapc-function transformation="transformation" ng-if="availableFunctions[5].selected"></mapc-function>
-            <melt-function transformation="transformation" ng-if="availableFunctions[6].selected === true"></melt-function>
-            <rename-columns-function transformation="transformation" ng-if="availableFunctions[7].selected === true"></rename-columns-function>
-            <take-rows-function transformation="transformation" ng-if="availableFunctions[8].selected"></take-rows-function>
-            <custom-code transformation="transformation" ng-if="availableFunctions[9].selected"></custom-code>
+            <apply-columns-function transformation="transformation" ng-if="availableFunctions[1].selected === true"></apply-columns-function>
+            <columns-function transformation="transformation" ng-if="availableFunctions[2].selected === true"></columns-function>
+            <derive-column-function transformation="transformation" ng-if="availableFunctions[3].selected === true"></derive-column-function>
+            <drop-rows-function transformation="transformation" ng-if="availableFunctions[4].selected"></drop-rows-function>
+            <grep-function transformation="transformation" ng-if="availableFunctions[5].selected"></grep-function>
+            <make-dataset transformation="transformation" ng-if="availableFunctions[6].selected"></make-dataset>
+            <mapc-function transformation="transformation" ng-if="availableFunctions[7].selected"></mapc-function>
+            <melt-function transformation="transformation" ng-if="availableFunctions[8].selected === true"></melt-function>
+            <rename-columns-function transformation="transformation" ng-if="availableFunctions[9].selected === true"></rename-columns-function>
+            <split-function transformation="transformation" ng-if="availableFunctions[10].selected"></split-function>
+            <take-rows-function transformation="transformation" ng-if="availableFunctions[11].selected"></take-rows-function>
+            <custom-code transformation="transformation" ng-if="availableFunctions[12].selected"></custom-code>
         </md-content>
         <div class="md-actions" layout="row" layout-align="right">
             <!-- <md-button ng-if="function" class="md-primary" ng-click="delete()" aria-label="Remove function">Remove</md-button> -->

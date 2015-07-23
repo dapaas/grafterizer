@@ -13,19 +13,46 @@ angular.module('grafterizerApp')
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
         if (!scope.function) {
-          scope.function = new transformationDataModel.RenameColumnsFunction(null);
+            var renfunc = scope.$parent.transformation.findPrefixerOrCustomFunctionByName(
+scope.$parent.transformation.customFunctionDeclarations[0].name);
+          scope.function = new transformationDataModel.RenameColumnsFunction([renfunc], [null,null],null);
+          scope.function.docstring = null;
         }
 
         scope.$parent.generateCurrFunction = function() {
-          // TODO fix selected function bug
-       
-        /*    var functArray = [];
+            var functArray = [];
+           if (!scope.function.mappings[0]) {
         for (var i=0;i<scope.function.functionsToRenameWith.length;++i)
-            functArray.push(scope.$parent.transformation.findPrefixerOrCustomFunctionByName(
-              scope.function.functionsToRenameWith[i]));
-          return new transformationDataModel.RenameColumnsFunction(
-            [functArray]);*/
-return new transformationDataModel.RenameColumnsFunction(scope.$parent.transformation.findPrefixerOrCustomFunctionByName(scope.function.functionToRenameWith));
+        {
+            var newrenfunc = scope.function.functionsToRenameWith[i];
+            functArray.push(scope.$parent.transformation.findPrefixerOrCustomFunctionByName(newrenfunc.toString()));
+        }
+           }
+           return new transformationDataModel.RenameColumnsFunction(
+            functArray, scope.function.mappings,scope.function.docstring);
+           
+        };
+
+        scope.addRenameFunction = function() {
+            var renfunc = scope.$parent.transformation.findPrefixerOrCustomFunctionByName(
+scope.$parent.transformation.customFunctionDeclarations[0].name);
+        this.function.functionsToRenameWith.push(renfunc);
+        }; 
+
+        scope.removeRenameFunction = function(index) {
+          scope.function.removeRenameFunction(index);
+        };
+        scope.addRenameMapping = function() {
+            this.function.mappings.push(null);
+            this.function.mappings.push(null);
+        }; 
+        scope.removeMappingPair = function(index) {
+          this.function.mappings.splice(index,2);
+        };
+        scope.getMapLength = function(num) {
+            var b = new Array();
+            for (var i =0;i<=num/2;i+=2) b.push(i);
+            return b;
         };
         scope.showUsage=false;
         scope.switchShowUsage=function() {

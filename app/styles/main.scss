@@ -330,6 +330,7 @@ md-tab-content .CodeMirror {
 
 .pipeline-button {
     min-width: 9em;
+    margin-left: 50px;
     // transition: min-width 0.66s ease;
 }
 
@@ -683,3 +684,8 @@ graph-mapping div {
     left:50%;
     margin-left:-40px;
 }
+
+.whiteframedemoBasicUsage md-whiteframe {
+      background: #fff;
+        margin: 20px;
+          padding: 20px; }
