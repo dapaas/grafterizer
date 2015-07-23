@@ -130,10 +130,6 @@ angular.module('grafterizerApp')
     };
 
     var showDownloadButton = function() {
-      if (!fileSaved) {
-        return;
-      }
-
       var distribution = $scope.selectedDistribution;
       var transformation = $scope.$parent.id;
       var downloadLink = PipeService.computeTuplesHref(
@@ -142,6 +138,10 @@ angular.module('grafterizerApp')
       $rootScope.$emit('addAction', {
         name: 'download',
         callback: function() {
+          if ($rootScope.actions && $rootScope.actions.save) {
+            // Save but without a preview
+            $rootScope.actions.save(true);
+          }
 
           var scopeDialog = $scope.$new(false);
           scopeDialog.downloadLink = downloadLink;
