@@ -22,10 +22,14 @@ angular.module('grafterizerApp')
         scope.$parent.generateCurrFunction = function() {
           // TODO fix selected function bug
           var functArray = [];
+          var newfiltfunc;
           if (scope.function.functionsToFilterWith)for (var i=0;i<scope.function.functionsToFilterWith.length;++i)
           {
-              var newfiltfunc = scope.function.functionsToFilterWith[i];
-              if (newfiltfunc) functArray.push(scope.$parent.transformation.findPrefixerOrCustomFunctionByName(newfiltfunc.toString()));
+              newfiltfunc = scope.function.functionsToFilterWith[i];
+              
+             if (!(newfiltfunc instanceof transformationDataModel.CustomFunctionDeclaration || newfiltfunc instanceof transformationDataModel.Prefixer))
+ functArray.push(scope.$parent.transformation.findPrefixerOrCustomFunctionByName(newfiltfunc.toString()));
+             else functArray.push(newfiltfunc);
                       }
           return new transformationDataModel.GrepFunction(
             scope.function.colsToFilter,
@@ -42,9 +46,18 @@ angular.module('grafterizerApp')
         scope.removeFilterFunction = function(index) {
             scope.function.functionsToFilterWith.splice(index,1);
         };
+        scope.showRegexTutorial = function() {
+            scope.$parent.$mdDialog.show({
+                templateUrl:'views/regextutorial.html'
+            });
+        };
+        scope.showRegex=false;
         scope.showUsage=false;
         scope.switchShowUsage=function() {
         scope.showUsage=!scope.showUsage;
+        }
+        scope.switchRegex=function() {
+        scope.showRegex=!scope.showRegex;
         }
       }
     };

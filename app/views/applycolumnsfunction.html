@@ -22,7 +22,7 @@
             </md-input-container>
         </div>
         <div layout="column">
-            <md-input-container>
+             <md-input-container>
                 <md-select placeholder="Choose a function..." ng-model="keyFunctionPair.func">
                     <md-optgroup label="Custom functions">
                     <md-option ng-repeat="customFunct in transformation.customFunctionDeclarations" title = "{{customFunct.docstring}}" value="{{customFunct.name}}">{{customFunct.name}}</md-option>
@@ -32,6 +32,10 @@
                     </md-optgroup>
                 </md-select>
             </md-input-container>
+
+        <!--md-button   class="md-primary button-tight md-default-theme" ng-if= "$index !== 1" ng-click="createCustomFunction()" aria-label="Create new function">
+            <i class="fa fa-pencil fa-lg"></i>
+        </md-button-->
         </div>
     </div>
 

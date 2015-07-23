@@ -37,6 +37,9 @@ angular.module('grafterizerApp')
         scope.switchShowUsage=function() {
         scope.showUsage=!scope.showUsage;
         }
+        scope.createCustomFunction = function() {
+        console.log(scope.$parent.TransformationNewCtrl);
+        }
       }
     };
   });

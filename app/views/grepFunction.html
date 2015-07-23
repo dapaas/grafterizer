@@ -38,10 +38,21 @@
         <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">
         <label>Regular expression</label>
         <input ng-model="function.filterRegex" type="text" > 
-        <md-button class="md-primary button-tight md-default-theme" ng-click="showRegexTutorial()" aria-label="Show tutorial" >
+        <md-button  class="md-primary button-tight md-default-theme" ng-click="switchRegex()" aria-label="Show tutorial" >
             <i class="fa fa-question-circle fa-lg"></i>
         </md-button>
-</md-whiteframe>
+            <div ng-show = "showRegex">
+            <p class="api-doc-docstring"> 
+            The most simple regular expressions are just literal characters. Example: to narrow dataset just to rows containing text fragment "abc" you should use "abc" regular expression.
+            <br>
+            <br>
+            The dot matches any single character. Example: expression f.nd mathes find, fond, f1nd etc. 
+            <br>
+            You may as well specify sets of characters you expect to see in certain position. f[iI]nd pattern will math find and fInd but not f1nd 
+            
+            </p>
+        </div>
+            </md-whiteframe>
         <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">
     <br>
     <!--TODO: first function - only predicates --> 
