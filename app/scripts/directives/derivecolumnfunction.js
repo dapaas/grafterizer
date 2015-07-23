@@ -15,8 +15,9 @@ angular.module('grafterizerApp')
         if (!scope.function) {
       //    var derfunc = scope.$parent.transformation.customFunctionDeclarations[0];  
           scope.function = new transformationDataModel.DeriveColumnFunction(
-            '', [], [null],null);
+            '', [], [null],[null],null);
           scope.function.docstring = null;
+          console.log(scope.function.paramsToFunctions);
         }
         
         scope.$parent.generateCurrFunction = function() {
@@ -30,18 +31,25 @@ angular.module('grafterizerApp')
  functArray.push(scope.$parent.transformation.findPrefixerOrCustomFunctionByName(newderfunc.toString()));
              else functArray.push(newderfunc);
                       }
+          console.log(scope.function.paramsToFunctions);
           return new transformationDataModel.DeriveColumnFunction(
             scope.function.newColName,
             scope.function.colsToDeriveFrom,
             functArray,
+            scope.function.paramsToFunctions,
             scope.function.docstring);
         };
         scope.addDeriveFunction = function() {
             var derfunc = scope.$parent.transformation.customFunctionDeclarations[0];
             this.function.functionsToDeriveWith.push(derfunc);
+            this.function.paramsToFunctions.push(null);
         };
         scope.removeDeriveFunction = function(index) {
             scope.function.functionsToDeriveWith.splice(index,1);
+            scope.function.paramsToFunctions.splice(index,1);
+        };
+        scope.addParamToFunction = function(index) {
+            scope.function.paramsToFunctions[index]=" ";
         };
         scope.showUsage=false;
         scope.switchShowUsage=function() {

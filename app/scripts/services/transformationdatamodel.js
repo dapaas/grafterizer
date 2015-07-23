@@ -204,12 +204,13 @@ angular.module('grafterizerApp')
   this.GrepFunction = GrepFunction;
   
   
-  var DeriveColumnFunction = function(newColName, colsToDeriveFrom, functionsToDeriveWith,docstring) {
+  var DeriveColumnFunction = function(newColName, colsToDeriveFrom, functionsToDeriveWith, paramsToFunctions, docstring) {
     GenericFunction.call(this);
     this.newColName = newColName;
     this.colsToDeriveFrom = colsToDeriveFrom;
     this.name = 'derive-column';
     this.displayName = 'derive-column';
+    this.paramsToFunctions = paramsToFunctions;
     var deriveFunc;
     if (functionsToDeriveWith !== null) {
         for (var i=0; i< functionsToDeriveWith.length; ++i) {
@@ -237,7 +238,7 @@ angular.module('grafterizerApp')
     else this.docstring = docstring;
   };
   DeriveColumnFunction.revive = function(data) {
-    return new DeriveColumnFunction(data.newColName, data.colsToDeriveFrom, data.functionsToDeriveWith, data.docstring);
+    return new DeriveColumnFunction(data.newColName, data.colsToDeriveFrom, data.functionsToDeriveWith,data.paramsToFunctions, data.docstring);
   };
   DeriveColumnFunction.prototype.generateClojure = function() {
     var colsToDeriveFromClj = new jsedn.Vector([]);
@@ -253,12 +254,16 @@ angular.module('grafterizerApp')
                   colsToDeriveFromClj];
 
     if (this.functionsToDeriveWith.length === 1) {
+      if (this.paramsToFunctions[0]) values.push(new jsedn.List([jsedn.sym(this.functionsToDeriveWith[0].name),this.paramsToFunctions[0].toString()]));
+      else
       values.push(jsedn.sym(this.functionsToDeriveWith[0].name));
     }
     else {
         var comp = "comp ";
         for (var i=0; i< this.functionsToDeriveWith.length; ++i) {
             deriveFunc = this.functionsToDeriveWith[i];
+            if (this.paramsToFunctions[i]) comp+='('+deriveFunc.name+' "'+this.paramsToFunctions[i]+'") ';
+            else
             comp += deriveFunc.name+" ";
         }
         values.push(new jsedn.List([jsedn.sym(comp)]));
