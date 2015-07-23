@@ -589,17 +589,23 @@ angular.module('grafterizerApp')
     //    var customFunctionsMap = transformation.customFunctionDeclarations;
     for (i = 0; i < transformation.customFunctionDeclarations.length; ++i) {
     /*Regex parsing*/
+        var codeToParse;
         var regexesPattern = /#"(.*?)"/g
-
+       
             var regexes = regexesPattern.exec(transformation.customFunctionDeclarations[i].clojureCode);
             if (regexes) {
                 for (var j=0;j<regexes.length;++j) {
             var newstring = regexes[0].replace('#"','(read-string "#\\"');
             newstring = newstring.replace(/"$/, '\\"")');
-                transformation.customFunctionDeclarations[i].clojureCode = transformation.customFunctionDeclarations[i].clojureCode.replace(regexes[0],newstring);
-            console.log(newf);
+                codeToParse = transformation.customFunctionDeclarations[i].clojureCode.replace(regexes[0],newstring);
             }
+        parseAndAddUserFunction(
+        //transformation.customFunctionDeclarations[i].clojureCode
+        codeToParse
+      );
             }
+            else
+
         parseAndAddUserFunction(
         transformation.customFunctionDeclarations[i].clojureCode
       );
