@@ -83,7 +83,9 @@ angular.module('grafterizerApp')
                   $scope.graftwerkException = data.raw;
                 }
 
-                // $scope.data = data;
+                // Delete the outdated data
+                $scope.data = null;
+
                 $timeout(function() {
                   $scope.selectedTabIndex = 0;
                 });
@@ -123,6 +125,7 @@ angular.module('grafterizerApp')
     $scope.$watch('selectedDistribution', function() {
       if ($scope.selectedDistribution) {
         delete $scope.originalData;
+        delete $scope.data;
         previewTransformation(true);
       }
     });
