@@ -54,7 +54,7 @@ angular
 
     PipeServiceProvider.setEndpoint(
       window.location.origin === 'http://localhost:9000' ?
-      'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8080'
+      'https://grafterizer.datagraft.net/backend'
       : '/backend');
 
     var urlBase = $urlRouterProvider.otherwise('/transformations/new');

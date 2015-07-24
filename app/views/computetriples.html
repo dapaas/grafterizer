@@ -1,12 +1,14 @@
 <md-dialog aria-label='Choose download mode' class="sin-function-dialog">
     <md-toolbar>
     <div class="md-toolbar-tools">
-      <h2>Process your data</h2>
+      <h2>Transform your data</h2>
     </div>
   </md-toolbar>
     <md-dialog-content class="sticky-container">
-
         <div flex layout="row" class="md-padding" layout-align="center center">
+        <p class="md-warn md-body-1">
+         Your transformation does not define RDF mapping.
+        </p>
             <md-button class="md-raised md-primary sin-button-padding" aria-label="Download N-triples" ng-click="save()">
                 <i class="fa fa-large fa-cloud-upload"></i>
                 save online
