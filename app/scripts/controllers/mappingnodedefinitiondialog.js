@@ -216,10 +216,10 @@ angular.module('grafterizerApp')
           });
 
           //get search result from local
-          var localVocabulary = JSON.parse(storage.getItem('localVocabulary'));
+          var localVocabularies = $scope.$parent.transformation.rdfVocabs;
 
-          for (var i = localVocabulary.length - 1; i >= 0; i--) {
-              var ClassList = localVocabulary[i].classes;
+          for (var i = localVocabularies.length - 1; i >= 0; i--) {
+              var ClassList = localVocabularies[i].classes;
               if (ClassList != null){
                   for( var item = ClassList.length - 1; item >= 0; item-- ){
                       if( ClassList[item].lowername.indexOf(Para.toLowerCase()) != -1 ) {
@@ -237,7 +237,7 @@ angular.module('grafterizerApp')
           $scope.selection = 'manageDialog';
           $scope.hideToolbar = true;
           //show local vocabulary
-          var localVocabulary = JSON.parse(storage.getItem('localVocabulary'));
+          var localVocabulary = $scope.$parent.transformation.rdfVocabs;
 
           var VocabList = [];
           if (localVocabulary != null){
@@ -320,7 +320,7 @@ angular.module('grafterizerApp')
       //delete local vocabulary
       $scope.deleteItem = function(vocabNamespace) {
           //delete from local storage
-          var localVocabulary = JSON.parse(storage.getItem('localVocabulary'));
+          var localVocabulary = $scope.$parent.transformation.rdfVocabs;
           for (var i = localVocabulary.length - 1; i >= 0; i--) {
               if( localVocabulary[i].namespace === vocabNamespace ){
                 localVocabulary.splice(i, 1);
@@ -332,8 +332,6 @@ angular.module('grafterizerApp')
                   $scope.VocabItems.splice(i, 1);
               }
           }
-
-          storage.setItem('localVocabulary', JSON.stringify(localVocabulary));
       };
 
       //editing vocabulary
@@ -349,7 +347,7 @@ angular.module('grafterizerApp')
 
           // if path is empty, just add vocabulary name to local storage.
           if (vocabLoc === undefined && !object.data) {
-              var localVocabulary = JSON.parse(storage.getItem('localVocabulary'));
+              var localVocabulary = $scope.$parent.transformation.rdfVocabs;
 
               if ($scope.namespaceInputDisable === true){
                   for (var i = localVocabulary.length - 1; i >= 0; i--) {
@@ -367,9 +365,6 @@ angular.module('grafterizerApp')
 
                   localVocabulary.push(vocabItemTemplate);
               }
-
-              storage.setItem('localVocabulary', JSON.stringify(localVocabulary));
-
               $scope.switchToManageDialog();
 
               return;
@@ -389,7 +384,7 @@ angular.module('grafterizerApp')
                   data: object.data
               }).success(function(response) {
                   //add vocabulary name, a list of classes, a list of properties in local storage
-                  var localVocabulary = JSON.parse(storage.getItem('localVocabulary'));
+                  var localVocabulary = $scope.$parent.transformation.rdfVocabs;
 
                   var classArray = [];
                   var propertyArray = [];
@@ -433,9 +428,6 @@ angular.module('grafterizerApp')
 
                       localVocabulary.push(vocabItemTemplate);
                   }
-
-                  storage.setItem('localVocabulary', JSON.stringify(localVocabulary));
-
                   $scope.switchToManageDialog();
                   $scope.showProgress = false;
               }).error(function(data, status, headers, config) {
