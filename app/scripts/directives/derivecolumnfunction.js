@@ -17,7 +17,6 @@ angular.module('grafterizerApp')
           scope.function = new transformationDataModel.DeriveColumnFunction(
             '', [], [null],[null],null);
           scope.function.docstring = null;
-          console.log(scope.function.paramsToFunctions);
         }
         
         scope.$parent.generateCurrFunction = function() {

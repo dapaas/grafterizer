@@ -99,11 +99,32 @@ angular.module('grafterizerApp')
   };
   this.TakeRowsFunction = TakeRowsFunction;
   
-  var AddColumnFunction = function(newColName,colValue,colExpr,docstring) {
+  var UtilityFunction = function(functionName,docstring) {
+      GenericFunction.call(this);
+              if(functionName)  if (!(functionName instanceof CustomFunctionDeclaration) && functionName.__type ===
+          'CustomFunctionDeclaration') {
+               functionName = CustomFunctionDeclaration.revive(functionName);
+                }
+      this.functionName = functionName;
+      if ((!docstring)&&functionName) this.docstring = "Apply "+functionName.name+" to dataset";
+      else this.docstring = docstring;
+      this.name = 'utility';
+     if (functionName) this.displayName = functionName.name;
+      this.__type = "UtilityFunction";
+  };
+  UtilityFunction.revive = function(data) {
+      return new UtilityFunction(data.functionName,data.docstring)
+  };
+  UtilityFunction.prototype.generateClojure = function() {
+      return new jsedn.List([jsedn.sym(this.functionName.name)]);
+  };
+  this.UtilityFunction = UtilityFunction;
+  var AddColumnFunction = function(newColName,fileName,colValue,colExpr,docstring) {
     GenericFunction.call(this);
     this.newColName = newColName;
     this.colValue = colValue;
     this.colExpr  = colExpr;
+    this.fileName = fileName;
     this.name = 'add-column';
     this.displayName = 'add-column';
     if (!docstring) this.docstring = 'Add new column '+newColName.toString();
@@ -111,13 +132,13 @@ angular.module('grafterizerApp')
     this.__type = 'AddColumnFunction';
   };
   AddColumnFunction.revive = function(data) {
-    return new AddColumnFunction(data.newColName,data.colValue, data.colExpr, data.docstring);
+    return new AddColumnFunction(data.newColName,data.fileName, data.colValue,  data.colExpr, data.docstring);
   };
   AddColumnFunction.prototype.generateClojure = function() {
-    if (!this.colExpr) return new jsedn.List([jsedn.sym('add-column'), new jsedn.kw(':'+this.newColName), this.colValue]);
+      if (this.fileName) return new jsedn.List([jsedn.sym('add-filename-to-column'), new jsedn.kw(':'+this.newColName)]);  
+      if (!this.colExpr) return new jsedn.List([jsedn.sym('add-column'), new jsedn.kw(':'+this.newColName), this.colValue]);
     else {
         return new jsedn.List([jsedn.sym('add-column'), new jsedn.kw(':'+this.newColName), jsedn.sym(this.colExpr)]);
-    console.log($rootScope.myvar);
     }
 
   };
@@ -597,7 +618,9 @@ angular.module('grafterizerApp')
         return new jsedn.List([jsedn.sym('columns'), colNamesClj]);
     }
     else {
-        return new jsedn.List([jsedn.sym('columns'), jsedn.sym('(into[] (take '+this.numberOfColumns.toString()+' (alphabetical-column-names)))')]);
+        return new jsedn.List([jsedn.sym('columns'), 
+                               new jsedn.List([jsedn.sym('range'),this.numberOfColumns])]);
+//                jsedn.sym('(into[] (take '+this.numberOfColumns.toString()+' (alphabetical-column-names)))')]);
     }
 
   };

@@ -15,15 +15,26 @@
         <label>Name of new column</label>
         <input ng-model="function.newColName" type="text" required>
     </md-input-container>
+        <div class="whiteframedemoBasicUsage" layout="column"  style="padding-bottom: 32px;">
+        <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">
+    <md-checkbox ng-model="function.fileName" aria-label="Add filename to column">
+    add filename to column
+    </md-checkbox>
+</md-whiteframe>
+        <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">
     <md-input-container flex>
         <label>Value</label>
         <input ng-model="function.colValue" type="text" >
 
     </md-input-container>
+</md-whiteframe>
+        <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">
     <md-input-container flex>
         <label>Expression</label>
         <input ng-model="function.colExpr" type="text" >
     </md-input-container>
+</md-whiteframe>
+    </div>
     <md-input-container flex>
         <label>Comment</label>
 

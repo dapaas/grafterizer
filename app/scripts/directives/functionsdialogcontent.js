@@ -82,6 +82,11 @@ angular.module('grafterizerApp')
             selected: false
           },
           {
+            name: 'utility',
+            displayName: 'Utility function',
+            selected: false
+          },
+          {
             name: 'custom-code',
             displayName: 'Custom code',
             selected: false
