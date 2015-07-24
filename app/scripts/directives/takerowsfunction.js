@@ -14,13 +14,15 @@ angular.module('grafterizerApp')
       link: function postLink(scope, element, attrs) {
         if (!scope.function) {
           scope.function = {
-            numberOfRows: 1
+            numberOfRows: 1,
+            docstring: null
+
           };
         }
 
         scope.$parent.generateCurrFunction = function() {
           return new transformationDataModel.TakeRowsFunction(parseInt(
-            scope.function.numberOfRows));
+            scope.function.numberOfRows), scope.function.docstring);
         };
         scope.showUsage=false;
         scope.switchShowUsage=function() {

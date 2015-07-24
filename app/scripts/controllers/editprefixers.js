@@ -26,6 +26,9 @@ angular.module('grafterizerApp')
         },
         {
           name: 'uri'
+        },
+        {
+          name: 'parentPrefix'
         }
         ],
       data: []
@@ -36,7 +39,8 @@ angular.module('grafterizerApp')
       //      console.log($scope.$parent.transformation.prefixers);
       $scope.gridOpts.data.push({
         prefixName: prefixer.name,
-        uri: prefixer.uri
+        uri: prefixer.uri,
+        parentPrefix: prefixer.parentPrefix
       });
 
     }
@@ -95,7 +99,7 @@ angular.module('grafterizerApp')
         return;
       }
 
-      if (!$scope.transformation.addPrefixer($scope.prefixName, $scope.prefixUri)) {
+      if (!$scope.transformation.addPrefixer($scope.prefixName, $scope.prefixUri,"")) {
         $mdToast.show(
           $mdToast.simple()
           .content(
@@ -109,7 +113,61 @@ angular.module('grafterizerApp')
 
       $scope.gridOpts.data.push({
         prefixName: $scope.prefixName,
-        uri: $scope.prefixUri
+        uri: $scope.prefixUri,
+        parentPrefix: ""
+      });
+    };
+    
+    $scope.addPrefixerFrom = function() {
+      if (!$scope.prefixName) {
+        $mdToast.show(
+          $mdToast.simple()
+          .content(
+            'Error adding prefixer. No name provided for prefixer.')
+          .position('bottom left')
+          .hideDelay(3000)
+        );
+        return;
+      }
+
+      if (!$scope.prefixUri) {
+        $mdToast.show(
+          $mdToast.simple()
+          .content('Error adding prefixer. No URI provided for prefixer.')
+          .position('bottom left')
+          .hideDelay(3000)
+        );
+        return;
+      }
+      
+      var selectedRows = $scope.gridApi.selection.getSelectedRows();
+
+      if (selectedRows.length!==1) {
+        $mdToast.show(
+          $mdToast.simple()
+          .content('Error adding prefixer. One parent prefixer should be selected.')
+          .position('bottom left')
+          .hideDelay(3000)
+        );
+        return;
+      }
+
+      if (!$scope.transformation.addPrefixer($scope.prefixName, $scope.prefixUri,selectedRows[0].prefixName)) {
+        $mdToast.show(
+          $mdToast.simple()
+          .content(
+            'Error adding prefixer. Prefixer with the same name already exists.'
+          )
+          .position('bottom left')
+          .hideDelay(3000)
+        );
+        return;
+      }
+
+      $scope.gridOpts.data.push({
+        prefixName: $scope.prefixName,
+        uri: $scope.prefixUri,
+        parentPrefix: selectedRows[0].prefixName
       });
     };
   });

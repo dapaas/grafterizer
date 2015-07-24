@@ -3,13 +3,9 @@
 		<!-- <i class="fa fa-eye"></i> -->
 		<!-- <md-tooltip>Preview mode</md-tooltip> -->
 	</md-switch>
-	<md-button class="md-icon-button" aria-label="Fork" ng-click="fork()" ng-if="fork">
-		<i class="fa fa-code-fork"></i>
-		<md-tooltip>Fork</md-tooltip>
-	</md-button>
-	<md-button class="md-icon-button" aria-label="Delete" ng-click="delete()" ng-if="delete">
-		<i class="fa fa-trash"></i>
-		<md-tooltip>Delete</md-tooltip>
+	<md-button class="md-icon-button" aria-label="Download N-Tuples" ng-click="download()" ng-if="download">
+		<i class="fa fa-cogs"></i>
+		<md-tooltip>Transform</md-tooltip>
 	</md-button>
 	<md-button class="md-icon-button" aria-label="Send" ng-click="send()" ng-if="send">
 		<i class="fa fa-send"></i>
@@ -19,8 +15,16 @@
 		<i class="fa fa-save"></i>
 		<md-tooltip>Save</md-tooltip>
 	</md-button>
-	<md-button class="md-icon-button" aria-label="Download N-Tuples" ng-click="download()" ng-if="download">
-		<i class="fa fa-cloud"></i>
-		<md-tooltip>Compute N-triples</md-tooltip>
+	<md-button class="md-icon-button" aria-label="Fork" ng-click="fork()" ng-if="fork">
+		<i class="fa fa-code-fork"></i>
+		<md-tooltip>Fork</md-tooltip>
+	</md-button>
+	<md-button class="md-icon-button" aria-label="Delete" ng-click="delete()" ng-if="delete">
+		<i class="fa fa-trash"></i>
+		<md-tooltip>Delete</md-tooltip>
+	</md-button>
+	<md-button class="md-icon-button" aria-label="Help" ui-sref="help" >
+		<i class="fa fa-question-circle"></i>
+		<md-tooltip>Help</md-tooltip>
 	</md-button>
 </div>

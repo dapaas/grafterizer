@@ -5,6 +5,7 @@
             <p class="api-doc-docstring"> Adds a new column to the end of the row, with specified value copied for all rows .
             
             <img src="../images/addcolumn.png"></img>
+            <a href="http://api.grafter.org/master/grafter.tabular.html#var-add-column" target="_blank"> view source</a>
     </div>
     </div>
 <div>
@@ -14,11 +15,23 @@
         <label>Name of new column</label>
         <input ng-model="function.newColName" type="text" required>
     </md-input-container>
+    <md-input-container flex>
         <label>Value</label>
-        <input ng-model="function.colValue" type="text" required>
-    </md-input-container>
+        <input ng-model="function.colValue" type="text" >
 
-</div>
+    </md-input-container>
+    <md-input-container flex>
+        <label>Expression</label>
+        <input ng-model="function.colExpr" type="text" >
+    </md-input-container>
+    <md-input-container flex>
+        <label>Comment</label>
+
+        <input ng-model="function.docstring" type="text" >
+    </md-input-container>
+    </div>
+
+    </div>
 
 </div>
 <!--

@@ -2,9 +2,9 @@
     <div>
         <md-button aria-label="Show/hide documentation" ng-click="switchShowUsage()"><i class="fa fa-angle-down"  >Show/hide documentation</i></md-button>
             <div ng-show = "showUsage">
-            <p class="api-doc-docstring"> Takes a vector of functions and maps each to the key column for every row. Each function should be from a cell to a cell. </p>
+            <p class="api-doc-docstring"> Like map columns takes a vector of functions and maps each to the key column for every row. Each function should be from collection of cells to collection of cells. </p>
             <img  src="../images/mapc.png"></img>
-            <a href="http://api.grafter.org/master/grafter.tabular.html#var-mapc" target="_blank"> view source</a>
+            <a href="http://api.grafter.org/master/grafter.tabular.html#var-apply-columns" target="_blank"> view source</a>
         </div>
         </div>
         <div>
@@ -12,7 +12,7 @@
 <md-button class="md-raised" ng-click="addKeyFunctionPair()" aria-label="Add mapping">Add mapping</md-button>
 <div layout="row"  ng-repeat="keyFunctionPair in function.keyFunctionPairs">
     <div layout="row">
-        <md-button class="md-primary button-tight md-default-theme" ng-disabled="function.keyFunctionPairs.length === 1" ng-click="removeKeyFunctionPair(keyFunctionPair)" aria-label="Remove column mapping">
+        <md-button class="md-primary button-tight md-default-theme" ng-disabled= "function.keyFunctionPairs.length === 1" ng-click="removeKeyFunctionPair(keyFunctionPair)" aria-label="Remove column mapping">
             <i class="fa fa-trash fa-lg"></i>
         </md-button>
         <div layout="column">
@@ -22,16 +22,20 @@
             </md-input-container>
         </div>
         <div layout="column">
-            <md-input-container>
+             <md-input-container>
                 <md-select placeholder="Choose a function..." ng-model="keyFunctionPair.func">
                     <md-optgroup label="Custom functions">
-                    <md-option ng-repeat="customFunct in transformation.customFunctionDeclarations" value="{{customFunct.name}}" title="{{customFunct.docstring}}">{{customFunct.name}}</md-option>
+                    <md-option ng-repeat="customFunct in transformation.customFunctionDeclarations" title = "{{customFunct.docstring}}" value="{{customFunct.name}}">{{customFunct.name}}</md-option>
                     </md-optgroup>
                     <md-optgroup label="Prefixers">
                         <md-option  ng-repeat="prefixer in transformation.prefixers" value="{{prefixer.name}}">{{prefixer.name}}</md-option>
                     </md-optgroup>
                 </md-select>
             </md-input-container>
+
+        <!--md-button   class="md-primary button-tight md-default-theme" ng-if= "$index !== 1" ng-click="createCustomFunction()" aria-label="Create new function">
+            <i class="fa fa-pencil fa-lg"></i>
+        </md-button-->
         </div>
     </div>
 

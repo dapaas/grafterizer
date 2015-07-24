@@ -13,18 +13,35 @@ angular.module('grafterizerApp')
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
         if (!scope.function) {
+      //    var derfunc = scope.$parent.transformation.customFunctionDeclarations[0];  
           scope.function = new transformationDataModel.DeriveColumnFunction(
-            '', [], null);
+            '', [], [null],null);
+          scope.function.docstring = null;
         }
-
+        
         scope.$parent.generateCurrFunction = function() {
           // TODO fix selected function bug
-
+          var functArray = [];
+          var newderfunc;
+          for (var i=0;i<scope.function.functionsToDeriveWith.length;++i)
+          {
+             newderfunc = scope.function.functionsToDeriveWith[i];
+             if (!(newderfunc instanceof transformationDataModel.CustomFunctionDeclaration || newderfunc instanceof transformationDataModel.Prefixer))
+ functArray.push(scope.$parent.transformation.findPrefixerOrCustomFunctionByName(newderfunc.toString()));
+             else functArray.push(newderfunc);
+                      }
           return new transformationDataModel.DeriveColumnFunction(
             scope.function.newColName,
             scope.function.colsToDeriveFrom,
-            scope.$parent.transformation.findPrefixerOrCustomFunctionByName(
-              scope.function.functionToDeriveWith));
+            functArray,
+            scope.function.docstring);
+        };
+        scope.addDeriveFunction = function() {
+            var derfunc = scope.$parent.transformation.customFunctionDeclarations[0];
+            this.function.functionsToDeriveWith.push(derfunc);
+        };
+        scope.removeDeriveFunction = function(index) {
+            scope.function.functionsToDeriveWith.splice(index,1);
         };
         scope.showUsage=false;
         scope.switchShowUsage=function() {

@@ -125,15 +125,38 @@ angular.module('grafterizerApp')
 
 
   /* Adds a prefixer to the list of pre-defined prefixers */
-  function addGrafterPrefixer(name, prefixString) {
-    var prefixer = new jsedn.List([
+  function addGrafterPrefixer(name, prefixString, parentPrefix) {
+ if (parentPrefix.toString().trim() === "")   {var prefixer = new jsedn.List([
       jsedn.sym('def'),
       jsedn.sym(name),
       new jsedn.List([jsedn.sym('prefixer'), prefixString])]);
 
+    prefixers.push(prefixer);}
+ else {
+ 
+    var prefixer = new jsedn.List([
+      jsedn.sym('def'),
+      jsedn.sym(name),
+      new jsedn.List([jsedn.sym('prefixer'), 
+      new jsedn.List([jsedn.sym(parentPrefix),prefixString])
+                     ])
+      ]);
     prefixers.push(prefixer);
+ }
   }
 
+  /* Adds a prefixer derived from another prefixer to the list of pre-defined prefixers */
+ /* function addGrafterPrefixerChild(name, prefixString, parentPrefix) {
+    var prefixer = new jsedn.List([
+      jsedn.sym('def'),
+      jsedn.sym(name),
+      new jsedn.List([jsedn.sym('prefixer'), 
+          jsedn.List([jsedn.sym(parentPrefix),prefixString])
+                     ])
+      ]);
+    prefixers.push(prefixer);
+  }
+*/
   /* Constructs the namespace declarations used by Grafter */
   /*function constructGrafterDeclarations() {
       declarations = new jsedn.List([
@@ -700,12 +723,13 @@ angular.module('grafterizerApp')
     for (var i = 0; i < prefixersInGUI.length; ++i) {
       var name = prefixersInGUI[i].name;
       var uri = prefixersInGUI[i].uri;
+      var parentPrefix = prefixersInGUI[i].parentPrefix;
       if (name === '' || uri === '') {
         alertInterface('Name or URI of a prefix empty, ignoring...', '');
         continue;
       }
 
-      addGrafterPrefixer(name, uri);
+      addGrafterPrefixer(name, uri, parentPrefix);
     }
 
     var grafterPrefixers = constructGrafterPrefixersArray();
@@ -713,7 +737,25 @@ angular.module('grafterizerApp')
 
     //    var customFunctionsMap = transformation.customFunctionDeclarations;
     for (i = 0; i < transformation.customFunctionDeclarations.length; ++i) {
-      parseAndAddUserFunction(
+    /*Regex parsing*/
+        var codeToParse;
+        var regexesPattern = /#"(.*?)"/g
+       
+            var regexes = regexesPattern.exec(transformation.customFunctionDeclarations[i].clojureCode);
+            if (regexes) {
+                for (var j=0;j<regexes.length;++j) {
+            var newstring = regexes[0].replace('#"','(read-string "#\\"');
+            newstring = newstring.replace(/"$/, '\\"")');
+                codeToParse = transformation.customFunctionDeclarations[i].clojureCode.replace(regexes[0],newstring);
+            }
+        parseAndAddUserFunction(
+        //transformation.customFunctionDeclarations[i].clojureCode
+        codeToParse
+      );
+            }
+            else
+
+        parseAndAddUserFunction(
         transformation.customFunctionDeclarations[i].clojureCode
       );
     }

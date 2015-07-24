@@ -14,7 +14,8 @@ angular.module('grafterizerApp')
       link: function postLink(scope, element, attrs) {
         if (!scope.function) {
           scope.function = new transformationDataModel.MakeDatasetFunction(
-            [],null,0,null);
+            [],null,0,null,null);
+          scope.function.docstring = null;
         }
 
         scope.$parent.generateCurrFunction = function() {
@@ -22,7 +23,8 @@ angular.module('grafterizerApp')
             .columnsArray,
                   scope.function.useLazy,
                   scope.function.numberOfColumns,
-                  scope.function.moveFirstRowToHeader);
+                  scope.function.moveFirstRowToHeader,
+                  scope.function.docstring);
         };
         scope.showUsage=false;
         scope.switchShowUsage=function() {

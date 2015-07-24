@@ -2,26 +2,26 @@
 
 /**
  * @ngdoc directive
- * @name grafterizerApp.directive:mapc
+ * @name grafterizerApp.directive:applyColumnsFunction
  * @description
- * # mapc
+ * # applyColumnsFunction
  */
 angular.module('grafterizerApp')
-  .directive('mapcFunction', function(transformationDataModel) {
+  .directive('applyColumnsFunction', function(transformationDataModel) {
     return {
-      templateUrl: 'views/mapcfunction.html',
+      templateUrl: 'views/applycolumnsfunction.html',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
         if (!scope.function) {
           var keyfuncpair = new transformationDataModel.KeyFunctionPair(
             'colName', scope.$parent.transformation.customFunctionDeclarations[0]);
 
-          scope.function = new transformationDataModel.MapcFunction([keyfuncpair],null);
+          scope.function = new transformationDataModel.ApplyColumnsFunction([keyfuncpair], null);
           scope.function.docstring = null;
         }
 
         scope.$parent.generateCurrFunction = function() {
-          return new transformationDataModel.MapcFunction(scope.function.keyFunctionPairs,scope.function.docstring);
+          return new transformationDataModel.ApplyColumnsFunction(scope.function.keyFunctionPairs, scope.function.docstring);
         };
 
         scope.addKeyFunctionPair = function() {
@@ -36,6 +36,9 @@ angular.module('grafterizerApp')
         scope.showUsage=false;
         scope.switchShowUsage=function() {
         scope.showUsage=!scope.showUsage;
+        }
+        scope.createCustomFunction = function() {
+        console.log(scope.$parent.TransformationNewCtrl);
         }
       }
     };

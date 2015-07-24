@@ -54,7 +54,7 @@ angular
 
     PipeServiceProvider.setEndpoint(
       window.location.origin === 'http://localhost:9000' ?
-      'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8080'
+      'https://grafterizer.datagraft.net/backend'
       : '/backend');
 
     var urlBase = $urlRouterProvider.otherwise('/transformations/new');
@@ -137,7 +137,7 @@ angular
         }
       })
       .state('transformations.transformation.preview', {
-        url: '^/preview/{id:nonURIEncoded}',
+        url: '^/transform/{id:nonURIEncoded}',
         params: {
           distribution: null
         },
@@ -148,7 +148,7 @@ angular
           }
         },
         ncyBreadcrumb: {
-          label: 'Preview'
+          label: '{{(selectedDistribution || "Preview")|beautifyUri}}'
         }
       })
       .state('datasets', {
@@ -206,6 +206,18 @@ angular
         },
         ncyBreadcrumb: {
           label: 'API Key'
+        }
+      })
+      .state('help', {
+        url: '/help',
+        views: {
+          main: {
+            templateUrl: 'views/help.html',
+            controller: 'HelpCtrl'
+          }
+        },
+        ncyBreadcrumb: {
+          label: 'Help'
         }
       });
 
@@ -280,9 +292,10 @@ angular
 
     $mdThemingProvider.theme('default')
       .primaryPalette('customPrimary')
-      .accentPalette('customAccent');
+      .accentPalette('blue');
 
-      // .primaryPalette('dapaasPrimary')
+    // .primaryPalette('dapaasPrimary')
+    // .accentPalette('customAccent');
 
     // JSEDN is too restrictive by default on valid symbols
     jsedn.Symbol.prototype.validRegex = new RegExp(/.*/);

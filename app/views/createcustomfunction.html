@@ -4,9 +4,9 @@
             <h2>Edit utility functions</h2> 
         </div>
     </md-toolbar>
-    <md-dialog-content>
-        <div class="content-stuff utility-functions" layout="row">
-            <md-content class="sin-functions-list" layout="column" md-scroll-y>
+    <md-dialog-content layout="row" class="sin-dark-background-fix">
+        <div class="content-stuff utility-functions" layout="column" flex="33">
+            <md-content class="sin-functions-list" layout="column" flex md-scroll-y>
                 <md-button ng-click="$parent.selectedCustomFunction = function" ng-repeat="function in functionsList" ng-disabled="function == $parent.selectedCustomFunction">{{function.name}}
                     <md-button ng-if="function == $parent.selectedCustomFunction" class="button-tight" aria-label="Delete this function" ng-click="removeCustomFunct(selectedCustomFunction)">
                         <i class="fa fa-minus-circle"></i>
@@ -18,22 +18,21 @@
                     </span>
                 </md-button>
                 <span flex></span>
-                <md-button class="md-raised md-primary" ng-click="createNewFunct()" style="flex-shrink: 0" >
+            </md-content>
+            <md-toolbar class="md-actions">
+                <md-button aria-label="Create new function" ng-click="createNewFunct()">
                     <i class="fa fa-plus"></i>
                 </md-button>
-            </md-content>
-            <div flex layout="column">
-                <!-- <md-content flex> -->
-                    <div class="code-mirror-container" flex style="font-size:1.3em;">
-                        <ui-codemirror ng-model="selectedCustomFunction.clojureCode" ui-codemirror-opts="codemirrorOpts"></ui-codemirror>
-                    </div>
-                    <!-- <md-button class="md-padding md-raised" ng-click="saveCustomFunct()" aria-label="Save function">Save function</md-button> -->
-                <!-- </md-content> -->
-                <md-toolbar class="md-actions" layout="row" layout-align="right">
-                    <md-button ng-click="applyCustomFunctionChanges()" aria-label="Apply custom function changes">Done</md-button>
-                    <md-button ng-click="cancelCustomFunctionChanges()"  aria-label="Cancel changes to custom functions">Cancel</md-button>
-                </md-toolbar>
-            </div>
+            </md-toolbar>
+        </div>
+        <div flex layout="column">
+                <div class="code-mirror-container" flex style="font-size:1.3em;">
+                    <ui-codemirror ng-model="selectedCustomFunction.clojureCode" ui-codemirror-opts="codemirrorOpts"></ui-codemirror>
+                </div>
+            <md-toolbar class="md-actions" layout="row" layout-align="right">
+                <md-button ng-click="applyCustomFunctionChanges()" aria-label="Apply custom function changes">Done</md-button>
+                <md-button ng-click="cancelCustomFunctionChanges()"  aria-label="Cancel changes to custom functions">Cancel</md-button>
+            </md-toolbar>
         </div>
     </md-dialog-content>
 </md-dialog>

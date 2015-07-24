@@ -9,7 +9,7 @@
 angular.module('grafterizerApp')
   .directive('pipelineFunction', function($mdDialog) {
     return {
-        template: '<p class="pipeline-description">{{function.docstring}}</p><div flex layout="row" layout-align="center"><md-button class="pipeline-button md-raised" aria-label="Edit pipeline step" ng-click="editFunction()">{{function.displayName}}</md-button></div>',
+      templateUrl: 'views/pipelinefunction.html',
       restrict: 'E',
       scope: {
         function: '=',
@@ -35,7 +35,8 @@ angular.module('grafterizerApp')
             angular.copy(scope.originalFunction, scope.function);
           });
         };
-
+         // scope.showChar = element.clientWidth;
+            scope.showChar = 50;
         //element.text('this is the pipelineFunction directive');
       }
     };
