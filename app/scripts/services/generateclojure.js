@@ -633,6 +633,9 @@ angular.module('grafterizerApp')
     function loadNamespaceMapping(){
       //load user defined vocabulary
       var localVocabulary = JSON.parse(window.localStorage.getItem('localVocabulary'));
+      if(!localVocabulary){
+        return;
+      }
       for (var i = localVocabulary.length - 1; i >= 0; i--) {
         namespaceMap = new Object();
 
@@ -642,6 +645,9 @@ angular.module('grafterizerApp')
       }
       //load vocabulary in server
       var serverVocabulary = JSON.parse(window.localStorage.getItem('serverVocabulary'));
+      if(!serverVocabulary){
+        return;
+      }
       for (var i = serverVocabulary.length - 1; i >= 0; i--) {
         namespaceMap = new Object();
 
