@@ -115,7 +115,10 @@ angular.module('grafterizerApp')
   };
   AddColumnFunction.prototype.generateClojure = function() {
     if (!this.colExpr) return new jsedn.List([jsedn.sym('add-column'), new jsedn.kw(':'+this.newColName), this.colValue]);
-    else return new jsedn.List([jsedn.sym('add-column'), new jsedn.kw(':'+this.newColName), jsedn.sym(this.colExpr)]);
+    else {
+        return new jsedn.List([jsedn.sym('add-column'), new jsedn.kw(':'+this.newColName), jsedn.sym(this.colExpr)]);
+    console.log($rootScope.myvar);
+    }
 
   };
   this.AddColumnFunction = AddColumnFunction;

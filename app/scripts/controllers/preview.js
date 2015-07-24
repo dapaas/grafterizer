@@ -130,6 +130,13 @@ angular.module('grafterizerApp')
       }
     });
 
+ontotextAPI.distribution($scope.selectedDistribution).success(function(data) {
+
+
+               $rootScope.myvar=data['http://www.w3.org/ns/dcat#fileName'];
+                
+                                });
+
     $scope.loadOriginalData = function() {
       if ($scope.selectedDistribution) {
         PipeService.original($scope.selectedDistribution)
