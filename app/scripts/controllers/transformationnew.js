@@ -102,7 +102,7 @@ angular.module('grafterizerApp')
     $scope.transformation = new transformationDataModel.Transformation(
       allcustomfunctions, [], [$scope.pipeline], []);
   $rootScope.transformation = $scope.transformation;
-  
+
 
     $rootScope.actions = {
       save: function() {
@@ -180,13 +180,22 @@ angular.module('grafterizerApp')
         angular.copy($scope.originalLibraries, $scope.transformation.libraries);
       });
     };
-    
-    
+
+
+    $scope.editRDFPrefixes = function(){
+      $mdDialog.show({
+        templateUrl: 'views/MappingPrefixManage.html',
+        controller: 'MappingPrefixManageCtrl',
+        scope: $scope.$new(false, $scope)
+      })
+    }
+
+
     $scope.defineCustomFunctions = function() {
       $scope.originalCustomFunctionDeclarations = [];
       angular.copy($scope.transformation.customFunctionDeclarations, $scope
         .originalCustomFunctionDeclarations);
-      
+
       $mdDialog.show({
         templateUrl: 'views/createcustomfunction.html',
         controller: 'CustomfunctionsdialogcontrollerCtrl',

@@ -8,7 +8,7 @@
  * Service in the grafterizerApp.
  */
 angular.module('grafterizerApp')
-  .service('generateClojure', function(transformationDataModel) {
+  .service('generateClojure', function(transformationDataModel, $rootScope) {
   /***************************************************************************
      * Main Grafter/Clojure generation variables and functions.
     ****************************************************************************/
@@ -126,27 +126,27 @@ angular.module('grafterizerApp')
 
   /* Adds a prefixer to the list of pre-defined prefixers */
   function addGrafterPrefixer(name, prefixString, parentPrefix) {
- if (parentPrefix.toString().trim() === "")   {var prefixer = new jsedn.List([
+    if (parentPrefix.toString().trim() === "")   {var prefixer = new jsedn.List([
       jsedn.sym('def'),
       jsedn.sym(name),
       new jsedn.List([jsedn.sym('prefixer'), prefixString])]);
 
-    prefixers.push(prefixer);}
- else {
- 
-    var prefixer = new jsedn.List([
-      jsedn.sym('def'),
-      jsedn.sym(name),
-      new jsedn.List([jsedn.sym('prefixer'), 
-      new jsedn.List([jsedn.sym(parentPrefix),prefixString])
-                     ])
+                                                  prefixers.push(prefixer);}
+    else {
+
+      var prefixer = new jsedn.List([
+        jsedn.sym('def'),
+        jsedn.sym(name),
+        new jsedn.List([jsedn.sym('prefixer'), 
+                        new jsedn.List([jsedn.sym(parentPrefix),prefixString])
+                       ])
       ]);
-    prefixers.push(prefixer);
- }
+      prefixers.push(prefixer);
+    }
   }
 
   /* Adds a prefixer derived from another prefixer to the list of pre-defined prefixers */
- /* function addGrafterPrefixerChild(name, prefixString, parentPrefix) {
+  /* function addGrafterPrefixerChild(name, prefixString, parentPrefix) {
     var prefixer = new jsedn.List([
       jsedn.sym('def'),
       jsedn.sym(name),
@@ -184,7 +184,7 @@ angular.module('grafterizerApp')
   function parseAndAddUserFunction(userFunctionString) {
     var result = parseEdnFromString(userFunctionString, 'Error parsing user function!');
 
-      if (!result) return false;
+    if (!result) return false;
 
     addUserFunction(result);
     return true;
@@ -276,7 +276,7 @@ angular.module('grafterizerApp')
     var readDatasetFunct = new jsedn.List([
       new jsedn.sym('read-dataset'),
       new jsedn.sym('data-file')
-      ]);
+    ]);
 
     pipeline = null;
 
@@ -368,6 +368,7 @@ angular.module('grafterizerApp')
     }
 
     if (node instanceof transformationDataModel.ConstantLiteral) {
+      console.log(node);
       if (node.literalValue.trim() === '') {
         alertInterface('Empty text literal found in RDF mapping!');
       }
@@ -426,7 +427,7 @@ angular.module('grafterizerApp')
     // graph URI as prefix, add nothing
     var propertyPrefix = property.prefix;
     var propertyName = property.propertyName;
-      if (!propertyPrefix) {
+    if (!propertyPrefix) {
       alertInterface('Property prefix cannot be null:' + propertyName);
       return;
     } else if (propertyPrefix === '') {
@@ -449,7 +450,7 @@ angular.module('grafterizerApp')
     // graph URI as prefix, add nothing
     var nodePrefix = colURINode.prefix;
     var nodeValue = colURINode.column;
-      if (nodePrefix === null || nodePrefix === undefined) {
+    if (nodePrefix === null || nodePrefix === undefined) {
       // base graph URI
       // ((prefixer "graphURI") nodeValue)
       return new jsedn.List([new jsedn.List([new jsedn.sym('prefixer'), containingGraph.graphURI]), new jsedn.sym(
@@ -465,7 +466,7 @@ angular.module('grafterizerApp')
         alertInterface('Cannot associate column \'' + nodeValue + '\' with prefix \'' + nodePrefix + '\'!');
 
         //                return;
-        return new jsedn.sym(nodePrefix + ':' + nodeValue);
+        return new jsedn.List([new jsedn.sym(nodePrefix), new jsedn.sym(nodeValue)]);
       } else {
         // TODO make a check if we have defined the prefix
         // some custom prefix, that is hopefully defined in the UI (Edit Prefixes...)
@@ -560,7 +561,177 @@ angular.module('grafterizerApp')
       return customCodeEdn;
     }*/
 
+  function tempCheckExistingVocabInGraft(prefix){
+    var vocab = ['dcat', 'dcterms', 'foaf', 'statistical-entity', 'org', 'os', 'owl', 'pmd', 'qb', 'rdf',
+                 'sdmx-attribute', 'sdmx-concept', 'sdmx-measure', 'skos', 'vcard', 'void', 'xsd'];
+
+    for (var i = 0; i < vocab.length; i++){
+      if(vocab[i] === prefix){
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  function tempCheckExistingClassorPropertiesInGraft(prefix, name){
+    var items = [
+      'owl:Ontology','owl:Class',
+      'foaf:Person','foaf:age','foaf:depiction','foaf:gender','foaf:homepage','foaf:interest','foaf:knows','foaf:name','foaf:nick',
+      'sdmx-measure:obsValue',
+      'sdmx-concept:statUnit','sdmx-concept:unitMeasure',
+      'rdfs','rdf:a','rdf:Property','rdfs:subPropertyOf','rdfs:Class','rdfs:subClassOf','rdfs:label','rdfs:comment','rdfs:isDefinedBy','rdfs:range','rdfs:domain',
+      'vcard:Address','vcard:hasAddress','vcard:hasUrl','vcard:street-address','vcard:postal-code','vcard:locality','vcard:country-name',
+      'qb:DataStructureDefinition','qb:DataSet','qb:dataSet','qb:component','qb:componentRequired','qb:componentAttachment','qb:ComponentSpecification','qb:ComponentProperty','qb:Attachable','qb:order','qb:structure','qb:dimension','qb:DimensionProperty','qb:attribute','qb:AttributeProperty','qb:measure','qb:measureType','qb:MeasureProperty','qb:Observation','qb:concept','qb:Slice','qb:slice',
+      'skos:ConceptScheme','skos:hasTopConcept','skos:Concept','skos:inScheme','skos:topConceptOf','skos:prefLabel','skos:definition','skos:notation','skos:altLabel','skos:note','skos:Collection','skos:member',
+      'dcat:Dataset','dcat:theme',
+      'pmd:Dataset','pmd:contactEmail','pmd:graph','folder:Folder','folder:hasTree','folder:defaultTree','folder:parentFolder','folder:inFolder','folder:inTree',
+      'os:postcode',
+      'statistical-entity:name','statistical-entity:abbreviation','statistical-entity:owner','statistical-entity:coverage',
+      'statistical-entity:relatedentity','statistical-entity:status','statistical-entity:liveinstances','statistical-entity:archivedinstances',
+      'statistical-entity:coverage','statistical-entity:firstcode','statistical-entity:lastcode','statistical-entity:reservedcode',
+      'statistical-entity:introduced','statistical-entity:lastinstancechange','statistical-entity:code','statistical-entity:crossborderinstances',
+      'statistical-entity:theme','statistical-geography','statistical-geography:officialname','statistical-geography:status',
+      'statistical-geography:parentcode','boundary-change','boundary-change:operativedate','boundary-change:originatingChangeOrder','boundary-change:terminateddate','boundary-change:changeOrderTitle',
+      'sdmx-attribute:statUnit','sdmx-attribute:unitMeasure',
+      'dcterms:title','dcterms:modified','dcterms:created','dcterms:description','dcterms:issued','dcterms:license','dcterms:publisher','dcterms:creator','dcterms:references','dcterms:isReplacedBy','dcterms:replaces',
+      'org:Organization',
+      'void:Dataset','void:dataDump','void:sparqlEndpoint','void:triples','void:vocabulary',
+    ]
+
+    for (var i = 0; i < items.length; i++){
+      var str = prefix + ':' + name;
+      if(items[i] === str){
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  //check whether the prefix is added or not
+  var graphPrefix = [];
+  function isPrefixExist(prefix){
+    for (var i = 0; i < graphPrefix.length; i++){
+      if(graphPrefix[i] === prefix){
+
+        return true;
+      }
+    }
+    graphPrefix.push(prefix);
+    return false;
+  }
+
+  var graphConcept = [];
+  function isConceptExist(prefix, concept){
+
+    var name = prefix + ':' + concept;
+    for (var i = 0; i < graphConcept.length; i++){
+      if(graphConcept[i] === name){
+        return true;
+      }
+    }
+    graphConcept.push(name);
+    return false;
+  }
+
+  var namespaceMap = {
+    prefix: '',
+    namespace: '',
+  };
+
+  var namespaceMaps = [];
+
+  //load a mapping between prefix and namespace from windows localStorage.
+  //the storage is edited in propertydialog.js and mappingnodedefinitiondialog.js
+  function loadNamespaceMapping(localVocabularies){
+    //load user defined vocabulary
+    if(!localVocabularies){
+      return;
+    }
+    for (var i = localVocabularies.length - 1; i >= 0; i--) {
+      namespaceMap = new Object();
+
+      namespaceMap.prefix = localVocabularies[i].name;
+      namespaceMap.namespace = localVocabularies[i].namespace;
+      namespaceMaps.push(namespaceMap);
+    }
+    //load vocabulary in server
+    var serverVocabulary = JSON.parse(window.localStorage.getItem('serverVocabulary'));
+    if(!localVocabularies){
+      return;
+    }
+    for (var i = serverVocabulary.length - 1; i >= 0; i--) {
+      namespaceMap = new Object();
+
+      namespaceMap.prefix = serverVocabulary[i].name;
+      namespaceMap.namespace = serverVocabulary[i].namespace;
+      namespaceMaps.push(namespaceMap);
+    }
+
+  }
+
+  //get namespace based on prefix
+  function getNamespaceofPrefix(prefix){
+    for (var i = 0; i < namespaceMaps.length; i++){
+      if(namespaceMaps[i].prefix === prefix){
+        return namespaceMaps[i].namespace;
+      }
+    }
+
+    return "";
+  }
+
+
+  // recursive function to add clojure code about property and class
+  function getConcept(element, str, containingGraph){
+
+    //define vocabulary
+    if(element.prefix != "" && element.prefix != undefined){
+      if(!isPrefixExist(element.prefix)) {
+        if (tempCheckExistingVocabInGraft(element.prefix)) {
+          var namespace = getNamespaceofPrefix(element.prefix);
+          if(namespace != ""){
+            str += ('(def ' + element.prefix + ' ' + '"' + namespace + '"' + ')');
+            str += '\n';
+          } else {
+            str += ('(def ' + element.prefix + ' ' + '"' + containingGraph.graphURI + '"' + ')');
+            str += '\n';
+          }
+        }
+      }
+      //define property
+      if (element.__type === "Property") {
+        if(!isConceptExist(element.prefix, element.propertyName)){
+          if (tempCheckExistingClassorPropertiesInGraft(element.prefix, element.propertyName)) {
+            str += '(def ' + element.prefix + ':' + element.propertyName + ' (' + element.prefix + ' "' + element.propertyName + '"))';
+            str += '\n';
+          }
+        }
+      }
+
+      //define class
+      if (element.__type === "ConstantURI") {
+        if(!isConceptExist(element.prefix, element.constant)){
+          if (tempCheckExistingClassorPropertiesInGraft(element.prefix, element.constant)) {
+            str += '(def ' + element.prefix + ':' + element.constant + ' (' + element.prefix + ' "' + element.constant + '"))';
+            str += '\n';
+          }
+        }
+      }
+    }
+
+    //recursive: do the same for all sub elements
+    for(var i = 0; i < element.subElements.length; i++) {
+      str = getConcept(element.subElements[i], str, containingGraph);
+    }
+
+    return str;
+  }
+
   function generateGrafterCode(transformation) {
+    graphPrefix = [];
+    graphConcept = [];
     /* Grafter Declarations */
 
     // TODO those are not needed here; may be needed afterwards?
@@ -588,27 +759,27 @@ angular.module('grafterizerApp')
 
     //    var customFunctionsMap = transformation.customFunctionDeclarations;
     for (i = 0; i < transformation.customFunctionDeclarations.length; ++i) {
-    /*Regex parsing*/
-        var codeToParse;
-        var regexesPattern = /#"(.*?)"/g
-       
-            var regexes = regexesPattern.exec(transformation.customFunctionDeclarations[i].clojureCode);
-            if (regexes) {
-                for (var j=0;j<regexes.length;++j) {
-            var newstring = regexes[0].replace('#"','(read-string "#\\"');
-            newstring = newstring.replace(/"$/, '\\"")');
-                codeToParse = transformation.customFunctionDeclarations[i].clojureCode.replace(regexes[0],newstring);
-            }
+      /*Regex parsing*/
+      var codeToParse;
+      var regexesPattern = /#"(.*?)"/g
+
+      var regexes = regexesPattern.exec(transformation.customFunctionDeclarations[i].clojureCode);
+      if (regexes) {
+        for (var j=0;j<regexes.length;++j) {
+          var newstring = regexes[0].replace('#"','(read-string "#\\"');
+          newstring = newstring.replace(/"$/, '\\"")');
+          codeToParse = transformation.customFunctionDeclarations[i].clojureCode.replace(regexes[0],newstring);
+        }
         parseAndAddUserFunction(
-        //transformation.customFunctionDeclarations[i].clojureCode
-        codeToParse
-      );
-            }
-            else
+          //transformation.customFunctionDeclarations[i].clojureCode
+          codeToParse
+        );
+      }
+      else
 
         parseAndAddUserFunction(
-        transformation.customFunctionDeclarations[i].clojureCode
-      );
+          transformation.customFunctionDeclarations[i].clojureCode
+        );
     }
 
     var grafterCustomFunctions = constructUserFunctions();
@@ -627,12 +798,18 @@ angular.module('grafterizerApp')
     var resultingPipeline = constructPipeline();
     var textStr = '';
 
-    //    textStr += (grafterDeclarations.ednEncode() + '\n' + '\n');
-    for (i = 0; i < transformation.rdfVocabs.length; ++i) {
-      
-      textStr += ('(def ' + transformation.rdfVocabs[i].prefixName + ' ' + '"' + transformation.rdfVocabs[i].namespaceURI + '"' +')');
+    loadNamespaceMapping(transformation.rdfVocabs);
+
+    if(transformation.graphs.length > 0){
+      for(i=0; i<transformation.graphs.length; ++i){
+        if(transformation.graphs[i].graphRoots){
+          if(transformation.graphs[i].graphRoots.length > 0){
+            textStr += getConcept(transformation.graphs[0].graphRoots[0], textStr, transformation.graphs[i]);
+          }
+        }
+      }
     }
-    
+
     for (i = 0; i < grafterPrefixers.length; ++i) {
       textStr += (grafterPrefixers[i].ednEncode() + '\n');
     }

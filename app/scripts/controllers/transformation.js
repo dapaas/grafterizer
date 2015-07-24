@@ -224,6 +224,7 @@ angular.module('grafterizerApp')
       });
     };
 
+
     $scope.defineCustomFunctions = function() {
       $scope.originalCustomFunctionDeclarations = [];
       angular.copy($scope.transformation.customFunctionDeclarations, $scope
