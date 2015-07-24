@@ -13,13 +13,13 @@ angular.module('grafterizerApp')
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
         if (!scope.function) {
-          scope.function = new transformationDataModel.MakeDatasetFunction("","","",null);
+          scope.function = new transformationDataModel.MakeDatasetFunction("",null,"","",null);
           scope.function.docstring="";
         }
 
         scope.$parent.generateCurrFunction = function() {
           return new transformationDataModel.AddColumnFunction(
-            scope.function.newColName,scope.function.colValue, scope.function.colExpr,scope.function.docstring);
+            scope.function.newColName,scope.function.fileName,scope.function.colValue, scope.function.colExpr,scope.function.docstring);
         };
         scope.showUsage=false;
         scope.switchShowUsage=function() {
