@@ -9,44 +9,57 @@
  */
 angular.module('grafterizerApp')
   .controller('ComputetriplesCtrl', function($scope, $mdDialog, ontotextAPI,
-    $http) {
+    $http, $rootScope) {
 
     $scope.download = function() {
       $mdDialog.hide();
       window.open($scope.downloadLink, '_blank');
     };
 
-    $scope.save = function() {
+    $scope.makeNewDataset = function() {
+      var type = 'pipe';
+      if ($rootScope.transformation.graphs &&
+        $rootScope.transformation.graphs.length !== 0) {
+        type = 'graft';
+      }
 
-      // console.log($scope.dataset);
-      $http.get($scope.downloadLink).success(function(data) {
+      $scope.processing = true;
 
-        var file = new Blob([data], {
-          type: 'application/n-triples'
-        });
-        var metadata = {
-          '@context': ontotextAPI.getContextDeclaration(),
-          '@type': 'dcat:Distribution',
-          'dct:title': 'computed',
-          'dct:description': 'Computed transformation',
-          'dcat:fileName': 'computed.nt',
-          'dcat:mediaType': 'application/n-triples'
-        };
+      ontotextAPI.newDataset({
+        '@context': ontotextAPI.getContextDeclaration(),
+        'dct:title': $scope.dataset.title,
+        'dct:description': $scope.dataset.description,
+        'dcat:public': 'false'
+      })
+      .success(function(newDataset) {
+        $http.get($scope.downloadLink).success(function(data) {
 
-        ontotextAPI.uploadDistribution(
-          $scope.dataset['foaf:primaryTopic'],
-          file,
-          metadata).success(function(data) {
-            //          console.log(data);
-
-            // TODO TODO TODO TODO
-            window.alert(data['@id']);
+          var file = new Blob([data], {
+            type: 'application/n-triples'
           });
+          var metadata = {
+            '@context': ontotextAPI.getContextDeclaration(),
+            '@type': 'dcat:Distribution',
+            'dct:title': type + ' computed transformation',
+            'dct:description': '[' + type + '] dataset transformed with Grafterizer',
+            'dcat:fileName': 'computed.' + (type === 'pipe' ? 'csv' : 'nt'),
+            'dcat:mediaType': (type === 'pipe' ? 'text/csv' : 'application/n-triples')
+          };
 
-        $mdDialog.hide();
+          ontotextAPI.uploadDistribution(
+            newDataset['@id'],
+            file,
+            metadata).success(function(data) {
+              //          console.log(data);
+
+              // TODO TODO TODO TODO
+              window.location = 'http://datagraft.net/pages/publish/details.jsp?id=' +
+                window.encodeURIComponent(data['@id']);
+            });
+
+          $mdDialog.hide();
+        });
       });
-      
-      return;
 
     };
 

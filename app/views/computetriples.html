@@ -4,19 +4,35 @@
       <h2>Transform your data</h2>
     </div>
   </md-toolbar>
-    <md-dialog-content class="sticky-container">
-        <div flex layout="row" class="md-padding" layout-align="center center">
-        <p class="md-warn md-body-1">
-         Your transformation does not define RDF mapping.
-        </p>
-            <md-button class="md-raised md-primary sin-button-padding" aria-label="Download N-triples" ng-click="save()">
-                <i class="fa fa-large fa-cloud-upload"></i>
-                save online
-            </md-button>
-            <md-button class="md-raised md-primary sin-button-padding" aria-label="Download N-triples" ng-click="download()">
-                <i class="fa fa-large fa-cloud-download"></i>
-                download
-            </md-button>
+    <md-dialog-content layout="row" class="sticky-container">
+        <div class="md-padding" flex="66">
+            <form ng-submit="makeNewDataset()">
+                <h4 class="md-title">Save as a new page</h4>
+                <md-input-container class="sin-no-shrink">
+                    <label>Title</label>
+                    <input ng-model="dataset.title" name="title" required pattern="[a-zA-Z0-9\s\-]*">
+                    <div ng-messages="transformationForm.title.$error">
+                        <div ng-message="required">This is required.</div>
+                        <div ng-message="pattern">The title shouldn't contain special characters.</div>
+                    </div>
+                </md-input-container>
+                <md-input-container class="sin-no-shrink">
+                    <label>Description</label>
+                    <textarea ng-model="dataset.description"></textarea>
+                </md-input-container>
+                <md-button class="md-raised md-primary sin-button-padding" aria-label="Download N-triples" type="submit">
+                    Create
+                </md-button>
+                <md-progress-circular ng-if="processing" md-mode="indeterminate"></md-progress-circular>
+            </form>
+        </div>
+        <div layout="column" class="md-padding">
+            <h4 class="md-title">Or download the results</h4>
+            <div layout-align="center center" layout="row">
+                <md-button class="md-fab md-accent sin-fa-button" aria-label="Download N-triples" ng-click="download()" ng-href="{{downloadLink}}">
+                    <i class="fa fa-cloud-download"></i>
+                </md-button>
+            </div>
         </div>
     </md-dialog-content>
     <div class="md-actions" layout="row" layout-align="right">

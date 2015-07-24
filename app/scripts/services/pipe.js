@@ -67,12 +67,13 @@ angular.module('grafterizerApp')
       );
     };
 
-    api.computeTuplesHref = function(distributionUri, transformationUri) {
+    api.computeTuplesHref = function(distributionUri, transformationUri, type) {
       return endpoint + '/download?authorization=' +
         window.encodeURIComponent(apiAuthorization) +
         '&transformationUri=' +
         window.encodeURIComponent(transformationUri) +
-        '&distributionUri=' + window.encodeURIComponent(distributionUri);
+        '&distributionUri=' + window.encodeURIComponent(distributionUri) +
+        '&type=' + (type ? window.encodeURIComponent(type) : 'pipe');
     };
 
     api.preview = function(distributionUri, clojure) {

@@ -142,8 +142,7 @@ angular.module('grafterizerApp')
     var showDownloadButton = function() {
       var distribution = $scope.selectedDistribution;
       var transformation = $scope.$parent.id;
-      var downloadLink = PipeService.computeTuplesHref(
-        distribution, transformation);
+
 
       $rootScope.$emit('addAction', {
         name: 'download',
@@ -152,6 +151,15 @@ angular.module('grafterizerApp')
             // Save but without a preview
             $rootScope.actions.save(true);
           }
+
+          var type = 'pipe';
+          if ($rootScope.transformation.graphs &&
+            $rootScope.transformation.graphs.length !== 0) {
+            type = 'graft';
+          }
+
+          var downloadLink = PipeService.computeTuplesHref(
+            distribution, transformation, type);
 
           var scopeDialog = $scope.$new(false);
           scopeDialog.downloadLink = downloadLink;
