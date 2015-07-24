@@ -34,11 +34,33 @@ angular.module('grafterizerApp')
           fromServer: false
       };
 
-
+      // this is for search
       var lowercaseTemplate = {
           name: '',
           lowercase:''
       }
+
+      $scope.VocabItems = [];
+      //load server vocabulary
+      var serverVocabulary = [];
+      $http.get(
+        connection + 'getAll'
+      ).success(
+        function(response) {
+          for (var i = response.result.length - 1; i >= 0; i--) {
+            vocabItemTemplate = new Object();
+            vocabItemTemplate.name = response.result[i].name;
+            vocabItemTemplate.namespace = response.result[i].namespace;
+            vocabItemTemplate.fromServer = true;
+
+            serverVocabulary.push(vocabItemTemplate);
+          }
+          storage.setItem('serverVocabulary', JSON.stringify(serverVocabulary));
+
+        }).error(function(data, status, headers, config) {
+          console.log('error /api/vocabulary/getAll');
+        });
+
 
       $scope.showSearchDialog = true;
       $scope.showManageDialog = false;
@@ -85,7 +107,6 @@ angular.module('grafterizerApp')
       }
 
       $scope.changeType = function() {
-
         switch ($scope.dialogState.selectedTab) {
           case 0:
             if ($scope.dialogState.mappingType === 'dataset-col') {
@@ -99,10 +120,11 @@ angular.module('grafterizerApp')
               } else {
                 if (!$scope.newNode) {
                   $scope.newNode = new transformationDataModel.ConstantURI('',
-                                                                           '', []);
-                } else {
-                  $scope.propertyValue.value = $scope.newNode.prefix + ':' +
-                    $scope.newNode.constant;
+                    '', []);
+                }
+
+                if($scope.newNode.prefix !== "" || $scope.newNode.constant !== ""){
+                  $scope.propertyValue.value = $scope.newNode.prefix + ':' + $scope.newNode.constant;
                 }
               }
             }
@@ -129,8 +151,7 @@ angular.module('grafterizerApp')
       $scope.addNode = function() {
 
         if ($scope.propertyValue.value.indexOf(':') >= 0) {
-          $scope.newNode.prefix = $scope.propertyValue.value.substring(0,
-                                                                       $scope.propertyValue.value.indexOf(':'));
+          $scope.newNode.prefix = $scope.propertyValue.value.substring(0, $scope.propertyValue.value.indexOf(':'));
           $scope.newNode.constant = $scope.propertyValue.value.substring(
             $scope.propertyValue.value.indexOf(':') + 1, $scope.propertyValue
             .value.length);
@@ -345,7 +366,6 @@ angular.module('grafterizerApp')
                   vocabItemTemplate.fromServer = false;
 
                   localVocabulary.push(vocabItemTemplate);
-                  $rootScope.transformation.rdfVocabs.push(new transformationDataModel.RDFVocabulary(vocabName, vocabNamespace, [], []));
               }
 
               storage.setItem('localVocabulary', JSON.stringify(localVocabulary));

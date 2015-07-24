@@ -14,8 +14,7 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
     $mdDialog,
     $log,
     transformationDataModel,
-    leObject,
-    $rootScope) {
+    leObject) {
 
     var storage = leObject.storage;
     var connection = leObject.serveraddress;
@@ -56,6 +55,31 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
     $scope.namespaceInputDisable = false;
     $scope.dragProcess = false;
 
+    $scope.VocabItems = [];
+
+    //load server vocabulary
+
+    var serverVocabulary = [];
+    $http.get(
+      connection + 'getAll'
+    ).success(
+        function(response) {
+          for (var i = response.result.length - 1; i >= 0; i--) {
+              vocabItemTemplate = new Object();
+              vocabItemTemplate.name = response.result[i].name;
+              vocabItemTemplate.namespace = response.result[i].namespace;
+              vocabItemTemplate.fromServer = true;
+
+              serverVocabulary.push(vocabItemTemplate);
+          }
+          storage.setItem('serverVocabulary', JSON.stringify(serverVocabulary));
+
+        }).error(function(data, status, headers, config) {
+            console.log('error /api/vocabulary/getAll');
+        });
+
+
+
     if (!$scope.property) {
         $scope.property = new transformationDataModel.Property('', '', []);
     } else {
@@ -68,8 +92,13 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
             $scope.property.propertyName = $scope.propertyValue.value.substring($scope.propertyValue.value.indexOf(':') +
             1, $scope.propertyValue.value.length);
         }
+        else{
+            $scope.property.propertyName = $scope.propertyValue.value;
+            $scope.property.prefix = "";
+        }
 
-        $mdDialog.hide($scope.property);
+
+      $mdDialog.hide($scope.property);
     };
 
     $scope.closeDialog = function() {
@@ -313,7 +342,6 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
                 vocabItemTemplate.fromServer = false;
 
                 localVocabulary.push(vocabItemTemplate);
-                $rootScope.transformation.rdfVocabs.push(new transformationDataModel.RDFVocabulary(vocabName, vocabNamespace, [], []));
             }
 
             storage.setItem('localVocabulary', JSON.stringify(localVocabulary));
@@ -345,12 +373,17 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
 
                 var classArray = [];
                 var propertyArray = [];
+
+                //var classArrayforClojureCode = [];
+                //var propertyArrayforClojureCode = [];
+
                 for (var i = response.classResult.length - 1; i >= 0; i--) {
                     //lower case is easier for search
                     lowercaseTemplate = new Object();
                     lowercaseTemplate.name = response.classResult[i].value;
                     lowercaseTemplate.lowername = response.classResult[i].value.toLowerCase();
                     classArray.push(lowercaseTemplate);
+                    //classArrayforClojureCode.push(response.classResult[i].value);
                     //console.log(response.classResult[i].value);
                 }
                 for (var i = response.propertyResult.length - 1; i >= 0; i--) {
@@ -358,6 +391,7 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
                     lowercaseTemplate.name = response.propertyResult[i].value;
                     lowercaseTemplate.lowername = response.propertyResult[i].value.toLowerCase();
                     propertyArray.push(lowercaseTemplate);
+                    //propertyArrayforClojureCode.push(response.propertyResult[i].value);
                     //console.log(response.propertyResult[i].value);
                 }
                 console.log("class number: " + response.classResult.length);
