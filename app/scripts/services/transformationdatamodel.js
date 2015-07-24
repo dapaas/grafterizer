@@ -899,6 +899,7 @@ angular.module('grafterizerApp')
     this.namespaceURI = namespaceURI;
     this.properties = properties;
     this.classes = classes;
+    this.fromServer = false;
 
     this.__type = 'RDFVocabulary';
   };
