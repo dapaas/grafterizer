@@ -137,7 +137,7 @@ angular.module('grafterizerApp')
       var prefixer = new jsedn.List([
         jsedn.sym('def'),
         jsedn.sym(name),
-        new jsedn.List([jsedn.sym('prefixer'), 
+        new jsedn.List([jsedn.sym('prefixer'),
                         new jsedn.List([jsedn.sym(parentPrefix),prefixString])
                        ])
       ]);
@@ -150,7 +150,7 @@ angular.module('grafterizerApp')
     var prefixer = new jsedn.List([
       jsedn.sym('def'),
       jsedn.sym(name),
-      new jsedn.List([jsedn.sym('prefixer'), 
+      new jsedn.List([jsedn.sym('prefixer'),
           jsedn.List([jsedn.sym(parentPrefix),prefixString])
                      ])
       ]);
@@ -656,19 +656,6 @@ angular.module('grafterizerApp')
       namespaceMap.namespace = localVocabularies[i].namespace;
       namespaceMaps.push(namespaceMap);
     }
-    //load vocabulary in server
-    var serverVocabulary = JSON.parse(window.localStorage.getItem('serverVocabulary'));
-    if(!localVocabularies){
-      return;
-    }
-    for (var i = serverVocabulary.length - 1; i >= 0; i--) {
-      namespaceMap = new Object();
-
-      namespaceMap.prefix = serverVocabulary[i].name;
-      namespaceMap.namespace = serverVocabulary[i].namespace;
-      namespaceMaps.push(namespaceMap);
-    }
-
   }
 
   //get namespace based on prefix
@@ -762,7 +749,7 @@ angular.module('grafterizerApp')
     /*Regex parsing*/
         var codeToParse;
         var regexesPattern = /#"(.*?)"/g
-       
+
             var regexes = regexesPattern.exec(transformation.customFunctionDeclarations[i].clojureCode);
             if (regexes) {
                 for (var j=0;j<regexes.length;++j) {

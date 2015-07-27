@@ -41,27 +41,7 @@ angular.module('grafterizerApp')
       }
 
       $scope.VocabItems = [];
-      //load server vocabulary
-      var serverVocabulary = [];
-      $http.get(
-        connection + 'getAll'
-      ).success(
-        function(response) {
-          for (var i = response.result.length - 1; i >= 0; i--) {
-            vocabItemTemplate = new Object();
-            vocabItemTemplate.name = response.result[i].name;
-            vocabItemTemplate.namespace = response.result[i].namespace;
-            vocabItemTemplate.fromServer = true;
-
-            serverVocabulary.push(vocabItemTemplate);
-          }
-          storage.setItem('serverVocabulary', JSON.stringify(serverVocabulary));
-
-        }).error(function(data, status, headers, config) {
-          console.log('error /api/vocabulary/getAll');
-        });
-
-
+    
       $scope.showSearchDialog = true;
       $scope.showManageDialog = false;
       $scope.showAddDialog = false;
