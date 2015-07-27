@@ -236,6 +236,14 @@ angular.module('grafterizerApp')
       });
     };
 
+    $scope.editRDFPrefixes = function(){
+      $mdDialog.show({
+        templateUrl: 'views/MappingPrefixManage.html',
+        controller: 'MappingPrefixManageCtrl',
+        scope: $scope.$new(false, $scope)
+      })
+    }
+
 
     $scope.defineCustomFunctions = function() {
       $scope.originalCustomFunctionDeclarations = [];
