@@ -113,6 +113,18 @@ angular.module('grafterizerApp')
       }
     });
 
+    $scope.$watch('rejectedFileUpload', function() {
+      if ($scope.rejectedFileUpload && $scope.rejectedFileUpload.length) {
+        delete $scope.rejectedFileUpload;
+        $mdToast.show(
+          $mdToast.simple()
+          .content('The file is not valid. It should be a CSV file smaller than 10Mio')
+          .position('bottom left')
+          .hideDelay(6000)
+        );
+      }
+    });
+
     $rootScope.actions = {
       save: function(noPreviewRequest) {
         var update = angular.copy($scope.document);
