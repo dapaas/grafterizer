@@ -13,9 +13,8 @@ angular.module('grafterizerApp')
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
         if (!scope.function) {
-            //var renfunc = scope.$parent.transformation.findPrefixerOrCustomFunctionByName(
-//scope.$parent.transformation.customFunctionDeclarations[0].name);
-          scope.function = new transformationDataModel.RenameColumnsFunction([null], [null,null],null);
+            var renfunc = scope.$parent.transformation.findPrefixerOrCustomFunctionByName("keyword");
+          scope.function = new transformationDataModel.RenameColumnsFunction([renfunc], [null,null],null);
           scope.function.docstring = null;
         }
 

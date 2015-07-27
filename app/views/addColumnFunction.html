@@ -11,6 +11,12 @@
 <div>
 
             <h3>Parameters</h3>
+            <!--p> Columns to add </p>
+            <div layout="column" ng-repeat="i in getMapLength(function.columnsToAdd.length)">
+                <div layout="row">
+        <md-button class="md-primary button-tight md-default-theme" ng-disabled="function.mappings.length === 2" ng-click="removeMappingPair(i)" aria-label="Remove column mapping">
+            <i class="fa fa-trash fa-lg"></i>
+        </md-button-->
     <md-input-container flex>
         <label>Name of new column</label>
         <input ng-model="function.newColName" type="text" required>

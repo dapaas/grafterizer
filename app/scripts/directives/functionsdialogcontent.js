@@ -22,8 +22,8 @@ angular.module('grafterizerApp')
 
         scope.availableFunctions = [
           {
-            name: 'add-column',
-            displayName: 'Add column',
+            name: 'add-columns',
+            displayName: 'Add columns',
             selected: false
           },
           {

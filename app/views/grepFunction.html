@@ -42,13 +42,18 @@
             <i class="fa fa-question-circle fa-lg"></i>
         </md-button>
             <div ng-show = "showRegex">
-            <p class="api-doc-docstring"> 
-            The most simple regular expressions are just literal characters. Example: to narrow dataset just to rows containing text fragment "abc" you should use "abc" regular expression.
+            <p> 
+            The most simple regular expressions are just literal characters. Example: to narrow dataset just to rows containing text fragment <mark>abc</mark> you should use <mark>abc</mark> regular expression.
             <br>
             <br>
-            The dot matches any single character. Example: expression f.nd mathes find, fond, f1nd etc. 
+            The dot  matches any single character. Example: expression <mark>f.nd</mark> mathes <mark>find</mark>, <mark>fond</mark>, <mark>f1nd</mark> etc. 
             <br>
-            You may as well specify sets of characters you expect to see in certain position. f[iI]nd pattern will math find and fInd but not f1nd 
+            <br>
+            You may as well specify sets of characters you expect to see in certain position. Thus, <mark>f[iI]nd</mark> pattern will math find and fInd but not f1nd. Such sets may as well be expressed in terms of ranges of characters. For example <mark>[a-n]</mark> matches any character from a to n. You may combine ranges by simply concatenating them: <mark>[a-nA-N]</mark>
+            
+            <br>
+            <br>
+            Some character groups may be easily referred to with help of simple shorthand pattern. <mark>\s</mark> is a shorthand for any whitespace character, <mark>\d</mark> is used as shorthand for "any digit" and <mark>\w</mark> may be used to express  any alphanumeric character or underscore.
             
             </p>
         </div>

@@ -99,6 +99,41 @@ angular.module('grafterizerApp')
   };
   this.TakeRowsFunction = TakeRowsFunction;
   
+  var SplitFunction = function(colName,newColName,separator,docstring) {
+    GenericFunction.call(this);
+    this.colName = colName;
+    if (!newColName) this.newColName = colName + "_splitted"; else this.newColName = newColName;
+    this.separator = separator;
+    this.name = 'split';
+    this.displayName = 'split';
+    if (!docstring) this.docstring = 'Split column '+colName+' on' + separator; else this.docstring=docstring;
+    this.__type = 'SplitFunction';
+  };
+  SplitFunction.revive = function(data) {
+    return new SplitFunction(data.colName,data.newColName, data.separator, data.docstring);
+  };
+  SplitFunction.prototype.generateClojure = function() {
+          
+      var regex = new jsedn.List([jsedn.sym("read-string"),'#\"'+this.separator+'\"']);
+      var split = new jsedn.List([jsedn.sym('clojure.string/split'), jsedn.sym('col'), regex]);
+      var func = new jsedn.List([jsedn.sym('fn'),new jsedn.Vector([jsedn.sym('col')]), new jsedn.List([
+                  jsedn.sym('clojure.string/join'),this.separator, new jsedn.List([
+                      jsedn.sym('rest'),split])
+                  ])
+              ]);
+      var deriveNew = new jsedn.List([jsedn.sym('derive-column'), new jsedn.kw(':'+this.newColName), new jsedn.Vector([new jsedn.kw(':'+this.colName)]), func]);
+      var mapOld = new jsedn.List([jsedn.sym('mapc'), 
+                                   new jsedn.Map([ new jsedn.kw(':'+this.colName), 
+                                                   new jsedn.List([jsedn.sym('fn'),
+                                                                   new jsedn.Vector([jsedn.sym('col')]), 
+                                                                   new jsedn.List([jsedn.sym('first'),split])
+                                                                  ])
+                                                 ])
+                                   ]);
+  return new jsedn.List([jsedn.sym('->'),deriveNew,mapOld]);
+  };
+  this.SplitFunction = SplitFunction;
+  
   var UtilityFunction = function(functionName,docstring) {
       GenericFunction.call(this);
               if(functionName)  if (!(functionName instanceof CustomFunctionDeclaration) && functionName.__type ===
@@ -424,6 +459,18 @@ angular.module('grafterizerApp')
     return new KeyFunctionPair(data.key, data.func);
   };
   this.KeyFunctionPair = KeyFunctionPair;
+
+
+  var NewColumnSpec = function(colName,colValue,specValue) {
+      this.colName = colName;
+      this.colValue = colValue;
+      this.specValue = specValue;
+      this.__type = 'NewColumnSpec';
+  };
+  NewColumnSpec.revive = function(data) {
+      return new NewColumnSpec(data.colName,data.colValue,data.specValue)
+  };
+  this.NewColumnSpec = NewColumnSpec;
 
   var ApplyColumnsFunction = function(keyFunctionPairs, docstring) {
     // array of obj with [key, function]

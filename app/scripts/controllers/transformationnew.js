@@ -210,4 +210,12 @@ angular.module('grafterizerApp')
           .customFunctionDeclarations);
       });
     };
+    
+    $scope.defineStringCustomFunctions = function() {
+      $mdDialog.show({
+        templateUrl: 'views/createstringcustomfunction.html',
+        controller: 'StringCustomfunctionsdialogcontrollerCtrl',
+        scope: $scope.$new(false, $scope)
+  })
+    };
   });
