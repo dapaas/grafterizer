@@ -57,27 +57,6 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
 
   $scope.VocabItems = [];
 
-  //load server vocabulary
-
-  var serverVocabulary = [];
-  $http.get(
-    connection + 'getAll'
-  ).success(
-    function(response) {
-      for (var i = response.result.length - 1; i >= 0; i--) {
-        vocabItemTemplate = new Object();
-        vocabItemTemplate.name = response.result[i].name;
-        vocabItemTemplate.namespace = response.result[i].namespace;
-        vocabItemTemplate.fromServer = true;
-
-        serverVocabulary.push(vocabItemTemplate);
-      }
-      storage.setItem('serverVocabulary', JSON.stringify(serverVocabulary));
-
-    }).error(function(data, status, headers, config) {
-      console.log('error /api/vocabulary/getAll');
-    });
-
 
   $scope.closeDialog = function() {
     $mdDialog.cancel();
@@ -185,8 +164,6 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
         $scope.VocabItems.splice(i, 1);
       }
     }
-
-    storage.setItem('localVocabulary', JSON.stringify(localVocabulary));
   };
 
   //editing vocabulary
@@ -255,8 +232,6 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
 
         localVocabulary.push(vocabItemTemplate);
       }
-
-      storage.setItem('localVocabulary', JSON.stringify(localVocabulary));
 
       switchToManageDialog();
 
@@ -331,8 +306,6 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
 
           localVocabulary.push(vocabItemTemplate);
         }
-
-        storage.setItem('localVocabulary', JSON.stringify(localVocabulary));
 
         switchToManageDialog();
         $scope.showProgress = false;

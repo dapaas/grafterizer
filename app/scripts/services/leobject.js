@@ -10,8 +10,10 @@
 angular.module('grafterizerApp')
   .service('leObject', function() {
     this.object = {};
-//    this.serveraddress = 'http://localhost:8080/ManageVocabulary/api/vocabulary/';
-    this.serveraddress = 'http://ec2-54-154-72-62.eu-west-1.compute.amazonaws.com:8081/ManageVocabulary/api/vocabulary/';
+    this.serveraddress = window.location.origin === 'http://localhost:9000' ?
+      'https://grafterizer.datagraft.net/ManageVocabulary/api/vocabulary/'
+      : '/ManageVocabulary/api/vocabulary/';
+    
     this.storage = window.localStorage;
 
 

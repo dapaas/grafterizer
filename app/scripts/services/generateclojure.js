@@ -131,15 +131,15 @@ angular.module('grafterizerApp')
       jsedn.sym(name),
       new jsedn.List([jsedn.sym('prefixer'), prefixString])]);
 
-    prefixers.push(prefixer);}
- else {
- 
-    var prefixer = new jsedn.List([
-      jsedn.sym('def'),
-      jsedn.sym(name),
-      new jsedn.List([jsedn.sym('prefixer'), 
-      new jsedn.List([jsedn.sym(parentPrefix),prefixString])
-                     ])
+                                                  prefixers.push(prefixer);}
+    else {
+
+      var prefixer = new jsedn.List([
+        jsedn.sym('def'),
+        jsedn.sym(name),
+        new jsedn.List([jsedn.sym('prefixer'),
+                        new jsedn.List([jsedn.sym(parentPrefix),prefixString])
+                       ])
       ]);
     prefixers.push(prefixer);
  }
@@ -150,7 +150,7 @@ angular.module('grafterizerApp')
     var prefixer = new jsedn.List([
       jsedn.sym('def'),
       jsedn.sym(name),
-      new jsedn.List([jsedn.sym('prefixer'), 
+      new jsedn.List([jsedn.sym('prefixer'),
           jsedn.List([jsedn.sym(parentPrefix),prefixString])
                      ])
       ]);
@@ -560,6 +560,164 @@ angular.module('grafterizerApp')
       return customCodeEdn;
     }*/
 
+<<<<<<< HEAD
+=======
+  function tempCheckExistingVocabInGraft(prefix){
+    var vocab = ['dcat', 'dcterms', 'foaf', 'statistical-entity', 'org', 'os', 'owl', 'pmd', 'qb', 'rdf',
+                 'sdmx-attribute', 'sdmx-concept', 'sdmx-measure', 'skos', 'vcard', 'void', 'xsd'];
+
+    for (var i = 0; i < vocab.length; i++){
+      if(vocab[i] === prefix){
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  function tempCheckExistingClassorPropertiesInGraft(prefix, name){
+    var items = [
+      'owl:Ontology','owl:Class',
+      'foaf:Person','foaf:age','foaf:depiction','foaf:gender','foaf:homepage','foaf:interest','foaf:knows','foaf:name','foaf:nick',
+      'sdmx-measure:obsValue',
+      'sdmx-concept:statUnit','sdmx-concept:unitMeasure',
+      'rdfs','rdf:a','rdf:Property','rdfs:subPropertyOf','rdfs:Class','rdfs:subClassOf','rdfs:label','rdfs:comment','rdfs:isDefinedBy','rdfs:range','rdfs:domain',
+      'vcard:Address','vcard:hasAddress','vcard:hasUrl','vcard:street-address','vcard:postal-code','vcard:locality','vcard:country-name',
+      'qb:DataStructureDefinition','qb:DataSet','qb:dataSet','qb:component','qb:componentRequired','qb:componentAttachment','qb:ComponentSpecification','qb:ComponentProperty','qb:Attachable','qb:order','qb:structure','qb:dimension','qb:DimensionProperty','qb:attribute','qb:AttributeProperty','qb:measure','qb:measureType','qb:MeasureProperty','qb:Observation','qb:concept','qb:Slice','qb:slice',
+      'skos:ConceptScheme','skos:hasTopConcept','skos:Concept','skos:inScheme','skos:topConceptOf','skos:prefLabel','skos:definition','skos:notation','skos:altLabel','skos:note','skos:Collection','skos:member',
+      'dcat:Dataset','dcat:theme',
+      'pmd:Dataset','pmd:contactEmail','pmd:graph','folder:Folder','folder:hasTree','folder:defaultTree','folder:parentFolder','folder:inFolder','folder:inTree',
+      'os:postcode',
+      'statistical-entity:name','statistical-entity:abbreviation','statistical-entity:owner','statistical-entity:coverage',
+      'statistical-entity:relatedentity','statistical-entity:status','statistical-entity:liveinstances','statistical-entity:archivedinstances',
+      'statistical-entity:coverage','statistical-entity:firstcode','statistical-entity:lastcode','statistical-entity:reservedcode',
+      'statistical-entity:introduced','statistical-entity:lastinstancechange','statistical-entity:code','statistical-entity:crossborderinstances',
+      'statistical-entity:theme','statistical-geography','statistical-geography:officialname','statistical-geography:status',
+      'statistical-geography:parentcode','boundary-change','boundary-change:operativedate','boundary-change:originatingChangeOrder','boundary-change:terminateddate','boundary-change:changeOrderTitle',
+      'sdmx-attribute:statUnit','sdmx-attribute:unitMeasure',
+      'dcterms:title','dcterms:modified','dcterms:created','dcterms:description','dcterms:issued','dcterms:license','dcterms:publisher','dcterms:creator','dcterms:references','dcterms:isReplacedBy','dcterms:replaces',
+      'org:Organization',
+      'void:Dataset','void:dataDump','void:sparqlEndpoint','void:triples','void:vocabulary',
+    ]
+
+    for (var i = 0; i < items.length; i++){
+      var str = prefix + ':' + name;
+      if(items[i] === str){
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  //check whether the prefix is added or not
+  var graphPrefix = [];
+  function isPrefixExist(prefix){
+    for (var i = 0; i < graphPrefix.length; i++){
+      if(graphPrefix[i] === prefix){
+
+        return true;
+      }
+    }
+    graphPrefix.push(prefix);
+    return false;
+  }
+
+  var graphConcept = [];
+  function isConceptExist(prefix, concept){
+
+    var name = prefix + ':' + concept;
+    for (var i = 0; i < graphConcept.length; i++){
+      if(graphConcept[i] === name){
+        return true;
+      }
+    }
+    graphConcept.push(name);
+    return false;
+  }
+
+  var namespaceMap = {
+    prefix: '',
+    namespace: '',
+  };
+
+  var namespaceMaps = [];
+
+  //load a mapping between prefix and namespace from windows localStorage.
+  //the storage is edited in propertydialog.js and mappingnodedefinitiondialog.js
+  function loadNamespaceMapping(localVocabularies){
+    //load user defined vocabulary
+    if(!localVocabularies){
+      return;
+    }
+    for (var i = localVocabularies.length - 1; i >= 0; i--) {
+      namespaceMap = new Object();
+
+      namespaceMap.prefix = localVocabularies[i].name;
+      namespaceMap.namespace = localVocabularies[i].namespace;
+      namespaceMaps.push(namespaceMap);
+    }
+  }
+
+  //get namespace based on prefix
+  function getNamespaceofPrefix(prefix){
+    for (var i = 0; i < namespaceMaps.length; i++){
+      if(namespaceMaps[i].prefix === prefix){
+        return namespaceMaps[i].namespace;
+      }
+    }
+
+    return "";
+  }
+
+
+  // recursive function to add clojure code about property and class
+  function getConcept(element, str, containingGraph){
+
+    //define vocabulary
+    if(element.prefix != "" && element.prefix != undefined){
+      if(!isPrefixExist(element.prefix)) {
+        if (tempCheckExistingVocabInGraft(element.prefix)) {
+          var namespace = getNamespaceofPrefix(element.prefix);
+          if(namespace != ""){
+            str += ('(def ' + element.prefix + ' ' + '"' + namespace + '"' + ')');
+            str += '\n';
+          } else {
+            str += ('(def ' + element.prefix + ' ' + '"' + containingGraph.graphURI + '"' + ')');
+            str += '\n';
+          }
+        }
+      }
+      //define property
+      if (element.__type === "Property") {
+        if(!isConceptExist(element.prefix, element.propertyName)){
+          if (tempCheckExistingClassorPropertiesInGraft(element.prefix, element.propertyName)) {
+            str += '(def ' + element.prefix + ':' + element.propertyName + ' (' + element.prefix + ' "' + element.propertyName + '"))';
+            str += '\n';
+          }
+        }
+      }
+
+      //define class
+      if (element.__type === "ConstantURI") {
+        if(!isConceptExist(element.prefix, element.constant)){
+          if (tempCheckExistingClassorPropertiesInGraft(element.prefix, element.constant)) {
+            str += '(def ' + element.prefix + ':' + element.constant + ' (' + element.prefix + ' "' + element.constant + '"))';
+            str += '\n';
+          }
+        }
+      }
+    }
+
+    //recursive: do the same for all sub elements
+    for(var i = 0; i < element.subElements.length; i++) {
+      str = getConcept(element.subElements[i], str, containingGraph);
+    }
+
+    return str;
+  }
+
+>>>>>>> origin/master
   function generateGrafterCode(transformation) {
     /* Grafter Declarations */
 
@@ -591,7 +749,7 @@ angular.module('grafterizerApp')
     /*Regex parsing*/
         var codeToParse;
         var regexesPattern = /#"(.*?)"/g
-       
+
             var regexes = regexesPattern.exec(transformation.customFunctionDeclarations[i].clojureCode);
             if (regexes) {
                 for (var j=0;j<regexes.length;++j) {
