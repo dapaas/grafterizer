@@ -23,12 +23,13 @@
   <md-dialog-content>
     <div class="modal-dialog animate-switch-container" ng-switch on="selection" >
       <div class="modal-content animate-switch" ng-switch-default>
-        <div>
+        <div class="md-padding">
           <md-list>
-            <md-list-item ng-click="noOperation()" ng-repeat="item in VocabItems | startFrom:vocabcurrentPage*vocabpageSize | limitTo:vocabpageSize track by $index">
-              <p> {{ item.name }} <small style="color:#C0C0C0"> ( {{item.namespace}} )</small></p>
-              <md-button ng-hide="item.fromServer" aria-label='edit' class="fa fa-pencil-square-o md-icon-button md-primary" ng-click="editItem(item.name, item.namespace)"></md-button>
-              <md-button ng-hide="item.fromServer" aria-label='delete' class="fa fa-trash md-icon-button md-primary" ng-click="deleteItem(item.namespace)"></md-button>
+            <md-list-item ng-repeat="item in VocabItems | startFrom:vocabcurrentPage*vocabpageSize | limitTo:vocabpageSize track by $index">
+              <p ng-show="item.fromServer" style="color:#C0C0C0">  {{ item.name }} <small style="color:#C0C0C0"> ( {{item.namespace}} )</small></p>
+              <p ng-hide="item.fromServer"> {{ item.name }} <small style="color:#C0C0C0"> ( {{item.namespace}} )</small></p>
+              <md-button ng-hide="item.fromServer" aria-label='edit' class="fa fa-pencil-square-o md-icon-button md-primary fa-lg" ng-click="editItem(item.name, item.namespace, item.fromServer)"></md-button>
+              <md-button ng-hide="item.fromServer" aria-label='delete' class="fa fa-trash md-icon-button md-primary fa-lg" ng-click="deleteItem(item.namespace)"></md-button>
             </md-list-item>
           </md-list>
           <div align="center"><md-progress-circular ng-show="showProgressCircular" class="md-hue-2" md-mode="indeterminate"></md-progress-circular></div>

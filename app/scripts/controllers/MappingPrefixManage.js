@@ -37,20 +37,14 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
     lowercase:''
   }
 
-  $scope.showSearchDialog = true;
   $scope.showManageDialog = false;
   $scope.showAddDialog = false;
   $scope.showProgress = false;
-
-  //search dialog
-  $scope.showSearchResult  = false;
-  $scope.showSearchEmptyResult = false;
 
   //vocabulary edit dialog
   $scope.showProgressCircular = false;
 
   //add vocabulary dialog
-  $scope.showSearchPagination = false;
   $scope.showVocabularyPagination = false;
   $scope.namespaceInputDisable = false;
   $scope.dragProcess = false;
@@ -76,9 +70,12 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
     var localVocabulary = $scope.$parent.transformation.rdfVocabs;
 
     var VocabList = [];
+    $scope.VocabItems = [];
     if (localVocabulary != null){
       for (var i = localVocabulary.length - 1; i >= 0; i--) {
-        VocabList.push(localVocabulary[i]);
+        if (localVocabulary[i].fromServer === false) {
+          VocabList.push(localVocabulary[i]);
+        }
       }
     }
 
@@ -98,7 +95,7 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
 
           $scope.VocabItems.push(vocabItemTemplate);
 
-          if ($scope.VocabItems.length > $scope.pageSize){
+          if ($scope.VocabItems.length > $scope.vocabpageSize){
             $scope.showVocabularyPagination = true;
           }
           else{
@@ -121,7 +118,10 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
 
   switchToManageDialog();
 
-  $scope.switchToAddDialog = function(name, namespace) {
+  $scope.switchToAddDialog = function(name, namespace, fromServer) {
+    if(fromServer === true){
+      return;
+    }
     $scope.selection = 'addVocabDialog';
 
     $scope.showManageDialog = false;
@@ -167,8 +167,8 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
   };
 
   //editing vocabulary
-  $scope.editItem = function(name, namespace){
-    $scope.switchToAddDialog(name, namespace);
+  $scope.editItem = function(name, namespace, fromServer){
+    $scope.switchToAddDialog(name, namespace, fromServer);
   };
 
   //delete vocabulary from server
@@ -189,22 +189,6 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
         alert('error');
       });
   }
-
-  //add vocabulary to server
-  $scope.addVocabtoServer = function(vocabName, vocabNamespace, vocabLoc) {
-    $http.post(
-      connection + 'add'
-      , {
-        name: vocabName,
-        namespace: vocabNamespace,
-        path: vocabLoc,
-        data: object.data
-      }).success(function(response) {
-        switchToManageDialog();
-      }).error(function(data, status, headers, config) {
-        console.log('error', data);
-      });
-  };
 
   //add vocabulary to local
   $scope.addVocabtoLocal = function(vocabName, vocabNamespace, vocabLoc) {
