@@ -1,6 +1,7 @@
 <md-content flex layout-sm="column" layout="row"
             ngf-drop ng-model="fileUpload" ngf-drag-over-class="show-upload-indicator"
-            ngf-accept="'.csv'">
+            ngf-accept="'.csv'" ngf-max-size="1048576"
+            ng-model-rejected="rejectedFileUpload">
     <md-button aria-label="Upload dataset" class="md-accent upload-indicator">
         <i class="fa fa-upload"></i>
     </md-button>
