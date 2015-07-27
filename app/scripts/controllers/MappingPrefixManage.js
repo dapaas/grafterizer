@@ -57,25 +57,6 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
 
   $scope.VocabItems = [];
 
-  //load server vocabulary
-
-  var localVocabulary = $scope.$parent.transformation.rdfVocabs;
-  $http.get(
-    connection + 'getAll'
-  ).success(
-    function(response) {
-      for (var i = response.result.length - 1; i >= 0; i--) {
-        vocabItemTemplate = new Object();
-        vocabItemTemplate.name = response.result[i].name;
-        vocabItemTemplate.namespace = response.result[i].namespace;
-        vocabItemTemplate.fromServer = true;
-
-        localVocabulary.push(vocabItemTemplate);
-      }
-    }).error(function(data, status, headers, config) {
-      console.log('error /api/vocabulary/getAll');
-    });
-
 
   $scope.closeDialog = function() {
     $mdDialog.cancel();
