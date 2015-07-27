@@ -9,7 +9,7 @@
  */
 angular.module('grafterizerApp')
   .controller('ComputetriplesCtrl', function($scope, $mdDialog, ontotextAPI,
-    $http, $rootScope) {
+    $http, $rootScope, datagraftPostMessage) {
 
     $scope.download = function() {
       $mdDialog.hide();
@@ -31,7 +31,7 @@ angular.module('grafterizerApp')
         'dct:description': $scope.dataset.description,
         'dcat:public': 'false'
       })
-      .success(function(newDataset) {
+      .success(function(datasetData) {
         $http.get($scope.downloadLink).success(function(data) {
 
           var file = new Blob([data], {
@@ -47,14 +47,23 @@ angular.module('grafterizerApp')
           };
 
           ontotextAPI.uploadDistribution(
-            newDataset['@id'],
+            datasetData['@id'],
             file,
-            metadata).success(function(data) {
-              //          console.log(data);
+            metadata).success(function(distributionData) {
 
-              // TODO TODO TODO TODO
-              window.location = 'http://datagraft.net/pages/publish/details.jsp?id=' +
-                window.encodeURIComponent(data['@id']);
+              var location = '/pages/publish/details.jsp?id=' +
+                    window.encodeURIComponent(datasetData['@id']);
+              if (datagraftPostMessage.isConnected()) {
+                datagraftPostMessage.setLocation(location);
+              } else {
+                if (location.protocol === 'https:') {
+                  location = 'https://datagraft.net' + location;
+                } else {
+                  location = 'http://datagraft.net' + location;
+                }
+
+                window.location = location;
+              }
             });
 
           $mdDialog.hide();
