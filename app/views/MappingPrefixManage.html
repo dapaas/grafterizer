@@ -12,10 +12,10 @@
   </style>
   <md-toolbar>
     <div class="md-toolbar-tools" ng-show="showManageDialog">
-      <h2>View local vocabulary</h2>
+      <h2>View prefixes</h2>
     </div>
     <div class="md-toolbar-tools" ng-show="showAddDialog">
-      <h2>Add new vocabulary</h2>
+      <h2>Add new prefix</h2>
     </div>
     <md-progress-linear md-mode="indeterminate" ng-show="showProgress"></md-progress-linear>
   </md-toolbar>
@@ -23,12 +23,13 @@
   <md-dialog-content>
     <div class="modal-dialog animate-switch-container" ng-switch on="selection" >
       <div class="modal-content animate-switch" ng-switch-default>
-        <div>
+        <div class="md-padding">
           <md-list>
-            <md-list-item ng-click="noOperation()" ng-repeat="item in VocabItems | startFrom:vocabcurrentPage*vocabpageSize | limitTo:vocabpageSize track by $index">
-              <p> {{ item.name }} <small style="color:#C0C0C0"> ( {{item.namespace}} )</small></p>
-              <md-button ng-hide="item.fromServer" aria-label='edit' class="fa fa-pencil-square-o md-icon-button md-primary" ng-click="editItem(item.name, item.namespace)"></md-button>
-              <md-button ng-hide="item.fromServer" aria-label='delete' class="fa fa-trash md-icon-button md-primary" ng-click="deleteItem(item.namespace)"></md-button>
+            <md-list-item ng-repeat="item in VocabItems | startFrom:vocabcurrentPage*vocabpageSize | limitTo:vocabpageSize track by $index">
+              <p ng-show="item.fromServer" style="color:#C0C0C0">  {{ item.name }} <small style="color:#C0C0C0"> ( {{item.namespace}} )</small></p>
+              <p ng-hide="item.fromServer"> {{ item.name }} <small style="color:#C0C0C0"> ( {{item.namespace}} )</small></p>
+              <md-button ng-hide="item.fromServer" aria-label='edit' class="fa fa-pencil-square-o md-icon-button md-primary fa-lg" ng-click="editItem(item.name, item.namespace, item.fromServer)"></md-button>
+              <md-button ng-hide="item.fromServer" aria-label='delete' class="fa fa-trash md-icon-button md-primary fa-lg" ng-click="deleteItem(item.namespace)"></md-button>
             </md-list-item>
           </md-list>
           <div align="center"><md-progress-circular ng-show="showProgressCircular" class="md-hue-2" md-mode="indeterminate"></md-progress-circular></div>
@@ -45,9 +46,10 @@
           </div>
         </div>
 
-        <div class="md-actions" layout="row" layout-align="right">
-          <md-button class="md-primary" ng-click="switchToAddDialog('','')">Add Prefix</md-button>
-          <md-button class="md-primary" ng-click="closeDialog()">OK</md-button>
+        <div class="md-actions" layout="row">
+          <md-button aria-label='Add Prefix' class="fa fa-plus md-icon-button md-primary" ng-click="switchToAddDialog('','')"></md-button>
+          <span flex></span>
+          <div align="right"><md-button class="md-primary" ng-click="closeDialog()">OK</md-button></div>
         </div>
       </div>
 
