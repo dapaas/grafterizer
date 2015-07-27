@@ -560,8 +560,6 @@ angular.module('grafterizerApp')
       return customCodeEdn;
     }*/
 
-<<<<<<< HEAD
-=======
   function tempCheckExistingVocabInGraft(prefix){
     var vocab = ['dcat', 'dcterms', 'foaf', 'statistical-entity', 'org', 'os', 'owl', 'pmd', 'qb', 'rdf',
                  'sdmx-attribute', 'sdmx-concept', 'sdmx-measure', 'skos', 'vcard', 'void', 'xsd'];
@@ -717,7 +715,6 @@ angular.module('grafterizerApp')
     return str;
   }
 
->>>>>>> origin/master
   function generateGrafterCode(transformation) {
     /* Grafter Declarations */
 
