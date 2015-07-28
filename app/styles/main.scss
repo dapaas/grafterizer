@@ -448,7 +448,9 @@ md-tab-content {
 }
 
 .sin-grid {
-    min-height:20em;
+    &:not(.no-min-height) {
+        min-height:20em;
+    }
     vertical-align: middle;
 
     .ui-grid-top-panel {

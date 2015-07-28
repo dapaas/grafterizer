@@ -23,8 +23,8 @@
     <md-tab label="Sources">
         <md-tab-body>
 
-        <p class="md-padding md-caption" style="text-align:center;" ng-if="datasets.length === 0">You don't have distributions yet. You can drag &amp;drop a CSV file.</p>
-        <p class="md-padding md-caption" style="text-align:center;" ng-if="datasets.length !== 0">Select an existing distribution or drag&amp;drop a CSV file.</p>
+        <p class="md-padding md-caption" style="text-align:center;" ng-if="datasets.length === 0">You don't have distributions yet. Drag and drop a CSV file.</p>
+        <p class="md-padding md-caption" style="text-align:center;" ng-if="datasets.length !== 0">Select an existing distribution or drag and drop a CSV file.</p>
         <md-radio-group ng-model="selectedDistribution">
         <v-accordion class="vAccordion--default md-margin" flex
             onexpand="accordionExpandCallback(index)">

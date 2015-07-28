@@ -4,8 +4,8 @@
             <h2>Edit prefixes</h2>
         </div>
     </md-toolbar>
-    <md-dialog-content class="md-padding">
-        <div id="prefixesTable" ui-grid="gridOpts" class="grid sin-grid sin-prefixes-grid" ui-grid-selection ui-grid-resize-columns ui-grid-exporter></div>
+    <md-dialog-content layout="column" class="md-padding" style="overflow-y:hidden;">
+        <div id="prefixesTable" ui-grid="gridOpts" class="grid sin-grid sin-prefixes-grid no-min-height" ui-grid-selection ui-grid-resize-columns ui-grid-exporter flex></div>
         <div>
             <form name="prefixForm">
                 <div layout="row">
