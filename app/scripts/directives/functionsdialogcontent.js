@@ -67,6 +67,11 @@ angular.module('grafterizerApp')
             selected: false
           },
           {
+            name: 'remove-columns',
+            displayName: 'Remove columns',
+            selected: false
+          },
+          {
             name: 'rename-columns',
             displayName: 'Rename columns',
             selected: false

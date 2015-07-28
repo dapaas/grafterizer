@@ -757,7 +757,6 @@ angular.module('grafterizerApp')
                 codeToParse = codeToParse.replace(regexes[0],newstring);
            regexes = regexesPattern.exec(codeToParse);
            }
-         console.log(codeToParse); 
         parseAndAddUserFunction(
         //transformation.customFunctionDeclarations[i].clojureCode
         codeToParse
