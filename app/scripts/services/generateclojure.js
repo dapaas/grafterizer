@@ -722,6 +722,8 @@ angular.module('grafterizerApp')
     //    var grafterDeclarations = constructGrafterDeclarations();
 
     /* Prefixers */
+    graphPrefix = [];
+    graphConcept = [];
 
     var prefixersInGUI = transformation.prefixers;
 
@@ -750,7 +752,7 @@ angular.module('grafterizerApp')
             var regexes = regexesPattern.exec(codeToParse);
         var newstring;
            while (regexes) {
-          
+
 
             newstring = regexes[0].replace('#"',' (read-string "#\\"');
             newstring = newstring.replace(/"$/, '\\"")');
@@ -762,8 +764,8 @@ angular.module('grafterizerApp')
         codeToParse
       );
 
-          
-          
+
+
     }
 
     var grafterCustomFunctions = constructUserFunctions();
@@ -782,12 +784,17 @@ angular.module('grafterizerApp')
     var resultingPipeline = constructPipeline();
     var textStr = '';
 
-    //    textStr += (grafterDeclarations.ednEncode() + '\n' + '\n');
-    for (i = 0; i < transformation.rdfVocabs.length; ++i) {
-      
-      textStr += ('(def ' + transformation.rdfVocabs[i].prefixName + ' ' + '"' + transformation.rdfVocabs[i].namespaceURI + '"' +')');
+    loadNamespaceMapping(transformation.rdfVocabs);
+    if(transformation.graphs.length > 0) {
+      for (i = 0; i < transformation.graphs.length; ++i) {
+        if (transformation.graphs[i].graphRoots) {
+          if (transformation.graphs[i].graphRoots.length > 0) {
+            textStr += getConcept(transformation.graphs[0].graphRoots[0], textStr, transformation.graphs[i]);
+          }
+        }
+      }
     }
-    
+
     for (i = 0; i < grafterPrefixers.length; ++i) {
       textStr += (grafterPrefixers[i].ednEncode() + '\n');
     }
