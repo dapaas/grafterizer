@@ -57,6 +57,8 @@ angular.module('grafterizerApp')
           new transformationDataModel.CustomFunctionDeclaration('upper-case',
         '','Converts string to all upper-case'),
           new transformationDataModel.CustomFunctionDeclaration('reverse', '','Returns given string with its characters reversed'),
+          new transformationDataModel.CustomFunctionDeclaration('remove-blanks', '(defn remove-blanks [s]  (when (seq s)  (clojure.string/replace s " " "")))','Removes blanks in a string'),
+          new transformationDataModel.CustomFunctionDeclaration('titleize', '(defn titleize [st] (when (seq st) (let [a (clojure.string/split st (read-string "#\\" \\"")) c (map clojure.string/capitalize a)]  (->> c (interpose " ") (apply str) trim))))','Capitalizes each word in a string'),
           new transformationDataModel.CustomFunctionDeclaration('trim', '','Removes whitespace from both ends of string'),
           new transformationDataModel.CustomFunctionDeclaration('trim-newline',
         '','Removes all trailing newline \n or return \r characters from string'),
@@ -215,7 +217,7 @@ angular.module('grafterizerApp')
     $scope.defineStringCustomFunctions = function() {
       $mdDialog.show({
         templateUrl: 'views/createstringcustomfunction.html',
-        controller: 'StringCustomfunctionsdialogcontrollerCtrl',
+        controller: 'CustomStringfunctionsdialogcontrollerCtrl',
         scope: $scope.$new(false, $scope)
   })
     };

@@ -254,7 +254,12 @@ angular.module('grafterizerApp')
     switch (opt){
 
         case ("txt"):
-            values.push(this.filterText);
+            if (this.ignoreCase) {
+                var regexParsed = '#\"(?i).*'+this.filterText+'.*\"';
+                values.push(new jsedn.List([jsedn.sym("read-string"),regexParsed]));
+            }
+            else
+                values.push(this.filterText);
             break;
 
         case ("regex"):
@@ -750,6 +755,10 @@ angular.module('grafterizerApp')
           functions[i] = DropRowsFunction.revive(funct);
         }
 
+        if (funct.__type === 'UtilityFunction') {
+          functions[i] = UtilityFunction.revive(funct);
+        }
+
         if (funct.__type === 'TakeRowsFunction') {
           functions[i] = TakeRowsFunction.revive(funct);
         }
@@ -786,6 +795,16 @@ angular.module('grafterizerApp')
           functions[i] = MeltFunction.revive(funct);
         }
 
+        if (funct.__type === 'GrepFunction') {
+          functions[i] = GrepFunction.revive(funct);
+        }
+        
+        if (funct.__type === 'RemoveColumnsFunction') {
+          functions[i] = RemoveColumnsFunction.revive(funct);
+        }
+        if (funct.__type === 'SplitFunction') {
+          functions[i] = SplitFunction.revive(funct);
+        }
       }
     }
 
