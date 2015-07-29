@@ -27,7 +27,7 @@
                             Expose as public
                         </md-switch>
                         <p flex ng-show="document['dct:publisher']">
-                            Publisher: <strong>{{document['dct:publisher']}}</strong> 
+                            Publisher: <strong>{{document['dct:publisher']}}</strong>
                         </p>
                     </div>
                 </form>
@@ -57,6 +57,9 @@
                     <md-button aria-label="Edit RDF mapping prefixes" ng-click="editRDFPrefixes()">
                         <i class="fa fa-cubes"></i> Edit RDF mapping prefixes
                     </md-button>
+                    <md-button aria-label="Validate mapping" ng-click="validateMapping()">
+                      <i class="fa fa-code"></i> Validate mapping
+                    </md-button>
                 </div>
                 <rdf-mapping></rdf-mapping>
             </md-tab-body>
@@ -71,5 +74,5 @@
     </md-tabs>
     <div ng-show="showPreview" flex flex-gt-lg="66" layout="column">
         <div layout="column" flex ui-view="preview" autoscroll="false"></div>
-    </div> 
+    </div>
 </md-content>

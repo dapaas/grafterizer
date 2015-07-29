@@ -193,6 +193,14 @@ angular.module('grafterizerApp')
       })
     }
 
+    $scope.validateMapping = function(){
+      $mdDialog.show({
+        templateUrl: 'views/validateMapping.html',
+        controller: 'validateMappingCtrl',
+        scope: $scope.$new(false, $scope)
+      })
+    }
+
 
     $scope.defineCustomFunctions = function() {
       $scope.originalCustomFunctionDeclarations = [];
@@ -211,7 +219,7 @@ angular.module('grafterizerApp')
           .customFunctionDeclarations);
       });
     };
-    
+
     $scope.defineStringCustomFunctions = function() {
       $mdDialog.show({
         templateUrl: 'views/createstringcustomfunction.html',

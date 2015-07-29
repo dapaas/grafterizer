@@ -13,10 +13,8 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
   $http,
   $mdDialog,
   $log,
-  transformationDataModel,
   leObject) {
 
-  var storage = leObject.storage;
   var connection = leObject.serveraddress;
   var object = leObject.object;
 
