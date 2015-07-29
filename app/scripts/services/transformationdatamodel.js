@@ -99,6 +99,29 @@ angular.module('grafterizerApp')
   };
   this.TakeRowsFunction = TakeRowsFunction;
   
+  var RemoveColumnsFunction = function(columnsArray, docstring) {
+      GenericFunction.call(this);
+      this.columnsArray = columnsArray;
+      if (!docstring) { this.docstring = "Remove columns ";
+          for (var i=0;i<columnsArray.length;++i) this.docstring+=columnsArray[i]+" ";
+      }
+      else this.docstring = docstring;
+      this.name = 'remove-columns';
+      this.displayName = 'remove-columns';
+      this.__type = 'RemoveColumnsFunction';
+  };
+  RemoveColumnsFunction.revive = function(data) {
+      return new RemoveColumnsFunction(data.columnsArray, data.docstring);
+  };
+  RemoveColumnsFunction.prototype.generateClojure = function() {
+    var colNamesClj = new jsedn.Vector([]);
+        for (var i = 0; i < this.columnsArray.length; ++i) {
+          colNamesClj.val.push(new jsedn.kw(':' + this.columnsArray[i]));
+        }
+
+    return new jsedn.List([jsedn.sym('remove-columns'), colNamesClj]);
+  };
+  this.RemoveColumnsFunction = RemoveColumnsFunction;
   var SplitFunction = function(colName,newColName,separator,docstring) {
     GenericFunction.call(this);
     this.colName = colName;
