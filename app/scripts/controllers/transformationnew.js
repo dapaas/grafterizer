@@ -103,7 +103,12 @@ angular.module('grafterizerApp')
 
     var allcustomfunctions = customfunctions.concat(predicatefunctions.concat(numericcustomfunctions));
     $scope.clojure = '';
-    $scope.pipeline = new transformationDataModel.Pipeline([]);
+    //Initial functions: Make dataset with first row from header and rename columns as keywords to allow referring to them
+    var makeds = new transformationDataModel.MakeDatasetFunction([],null,0,true,null);
+    var j;
+    for (j=0;j<customfunctions.length;++j) if (customfunctions[j].name === 'keyword') break;
+    var renamecols = new transformationDataModel.RenameColumnsFunction([customfunctions[j]],[null,null],null);
+    $scope.pipeline = new transformationDataModel.Pipeline([makeds,renamecols]);
     $scope.transformation = new transformationDataModel.Transformation(
       allcustomfunctions, [], [$scope.pipeline], []);
   $rootScope.transformation = $scope.transformation;

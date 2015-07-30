@@ -103,10 +103,10 @@ angular.module('grafterizerApp')
                     $scope.sampleToReplace = $scope.sample;
                 break;
                 case ('trim-newline'):
-                    $scope.sample = $scope.sample.replace(/\n/g,'');
+                    $scope.sample = $scope.sample.replace('\n','');
+                    
                 break;
                 case ('remove-blanks'):
-                    $scope.sample = $scope.sample.replace(/ +/g,'');
                 break;
                 default:
                 break;
