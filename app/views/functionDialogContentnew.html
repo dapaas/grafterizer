@@ -19,7 +19,6 @@
 <div layout="column" flex>
     <div layout="column" >   <md-content ng-class="!selectedFunctionName ? 'sin-dapaas-background md-padding' : 'md-padding'" flex layout="column" md-scroll-y>
         <add-columns-function transformation="transformation" ng-if="selectedFunctionName ==='add-columns'"></add-columns-function>
-        <!--apply-columns-function transformation="transformation" ng-if="availableFunctions[1].selected === true"></apply-columns-function-->
         <columns-function transformation="transformation" ng-if="selectedFunctionName === 'columns'"></columns-function>
         <derive-column-function transformation="transformation" ng-if="selectedFunctionName === 'derive-column'" ></derive-column-function>
         <drop-rows-function transformation="transformation" ng-if="selectedFunctionName === 'drop-rows'"></drop-rows-function>
@@ -27,12 +26,9 @@
         <make-dataset transformation="transformation" ng-if="selectedFunctionName === 'make-dataset'"></make-dataset>
         <mapc-function transformation="transformation" ng-if="selectedFunctionName === 'mapc'"></mapc-function>
         <melt-function transformation="transformation" ng-if="selectedFunctionName === 'melt'"></melt-function>
-        <!--remove-columns-function transformation="transformation" ng-if="availableFunctions[9].selected === true"></remove-columns-function-->
         <rename-columns-function transformation="transformation" ng-if="selectedFunctionName === 'rename-columns'"></rename-columns-function>
         <split-function transformation="transformation" ng-if="selectedFunctionName === 'split'"></split-function>
-        <!--take-rows-function transformation="transformation" ng-if="availableFunctions[12].selected"></take-rows-function-->
         <utility-function transformation="transformation" ng-if="selectedFunctionName === 'utility'"></utility-function>
-        <!--custom-code transformation="transformation" ng-if="availableFunctions[14].selected"></custom-code-->
     </md-content>
 
 </div> 
