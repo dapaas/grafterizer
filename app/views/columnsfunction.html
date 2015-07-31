@@ -18,6 +18,11 @@
             <strong>{{$chip}}</strong>
         </md-chip-template>
     </md-chips>
+    <div style="align:right">
+    <md-switch ng-disabled="function.useLazy"  ng-model="function.take" aria-label="switch mode">
+    {{function.take?"Take only listed columns":"Take all columns EXCEPT of listed"}}
+    </md-switch>
+    </div>
 </md-whiteframe>
         <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">
     <md-checkbox ng-model="function.useLazy" aria-label="or specify number of columns to fetch">

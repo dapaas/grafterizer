@@ -7,7 +7,7 @@
     <md-dialog-content layout="row" class="sin-dark-background-fix">
         <div class="content-stuff utility-functions" layout="column" flex="33">
             <md-content class="sin-functions-list" layout="column" flex md-scroll-y>
-                <md-button ng-click="$parent.selectedCustomFunction = function" ng-repeat="function in functionsList" ng-disabled="function == $parent.selectedCustomFunction">{{function.name}}
+                <md-button ng-click="$parent.selectedCustomFunction = function" ng-repeat="function in functionsList" ng-show="function.name!=='fill-when' && function.name!=='add-filename-to-column'  && function.name!=='integer-literal'  && function.name!=='remove-columns'  && function.name!=='replace-varible-string'   && function.name!=='string-literal'   && function.name!=='titleize'  " ng-disabled="function == $parent.selectedCustomFunction">{{function.name}}
                     <md-button ng-if="function == $parent.selectedCustomFunction" class="button-tight" aria-label="Delete this function" ng-click="removeCustomFunct(selectedCustomFunction)">
                         <i class="fa fa-minus-circle"></i>
                         <md-tooltip>Delete this function</md-tooltip>
@@ -19,9 +19,12 @@
                 </md-button>
                 <span flex></span>
             </md-content>
-            <md-toolbar class="md-actions">
+            <md-toolbar class="md-actions" layout = "row" layout-align="left">
                 <md-button aria-label="Create new function" ng-click="createNewFunct()">
                     <i class="fa fa-plus"></i>
+                </md-button>
+                <md-button aria-label="Create new text transformation" ng-click="createNewText()">
+                    <i class="fa fa-font"></i>
                 </md-button>
             </md-toolbar>
         </div>

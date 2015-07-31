@@ -14,7 +14,7 @@ angular.module('grafterizerApp')
       link: function postLink(scope, element, attrs) {
         if (!scope.function) {
           scope.function = new transformationDataModel.ColumnsFunction(
-            [],null,0, null);
+            [],null,0,true, null);
           scope.function.docstring = null;
         }
 
@@ -22,6 +22,7 @@ angular.module('grafterizerApp')
           return new transformationDataModel.ColumnsFunction(scope.function.columnsArray,
                   scope.function.useLazy,
                   scope.function.numberOfColumns,
+                  scope.function.take,
                   scope.function.docstring);
         };
         scope.showUsage=false;

@@ -13,7 +13,7 @@ angular.module('grafterizerApp')
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
         if (!scope.function) {
-          scope.function = new transformationDataModel.MakeDatasetFunction("",null,"","",null);
+          scope.function = new transformationDataModel.AddColumnFunction("",null,"","",null);
           scope.function.docstring="";
         }
 

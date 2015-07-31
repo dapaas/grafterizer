@@ -9,6 +9,13 @@
         </div>
         <div>
             <h3>Parameters</h3>
+            <div layout="row">
+                
+    <md-switch ng-model="function.take" aria-label="switch mode">
+    {{function.take?"Take rows":"Drop rows"}}
+    </md-switch>
+<md-button class="md-raised" ng-click="doGrep()" style="position:absolute; right:10px" aria-label="Grep">Filter Dataset</md-button>
+</div>
   <md-input-container flex>
         <label>Number of rows</label>
         <input ng-model="function.numberOfRows" type="number" min="1" required>

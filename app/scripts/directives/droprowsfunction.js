@@ -15,14 +15,18 @@ angular.module('grafterizerApp')
         if (!scope.function) {
           scope.function = {
             numberOfRows: 1,
+            take: true,
             docstring: null
           };
         }
 
         scope.$parent.generateCurrFunction = function() {
           return new transformationDataModel.DropRowsFunction(parseInt(
-            scope.function.numberOfRows),scope.function.docstring);
+            scope.function.numberOfRows),scope.function.take, scope.function.docstring);
         };
+        scope.doGrep = function() {
+        scope.$parent.selectedFunctionName = 'grep';
+        }
         scope.showUsage=false;
         scope.switchShowUsage=function() {
         scope.showUsage=!scope.showUsage;
