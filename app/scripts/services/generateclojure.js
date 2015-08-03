@@ -670,17 +670,20 @@ angular.module('grafterizerApp')
 
 
   // recursive function to add clojure code about property and class
-  function getConcept(element, str, containingGraph){
-
+  function getConcept(element, str, containingGraph,prefixersInGUI){
     //define vocabulary
     if(element.prefix != "" && element.prefix != undefined){
       if(!isPrefixExist(element.prefix)) {
         if (tempCheckExistingVocabInGraft(element.prefix)) {
           var namespace = getNamespaceofPrefix(element.prefix);
+          var existsInGUI=false;
+          for (var i=0;i<prefixersInGUI.length;++i) {
+              if (prefixersInGUI[i].name === element.prefix) existsInGUI = true;
+          }
           if(namespace != ""){
-            str += ('(def ' + element.prefix + ' ' + '"' + namespace + '"' + ')');
+            str += ('(def ' + element.prefix + ' ' + '"' + namespace + '"' + ') ');
             str += '\n';
-          } else {
+          } else if (!existsInGUI) {
             str += ('(def ' + element.prefix + ' ' + '"' + containingGraph.graphURI + '"' + ')');
             str += '\n';
           }
@@ -709,7 +712,7 @@ angular.module('grafterizerApp')
 
     //recursive: do the same for all sub elements
     for(var i = 0; i < element.subElements.length; i++) {
-      str = getConcept(element.subElements[i], str, containingGraph);
+      str = getConcept(element.subElements[i], str, containingGraph,prefixersInGUI);
     }
 
     return str;
@@ -783,24 +786,27 @@ angular.module('grafterizerApp')
 
     var resultingPipeline = constructPipeline();
     var textStr = '';
+    
+    for (i = 0; i < grafterPrefixers.length; ++i) {
+      textStr += (grafterPrefixers[i].ednEncode()  + '\n');
+    }
+    textStr += '\n';
 
     loadNamespaceMapping(transformation.rdfVocabs);
     if(transformation.graphs.length > 0) {
       for (i = 0; i < transformation.graphs.length; ++i) {
         if (transformation.graphs[i].graphRoots) {
           if (transformation.graphs[i].graphRoots.length > 0) {
-            textStr += getConcept(transformation.graphs[0].graphRoots[0], textStr, transformation.graphs[i]);
+            textStr = getConcept(transformation.graphs[0].graphRoots[0], textStr, transformation.graphs[i],prefixersInGUI);
           }
         }
       }
-    }
+   }
 
-    for (i = 0; i < grafterPrefixers.length; ++i) {
-      textStr += (grafterPrefixers[i].ednEncode() + '\n');
-    }
 
     textStr += '\n';
 
+    
     for (i = 0; i < grafterCustomFunctions.length; ++i) {
       textStr += (grafterCustomFunctions[i].ednEncode() + '\n');
     }

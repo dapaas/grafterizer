@@ -127,8 +127,8 @@ angular.module('grafterizerApp')
     
       $mdDialog.show({
         templateUrl: 'views/createstringcustomfunction.html',
-        controller: 'CustomStringfunctionsdialogcontrollerCtrl',
-        scope: $scope.$new(false, $scope)
+        controller: 'CustomStringfunctionsdialogcontrollerCtrl'/*,
+        scope: $scope.$new(false, $scope)*/
   })
     }; 
     var functionName = /\(defn?\s+([^\s\)]+)/i;

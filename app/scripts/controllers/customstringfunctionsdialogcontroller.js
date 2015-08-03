@@ -98,7 +98,6 @@ angular.module('grafterizerApp')
                     var w;
                 var wspattern = /\w/g
                 while (wspattern.test($scope.sample)) w = wspattern.lastIndex;    
-                console.log(w);
                     $scope.sample = $scope.sample.substr(0,w);
                     $scope.sampleToReplace = $scope.sample;
                 break;
