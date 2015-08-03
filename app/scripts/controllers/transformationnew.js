@@ -108,7 +108,7 @@ angular.module('grafterizerApp')
     var j;
     for (j=0;j<customfunctions.length;++j) if (customfunctions[j].name === 'keyword') break;
     var renamecols = new transformationDataModel.RenameColumnsFunction([customfunctions[j]],[null,null],null);
-    $scope.pipeline = new transformationDataModel.Pipeline([makeds,renamecols]);
+    $scope.pipeline = new transformationDataModel.Pipeline([/*makeds,renamecols*/]);
     $scope.transformation = new transformationDataModel.Transformation(
       allcustomfunctions, [], [$scope.pipeline], []);
   $rootScope.transformation = $scope.transformation;

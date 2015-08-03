@@ -1083,7 +1083,7 @@ angular.module('grafterizerApp')
   };
   ConstantLiteral.prototype = Object.create(RDFElement.prototype);
   ConstantLiteral.revive = function(data) {
-    return new ConstantLiteral(data.literalText, data.subElements);
+    return new ConstantLiteral(data.literalValue, data.subElements);
   };
   this.ConstantLiteral = ConstantLiteral;
 

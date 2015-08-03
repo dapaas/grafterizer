@@ -797,7 +797,7 @@ angular.module('grafterizerApp')
       for (i = 0; i < transformation.graphs.length; ++i) {
         if (transformation.graphs[i].graphRoots) {
           if (transformation.graphs[i].graphRoots.length > 0) {
-            textStr = getConcept(transformation.graphs[0].graphRoots[0], textStr, transformation.graphs[i],prefixersInGUI);
+            textStr= getConcept(transformation.graphs[0].graphRoots[0], textStr, transformation.graphs[i],prefixersInGUI);
           }
         }
       }
