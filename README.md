@@ -1,3 +1,5 @@
+ ![](http://dapaas.github.io/api-documentation/grafterizer_logo.png)
+ 
 Grafterizer
 ===========
 
