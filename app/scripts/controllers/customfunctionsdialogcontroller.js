@@ -123,7 +123,14 @@ angular.module('grafterizerApp')
       $scope.selectedCustomFunction = $scope.emptyCustomFunction;
       $scope.saveCustomFunct();
     };
-
+    $scope.createNewText = function() {
+    
+      $mdDialog.show({
+        templateUrl: 'views/createstringcustomfunction.html',
+        controller: 'CustomStringfunctionsdialogcontrollerCtrl'/*,
+        scope: $scope.$new(false, $scope)*/
+  })
+    }; 
     var functionName = /\(defn?\s+([^\s\)]+)/i;
     $scope.$watch('selectedCustomFunction.clojureCode', function() {
       if (!$scope.selectedCustomFunction) return;

@@ -30,7 +30,6 @@ angular.module('grafterizerApp')
  functArray.push(scope.$parent.transformation.findPrefixerOrCustomFunctionByName(newderfunc.toString()));
              else functArray.push(newderfunc);
                       }
-          console.log(scope.function.paramsToFunctions);
           return new transformationDataModel.DeriveColumnFunction(
             scope.function.newColName,
             scope.function.colsToDeriveFrom,

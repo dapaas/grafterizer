@@ -2,27 +2,24 @@
 
 /**
  * @ngdoc directive
- * @name grafterizerApp.directive:columnsFunction
+ * @name grafterizerApp.directive:removeColumnsFunction
  * @description
- * # columnsFunction
+ * # removeColumnsFunction
  */
 angular.module('grafterizerApp')
-  .directive('columnsFunction', function(transformationDataModel) {
+  .directive('removeColumnsFunction', function(transformationDataModel) {
     return {
-      templateUrl: 'views/columnsfunction.html',
+      templateUrl: 'views/removecolumnsfunction.html',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
         if (!scope.function) {
-          scope.function = new transformationDataModel.ColumnsFunction(
-            [],null,0,true, null);
+          scope.function = new transformationDataModel.RemoveColumnsFunction(
+            [], null);
           scope.function.docstring = null;
         }
 
         scope.$parent.generateCurrFunction = function() {
-          return new transformationDataModel.ColumnsFunction(scope.function.columnsArray,
-                  scope.function.useLazy,
-                  scope.function.numberOfColumns,
-                  scope.function.take,
+          return new transformationDataModel.RemoveColumnsFunction(scope.function.columnsArray,
                   scope.function.docstring);
         };
         scope.showUsage=false;

@@ -1,28 +1,43 @@
+<div layout="row" flex>
 <div layout="column" flex="33" ng-if="!function">
-    <md-content class="sin-functions-list" layout="column" md-scroll-y >
-        <md-button flex ng-click="changeSelected(function.name)" ng-repeat="function in availableFunctions" ng-disabled="function.selected">{{function.displayName}} ({{(function.name==='split')?'combined':function.name}})</md-button>
-    </md-content>
+    <md-content class="sin-functions-list" flex layout="column" md-scroll-y >
+        <!--md-button flex ng-click="changeSelected(function.name)" ng-repeat="function in availableFunctions" ng-disabled="function.selected">{{function.displayName}} ({{(function.name === 'split' || function.name === 'remove-columns')?'combined':function.name}})</md-button-->
+        <md-button flex ng-click="changeSelected(availableFunctions[0].name)"
+        > Make Dataset </md-button>
+        <md-button flex ng-click="showNarrow()" > NARROW DATASET <i class ="fa fa-chevron-down fa-lg" ng-show="!shownarrow" style="font-size:12px"></i><i class ="fa fa-chevron-up fa-lg" ng-show="shownarrow" style="font-size:12px"></i></md-button>
+        <md-button flex ng-click="changeSelected(function.name)" ng-repeat="function in availableFunctions" ng-show="shownarrow && function.type === 'narrow'" ng-disabled="function.selected"> {{function.displayName}} </md-button>
+        <md-button flex ng-click="showExpand()" > EXPAND DATASET <i class ="fa fa-chevron-down fa-lg" ng-show="!showexpand" style="font-size:12px"></i><i class ="fa fa-chevron-up fa-lg" ng-show="showexpand" style="font-size:12px"></i></md-button>
+        <md-button flex ng-click="changeSelected(function.name)" ng-repeat="function in availableFunctions" ng-show="showexpand && function.type === 'expand'" ng-disabled="function.selected"> {{function.displayName}} </md-button>
+        <md-button flex ng-click="showModify()" > MODIFY DATASET <i class ="fa fa-chevron-down fa-lg" ng-show="!showmodify" style="font-size:12px"></i><i class ="fa fa-chevron-up fa-lg" ng-show="showmodify" style="font-size:12px"></i></md-button>
+        <md-button flex ng-click="changeSelected(function.name)" ng-repeat="function in availableFunctions" ng-show="showmodify && function.type === 'modify'" ng-disabled="function.selected"> {{function.displayName}} </md-button>
+        <md-button flex ng-click="changeSelected(availableFunctions[1].name)"
+        > Custom function </md-button>
+</md-content>
+
+
 </div>
-<div flex layout="column" >
-    <md-content ng-class="!selectedFunctionName ? 'sin-dapaas-background md-padding' : 'md-padding'" flex md-scroll-y>
-        <add-column-function transformation="transformation" ng-if="availableFunctions[0].selected === true"></add-column-function>
-        <apply-columns-function transformation="transformation" ng-if="availableFunctions[1].selected === true"></apply-columns-function>
-        <columns-function transformation="transformation" ng-if="availableFunctions[2].selected === true"></columns-function>
-        <derive-column-function transformation="transformation" ng-if="availableFunctions[3].selected === true"></derive-column-function>
-        <drop-rows-function transformation="transformation" ng-if="availableFunctions[4].selected"></drop-rows-function>
-        <grep-function transformation="transformation" ng-if="availableFunctions[5].selected"></grep-function>
-        <make-dataset transformation="transformation" ng-if="availableFunctions[6].selected"></make-dataset>
-        <mapc-function transformation="transformation" ng-if="availableFunctions[7].selected"></mapc-function>
-        <melt-function transformation="transformation" ng-if="availableFunctions[8].selected === true"></melt-function>
-        <rename-columns-function transformation="transformation" ng-if="availableFunctions[9].selected === true"></rename-columns-function>
-        <split-function transformation="transformation" ng-if="availableFunctions[10].selected"></split-function>
-        <take-rows-function transformation="transformation" ng-if="availableFunctions[11].selected"></take-rows-function>
-        <utility-function transformation="transformation" ng-if="availableFunctions[12].selected"></utility-function>
-        <custom-code transformation="transformation" ng-if="availableFunctions[13].selected"></custom-code>
+<div layout="column" flex>
+    <div layout="column" >   <md-content ng-class="!selectedFunctionName ? 'sin-dapaas-background md-padding' : 'md-padding'" flex layout="column" md-scroll-y>
+        <add-columns-function transformation="transformation" ng-if="selectedFunctionName ==='add-columns'"></add-columns-function>
+        <columns-function transformation="transformation" ng-if="selectedFunctionName === 'columns'"></columns-function>
+        <derive-column-function transformation="transformation" ng-if="selectedFunctionName === 'derive-column'" ></derive-column-function>
+        <drop-rows-function transformation="transformation" ng-if="selectedFunctionName === 'drop-rows'"></drop-rows-function>
+        <grep-function transformation="transformation" ng-if="selectedFunctionName === 'grep'"></grep-function>
+        <make-dataset transformation="transformation" ng-if="selectedFunctionName === 'make-dataset'"></make-dataset>
+        <mapc-function transformation="transformation" ng-if="selectedFunctionName === 'mapc'"></mapc-function>
+        <melt-function transformation="transformation" ng-if="selectedFunctionName === 'melt'"></melt-function>
+        <rename-columns-function transformation="transformation" ng-if="selectedFunctionName === 'rename-columns'"></rename-columns-function>
+        <split-function transformation="transformation" ng-if="selectedFunctionName === 'split'"></split-function>
+        <utility-function transformation="transformation" ng-if="selectedFunctionName === 'utility'"></utility-function>
     </md-content>
-    <div class="md-actions" layout="row" layout-align="right">
+
+</div> 
+
+<div class="md-actions" layout="row" layout-align="right">
         <!-- <md-button ng-if="function" class="md-primary" ng-click="delete()" aria-label="Remove function">Remove</md-button> -->
         <md-button class="md-primary" ng-disabled="!selectedFunctionName" ng-click="add()" aria-label="{{function ? 'Edit' : 'Create'}} function">{{function ? 'Edit' : 'Create'}} function</md-button>
         <md-button class="md-primary" ng-click="closeDialog()" aria-label="Cancel changes to function">Cancel</md-button>
+    
     </div>
-</div>
+    </div>
+    </div>

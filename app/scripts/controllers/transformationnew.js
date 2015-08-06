@@ -27,6 +27,7 @@ angular.module('grafterizerApp')
     var customfunctions = [
           new transformationDataModel.CustomFunctionDeclaration('replace-varible-string', '(defn replace-varible-string [cell]   (-> cell  (clojure.string/replace (read-string "#\\".* #\\"") "number") (clojure.string/replace (read-string "#\\"[0-9]{4} \\"") "") ))',''),
           new transformationDataModel.CustomFunctionDeclaration('add-filename-to-column', '(defn add-filename-to-column [ds destination-column] (let [fname (:grafter.tabular/data-source (meta ds))] (add-column ds destination-column fname)))     ',''),
+          new transformationDataModel.CustomFunctionDeclaration('remove-columns', '(defn remove-columns [ds cols] (columns ds (remove (fn [item] (some (fn [a] (= item a)) cols )) (column-names ds)))) ','Given a dataset and collection of column names narrows dataset to all but specified columns'),
           new transformationDataModel.CustomFunctionDeclaration('organize-date', '(defn organize-date "Transform date dd/mm/yyyy ~> yyyy-mm-dd" [date] (when (seq date)  (let [[d m y] (clojure.string/split date  (read-string "#\\"/\\""))]  (apply str (interpose "-" [y m d])))))','Transform date dd/mm/yyyy ~> yyyy-mm-dd'),
           new transformationDataModel.CustomFunctionDeclaration('integer-literal', '(defn integer-literal [s] (Integer/parseInt s))','Coerce to integer'),
           new transformationDataModel.CustomFunctionDeclaration('fill-when', '','Takes a sequence of values and copies a value through the sequence depending on the supplied predicate function'),
@@ -56,6 +57,8 @@ angular.module('grafterizerApp')
           new transformationDataModel.CustomFunctionDeclaration('upper-case',
         '','Converts string to all upper-case'),
           new transformationDataModel.CustomFunctionDeclaration('reverse', '','Returns given string with its characters reversed'),
+          new transformationDataModel.CustomFunctionDeclaration('remove-blanks', '(defn remove-blanks [s]  (when (seq s)  (clojure.string/replace s " " "")))','Removes blanks in a string'),
+          new transformationDataModel.CustomFunctionDeclaration('titleize', '(defn titleize [st] (when (seq st) (let [a (clojure.string/split st (read-string "#\\" \\"")) c (map clojure.string/capitalize a)]  (->> c (interpose " ") (apply str) trim))))','Capitalizes each word in a string'),
           new transformationDataModel.CustomFunctionDeclaration('trim', '','Removes whitespace from both ends of string'),
           new transformationDataModel.CustomFunctionDeclaration('trim-newline',
         '','Removes all trailing newline \n or return \r characters from string'),
@@ -100,7 +103,12 @@ angular.module('grafterizerApp')
 
     var allcustomfunctions = customfunctions.concat(predicatefunctions.concat(numericcustomfunctions));
     $scope.clojure = '';
-    $scope.pipeline = new transformationDataModel.Pipeline([]);
+    //Initial functions: Make dataset with first row from header and rename columns as keywords to allow referring to them
+    var makeds = new transformationDataModel.MakeDatasetFunction([],null,0,true,null);
+    var j;
+    for (j=0;j<customfunctions.length;++j) if (customfunctions[j].name === 'keyword') break;
+    var renamecols = new transformationDataModel.RenameColumnsFunction([customfunctions[j]],[null,null],null);
+    $scope.pipeline = new transformationDataModel.Pipeline([/*makeds,renamecols*/]);
     $scope.transformation = new transformationDataModel.Transformation(
       allcustomfunctions, [], [$scope.pipeline], []);
   $rootScope.transformation = $scope.transformation;
@@ -214,7 +222,7 @@ angular.module('grafterizerApp')
     $scope.defineStringCustomFunctions = function() {
       $mdDialog.show({
         templateUrl: 'views/createstringcustomfunction.html',
-        controller: 'StringCustomfunctionsdialogcontrollerCtrl',
+        controller: 'CustomStringfunctionsdialogcontrollerCtrl',
         scope: $scope.$new(false, $scope)
   })
     };

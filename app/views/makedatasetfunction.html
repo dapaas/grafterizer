@@ -1,11 +1,10 @@
-<div layout="column">
+<!--div layout="column">
     <div>
         <md-button aria-label="Show/hide documentation" ng-click="switchShowUsage()"><i class="fa fa-angle-down"  >Show/hide documentation</i></md-button>
             <div ng-show = "showUsage">
             <p class="api-doc-docstring"> Creates a dataset either by taking specified number of columns or by inspecting the amount of columns in the first row, and taking that many column names from the sequence. </p>
             <a href="http://api.grafter.org/master/grafter.tabular.html#var-make-dataset" target="_blank"> view source</a>
-    </div>
-    </div>
+    </div-->
     <div>
         <h3>Parameters</h3>
         <div class="whiteframedemoBasicUsage" layout="column"  style="padding-bottom: 32px;">
@@ -29,6 +28,7 @@
     <md-input-container flex>
         <label>Number of columns</label>
         <input ng-model="function.numberOfColumns" type="number" min="1" ng-disabled="!(function.useLazy)">
+
     </md-input-container>
 </md-whiteframe>
 </div>    <md-input-container flex>
@@ -38,4 +38,4 @@
     </md-input-container>
                 
 </div>
-</div>
+<!--/div-->

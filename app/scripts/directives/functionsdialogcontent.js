@@ -19,8 +19,123 @@ angular.module('grafterizerApp')
         scope.generateCurrFunction = function() {
           console.error('generic generateCurrFunction');
         };
-
+        
         scope.availableFunctions = [
+            //---------------------------------
+            {
+                displayName: 'Make Dataset',
+                name: 'make-dataset',
+                selected: false,
+                type: 'none'
+            },
+            
+            {
+                displayName: 'Custom function',
+                name: 'utility',
+                selected: false,
+                type: 'none'
+            },
+            //---------------------------------
+            {
+                displayName: 'Columns',
+                name: 'columns',
+                selected: false,
+                type: 'narrow'
+            },
+            {
+                displayName: 'Rows',
+                name: 'drop-rows',
+                selected: false,
+                type: 'narrow'
+            },
+            //--------------------------------
+            
+            {
+                displayName: 'Add Columns',
+                name: 'add-columns',
+                selected: false,
+                type: 'expand'
+            },
+            {
+                displayName: 'Derive Column',
+                name: 'derive-column',
+                selected: false,
+                type: 'expand'
+            },
+            {
+                displayName: 'Split Column',
+                name: 'split',
+                selected: false,
+                type: 'expand'
+            },
+
+            //--------------------------------
+            
+            {
+                displayName: 'Map Columns',
+                name: 'mapc',
+                selected: false,
+                type: 'modify'
+            },
+            {
+                displayName: 'Rename Columns',
+                name: 'rename-columns',
+                selected: false,
+                type: 'modify'
+            },
+            {
+                displayName: 'Reshape Dataset',
+                name: 'melt',
+                selected: false,
+                type: 'modify'
+            },
+
+                ];
+            
+
+        scope.shownarrow = false;
+        scope.showNarrow = function() {
+            scope.shownarrow = !scope.shownarrow;
+        };
+        scope.showexpand = false;
+        scope.showExpand = function() {
+            scope.showexpand = !scope.showexpand;
+        };
+
+        scope.showmodify = false;
+        scope.showModify = function() {
+            scope.showmodify = !scope.showmodify;
+        };
+        /*
+        scope.narrowFunctions = [
+                        
+          {
+            name: 'Columns',
+            selected: false
+          },
+                    
+          {
+            name: 'drop-rows',
+            selected: false
+          },
+        ];
+        
+        scope.expandFunctions = [
+        
+          {
+            name: 'add-columns',
+            selected: false
+          },
+        ];
+
+        scope.modifyFunctions = [
+
+          {
+            name: 'apply-columns',
+            selected: false
+          },
+          ]*/
+       /* scope.availableFunctions = [
           {
             name: 'add-columns',
             displayName: 'Add columns',
@@ -67,6 +182,11 @@ angular.module('grafterizerApp')
             selected: false
           },
           {
+            name: 'remove-columns',
+            displayName: 'Remove columns',
+            selected: false
+          },
+          {
             name: 'rename-columns',
             displayName: 'Rename columns',
             selected: false
@@ -85,13 +205,13 @@ angular.module('grafterizerApp')
             name: 'utility',
             displayName: 'Utility function',
             selected: false
-          },
-          {
+          },*/
+      /*    {   //To define custom code --> create utility function with ds as parameter and use option above
             name: 'custom-code',
             displayName: 'Custom code',
             selected: false
-          }
-        ];
+          }*/
+       // ];
         scope.selectedFunctionName = null;
         scope.changeSelected = function(f) {
           var i;
