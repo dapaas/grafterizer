@@ -348,12 +348,13 @@ md-tab-content .CodeMirror {
     margin: 0;
     padding: 0;
     font-size: 12em;
-    z-index: 2;
+    z-index: 5;
     background-color:rgba(255,255,255,0.5);
 }
 
 .show-upload-indicator .upload-indicator {
     display: flex;
+    border-radius:0;
 }
 
 .md-toolbar-tools .md-button {

@@ -27,7 +27,7 @@ angular
     'angular-loading-bar',
     'ncy-angular-breadcrumb',
     'angularMoment',
-    'ui.sortable',
+    'as.sortable',
     'ui.codemirror',
     'ui.grid.selection',
     'ui.grid.edit',
@@ -36,8 +36,6 @@ angular
     'ngMessages',
     'RecursionHelper',
     'vAccordion'
-
-    //'http-auth-interceptor'
 ])
   .config(function(
     ontotextAPIProvider,

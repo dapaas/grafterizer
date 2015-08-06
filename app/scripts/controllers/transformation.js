@@ -70,8 +70,8 @@ angular.module('grafterizerApp')
     }).error(loadEmptyTransformation);
 
     $scope.$watch('fileUpload', function() {
-      if ($scope.fileUpload && $scope.fileUpload[0]) {
-        var file = $scope.fileUpload[0];
+      if ($scope.fileUpload) {
+        var file = $scope.fileUpload;
 
         var callback = function(idDataset) {
           var metadata = {
