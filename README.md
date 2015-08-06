@@ -30,3 +30,12 @@ Execute ```grunt build``` to build the application. The dist folder will then be
 
 You can optionnaly build a [Docker](http://docker.com/) image.
 ```docker build -t grafterizer .```
+
+### Deployment
+
+You can deploy a Grafterizer instance using [Docker Compose](https://docs.docker.com/compose/). The application starts a HTTP server on the port 80 by default.
+
+```sh
+wget "https://raw.githubusercontent.com/dapaas/grafterizer/master/docker-compose.yml"
+docker-compose up
+```
