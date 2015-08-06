@@ -50,7 +50,7 @@ angular
     $breadcrumbProvider,
     $locationProvider) {
 
-    ontotextAPIProvider.setEndpoint('http://ec2-54-76-140-62.eu-west-1.compute.amazonaws.com:8080');
+    ontotextAPIProvider.setEndpoint('https://api.grafterizer.net:8443');
 
     PipeServiceProvider.setEndpoint(
       window.location.origin === 'http://localhost:9000' ?
