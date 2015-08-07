@@ -46,7 +46,28 @@ angular
     $urlMatcherFactoryProvider,
     cfpLoadingBarProvider,
     $breadcrumbProvider,
-    $locationProvider) {
+    $locationProvider,
+    $provide) {
+
+    if (typeof Raven !== 'undefined' &&
+      window.location.origin !== 'http://localhost:9000') {
+      Raven.config('https://b490db0a34f7443ba8ee0b7d1890d7a6@grafterizer.datagraft.net/2', {
+      }).install();
+
+      $provide.decorator('$exceptionHandler', ['$delegate', function($delegate) {
+        return function(exception, cause) {
+          $delegate(exception, cause);
+          if (typeof Raven !== 'undefined') {
+            Raven.captureException(exception, { cause: cause });
+          }
+        };
+      }]);
+    } else {
+      window.Raven = {
+        captureEvents: console.log,
+        captureMessage: console.log
+      };
+    }
 
     ontotextAPIProvider.setEndpoint('https://api.datagraft.net');
 
