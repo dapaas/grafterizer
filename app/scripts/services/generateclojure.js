@@ -42,6 +42,16 @@ angular.module('grafterizerApp')
     return false;
   }
 
+
+  function isGUIPrefix(prefixName, prefixersInGUI) {
+    console.log(prefixers.length);
+/*    for (var i=0;i<prefixersInGUI.length;++i) {
+        console.log(prefixersInGUI[i].name+'---'+prefixName);
+        if (prefixersInGUI[i].name === prefixName)
+           return true; 
+    }*/
+    return false;
+  }
   var pipelineFunctions = new jsedn.List([]);
 
   var pipeline = new jsedn.List([
@@ -141,6 +151,7 @@ angular.module('grafterizerApp')
                         new jsedn.List([jsedn.sym(parentPrefix),prefixString])
                        ])
       ]);
+      console.log(prefixer);
     prefixers.push(prefixer);
  }
   }
@@ -303,16 +314,22 @@ angular.module('grafterizerApp')
 
   /* Constructs and returns the RDF creation function. */
   function constructRDFGraphFunction(transformation) {
+    //var prefixersInGUI = transformation.prefixers;
     var i;
     var j;
     var currentGraph = null;
 
     var colKeysClj = new jsedn.Vector([]);
+    
     var columnKeysFromPipeline = transformation.getColumnKeysFromPipeline();
     for (i = 0; i < columnKeysFromPipeline.length; ++i) {
       colKeysClj.val.push(new jsedn.sym(columnKeysFromPipeline[i]));
     }
-
+    var columnKeysFromGraph = transformation.getColumnKeysFromGraphNodes();
+    //console.log(colsFromGraph);
+    for (i = 0; i < columnKeysFromGraph.length; ++i)
+        if (columnKeysFromPipeline.indexOf(columnKeysFromGraph[i]) === -1) 
+            colKeysClj.val.push(new jsedn.sym(columnKeysFromGraph[i]));
     var graphFunction = new jsedn.List([
       new jsedn.sym('graph-fn'),
       new jsedn.Vector([
@@ -321,7 +338,6 @@ angular.module('grafterizerApp')
     ]);
     var currentGraphJsEdn = null;
     var currentRootJsEdn = null;
-
     for (i = 0; i < transformation.graphs.length; ++i) {
       currentGraph = transformation.graphs[i];
 
@@ -335,13 +351,13 @@ angular.module('grafterizerApp')
 
       graphFunction.val.push(currentGraphJsEdn);
     }
-
     var result = new jsedn.List([jsedn.sym('def'), jsedn.sym('make-graph'), graphFunction]);
 
     return result;
   }
 
   function constructNodeVectorEdn(node, containingGraph) {
+      
     var i;
     var allSubElementsVector;
     var subElementEdn;
@@ -387,6 +403,7 @@ angular.module('grafterizerApp')
         allSubElementsVector = new jsedn.Vector([constructColumnURINodeJsEdn(node, containingGraph)]);
         var k;
 
+    
         for (k = 0; k < node.subElements.length; ++k) {
           subElementEdn = constructNodeVectorEdn(node.subElements[k]);
 
@@ -415,6 +432,26 @@ angular.module('grafterizerApp')
         return allSubElementsVector;
       }
 
+    }
+
+    if (node instanceof transformationDataModel.BlankNode) {
+      if (node.subElements.length === 0) {
+        return constructBlankNodeJsEdn(node, containingGraph);
+
+      } else {
+        allSubElementsVector = new jsedn.Vector([constructBlankNodeJsEdn(node, containingGraph)]);
+        var k;
+
+    
+        for (k = 0; k < node.subElements.length; ++k) {
+          subElementEdn = constructNodeVectorEdn(node.subElements[k]);
+
+          allSubElementsVector.val.push(subElementEdn);
+
+        }
+
+        return allSubElementsVector;
+      }
     }
 
     /*if (node instanceof transformationDataModel.BlankNode) {
@@ -459,7 +496,7 @@ angular.module('grafterizerApp')
       // nodeValue
       return new jsedn.sym(nodeValue);
     } else {
-      if (isSupportedPrefix(nodePrefix.trim())) {
+      if (isSupportedPrefix(nodePrefix.trim()) ) {
         // supported prefix - no need to use prefixer - simple library call
         // nodePrefix:nodeValue (e.g. vcard:Address)
         alertInterface('Cannot associate column \'' + nodeValue + '\' with prefix \'' + nodePrefix + '\'!');
@@ -489,7 +526,7 @@ angular.module('grafterizerApp')
       // nodeValue
       return nodeValue;
     } else {
-      if (isSupportedPrefix(nodePrefix.trim())) {
+      if (isSupportedPrefix(nodePrefix.trim()) ) {
 
         // nodePrefix:nodeValue (e.g. vcard:Address)
         return new jsedn.sym(nodePrefix + ':' + nodeValue);
@@ -497,11 +534,18 @@ angular.module('grafterizerApp')
         // TODO make a check if we have defined the prefix
         // some custom prefix, that is hopefully defined in the UI (Edit Prefixes...)
         // both are symbols and we get (nodePrefix nodeValue) as a result
+          
         return nodePrefix + nodeValue;
       }
     }
 
     // prefix null, empty or undefined
+  }
+
+  function constructBlankNodeJsEdn(blankNode, containingGraph) {
+      console.log("BLANK111");
+      return new jsedn.Vector([]);
+
   }
 
   /***************************************************************************
@@ -727,7 +771,6 @@ angular.module('grafterizerApp')
     /* Prefixers */
     graphPrefix = [];
     graphConcept = [];
-
     var prefixersInGUI = transformation.prefixers;
 
     // add only custom prefixers - the Grafter ones are available by default

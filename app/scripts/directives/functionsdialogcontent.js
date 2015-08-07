@@ -35,21 +35,13 @@ angular.module('grafterizerApp')
                 selected: false,
                 type: 'none'
             },
+            {
+                displayName: 'Reshape Dataset',
+                name: 'melt',
+                selected: false,
+                type: 'none'
+            },
             //---------------------------------
-            {
-                displayName: 'Columns',
-                name: 'columns',
-                selected: false,
-                type: 'narrow'
-            },
-            {
-                displayName: 'Rows',
-                name: 'drop-rows',
-                selected: false,
-                type: 'narrow'
-            },
-            //--------------------------------
-            
             {
                 displayName: 'Add Columns',
                 name: 'add-columns',
@@ -57,55 +49,70 @@ angular.module('grafterizerApp')
                 type: 'expand'
             },
             {
+                displayName: 'Columns',
+                name: 'columns',
+                selected: false,
+                type: 'column'
+            },
+            {
                 displayName: 'Derive Column',
                 name: 'derive-column',
                 selected: false,
-                type: 'expand'
+                type: 'column'
             },
-            {
-                displayName: 'Split Column',
-                name: 'split',
-                selected: false,
-                type: 'expand'
-            },
-
-            //--------------------------------
-            
             {
                 displayName: 'Map Columns',
                 name: 'mapc',
                 selected: false,
-                type: 'modify'
+                type: 'column'
             },
             {
                 displayName: 'Rename Columns',
                 name: 'rename-columns',
                 selected: false,
-                type: 'modify'
+                type: 'column'
             },
             {
-                displayName: 'Reshape Dataset',
-                name: 'melt',
+                displayName: 'Split Column',
+                name: 'split',
                 selected: false,
-                type: 'modify'
+                type: 'column'
             },
+
+            //--------------------------------
+
+            {
+                displayName: 'Select Rows',
+                name: 'drop-rows',
+                selected: false,
+                type: 'rows'
+            },
+            {
+                displayName: 'Filter Rows',
+                name: 'grep',
+                selected: false,
+                type: 'rows'
+            },
+            //--------------------------------
+            
+            
 
                 ];
             
 
-        scope.shownarrow = false;
-        scope.showNarrow = function() {
-            scope.shownarrow = !scope.shownarrow;
+        scope.showcolumn = false;
+        scope.showColumn = function() {
+            scope.showcolumn = !scope.showcolumn;
         };
-        scope.showexpand = false;
-        scope.showExpand = function() {
-            scope.showexpand = !scope.showexpand;
+        scope.showrows = false;
+        scope.showRows = function() {
+            scope.showrows = !scope.showrows;
         };
 
-        scope.showmodify = false;
+       /* scope.showmodify = false;
         scope.showModify = function() {
             scope.showmodify = !scope.showmodify;
-        };
+        };*/
         /*
         scope.narrowFunctions = [
                         

@@ -28,7 +28,7 @@ angular.module('grafterizerApp')
 
 
     $scope.emptyCustomFunction = new transformationDataModel.CustomFunctionDeclaration(
-      '', '');
+      '', '','','');
     $scope.saveCustomFunct = function() {
         if (!$scope.functionCodeOptions.name) $scope.functionCodeOptions.name = 'transform-text';
         if (!$scope.functionCodeOptions.docstring) $scope.functionCodeOptions.docstring = 'Transforms text';
@@ -42,7 +42,7 @@ angular.module('grafterizerApp')
         
         functionCode+= '(clojure.string/replace "'+(options.replaceMap[i]?options.replaceMap[i]:'')+'" "' + (options.replaceMap[i+1]?options.replaceMap[i+1]:'') + '") ';
         functionCode+= ')))';
-        var result = $scope.$parent.transformation.addCustomFunctionDeclaration($scope.functionCodeOptions.name,functionCode);
+        var result = $scope.$parent.transformation.addCustomFunctionDeclaration($scope.functionCodeOptions.name,functionCode,$scope.functionCodeOptions.docstring);
 
       if (!result) {
         $mdToast.show(
@@ -223,7 +223,8 @@ angular.module('grafterizerApp')
       var docstring = '';
       $scope.emptyCustomFunction.name = name;
       $scope.emptyCustomFunction.clojureCode = '(defn ' + name + ' "" [] ())';
-      //$scope.emptyCustomFunction.docstring = docstring;
+      $scope.emptyCustomFunction.docstring = docstring;
+      $scope.emptyCustomFunction.group = 'UTILITY';
       $scope.selectedCustomFunction = $scope.emptyCustomFunction;
       $scope.saveCustomFunct();
     };
