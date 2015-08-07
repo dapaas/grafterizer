@@ -727,10 +727,10 @@ angular.module('grafterizerApp')
           if(namespace != ""){
             str += ('(def ' + element.prefix + ' ' + '"' + namespace + '"' + ') ');
             str += '\n';
-          } /*else if (!existsInGUI) {
+          } else if (!existsInGUI) {
             str += ('(def ' + element.prefix + ' ' + '"' + containingGraph.graphURI + '"' + ')');
             str += '\n';
-          }*/
+          }
         }
       }
       //define property
