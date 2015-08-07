@@ -42,6 +42,7 @@ angular.module('grafterizerApp')
       } catch (e) {
         $log.debug(data);
         $log.error(e);
+        Raven.captureException(e);
         return {
           raw: data,
           jsedn: null
@@ -65,6 +66,8 @@ angular.module('grafterizerApp')
         .position('bottom left')
         .hideDelay(3000)
       );
+
+      Raven.captureMessage(message, {extra: {status: status, data: (data ? data.error : null)}});
     };
 
     api.computeTuplesHref = function(distributionUri, transformationUri, type) {

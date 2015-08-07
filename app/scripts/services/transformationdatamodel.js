@@ -328,7 +328,7 @@ angular.module('grafterizerApp')
             break;
 
         default:
-            console.log("Error in defining  grep option");
+            Raven.captureMessage("Error in defining  grep option");
             break;
     }
     if (this.colsToFilter.length>0) values.push(colsToFilter);
@@ -589,7 +589,7 @@ angular.module('grafterizerApp')
   ApplyColumnsFunction.prototype.removeKeyFunctionPair = function(kfPair) {
     var index = this.keyFunctionPairs.indexOf(kfPair);
     if (index === -1 || kfPair === null || kfPair === undefined) {
-      console.log('tried to remove non-existing function');
+      Raven.captureMessage('tried to remove non-existing function');
       return false;
     }
 
@@ -650,7 +650,7 @@ angular.module('grafterizerApp')
                                                mapc,
                                                applyc]);
     else {
-        console.log('Error parsing map in mapc');
+        Raven.captureMessage('Error parsing map in mapc');
         return;
     }
 
@@ -658,7 +658,7 @@ angular.module('grafterizerApp')
   MapcFunction.prototype.removeKeyFunctionPair = function(kfPair) {
     var index = this.keyFunctionPairs.indexOf(kfPair);
     if (index === -1 || kfPair === null || kfPair === undefined) {
-      console.log('tried to remove non-existing function');
+      Raven.captureMessage('tried to remove non-existing function');
       return false;
     }
 
@@ -899,7 +899,7 @@ angular.module('grafterizerApp')
   Pipeline.prototype.remove = function(funct) {
     var index = this.functions.indexOf(funct);
     if (index === -1 || funct === null || funct === undefined) {
-      console.log('tried to remove non-existing function');
+      Raven.captureMessage('tried to remove non-existing function');
       return false;
     }
 

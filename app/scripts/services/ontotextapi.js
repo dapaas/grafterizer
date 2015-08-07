@@ -52,6 +52,8 @@ angular.module('grafterizerApp')
           .position('bottom left')
           .hideDelay(3000)
       );
+
+      Raven.captureMessage(message, {extra: {status: status, data: (data ? data.error : null)}});
     };
 
     var transformRequest = function(data, headersGetter) {

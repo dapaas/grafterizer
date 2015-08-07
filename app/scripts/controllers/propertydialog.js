@@ -139,7 +139,7 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function ($sco
 
         $scope.showProgress = false;
       }).error(function (data, status, headers, config) {
-        console.log('error api/vocabulary/search');
+        Raven.captureMessage('error api/vocabulary/search');
         $scope.showProgress = false;
       });
 

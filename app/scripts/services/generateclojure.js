@@ -122,6 +122,7 @@ angular.module('grafterizerApp')
     /*
        * TODO re-define me when integrating with the rest of the UI
        */
+    Raven.captureMessage(errorString);
     console.log(error, errorString);
   }
 
@@ -882,7 +883,7 @@ angular.module('grafterizerApp')
 
       return generatedCode;
     } catch (e) {
-      console.log(e);
+      Raven.captureException(e);
       return '';
     }
   };

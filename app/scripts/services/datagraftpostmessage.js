@@ -28,7 +28,7 @@ angular.module('grafterizerApp')
           break;
       };
     } catch (e) {
-      console.log(e);
+      Raven.captureException(e);
     }
   };
 

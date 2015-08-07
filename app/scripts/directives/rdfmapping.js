@@ -35,7 +35,7 @@ angular.module('grafterizerApp')
           localVocabulary.push(vocabItemTemplate);
         }
       }).error(function(data, status, headers, config) {
-        console.log('error /api/vocabulary/getAll');
+        Raven.captureMessage('error /api/vocabulary/getAll');
       });
 
     return {

@@ -104,7 +104,7 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
         }
         $scope.showProgressCircular = false;
       }).error(function(data, status, headers, config) {
-        console.log('error /api/vocabulary/getAll');
+        Raven.captureMessage('error /api/vocabulary/getAll');
         $scope.showProgressCircular = false;
       });
 
@@ -294,7 +294,7 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
         switchToManageDialog();
         $scope.showProgress = false;
       }).error(function(data, status, headers, config) {
-        console.log('error api/vocabulary/getClassAndPropertyFromVocabulary');
+        Raven.captureMessage('error api/vocabulary/getClassAndPropertyFromVocabulary');
         $scope.showProgress = false;
       });
   };

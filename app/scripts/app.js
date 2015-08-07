@@ -49,10 +49,11 @@ angular
     $locationProvider,
     $provide) {
 
-    if (typeof Raven !== 'undefined' &&
-      window.location.origin !== 'http://localhost:9000') {
-      Raven.config('https://b490db0a34f7443ba8ee0b7d1890d7a6@grafterizer.datagraft.net/2', {
-      }).install();
+    var developmentMode = window.location.origin === 'http://localhost:9000';
+
+    if (typeof Raven !== 'undefined') {
+
+      Raven.config('https://245b9e44d62e421bad11c1614b3e0fe8@grafterizer.datagraft.net/2', {}).install();
 
       $provide.decorator('$exceptionHandler', ['$delegate', function($delegate) {
         return function(exception, cause) {
@@ -62,6 +63,7 @@ angular
           }
         };
       }]);
+
     } else {
       window.Raven = {
         captureEvents: console.log,
@@ -72,7 +74,7 @@ angular
     ontotextAPIProvider.setEndpoint('https://api.datagraft.net');
 
     PipeServiceProvider.setEndpoint(
-      window.location.origin === 'http://localhost:9000' ?
+      developmentMode ?
       'https://grafterizer.datagraft.net/backend'
       : '/backend');
 
@@ -81,8 +83,7 @@ angular
     sessionStorage.localClassAndProperty = JSON.stringify([]);
     sessionStorage.localVocabulary = JSON.stringify([]);
 
-    if (!window.navigator.device &&
-      window.location.origin !== 'http://localhost:9000') {
+    if (!window.navigator.device && !developmentMode) {
       $locationProvider.html5Mode(true);
     }
 
