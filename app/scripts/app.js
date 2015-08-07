@@ -27,7 +27,7 @@ angular
     'angular-loading-bar',
     'ncy-angular-breadcrumb',
     'angularMoment',
-    'ui.sortable',
+    'as.sortable',
     'ui.codemirror',
     'ui.grid.selection',
     'ui.grid.edit',
@@ -36,8 +36,6 @@ angular
     'ngMessages',
     'RecursionHelper',
     'vAccordion'
-
-    //'http-auth-interceptor'
 ])
   .config(function(
     ontotextAPIProvider,
@@ -50,9 +48,8 @@ angular
     $breadcrumbProvider,
     $locationProvider) {
 
-    //ontotextAPIProvider.setEndpoint('http://ec2-54-76-140-62.eu-west-1.compute.amazonaws.com:8080');
     ontotextAPIProvider.setEndpoint('https://api.datagraft.net');
-    //  ontotextAPIProvider.setEndpoint('https://api.grafterizer.net:8443');
+
     PipeServiceProvider.setEndpoint(
       window.location.origin === 'http://localhost:9000' ?
       'https://grafterizer.datagraft.net/backend'

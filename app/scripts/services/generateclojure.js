@@ -436,12 +436,9 @@ angular.module('grafterizerApp')
 
     if (node instanceof transformationDataModel.BlankNode) {
       if (node.subElements.length === 0) {
-        // we terminate by this URI, return the column
-        // TODO check in keywords array if this exists
         return constructBlankNodeJsEdn(node, containingGraph);
 
       } else {
-        // [node-uri-as-generated {sub-1's edn representation} {sub-2's edn representation} ... {sub-n's edn representation}]
         allSubElementsVector = new jsedn.Vector([constructBlankNodeJsEdn(node, containingGraph)]);
         var k;
 
