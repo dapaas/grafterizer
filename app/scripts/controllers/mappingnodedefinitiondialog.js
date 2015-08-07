@@ -106,7 +106,7 @@ angular.module('grafterizerApp')
             }
             break;
           case 2:
-            $scope.newNode = new transformationDataModel.BlankNode();
+            $scope.newNode = new transformationDataModel.BlankNode([]);
             // TODO not yet implemented
             break;
         }
@@ -124,7 +124,8 @@ angular.module('grafterizerApp')
               $scope.propertyValue.value.indexOf(':') + 1, $scope.propertyValue
                 .value.length);
           }
-          else {
+          else if ($scope.newNode.__type !== 'BlankNode') 
+          {
             $scope.newNode.prefix = "";
             $scope.newNode.constant = $scope.propertyValue.value;
           }

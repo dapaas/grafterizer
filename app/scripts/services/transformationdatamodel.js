@@ -31,18 +31,19 @@ angular.module('grafterizerApp')
       };
     }
   };
-  var CustomFunctionDeclaration = function(name, clojureCode, docstring) {
+  var CustomFunctionDeclaration = function(name, clojureCode, group, docstring) {
     this.name = name;
     this.clojureCode = clojureCode;
+    this.group = group;
     this.docstring = docstring;
     this.__type = 'CustomFunctionDeclaration';
   };
   CustomFunctionDeclaration.revive = function(data) {
-    return new CustomFunctionDeclaration(data.name, data.clojureCode, data.docstring);
+    return new CustomFunctionDeclaration(data.name, data.clojureCode, data.group, data.docstring);
   };
   this.CustomFunctionDeclaration = CustomFunctionDeclaration;
 
-  var CustomCode = function(name, clojureCode) {
+/*  var CustomCode = function(name, clojureCode) {
     GenericFunction.call(this);
     this.name = 'custom-code';
     this.displayName = name; // display name in the pipeline
@@ -66,7 +67,7 @@ angular.module('grafterizerApp')
     }
   };
   this.CustomCode = CustomCode;
-
+*/
   var DropRowsFunction = function(numberOfRows, take, docstring) {
     GenericFunction.call(this);
     this.numberOfRows = numberOfRows;
@@ -84,45 +85,7 @@ angular.module('grafterizerApp')
   };
   this.DropRowsFunction = DropRowsFunction;
 
-  var TakeRowsFunction = function(numberOfRows,docstring) {
-    GenericFunction.call(this);
-    this.numberOfRows = numberOfRows;
-    this.name = 'take-rows';
-    this.displayName = 'take-rows';
-    if (!docstring) this.docstring = 'Take '+numberOfRows.toString()+' first row(s)'; else this.docstring=docstring;
-    this.__type = 'TakeRowsFunction';
-  };
-  TakeRowsFunction.revive = function(data) {
-    return new TakeRowsFunction(data.numberOfRows,data.docstring);
-  };
-  TakeRowsFunction.prototype.generateClojure = function() {
-    return new jsedn.List([jsedn.sym('take-rows'), this.numberOfRows]);
-  };
-  this.TakeRowsFunction = TakeRowsFunction;
   
-  var RemoveColumnsFunction = function(columnsArray, docstring) {
-      GenericFunction.call(this);
-      this.columnsArray = columnsArray;
-      if (!docstring) { this.docstring = "Remove columns ";
-          for (var i=0;i<columnsArray.length;++i) this.docstring+=columnsArray[i]+" ";
-      }
-      else this.docstring = docstring;
-      this.name = 'remove-columns';
-      this.displayName = 'remove-columns';
-      this.__type = 'RemoveColumnsFunction';
-  };
-  RemoveColumnsFunction.revive = function(data) {
-      return new RemoveColumnsFunction(data.columnsArray, data.docstring);
-  };
-  RemoveColumnsFunction.prototype.generateClojure = function() {
-    var colNamesClj = new jsedn.Vector([]);
-        for (var i = 0; i < this.columnsArray.length; ++i) {
-          colNamesClj.val.push(new jsedn.kw(':' + this.columnsArray[i]));
-        }
-
-    return new jsedn.List([jsedn.sym('remove-columns'), colNamesClj]);
-  };
-  this.RemoveColumnsFunction = RemoveColumnsFunction;
   var SplitFunction = function(colName,newColName,separator,docstring) {
     GenericFunction.call(this);
     this.colName = colName;
@@ -755,7 +718,7 @@ angular.module('grafterizerApp')
     }
     else {
         // make dataset with lazy naming
-        return new jsedn.List([jsedn.sym('make-dataset'), jsedn.sym('(into[] (take '+this.numberOfColumns.toString()+' (alphabetical-column-names)))')]);
+        return new jsedn.List([jsedn.sym('make-dataset'), new jsedn.List([jsedn.sym('range'),this.numberOfColumns])]);
     }
   };
 
@@ -856,10 +819,10 @@ angular.module('grafterizerApp')
     for (i = 0; i < functions.length; ++i) {
       funct = functions[i];
       if (!(funct instanceof GenericFunction)) {
-        if (funct.__type === 'CustomCode') {
+      /*  if (funct.__type === 'CustomCode') {
           functions[i] = CustomCode.revive(funct);
         }
-
+*/
         if (funct.__type === 'DropRowsFunction') {
           functions[i] = DropRowsFunction.revive(funct);
         }
@@ -868,9 +831,6 @@ angular.module('grafterizerApp')
           functions[i] = UtilityFunction.revive(funct);
         }
 
-        if (funct.__type === 'TakeRowsFunction') {
-          functions[i] = TakeRowsFunction.revive(funct);
-        }
 
         if (funct.__type === 'AddColumnsFunction') {
           functions[i] = AddColumnsFunction.revive(funct);
@@ -911,9 +871,6 @@ angular.module('grafterizerApp')
           functions[i] = GrepFunction.revive(funct);
         }
         
-        if (funct.__type === 'RemoveColumnsFunction') {
-          functions[i] = RemoveColumnsFunction.revive(funct);
-        }
         if (funct.__type === 'SplitFunction') {
           functions[i] = SplitFunction.revive(funct);
         }
@@ -1088,11 +1045,13 @@ angular.module('grafterizerApp')
   this.ConstantLiteral = ConstantLiteral;
 
   // TODO add support for blank nodes
-  var BlankNode = function() {
+  var BlankNode = function(subElements) {
+    RDFElement.call(this, subElements);  
     this.__type = 'BlankNode';
   };
+  BlankNode.prototype = Object.create(URINode.prototype);
   BlankNode.revive = function(data) {
-    return new BlankNode();
+    return new BlankNode(data.subElements);
   };
   this.BlankNode = BlankNode;
 
@@ -1129,6 +1088,7 @@ angular.module('grafterizerApp')
   };
   Graph.prototype.addChild = function(child) {
     this.graphRoots.push(child);
+
   };
   Graph.prototype.removeChild = function(child) {
     var childIndex = this.graphRoots.indexOf(child);
@@ -1267,7 +1227,7 @@ angular.module('grafterizerApp')
       }
     }
 
-    this.customFunctionDeclarations.push(new CustomFunctionDeclaration(name, clojureCode, docstring));
+    this.customFunctionDeclarations.push(new CustomFunctionDeclaration(name, clojureCode, 'UTILITY', docstring));
     return true;
   };
   Transformation.prototype.removeCustomFunctionDeclaration = function(customFunct) {
@@ -1305,6 +1265,35 @@ angular.module('grafterizerApp')
 
     return null;
   };
+  Transformation.prototype.getColumnKeysFromGraphNodes = function() {
+      var requestedColumnKeys = [];
+      var rootNode;
+      for (var j = 0; j < this.graphs.length; ++j) 
+          for (var i = 0; i < this.graphs[j].graphRoots.length; ++i) {
+              rootNode = this.graphs[j].graphRoots[i];
+              if (rootNode instanceof ColumnURI) 
+                  if (requestedColumnKeys.indexOf(rootNode.column) === -1) 
+                      requestedColumnKeys.push(rootNode.column);
+              if (rootNode instanceof ColumnLiteral) 
+                  if (requestedColumnKeys.indexOf(rootNode.literalValue) === -1) 
+                      requestedColumnKeys.push(rootNode.literalValue);
+              requestedColumnKeys = getKeysFromSubs(rootNode,requestedColumnKeys);
+          }
+      return requestedColumnKeys;
+  }
+
+  var getKeysFromSubs = function(rootNode,subColKeys) {
+      for (var i = 0;i<rootNode.subElements.length;++i) {
+         if (rootNode.subElements[i] instanceof ColumnURI)
+             if (subColKeys.indexOf(rootNode.subElements[i].column) === -1)
+                 subColKeys.push(rootNode.subElements[i].column);
+         if (rootNode.subElements[i] instanceof ColumnLiteral)
+             if (subColKeys.indexOf(rootNode.subElements[i].literalValue) === -1)
+                 subColKeys.push(rootNode.subElements[i].literalValue);
+         getKeysFromSubs (rootNode.subElements[i], subColKeys);
+      }
+      return subColKeys;
+  }
   Transformation.prototype.getColumnKeysFromPipeline = function() {
     var i;
     var j;
@@ -1318,9 +1307,6 @@ angular.module('grafterizerApp')
           availableColumnKeys.push(currentFunction.newColName);
         }
 
-        if (currentFunction instanceof AddColumnFunction) {
-          availableColumnKeys.push(currentFunction.newColName);
-        }
         if (currentFunction instanceof AddColumnsFunction) {
           for (var k=0;k<currentFunction.columnsArray.length;++k)
             availableColumnKeys.push(currentFunction.columnsArray[k].colName);
@@ -1333,9 +1319,11 @@ angular.module('grafterizerApp')
 //TODO: clean and get new availColKeys for RenameColumns
 
         if (currentFunction instanceof MakeDatasetFunction) {
-          for (var k = 0; k < currentFunction.columnsArray.length; ++k) {
-            availableColumnKeys.push(currentFunction.columnsArray[k]);
-          }
+          if (!currentFunction.useLazy)
+            for (var k = 0; k < currentFunction.columnsArray.length; ++k) {
+                availableColumnKeys.push(currentFunction.columnsArray[k]);
+            }
+       //   else //TODO:For lazy naming + for "move-first-row-to-header"
 
         }
 

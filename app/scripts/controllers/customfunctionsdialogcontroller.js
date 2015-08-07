@@ -25,7 +25,7 @@ angular.module('grafterizerApp')
     }, 250);
 
     $scope.emptyCustomFunction = new transformationDataModel.CustomFunctionDeclaration(
-      '', '');
+      '', '','','');
     
     $scope.saveCustomFunct = function() {
       // var customFunctionData = $scope.parseCustomFunctionCode($scope.selectedCustomFunction
@@ -34,7 +34,8 @@ angular.module('grafterizerApp')
       var result = $scope.$parent.transformation
         .addCustomFunctionDeclaration(
           $scope.selectedCustomFunction.name,
-          $scope.selectedCustomFunction.clojureCode);
+          $scope.selectedCustomFunction.clojureCode,
+          $scope.selectedCustomFunction.docstring);
           // customFunctionData.name,
           // customFunctionData.code);
 
@@ -104,7 +105,7 @@ angular.module('grafterizerApp')
       $scope.$parent.transformation.removeCustomFunctionDeclaration(
         customFunct);
       $scope.selectedCustomFunction = $scope.emptyCustomFunction = new transformationDataModel.CustomFunctionDeclaration(
-      '', '');
+      '', '','','');
     };
 
     var randomA = ['convert', 'do', 'analyse', 'parse', 'process', 'ignore', 'compute', 'apply'];
@@ -119,7 +120,8 @@ angular.module('grafterizerApp')
 
       $scope.emptyCustomFunction.name = name;
       $scope.emptyCustomFunction.clojureCode = '(defn ' + name + ' "" [] ())';
-      //$scope.emptyCustomFunction.docstring = docstring;
+      $scope.emptyCustomFunction.docstring = docstring;
+      $scope.emptyCustomFunction.group = 'UTILITY';
       $scope.selectedCustomFunction = $scope.emptyCustomFunction;
       $scope.saveCustomFunct();
     };
