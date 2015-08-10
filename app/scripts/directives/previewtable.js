@@ -80,10 +80,14 @@ angular.module('grafterizerApp')
 
           scope.gridOptions.columnDefs =
             _.map(data[':column-names'], function(f) {
+              var w = widths[f];
+              var width = w === largest || isNaN(w) ? '*' : Math.floor(w * 100) + '%';
+              var minWidth = isNaN(rawWidths[f]) ? 200 : Math.min(80 + rawWidths[f] * 8, 200);
+
               return {
                 name: f,
-                width: widths[f] === largest ? '*' : Math.floor(widths[f] * 100) + '%',
-                minWidth: Math.min(80 + rawWidths[f] * 8, 250),
+                width: width,
+                minWidth: minWidth,
                 cellTooltip: true
               };
             });
