@@ -319,8 +319,12 @@ angular
 
     // JSEDN is too restrictive by default on valid symbols
     jsedn.Symbol.prototype.validRegex = new RegExp(/.*/);
-  }).run(function(datagraftPostMessage, apiKeyService, $state) {
+  }).run(function(datagraftPostMessage, apiKeyService, $state, $rootScope) {
     datagraftPostMessage.setup();
+
+    // Mobile detection (as Leaflet 1.0 does)
+    var ua = navigator.userAgent.toLowerCase();
+    $rootScope.isMobile = typeof orientation !== 'undefined' || ua.indexOf('mobile') !== -1;
 
     if (!apiKeyService.hasKeyPass()) {
       window.setTimeout(function() {
