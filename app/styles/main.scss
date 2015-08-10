@@ -735,3 +735,8 @@ mark {
     border-width:2px;
     border-color:#5555AA;
 }
+
+[flex] {
+    min-height: 0;
+    min-width: 0;
+}
