@@ -544,7 +544,6 @@ angular.module('grafterizerApp')
   }
 
   function constructBlankNodeJsEdn(blankNode, containingGraph) {
-      console.log("BLANK111");
       return new jsedn.Vector([]);
 
   }
@@ -607,7 +606,7 @@ angular.module('grafterizerApp')
 
   function tempCheckExistingVocabInGraft(prefix){
     var vocab = ['dcat', 'dcterms', 'foaf', 'statistical-entity', 'org', 'os', 'owl', 'pmd', 'qb', 'rdf',
-                 'sdmx-attribute', 'sdmx-concept', 'sdmx-measure', 'skos', 'vcard', 'void', 'xsd'];
+         /**/  'rdfs',/**/      'sdmx-attribute', 'sdmx-concept', 'sdmx-measure', 'skos', 'vcard', 'void', 'xsd'];
 
     for (var i = 0; i < vocab.length; i++){
       if(vocab[i] === prefix){
@@ -726,10 +725,10 @@ angular.module('grafterizerApp')
               if (prefixersInGUI[i].name === element.prefix) existsInGUI = true;
           }
           if(namespace != ""){
-            str += ('(def ' + element.prefix + ' ' + '"' + namespace + '"' + ') ');
+            str += ('(def ' + element.prefix + ' (prefixer ' + '"' + namespace + '"' + ')) ');
             str += '\n';
           } else if (!existsInGUI) {
-            str += ('(def ' + element.prefix + ' ' + '"' + containingGraph.graphURI + '"' + ')');
+            str += ('(def ' + element.prefix + ' (prefixer ' + '"' + containingGraph.graphURI + '"' + '))');
             str += '\n';
           }
         }

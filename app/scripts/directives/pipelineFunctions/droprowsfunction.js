@@ -9,7 +9,7 @@
 angular.module('grafterizerApp')
   .directive('dropRowsFunction', function(transformationDataModel) {
     return {
-      templateUrl: 'views/dropRowsFunction.html',
+      templateUrl: 'views/pipelineFunctions/dropRowsFunction.html',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
         if (!scope.function) {
