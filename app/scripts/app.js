@@ -53,7 +53,7 @@ angular
 
     if (typeof Raven !== 'undefined') {
 
-      Raven.config('https://245b9e44d62e421bad11c1614b3e0fe8@grafterizer.datagraft.net/2', {}).install();
+      Raven.config('https://cdec3ae0110344cabdd5a242d2247d07@grafterizer.datagraft.net/5', {}).install();
 
       $provide.decorator('$exceptionHandler', ['$delegate', function($delegate) {
         return function(exception, cause) {
