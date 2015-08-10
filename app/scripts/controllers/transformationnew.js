@@ -226,4 +226,6 @@ angular.module('grafterizerApp')
         scope: $scope.$new(false, $scope)
   })
     };
+
+    $scope.hideUploadButton = true;
   });

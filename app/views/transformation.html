@@ -73,3 +73,7 @@
         <div layout="column" flex ui-view="preview" autoscroll="false"></div>
     </div> 
 </md-content>
+
+<md-button class="md-accent md-fab md-fab-bottom-right sin-fa-button" aria-label="Open file" ngf-select ng-model="fileUpload" ngf-accept="'.csv'" ngf-max-size="1048576" ng-model-rejected="rejectedFileUpload" ng-show="!hideUploadButton">
+    <i class="fa fa-folder-open-o"></i>
+</md-button>
