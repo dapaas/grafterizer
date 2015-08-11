@@ -9,7 +9,7 @@
 angular.module('grafterizerApp')
   .directive('splitFunction', function(transformationDataModel) {
     return {
-      templateUrl: 'views/splitFunction.html',
+      templateUrl: 'views/pipelineFunctions/splitFunction.html',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
         if (!scope.function) {

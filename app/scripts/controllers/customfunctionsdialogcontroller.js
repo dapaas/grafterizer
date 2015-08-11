@@ -35,6 +35,7 @@ angular.module('grafterizerApp')
         .addCustomFunctionDeclaration(
           $scope.selectedCustomFunction.name,
           $scope.selectedCustomFunction.clojureCode,
+          $scope.selectedCustomFunction.group,
           $scope.selectedCustomFunction.docstring);
           // customFunctionData.name,
           // customFunctionData.code);

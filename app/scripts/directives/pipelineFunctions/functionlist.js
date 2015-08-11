@@ -9,7 +9,7 @@
 angular.module('grafterizerApp')
   .directive('functionList', function() {
     return {
-      templateUrl: 'views/functionlist.html',
+      templateUrl: 'views/pipelineFunctions/functionlist.html',
       restrict: 'E',
       scope: true,
       controller: ['$scope', function($scope) {

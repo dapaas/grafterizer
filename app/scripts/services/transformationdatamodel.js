@@ -1219,7 +1219,7 @@ angular.module('grafterizerApp')
 
     return false;
   };
-  Transformation.prototype.addCustomFunctionDeclaration = function(name, clojureCode,docstring) {
+  Transformation.prototype.addCustomFunctionDeclaration = function(name, clojureCode, group, docstring) {
     for (var i = 0; i < this.customFunctionDeclarations.length; ++i) {
       if (this.customFunctionDeclarations[i].name === name.trim()) {
         this.customFunctionDeclarations[i].clojureCode = clojureCode;
@@ -1227,7 +1227,7 @@ angular.module('grafterizerApp')
       }
     }
 
-    this.customFunctionDeclarations.push(new CustomFunctionDeclaration(name, clojureCode, 'UTILITY', docstring));
+    this.customFunctionDeclarations.push(new CustomFunctionDeclaration(name, clojureCode, group, docstring));
     return true;
   };
   Transformation.prototype.removeCustomFunctionDeclaration = function(customFunct) {
