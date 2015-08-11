@@ -5,7 +5,7 @@
     </div>
   </md-toolbar>
     <md-dialog-content layout="row" class="sticky-container">
-        <div class="md-padding" flex="66">
+<!--         <div class="md-padding" flex="66">
             <form ng-submit="makeNewDataset()">
                 <h4 class="md-title">Save as a new page</h4>
                 <md-input-container class="sin-no-shrink">
@@ -25,6 +25,18 @@
                 </md-button>
             </form>
             <md-progress-circular style="margin: 30px auto 0px auto;" ng-if="processing" md-mode="indeterminate"></md-progress-circular>
+        </div>
+ -->        
+        <div layout="column" class="md-padding">
+            <h4 class="md-title">Download the JAR file</h4>
+            <div layout-align="center center" layout="row">
+                <form target="_blank" method="POST" action="{{downloadJarEndpoint}}" ng-submit="downloadJar()">
+                    <input type="hidden" name="clojure" value="{{downloadJarClojure}}">
+                    <md-button type="submit" class="md-fab md-accent sin-fa-button" aria-label="Download JAR">
+                        <i class="fa fa-cube"></i>
+                    </md-button>
+                </form>
+            </div>
         </div>
         <div layout="column" class="md-padding">
             <h4 class="md-title">Or download the results</h4>

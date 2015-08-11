@@ -40,6 +40,7 @@ angular
   .config(function(
     ontotextAPIProvider,
     PipeServiceProvider,
+    jarfterServiceProvider,
     $mdThemingProvider,
     $stateProvider,
     $urlRouterProvider,
@@ -77,6 +78,8 @@ angular
       developmentMode ?
       'https://grafterizer.datagraft.net/backend'
       : '/backend');
+
+    jarfterServiceProvider.setEndpoint('http://192.168.11.43:8080');
 
     var urlBase = $urlRouterProvider.otherwise('/transformations/new');
 

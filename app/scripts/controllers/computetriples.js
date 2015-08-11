@@ -8,12 +8,25 @@
  * Controller of the grafterizerApp
  */
 angular.module('grafterizerApp')
-  .controller('ComputetriplesCtrl', function($scope, $mdDialog, ontotextAPI,
-    $http, $rootScope, datagraftPostMessage) {
+  .controller('ComputetriplesCtrl', function(
+    $scope,
+    $rootScope,
+    $mdDialog,
+    $http,
+    ontotextAPI,
+    datagraftPostMessage,
+    jarfterService,
+    generateClojure) {
 
     $scope.download = function() {
       $mdDialog.hide();
       window.open($scope.downloadLink, '_blank');
+    };
+
+    $scope.downloadJarEndpoint = jarfterService.getJarCreatorStandAloneEndpoint();
+
+    $scope.downloadJar = function() {
+      $scope.downloadJarClojure = generateClojure.fromTransformation($rootScope.transformation);
     };
 
     $scope.makeNewDataset = function() {
