@@ -15,8 +15,7 @@ angular.module('grafterizerApp')
     $http,
     ontotextAPI,
     datagraftPostMessage,
-    jarfterService,
-    generateClojure) {
+    jarfterService) {
 
     $scope.download = function() {
       $mdDialog.hide();
@@ -26,7 +25,7 @@ angular.module('grafterizerApp')
     $scope.downloadJarEndpoint = jarfterService.getJarCreatorStandAloneEndpoint();
 
     $scope.downloadJar = function() {
-      $scope.downloadJarClojure = generateClojure.fromTransformation($rootScope.transformation);
+      $scope.downloadJarClojure = jarfterService.generateClojure($rootScope.transformation);
     };
 
     $scope.makeNewDataset = function() {

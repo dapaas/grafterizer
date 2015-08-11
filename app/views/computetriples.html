@@ -27,24 +27,30 @@
             <md-progress-circular style="margin: 30px auto 0px auto;" ng-if="processing" md-mode="indeterminate"></md-progress-circular>
         </div>
  -->        
-        <div layout="column" class="md-padding">
-            <h4 class="md-title">Download the JAR file</h4>
-            <div layout-align="center center" layout="row">
-                <form target="_blank" method="POST" action="{{downloadJarEndpoint}}" ng-submit="downloadJar()">
-                    <input type="hidden" name="clojure" value="{{downloadJarClojure}}">
-                    <md-button type="submit" class="md-fab md-accent sin-fa-button" aria-label="Download JAR">
-                        <i class="fa fa-cube"></i>
-                    </md-button>
-                </form>
-            </div>
-        </div>
-        <div layout="column" class="md-padding">
-            <h4 class="md-title">Or download the results</h4>
-            <div layout-align="center center" layout="row">
-                <md-button class="md-fab md-accent sin-fa-button" aria-label="Download N-triples" ng-click="download()" ng-href="{{downloadLink}}">
-                    <i class="fa fa-cloud-download"></i>
+        <div layout="column" flex class="md-padding">
+        <!-- <div layout="column" class="md-padding"> -->
+            <h4 class="md-title" style="margin-bottom:0;">Execute transformation</h4>
+            <p class="md-caption">Compile the transformation, execute it and retrieve the results. This may take a few minutes.</p>
+            <!-- <div layout-align="center center" layout="row"> -->
+            <div layout-align="center center" flex layout="row">
+                <md-button class="md-fab md-accent sin-fa-fab-big" aria-label="Download N-triples" ng-click="download()" ng-href="{{downloadLink}}" >
+                    <i class="fa fa-bolt fa-5x"></i>
                 </md-button>
             </div>
+        </div>
+        <div layout="column" flex>
+            <h4 class="md-title" style="margin-bottom:0;">Download transformation executable</h4>
+            <p class="md-caption">Compile the transformation and retrieve an executable JAR file.</p>
+            <p class="md-caption">Usage:<br>
+            <code>java -jar jarCreatorSandAlone.jar &lt;input-file.csv&gt; &lt;output-file.(nt|rdf|n3|ttl)&gt;</code></p>
+            <!-- <div layout-align="center center" layout="row"> -->
+                <form target="_blank" method="POST" action="{{downloadJarEndpoint}}" ng-submit="downloadJar()" flex layout="row" class="md-padding" layout-align="center center">
+                    <input type="hidden" name="clojure" value="{{downloadJarClojure}}">
+                    <md-button type="submit" class="md-fab sin-fa-fab-big md-accent" aria-label="Download JAR">
+                        <i class="fa fa-cube fa-5x"></i>
+                    </md-button>
+                </form>
+            <!-- </div> -->
         </div>
     </md-dialog-content>
     <div class="md-actions" layout="row" layout-align="right">
