@@ -19,6 +19,7 @@ angular.module('grafterizerApp')
     {name: 'foaf', text: ''},
     {name: 'org', text: ''},
     {name: 'os', text: ''},
+/**/{name: 'ps', text: ''},/**/
     {name: 'owl', text: ''},
     {name: 'pmd', text: ''},
     {name: 'qb', text: ''},
@@ -44,7 +45,6 @@ angular.module('grafterizerApp')
 
 
   function isGUIPrefix(prefixName, prefixersInGUI) {
-    console.log(prefixers.length);
 /*    for (var i=0;i<prefixersInGUI.length;++i) {
         console.log(prefixersInGUI[i].name+'---'+prefixName);
         if (prefixersInGUI[i].name === prefixName)
@@ -152,7 +152,6 @@ angular.module('grafterizerApp')
                         new jsedn.List([jsedn.sym(parentPrefix),prefixString])
                        ])
       ]);
-      console.log(prefixer);
     prefixers.push(prefixer);
  }
   }
@@ -528,15 +527,19 @@ angular.module('grafterizerApp')
       return nodeValue;
     } else {
       if (isSupportedPrefix(nodePrefix.trim()) ) {
-
+        
         // nodePrefix:nodeValue (e.g. vcard:Address)
         return new jsedn.sym(nodePrefix + ':' + nodeValue);
-      } else {
+
+      }  
+          else
+          {
         // TODO make a check if we have defined the prefix
         // some custom prefix, that is hopefully defined in the UI (Edit Prefixes...)
         // both are symbols and we get (nodePrefix nodeValue) as a result
-          
-        return nodePrefix + nodeValue;
+
+                    return new jsedn.List([new jsedn.sym(nodePrefix),nodeValue]); 
+        //return nodePrefix + nodeValue;
       }
     }
 
@@ -840,7 +843,8 @@ angular.module('grafterizerApp')
       for (i = 0; i < transformation.graphs.length; ++i) {
         if (transformation.graphs[i].graphRoots) {
           if (transformation.graphs[i].graphRoots.length > 0) {
-            textStr= getConcept(transformation.graphs[0].graphRoots[0], textStr, transformation.graphs[i],prefixersInGUI);
+            for (var j=0;j<transformation.graphs[i].graphRoots.length;j++)
+            textStr= getConcept(transformation.graphs[i].graphRoots[j], textStr, transformation.graphs[i],prefixersInGUI);
           }
         }
       }
