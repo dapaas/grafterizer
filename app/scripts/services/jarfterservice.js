@@ -21,8 +21,12 @@ angular.module('grafterizerApp')
   this.$get = function($http, generateClojure) {
     var api = {};
 
-    api.getJarCreatorStandAloneEndpoint = function(clojure) {
+    api.getJarCreatorStandAloneEndpoint = function() {
       return endpoint + '/jarfter/webresources/jarCreatorStandAlone';
+    };
+
+    api.getTransformStandAloneEndpoint = function() {
+      return endpoint + '/jarfter/webresources/transformStandAlone';
     };
 
     api.generateClojure = function(transformation) {

@@ -23,9 +23,25 @@ angular.module('grafterizerApp')
     };
 
     $scope.downloadJarEndpoint = jarfterService.getJarCreatorStandAloneEndpoint();
+    $scope.transformEndpoint = jarfterService.getTransformStandAloneEndpoint();
 
-    $scope.downloadJar = function() {
-      $scope.downloadJarClojure = jarfterService.generateClojure($rootScope.transformation);
+    $scope.generateJarfterClojure = function() {
+      $scope.jarfterClojure = jarfterService.generateClojure($rootScope.transformation);
+    };
+
+    ontotextAPI.distributionFile($scope.$parent.selectedDistribution)
+      .success(function(data) {
+        $scope.fullData = data;
+      });
+
+    $scope.onSubmitExecute = function() {
+      $scope.generateJarfterClojure();
+      $mdDialog.hide();
+    };
+
+    $scope.onSubmitDownloadJar = function() {
+      $scope.generateJarfterClojure();
+      $mdDialog.hide();
     };
 
     $scope.makeNewDataset = function() {
