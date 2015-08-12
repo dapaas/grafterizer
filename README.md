@@ -13,7 +13,7 @@ This branch uses the [Yeoman](http://yeoman.io/) development workflow.
 First, you need [Node.js](http://nodejs.org/).
 
 Then, install grunt, bower and yeoman:
-```npm install -g grunt-cli bower yo```
+```npm install -g grunt-cli bower yo generator-angular```
 
 Install the development dependencies:
 ```npm install```
