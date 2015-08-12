@@ -53,7 +53,16 @@ angular.module('grafterizerApp')
           .hideDelay(3000)
       );
 
-      Raven.captureMessage(message, {extra: {status: status, data: (data ? data.error : null)}});
+      Raven.captureMessage(message, {
+        extra: {
+          status: status,
+          data: (data ? data.error : null)
+        },
+        tags: {
+          file: 'ontotextapi',
+          method: 'errorHandler'
+        }
+      });
     };
 
     var transformRequest = function(data, headersGetter) {

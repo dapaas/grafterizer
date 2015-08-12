@@ -122,7 +122,10 @@ angular.module('grafterizerApp')
     /*
        * TODO re-define me when integrating with the rest of the UI
        */
-    Raven.captureMessage(errorString);
+    Raven.captureMessage(errorString, {tags: {
+      file: 'generateclojure',
+      method: 'alertInterface'
+    }});
     console.log(error, errorString);
   }
 
