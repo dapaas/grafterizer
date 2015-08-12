@@ -9,7 +9,7 @@
 angular.module('grafterizerApp')
   .directive('renameColumnsFunction', function(transformationDataModel) {
     return {
-      templateUrl: 'views/renameColumnsFunction.html',
+      templateUrl: 'views/pipelineFunctions/renameColumnsFunction.html',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
         if (!scope.function) {

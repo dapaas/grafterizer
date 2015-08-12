@@ -67,7 +67,16 @@ angular.module('grafterizerApp')
         .hideDelay(3000)
       );
 
-      Raven.captureMessage(message, {extra: {status: status, data: (data ? data.error : null)}});
+      Raven.captureMessage(message, {
+        extra: {
+          status: status,
+          data: (data ? data.error : null)
+        },
+        tags: {
+          file: 'pipe',
+          method: 'errorHandler'
+        }
+      });
     };
 
     api.computeTuplesHref = function(distributionUri, transformationUri, type) {

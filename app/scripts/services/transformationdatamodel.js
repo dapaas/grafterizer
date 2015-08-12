@@ -328,7 +328,10 @@ angular.module('grafterizerApp')
             break;
 
         default:
-            Raven.captureMessage("Error in defining  grep option");
+            Raven.captureMessage("Error in defining  grep option", {tags: {
+              file: 'transformationdatamodel',
+              method: 'GrepFunction.generateClojure'
+            }});
             break;
     }
     if (this.colsToFilter.length>0) values.push(colsToFilter);
@@ -589,7 +592,10 @@ angular.module('grafterizerApp')
   ApplyColumnsFunction.prototype.removeKeyFunctionPair = function(kfPair) {
     var index = this.keyFunctionPairs.indexOf(kfPair);
     if (index === -1 || kfPair === null || kfPair === undefined) {
-      Raven.captureMessage('tried to remove non-existing function');
+      Raven.captureMessage('tried to remove non-existing function', {tags: {
+        file: 'transformationdatamodel',
+        method: 'removeKeyFunctionPair'
+      }});
       return false;
     }
 
@@ -650,7 +656,10 @@ angular.module('grafterizerApp')
                                                mapc,
                                                applyc]);
     else {
-        Raven.captureMessage('Error parsing map in mapc');
+        Raven.captureMessage('Error parsing map in mapc', {tags: {
+          file: 'transformationdatamodel',
+          method: 'MapcFunction.generateClojure'
+        }});
         return;
     }
 
@@ -658,7 +667,10 @@ angular.module('grafterizerApp')
   MapcFunction.prototype.removeKeyFunctionPair = function(kfPair) {
     var index = this.keyFunctionPairs.indexOf(kfPair);
     if (index === -1 || kfPair === null || kfPair === undefined) {
-      Raven.captureMessage('tried to remove non-existing function');
+      Raven.captureMessage('tried to remove non-existing function', {tags: {
+        file: 'transformationdatamodel',
+        method: 'MapcFunction.removeKeyFunctionPair'
+      }});
       return false;
     }
 
@@ -899,7 +911,10 @@ angular.module('grafterizerApp')
   Pipeline.prototype.remove = function(funct) {
     var index = this.functions.indexOf(funct);
     if (index === -1 || funct === null || funct === undefined) {
-      Raven.captureMessage('tried to remove non-existing function');
+      Raven.captureMessage('tried to remove non-existing function', {tags: {
+        file: 'transformationdatamodel',
+        method: 'Pipeline.remove'
+      }});
       return false;
     }
 
@@ -1219,7 +1234,7 @@ angular.module('grafterizerApp')
 
     return false;
   };
-  Transformation.prototype.addCustomFunctionDeclaration = function(name, clojureCode,docstring) {
+  Transformation.prototype.addCustomFunctionDeclaration = function(name, clojureCode, group, docstring) {
     for (var i = 0; i < this.customFunctionDeclarations.length; ++i) {
       if (this.customFunctionDeclarations[i].name === name.trim()) {
         this.customFunctionDeclarations[i].clojureCode = clojureCode;
@@ -1227,7 +1242,7 @@ angular.module('grafterizerApp')
       }
     }
 
-    this.customFunctionDeclarations.push(new CustomFunctionDeclaration(name, clojureCode, 'UTILITY', docstring));
+    this.customFunctionDeclarations.push(new CustomFunctionDeclaration(name, clojureCode, group, docstring));
     return true;
   };
   Transformation.prototype.removeCustomFunctionDeclaration = function(customFunct) {

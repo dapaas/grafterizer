@@ -46,7 +46,7 @@ angular.module('grafterizerApp')
                 displayName: 'Add Columns',
                 name: 'add-columns',
                 selected: false,
-                type: 'expand'
+                type: 'column'
             },
             {
                 displayName: 'Columns',

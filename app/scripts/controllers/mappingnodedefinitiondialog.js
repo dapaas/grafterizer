@@ -178,7 +178,10 @@ angular.module('grafterizerApp')
 
                       $scope.showProgress = false;
                   }).error(function(data, status, headers, config) {
-                      Raven.captureMessage('error api/vocabulary/search');
+                      Raven.captureMessage('error api/vocabulary/search', {tags: {
+                        file: 'mappingnodedefinitiondialog',
+                        method: 'search'
+                      }});
                       $scope.showProgress = false;
           });
 

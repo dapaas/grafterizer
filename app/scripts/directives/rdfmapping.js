@@ -35,7 +35,10 @@ angular.module('grafterizerApp')
           localVocabulary.push(vocabItemTemplate);
         }
       }).error(function(data, status, headers, config) {
-        Raven.captureMessage('error /api/vocabulary/getAll');
+        Raven.captureMessage('error /api/vocabulary/getAll', {tags: {
+          file: 'rdfmapping',
+          method: 'controller'
+        }});
       });
 
     return {

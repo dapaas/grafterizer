@@ -153,7 +153,10 @@ angular.module('grafterizerApp')
                 }
         break;
         default:
-            Raven.captureMessage("Unhandled modification");
+            Raven.captureMessage("Unhandled modification", {tags: {
+              file: 'customstringfunctionsdialogcontroller',
+              method: 'changeSample'
+            }});
         break;
       }
     };
