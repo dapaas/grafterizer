@@ -104,7 +104,10 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
         }
         $scope.showProgressCircular = false;
       }).error(function(data, status, headers, config) {
-        Raven.captureMessage('error /api/vocabulary/getAll');
+        Raven.captureMessage('error /api/vocabulary/getAll', {tags: {
+          file: 'MappingPrefixManage',
+          method: 'switchToManageDialog'
+        }});
         $scope.showProgressCircular = false;
       });
 
@@ -294,7 +297,10 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
         switchToManageDialog();
         $scope.showProgress = false;
       }).error(function(data, status, headers, config) {
-        Raven.captureMessage('error api/vocabulary/getClassAndPropertyFromVocabulary');
+        Raven.captureMessage('error api/vocabulary/getClassAndPropertyFromVocabulary', {tags: {
+          file: 'MappingPrefixManage',
+          method: 'addVocabtoLocal'
+        }});
         $scope.showProgress = false;
       });
   };
