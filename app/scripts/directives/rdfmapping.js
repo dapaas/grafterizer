@@ -15,6 +15,14 @@ angular.module('grafterizerApp')
     transformationDataModel,
     RecursionHelper) {
 
+    $scope.editRDFPrefixes = function() {
+      $mdDialog.show({
+        templateUrl: 'views/MappingPrefixManage.html',
+        controller: 'MappingPrefixManageCtrl',
+        scope: $rootScope.$new(false)
+      });
+    };
+
     var connection = leObject.serveraddress;
 
     //load server vocabulary
@@ -46,13 +54,52 @@ angular.module('grafterizerApp')
       restrict: 'E',
       compile: function(element) {
         return RecursionHelper.compile(element, function(scope, iElement, iAttrs, controller, transcludeFn) {
-          scope.clickAddAfter = function(graph) {
-            if (!graph) {
+
+          scope.$watch('$parent.transformation.graphs.length', function() {
+            scope.mappingEnabled = scope.$parent.transformation.graphs.length > 0;
+          });
+
+          scope.switchMapping = function() {
+            var transformation = scope.$parent.transformation;
+
+            if (scope.mappingEnabled) {
+
               var newGraph = new transformationDataModel.Graph('http://www.example.no/#/', []);
-              scope.$parent.transformation.addGraphAfter(null, newGraph);
+              transformation.addGraphAfter(null, newGraph);
+
+            } else if (transformation.graphs.length > 0) {
+
+              var isEmpty = !_.detect(transformation.graphs, function(graph) {
+                return graph.graphRoots && graph.graphRoots.length > 0;
+              });
+
+              if (isEmpty) {
+                transformation.graphs = [];
+              } else {
+                $mdDialog.show(
+                  $mdDialog.confirm()
+                  .title(
+                    'Do you want to disable the RDF mapping?')
+                  .content(
+                    'The current RDF mapping is not empty and it will be removed.'
+                  )
+                  .ariaLabel(
+                    'The current RDF mapping is not empty and it will be removed.'
+                  )
+                  .ok('Yes')
+                  .cancel('Cancel')).then(
+                  function() {
+                    transformation.graphs = [];
+                  },
+
+                  function() {
+                    scope.mappingEnabled = true;
+                  });
+              }
             }
+
           };
         });
-    }
+      }
     };
   });

@@ -55,6 +55,7 @@
 
       <div class="modal-content animate-switch" ng-switch-when="addVocabDialog">
         <form name="graphsForm">
+          <div class="md-padding">
           <md-input-container>
             <label>Prefix</label>
             <input type="text" class="form-control" ng-model="vocabName" name="prefix" required/>
@@ -93,6 +94,7 @@
             <input type="text" ng-model="vocabLoc"/>
           </md-input-container>
 
+          </div>
           <div class="md-actions" layout="row" layout-align="right">
             <md-button class="md-primary" ng-click="addVocabtoLocal(vocabName, vocabNamespace, vocabLoc)">{{addorEdit}}</md-button>
             <md-button class="md-primary" ng-click="switchToManageDialogScope()">Cancel</md-button>

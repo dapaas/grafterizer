@@ -837,11 +837,13 @@ angular.module('grafterizerApp')
 
     var resultingPipeline = constructPipeline();
     var textStr = '';
-    
-    for (i = 0; i < grafterPrefixers.length; ++i) {
-      textStr += (grafterPrefixers[i].ednEncode()  + '\n');
+   
+    if (grafterPrefixers.length) {
+      for (i = 0; i < grafterPrefixers.length; ++i) {
+        textStr += (grafterPrefixers[i].ednEncode()  + '\n');
+      }
+      textStr += '\n';
     }
-    textStr += '\n';
 
     loadNamespaceMapping(transformation.rdfVocabs);
     if(transformation.graphs.length > 0) {
@@ -853,10 +855,10 @@ angular.module('grafterizerApp')
           }
         }
       }
+      textStr += '\n';
    }
 
 
-    textStr += '\n';
 
     
     for (i = 0; i < grafterCustomFunctions.length; ++i) {

@@ -1,16 +1,22 @@
-
-<div ng-model="transformation.graphs" layout="row">
-    <md-button class="md-primary" ng-click="clickAddAfter(null)" ng-hide="transformation.graphs.length!=0" flex aria-label="Add pipeline step">
-        <i class="fa fa-large fa-plus-circle"></i>
+<div class="md-padding map-tabular-data-view">
+   <md-switch aria-label="Map the tabular data to RDF" flex ng-model="mappingEnabled" ng-change="switchMapping()">
+     Map the tabular data to RDF
+   </md-switch>
+</div>
+<div class="md-padding">
+    <md-button aria-label="Edit RDF mapping prefixes" ng-click="$parent.editRDFPrefixes()" ng-show="mappingEnabled">
+        <i class="fa fa-cubes"></i> Edit RDF mapping prefixes
     </md-button>
+</div>
+<div ng-model="transformation.graphs" layout="row" class="md-padding">
     <div ng-repeat="graph in transformation.graphs">
         <form name="graphsForm" class="md-padding" >
             <md-input-container flex class="sin-no-shrink">
                 <label>Graph URI</label>
-                <input ng-model="graph.graphURI" name="graphURI" type="text" required>
+                <input ng-model="graph.graphURI" name="graphURI" type="url" required>
                 <div ng-messages="graphsForm.graphURI.$error">
-                    <div ng-message="required">Field is required.</div>
-                    <div ng-message="pattern">Not a valid URI.</div>
+                    <div ng-message="required">A valid URI is required.</div>
+                    <div ng-message="url">You should enter a valid URI.</div>
                 </div>
             </md-input-container>
 

@@ -10,6 +10,7 @@
 
 angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
   $scope,
+  $rootScope,
   $http,
   $mdDialog,
   $log,
@@ -67,7 +68,7 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
     $scope.selection = 'manageDialog';
 
     //show local vocabulary
-    var localVocabulary = $scope.$parent.transformation.rdfVocabs;
+    var localVocabulary = $rootScope.transformation.rdfVocabs;
 
     var VocabList = [];
     $scope.VocabItems = [];
@@ -155,7 +156,7 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
   //delete local vocabulary
   $scope.deleteItem = function(vocabNamespace) {
     //delete from local storage
-    var localVocabulary = $scope.$parent.transformation.rdfVocabs;
+    var localVocabulary = $rootScope.transformation.rdfVocabs;
     for (var i = localVocabulary.length - 1; i >= 0; i--) {
       if( localVocabulary[i].namespace === vocabNamespace ){
         localVocabulary.splice(i, 1);
@@ -201,7 +202,7 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
 
     // if only specify prefix and namespace, just add vocabulary name to local storage.
     if (vocabLoc === undefined && !object.data) {
-      var localVocabulary = $scope.$parent.transformation.rdfVocabs;
+      var localVocabulary = $rootScope.transformation.rdfVocabs;
 
       if ($scope.namespaceInputDisable === true){
         for (var i = localVocabulary.length - 1; i >= 0; i--) {
@@ -243,7 +244,7 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
         islocal: isLocalfile
       }).success(function(response) {
         //add vocabulary name, a list of classes, a list of properties in local storage
-        var localVocabulary = $scope.$parent.transformation.rdfVocabs;
+        var localVocabulary = $rootScope.transformation.rdfVocabs;
 
         var classArray = [];
         var propertyArray = [];

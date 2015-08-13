@@ -37,8 +37,8 @@ angular.module('grafterizerApp')
             scope.isOverrided = false;
           }, true);
 
-          var warningMsg = '; WARNING: Experimental feature\n' +
-            '; The changes will be lost if you edit the transformation\n\n';
+          var warningMsg = '; WARNING: Clojure editing is an experimental feature\n' +
+            '; The changes will be lost if you edit the transformation';
 
           var throttledPreviewRequest = _.throttle(function() {
             scope.$parent.$parent.$broadcast('preview-request');
@@ -48,7 +48,7 @@ angular.module('grafterizerApp')
             if (generatedClojure !== scope.clojure) {
               scope.isOverrided = true;
               if (scope.clojure.indexOf(warningMsg) === -1) {
-                scope.clojure = warningMsg + scope.clojure;
+                scope.clojure = warningMsg + '\n\n' + scope.clojure;
               }
 
               generateClojure.overrideClojure(scope.clojure,
