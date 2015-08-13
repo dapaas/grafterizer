@@ -118,6 +118,14 @@ angular.module('grafterizerApp')
       return $http.get(endpoint + '/catalog/transformations/catalog', jsonLdConfig).error(errorHandler);
     };
 
+    api.publicTransformations = function() {
+      return $http.get(endpoint + '/catalog/transformations/catalog', _.merge({
+        headers: {
+          showShared: 'y'
+        },
+      }, jsonLdConfig)).error(errorHandler);
+    };
+
     api.transformation = function(id) {
       return $http.get(endpoint + '/catalog/transformations', _.merge({
         headers: {
