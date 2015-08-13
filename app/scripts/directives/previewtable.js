@@ -86,6 +86,7 @@ angular.module('grafterizerApp')
 
               return {
                 name: f,
+                displayName: f,
                 width: width,
                 minWidth: minWidth,
                 cellTooltip: true
