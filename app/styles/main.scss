@@ -551,7 +551,9 @@ preview-table .watermark {
 }
 
 .sin-function-dialog {
-
+    md-dialog-content {
+        min-height:200px;
+    }
     md-dialog-content:not(.md-padding) {
         padding:0;
     }
