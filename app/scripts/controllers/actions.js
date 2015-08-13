@@ -21,4 +21,5 @@ angular.module('grafterizerApp')
       delete $rootScope.actions;
     });
 
+    $scope.isIframe = window !== window.top;
   });
