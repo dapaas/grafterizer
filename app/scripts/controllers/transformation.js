@@ -261,4 +261,18 @@ angular.module('grafterizerApp')
             .customFunctionDeclarations);
         });
     };
+
+    $scope.loadDistribution = function() {
+      $mdDialog.show({
+        templateUrl: 'views/loaddistribution.html',
+        controller: 'LoadDistributionCtrl',
+        scope: $scope.$new(false)
+      }).then(function(distribution) {
+        console.log("data!!!", distribution);
+        $state.go('transformations.transformation.preview', {
+          id: $stateParams.id,
+          distribution: distribution
+        });
+      });
+    };
   });
