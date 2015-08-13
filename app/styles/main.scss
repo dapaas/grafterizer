@@ -7,6 +7,10 @@
 $light-gray: #fafafa;
 $gray: rgb(178,178,178);
 
+[flex] {
+    min-height: 0;
+    min-width: 0;
+}
 
 
 .menuBtn {
@@ -253,7 +257,7 @@ md-sidenav {
     border-radius:0;
 }
 
-md-fab-trigger .fa {
+/*md-fab-trigger .fa {
     z-index: 22;
     position: absolute;
     left: 0;
@@ -262,7 +266,7 @@ md-fab-trigger .fa {
     bottom: 0;
     line-height: 56px;
     font-size: 20px;
-}
+}*/
 /*md-tab-content {
 padding:8px;
 }*/
@@ -397,7 +401,7 @@ md-tabs.md-whiteframe-z5 {
     }
 
     & > div {
-        padding:0 10px;
+        padding:0 15px 0 0;
         flex-grow: 1;
     }
 }
@@ -738,7 +742,17 @@ mark {
     border-color:#5555AA;
 }
 
-[flex] {
-    min-height: 0;
-    min-width: 0;
+// Workaround until https://github.com/angular/material/pull/3693 is merged in angular-material
+md-fab-speed-dial.md-fab-bottom-right {
+    z-index:100;
+    top: auto;
+    right: 20px;
+    bottom: 20px;
+    left: auto;
+    position: absolute;
 }
+
+.sin-load-distribution-view {
+    min-height:50vh;
+}
+

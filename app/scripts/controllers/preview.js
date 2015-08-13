@@ -20,7 +20,7 @@ angular.module('grafterizerApp')
     $mdDialog) {
 
     $scope.livePreview = true;
-    $scope.selectedTabIndex = 2;
+    $scope.selectedTabIndex = 0;
     
     // TODO IT DOES WORK
     $scope.$parent.showPreview = true;
@@ -29,36 +29,7 @@ angular.module('grafterizerApp')
       $scope.$parent.showPreview = false;
     });
 
-    ontotextAPI.datasets().success(function(data) {
-      $scope.datasets = data['dcat:record'].reverse();
-    });
-
-    var selectedDataset;
-
-    $scope.accordionExpandCallback = function(index) {
-      selectedDataset = $scope.datasets[index/*-1*/];
-      if (!selectedDataset) {
-        return;
-      }
-
-      if (!selectedDataset.distributions) {
-        selectedDataset.distributionsLoading = true;
-      }
-
-      ontotextAPI.dataset(selectedDataset['foaf:primaryTopic'])
-        .success(function(data) {
-          selectedDataset.distributionsLoading = false;
-          selectedDataset.distributions = data['dcat:distribution'];
-        }).error(function() {
-          selectedDataset.distributionsLoading = false;
-        });
-    };
-
     $scope.selectedDistribution = $stateParams.distribution;
-
-    if ($scope.selectedDistribution) {
-      $scope.selectedTabIndex = 0;
-    }
 
     var previewTransformation = function(redirect) {
       var clojure = generateClojure.fromTransformation($scope.$parent.transformation);
@@ -142,7 +113,6 @@ angular.module('grafterizerApp')
     var showDownloadButton = function() {
       var distribution = $scope.selectedDistribution;
       var transformation = $scope.$parent.id;
-
 
       $rootScope.$emit('addAction', {
         name: 'download',

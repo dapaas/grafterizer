@@ -20,32 +20,5 @@
             <preview-table ng-model="originalData.edn" hide-headers></preview-table>
         </md-tab-body>
     </md-tab>
-    <md-tab label="Sources">
-        <md-tab-body>
-
-        <p class="md-padding md-caption" style="text-align:center;" ng-if="datasets.length === 0">You don't have distributions yet. Drag and drop a CSV file.</p>
-        <p class="md-padding md-caption" style="text-align:center;" ng-if="datasets.length !== 0">Select an existing distribution or drag and drop a CSV file.</p>
-        <md-radio-group ng-model="selectedDistribution">
-        <v-accordion class="vAccordion--default md-margin" flex
-            onexpand="accordionExpandCallback(index)">
-          <v-pane ng-repeat="dataset in datasets" expanded="$first">
-            <v-pane-header layout="row">
-              <md-button class="md-raised md-primary md-hue-1">
-                {{dataset['dct:title']}}
-              </md-button>
-            </v-pane-header>
-            <v-pane-content>
-                <md-progress-circular class="md-hue-2" md-mode="indeterminate" ng-if="dataset.distributionsLoading"></md-progress-circular>
-                <div ng-repeat="distribution in dataset.distributions">
-                  <md-radio-button ng-value="distribution">{{distribution | beautifyUri}}</md-radio-button>
-                </div>
-                <div ng-if="!dataset.distributionsLoading &amp;&amp;dataset.distributions.length===0">
-                  <p class="empty-distribution md-body-1">This distribution doesn't contain datasets.</p>
-                </div>
-            </v-pane-content>
-          </v-pane>
-        </v-accordion>
-        </md-tab-body>
-    </md-tab>
 </md-tabs>
 </md-content>

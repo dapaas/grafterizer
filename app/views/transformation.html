@@ -74,6 +74,20 @@
     </div> 
 </md-content>
 
-<md-button class="md-accent md-fab md-fab-bottom-right sin-fa-button" aria-label="Open file" ngf-select ng-model="fileUpload" ngf-accept="'.csv'" ngf-max-size="1048576" ng-model-rejected="rejectedFileUpload" ng-show="!hideUploadButton">
-    <i class="fa fa-folder-open-o"></i>
-</md-button>
+<md-fab-speed-dial class="md-fling md-fab-bottom-right" md-direction="up" ng-hide="hideUploadButton">
+    <md-fab-trigger>
+        <md-button aria-label="Open file" class="md-fab md-accent sin-fa-button" ngf-select ng-model="fileUpload" ngf-accept="'.csv'" ngf-max-size="1048576" ng-model-rejected="rejectedFileUpload" >
+            <i class="fa fa-folder-open-o"></i>
+        </md-button>
+    </md-fab-trigger>
+        <md-fab-actions>
+            <md-button aria-label="Upload a file" class="md-fab md-raised md-mini" ngf-select ng-model="fileUpload" ngf-accept="'.csv'" ngf-max-size="1048576" ng-model-rejected="rejectedFileUpload">
+                <md-tooltip md-direction="left">Upload a file</md-tooltip>
+                <i class="fa fa-upload"></i>
+            </md-button>
+            <md-button aria-label="From datagraft" class="md-fab md-raised md-mini" ng-click="loadDistribution()">
+                <md-tooltip md-direction="left">Load an existing distribution</md-tooltip>
+                <i class="fa fa-cloud-download"></i>
+            </md-button>
+        </md-fab-actions>
+</md-fab-speed-dial>
