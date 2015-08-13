@@ -331,8 +331,10 @@ angular.module('grafterizerApp')
     var columnKeysFromGraph = transformation.getColumnKeysFromGraphNodes();
     //console.log(colsFromGraph);
     for (i = 0; i < columnKeysFromGraph.length; ++i)
-        if (columnKeysFromPipeline.indexOf(columnKeysFromGraph[i]) === -1) 
+        if (columnKeysFromPipeline.indexOf(columnKeysFromGraph[i]) === -1
+            && typeof columnKeysFromGraph[i] === 'string')  {
             colKeysClj.val.push(new jsedn.sym(columnKeysFromGraph[i]));
+        }
     var graphFunction = new jsedn.List([
       new jsedn.sym('graph-fn'),
       new jsedn.Vector([
