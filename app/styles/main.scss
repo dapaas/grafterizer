@@ -3,6 +3,7 @@
 // endbower
 
 @import "theme-codemirror.scss";
+@import "fonts.scss";
 
 $light-gray: #fafafa;
 $gray: rgb(178,178,178);
@@ -229,7 +230,7 @@ md-sidenav {
 
 .error-infos.md-warm {
     padding:20px;
-    font-family: monospace;
+    font-family: $sin-monospace-font;
     background:#F44336;
     color:white;
     z-index: 1;
@@ -443,6 +444,11 @@ md-tab-content {
         right: 0;
         bottom: 0;
     }
+    clojure-pipeline {
+        left: 10px;
+        right: 10px;
+        top: 10px;
+    }
     preview-raw {
         left:8px; 
     }
@@ -635,7 +641,7 @@ graph-mapping div {
 
 .sin-functions-list .md-button {
   text-align: left;
-  font-family: monospace;
+  font-family: $sin-monospace-font;
   border-radius: 0;
   // white-space: normal;
   // overflow: hidden;
