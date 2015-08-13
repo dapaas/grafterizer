@@ -53,7 +53,11 @@ angular
 
     if (typeof Raven !== 'undefined') {
 
-      Raven.config('https://cdec3ae0110344cabdd5a242d2247d07@grafterizer.datagraft.net/5', {}).install();
+      var sentryPath = developmentMode ?
+        'http://76c7f69b67a649619dbf7a9f679efb96@sentry.datagraft.net/6'
+        : 'https://cdec3ae0110344cabdd5a242d2247d07@grafterizer.datagraft.net/5';
+
+      Raven.config(sentryPath, {}).install();
 
       $provide.decorator('$exceptionHandler', ['$delegate', function($delegate) {
         return function(exception, cause) {
