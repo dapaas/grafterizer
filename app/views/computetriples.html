@@ -35,7 +35,8 @@
                 <form target="_blank" method="POST" action="{{transformEndpoint}}" ng-submit="onSubmitExecute()" flex layout="row" class="md-padding" layout-align="center center">
                     <input type="hidden" name="clojure" value="{{jarfterClojure}}">
                     <input type="hidden" name="csv" value="{{fullData}}">
-                    <input type="hidden" name="transformed_filename" value="rdf.rdf">
+                    <input type="hidden" name="transformed_filename" value="{{isRDF == 1 ? 'result.rdf' : 'result.csv'}}">
+                  
                     <md-button type="submit" class="md-fab sin-fa-fab-big md-accent" aria-label="Execute transformation" ng-disabled="!fullData">
                         <i class="fa fa-bolt fa-5x"></i>
                     </md-button>

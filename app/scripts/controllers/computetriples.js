@@ -21,10 +21,10 @@ angular.module('grafterizerApp')
       $mdDialog.hide();
       window.open($scope.downloadLink, '_blank');
     };
-
+    $scope.isRDF = $rootScope.transformation.graphs.length ? $rootScope.transformation.graphs.length  : 0;
     $scope.downloadJarEndpoint = jarfterService.getJarCreatorStandAloneEndpoint();
     $scope.transformEndpoint = jarfterService.getTransformStandAloneEndpoint();
-
+    
     $scope.generateJarfterClojure = function() {
       $scope.jarfterClojure = jarfterService.generateClojure($rootScope.transformation);
     };
