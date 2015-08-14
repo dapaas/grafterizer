@@ -6,6 +6,7 @@
         <i class="fa fa-upload"></i>
     </md-button>
     <md-tabs class="md-accent no-border-radius md-whiteframe-z5" flex
+        id="transformationTabs"
              md-no-disconnect md-swipe-content="{{isMobile}}" md-selected="transformationSelectedTabIndex">
         <md-tab label="Metadata">
             <md-tab-body>
@@ -64,9 +65,10 @@
             </md-tab-body>
         </md-tab>
     </md-tabs>
-    <div ng-show="showPreview" flex flex-gt-lg="66" layout="column">
+    <div ng-show="showPreview" flex layout="column">
         <div layout="column" flex ui-view="preview" autoscroll="false"></div>
     </div> 
+    <resize-hand for="transformationTabs"></resize-hand>
 </md-content>
 
 <md-fab-speed-dial class="md-fling md-fab-bottom-right" md-direction="up" ng-hide="hideUploadButton">

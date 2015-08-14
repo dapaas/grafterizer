@@ -770,3 +770,35 @@ md-fab-speed-dial.md-fab-bottom-right {
 .map-tabular-data-view {
     background:$light-gray;
 }
+
+resize-hand {
+    background: transparent;
+    width: 7px;
+    position:absolute;
+    cursor: col-resize;
+    z-index:10;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.resize-hand-mask {
+    cursor: col-resize;
+    position:absolute;
+    top:0;
+    right:0;
+    bottom:0;
+    left:0;
+    background:transparent;
+    // background: rgba(0,255,0,0.15);
+    z-index:1000;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
