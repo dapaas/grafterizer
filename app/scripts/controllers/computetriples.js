@@ -67,6 +67,15 @@ angular.module('grafterizerApp')
             });
 
           $mdDialog.hide();
+        }).error(function() {
+          $mdDialog.hide();
+          $mdDialog.show(
+            $mdDialog.alert({
+              title: 'An error occured',
+              content: 'The transformation cannot be applied to the dataset.',
+              ok: 'Ok :('
+            })
+          );
         });
       });
 
