@@ -104,6 +104,20 @@ angular
       }
     });
 
+    $urlMatcherFactoryProvider.type('previewURI', {
+      encode: function(val) {
+        return window.btoa(val);
+      },
+
+      decode: function(val) {
+        return window.atob(val);
+      },
+
+      is: function() {
+        return true;
+      }
+    });
+
     $stateProvider
       .state('about', {
         url: '/about',
@@ -161,10 +175,7 @@ angular
         }
       })
       .state('transformations.transformation.preview', {
-        url: '^/transform/{id:nonURIEncoded}',
-        params: {
-          distribution: null
-        },
+        url: '^/transform/{id:nonURIEncoded}?{distribution:previewURI}',
         views: {
           preview: {
             templateUrl: 'views/preview.html',
@@ -172,7 +183,7 @@ angular
           }
         },
         ncyBreadcrumb: {
-          label: '{{(selectedDistribution || "Preview")|beautifyUri}}'
+          label: '{{(selectedDistribution || "No dataset loaded")|beautifyUri}}'
         }
       })
       .state('datasets', {

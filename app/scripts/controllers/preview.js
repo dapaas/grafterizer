@@ -29,10 +29,17 @@ angular.module('grafterizerApp')
       $scope.$parent.showPreview = false;
     });
 
-    $scope.selectedDistribution = $stateParams.distribution;
+    try {
+      $scope.selectedDistribution = $stateParams.distribution ?
+        window.atob($stateParams.distribution) : undefined;
+
+    } catch (e) {
+      $scope.distribution = null;
+    }
 
     var previewTransformation = function(redirect) {
       var clojure = generateClojure.fromTransformation($scope.$parent.transformation);
+      if (!clojure) return;
       PipeService.preview($scope.selectedDistribution, clojure)
             .success(function(data) {
               delete $scope.graftwerkException;
