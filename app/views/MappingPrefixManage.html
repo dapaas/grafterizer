@@ -1,0 +1,106 @@
+<md-dialog aria-label='Specify property node...' class="sin-function-dialog">
+  <style type="text/css">
+    .dropzone {
+      width: 250px;
+      height: 15px;
+      border: 1px dashed #ccc;
+      text-align: center;
+      padding: 30px;
+      margin: 20px;
+      font-family: Arial;
+    }
+  </style>
+  <md-toolbar>
+    <div class="md-toolbar-tools" ng-show="showManageDialog">
+      <h2>View prefixes</h2>
+    </div>
+    <div class="md-toolbar-tools" ng-show="showAddDialog">
+      <h2>Add new prefix</h2>
+    </div>
+    <md-progress-linear md-mode="indeterminate" ng-show="showProgress"></md-progress-linear>
+  </md-toolbar>
+
+  <md-dialog-content>
+    <div class="modal-dialog animate-switch-container" ng-switch on="selection" >
+      <div class="modal-content animate-switch" ng-switch-default>
+        <div class="md-padding">
+          <md-list>
+            <md-list-item ng-repeat="item in VocabItems | startFrom:vocabcurrentPage*vocabpageSize | limitTo:vocabpageSize track by $index">
+              <p ng-show="item.fromServer" style="color:#C0C0C0">  {{ item.name }} <small style="color:#C0C0C0"> ( {{item.namespace}} )</small></p>
+              <p ng-hide="item.fromServer"> {{ item.name }} <small style="color:#C0C0C0"> ( {{item.namespace}} )</small></p>
+              <md-button ng-hide="item.fromServer" aria-label='edit' class="fa fa-pencil-square-o md-icon-button md-primary fa-lg" ng-click="editItem(item.name, item.namespace, item.fromServer)"></md-button>
+              <md-button ng-hide="item.fromServer" aria-label='delete' class="fa fa-trash md-icon-button md-primary fa-lg" ng-click="deleteItem(item.namespace)"></md-button>
+            </md-list-item>
+          </md-list>
+          <div align="center"><md-progress-circular ng-show="showProgressCircular" class="md-hue-2" md-mode="indeterminate"></md-progress-circular></div>
+          <div ng-show="showVocabularyPagination" >
+            <md-button aria-label='<<' class="md-icon-button fa fa-angle-double-left"  ng-disabled="vocabcurrentPage == 0" ng-click="vocabcurrentPage = 0">
+            </md-button>
+            <md-button aria-label='<' class="md-icon-button fa fa-angle-left" ng-disabled="vocabcurrentPage == 0" ng-click="vocabcurrentPage = vocabcurrentPage-1">
+            </md-button>
+            <label>{{vocabcurrentPage + 1}}</label>
+            <md-button aria-label='>' class="md-icon-button fa fa-angle-right" ng-disabled="vocabcurrentPage >= vocabnumberOfPages() - 1" ng-click="vocabcurrentPage=vocabcurrentPage+1">
+            </md-button>
+            <md-button aria-label='>>' class="md-icon-button fa fa-angle-double-right" ng-disabled="vocabcurrentPage >= vocabnumberOfPages() - 1" ng-click="vocabcurrentPage=vocabnumberOfPages() - 1">
+            </md-button>
+          </div>
+        </div>
+
+        <div class="md-actions" layout="row">
+          <md-button aria-label='Add Prefix' class="fa fa-plus md-icon-button md-primary" ng-click="switchToAddDialog('','')"></md-button>
+          <span flex></span>
+          <div align="right"><md-button class="md-primary" ng-click="closeDialog()">OK</md-button></div>
+        </div>
+      </div>
+
+      <div class="modal-content animate-switch" ng-switch-when="addVocabDialog">
+        <form name="graphsForm">
+          <div class="md-padding">
+          <md-input-container>
+            <label>Prefix</label>
+            <input type="text" class="form-control" ng-model="vocabName" name="prefix" required/>
+            <div ng-messages="graphsForm.prefi.$error" >
+              <div ng-message="required">prefix is required.</div>
+              <div ng-message="pattern">Not a valid prefix.</div>
+            </div>
+          </md-input-container>
+          <md-input-container>
+            <label>Namespace</label>
+            <input type="text" ng-disabled="namespaceInputDisable" ng-model="vocabNamespace" name="namespace" required/>
+            <div ng-messages="graphsForm.namespac.$error" >
+              <div ng-message="required">namespace is required.</div>
+              <div ng-message="pattern">Not a valid namespace.</div>
+            </div>
+          </md-input-container>
+
+          <md-select placeholder="Specify Vocabulary Path" ng-model="choice" ng-change="onChange(choice)">
+            <md-option ng-repeat="choice in choices" value="{{choice}}">{{choice}}</md-option>
+          </md-select>
+
+          <div ng-controller="FiletestCtrl" ng-show="localPath">
+            <div class="dropzone" file-dropzone="" file="text" file-name="fileName">
+              <span ng-hide="fileName.value" style="color:#C0C0C0">Drag rdf file here</span>
+              <div ng-show="fileName.value">
+                <span class="fa fa-file-text-o"></span>
+                <span style="color:#C0C0C0">{{fileName.value}}</span>
+              </div>
+            </div>
+          </div>
+
+          <md-progress-linear md-mode="indeterminate" ng-show="dragProcess"></md-progress-linear>
+
+          <md-input-container ng-show="remotePath">
+            <label>Remote Path</label>
+            <input type="text" ng-model="vocabLoc"/>
+          </md-input-container>
+
+          </div>
+          <div class="md-actions" layout="row" layout-align="right">
+            <md-button class="md-primary" ng-click="addVocabtoLocal(vocabName, vocabNamespace, vocabLoc)">{{addorEdit}}</md-button>
+            <md-button class="md-primary" ng-click="switchToManageDialogScope()">Cancel</md-button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </md-dialog-content>
+</md-dialog>

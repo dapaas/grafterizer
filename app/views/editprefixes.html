@@ -1,0 +1,34 @@
+<md-dialog aria-label='Edit prefixes' class="sin-function-dialog sin-width-function-dialog">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Edit prefixes</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content  layout="column" class="md-padding" >
+        <div id="prefixesTable" ui-grid="gridOpts" class="grid sin-grid sin-prefixes-grid no-min-height" ui-grid-selection ui-grid-resize-columns ui-grid-exporter flex></div>
+        <div flex    md-scroll-y >
+            <form name="prefixForm">
+                <div layout="row">
+                    <md-input-container flex>
+                        <label>Prefix name</label>
+                        <input ng-model="prefixName" type="text" min="1" required>
+                    </md-input-container>
+                    <md-input-container flex>
+                        <label>Prefix URI</label>
+                        <input ng-model="prefixUri" type="text" min="1" required>
+                    </md-input-container>
+                </div>
+            </form>
+            <div layout="row">
+                <md-button class="md-raised" ng-click="addPrefixer()" aria-label="Add prefixer">Add prefixer</md-button>
+                <md-button class="md-raised" ng-click="addPrefixerFrom()" aria-label="Add prefixer from selected">Add prefixer from selected</md-button>
+                <md-button class="md-raised" ng-click="removeSelectedPrefixers()" aria-label="Remove selected prefixer">Remove selected</md-button>
+            </div>
+        </div>
+    </md-dialog-content>
+
+    <div class="md-actions" layout="row" layout-align="right">
+        <md-button class="md-primary" ng-click="applyPrefixersChanges()" aria-label="Apply prefixers changes">Done</md-button>
+        <md-button class="md-primary" ng-click="cancelPrefixersChanges()" aria-label="Cancel changes to prefixers">Cancel</md-button>
+    </div>
+</md-dialog>

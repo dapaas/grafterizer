@@ -1,0 +1,17 @@
+<md-content layout-padding>
+  <h2 class="md-display-1">Please set the API key</h2>
+  <p class="md-body-1">Grafterizer needs to be connected to your <a href="http://datagraft.net/" target="_blank">DataGraft.net</a> account.<br/>The connection is not automatic if you access Grafterizer outside Datagraft.net. You can create a new API key using the <a href="http://datagraft.net/pages/keymanager/index.jsp" target="_blank">Datagraft API Keys manager.</a></p>
+  <form layout="row" layout-sm="column" ng-submit="apply()">
+    <md-input-container>
+      <label>Key</label>
+      <input ng-model="key" required>
+    </md-input-container>
+    <md-input-container>
+      <label>Secret</label>
+      <input ng-model="secret" required>
+    </md-input-container>
+    <div>
+      <md-button class="md-raised md-primary" type="submit">Apply</md-button>
+    </div>
+  </form>
+</md-content>

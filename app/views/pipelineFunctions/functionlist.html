@@ -1,0 +1,9 @@
+<md-optgroup ng-repeat="functionGroup in functionGroups" ng-click="switchGroupVisible($index)" >{{functionGroup}}<i class="fa fa-angle-down fa-lg" ng-show="groupsVisible[$index]" style="font-size:18px"></i> <i class="fa fa-angle-up fa-lg" ng-show="!groupsVisible[$index]" style="font-size:18px"></i>
+
+                    <md-option ng-repeat="customFunct in transformation.customFunctionDeclarations | filter: {group: functionGroup}" title="{{customFunct.docstring}}" value="{{customFunct.name}}">{{customFunct.name}}</md-option>
+                    </md-optgroup>
+
+
+                    <md-optgroup label="Prefixers">
+                        <md-option  ng-repeat="prefixer in transformation.prefixers " value="{{prefixer.name}}">{{prefixer.name}}</md-option>
+                    </md-optgroup>

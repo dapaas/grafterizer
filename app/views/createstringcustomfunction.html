@@ -1,0 +1,91 @@
+<md-dialog aria-label='Create string utility functions' class="sin-function-dialog" >
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Create text transformation function</h2> 
+        </div>
+    </md-toolbar>
+    <md-dialog-content ng-class="sin-dapaas-background " layout="column" >
+    <div layout="column"> 
+        <div><md-input-container flex>
+        <label>Name</label>
+
+        <input ng-model="functionCodeOptions.name" type="text" >
+    </md-input-container></div>
+    <div layout="row">
+        <div flex >
+            <md-input-container>
+            <label> Case modifications </label>
+            <md-select  ng-model="functionCodeOptions.textCaseOption" aria-label='text case options' ng-change="changeSample('case')">
+            
+            <md-option ng-repeat="case in caseOptions"  placeholder="{{functionCodeOptions.textCaseOption.name}}" value = {{case.code}}>{{case.name}}
+            </md-option>
+            </md-select>
+            </md-input-container >
+        </div>
+        <div flex >
+            <md-input-container>
+            <label> Trim whitespace </label>
+            <md-select  ng-change="changeSample('trim')" aria-label='trim text options' ng-model="functionCodeOptions.textTrimOption">
+            <md-option ng-repeat="trim in trimOptions"  placeholder="{{functionCodeOptions.textTrimOption.name}}" value = {{trim.code}}>{{trim.name}}
+            </md-option>
+            </md-select>
+            </md-input-container>
+        </div>
+    </div>
+    <div >
+        <label> Substring </label>
+        <div layout="row">
+            <div layout="row">
+                
+                <label>From: &nbsp </label>
+                <input ng-change="changeSample('substr')" ng-model="functionCodeOptions.substr[0]" type="number" >
+                
+            </div>
+            <div  style="padding-left:10px"  layout="row">
+                <label>[To:] &nbsp </label>
+                <input ng-change="changeSample('substr')" ng-model="functionCodeOptions.substr[1]" type="number" >
+            </div>
+            <div>
+            <pre class="text-transform-sample"> {{'"' + sample + '"'}}</pre>
+        </div>
+        </div>
+    </div>
+        <label> Replace values: </label>
+    <div layout="row" ng-repeat="i in getMapLength(functionCodeOptions.replaceMap.length)">
+    
+        <div layout="row"> 
+            <md-button class="md-primary button-tight md-default-theme" ng-disabled="functionCodeOptions.replaceMap.length === 2" ng-click="removeMapPair(i)" aria-label="Remove replace pair">
+            <i class="fa fa-trash fa-lg"></i>
+            </md-button>
+        
+            <div>
+                <md-input-container >
+                <label>Text </label>
+                <input ng-change="(functionCodeOptions.replaceMap[i+1]?changeSample('replace'))" ng-model="functionCodeOptions.replaceMap[i]" type="text">
+                </md-input-container>
+            </div>
+            <div>
+                <md-input-container >
+                <label>Replace with </label>
+                <input ng-change="changeSample('replace')" ng-model="functionCodeOptions.replaceMap[i+1]" type="text" >
+                </md-input-container>
+            </div>
+            
+        </div>
+
+   </div> 
+   <div> 
+        <md-button class="md-raised" ng-click="addMapPair()"  aria-label="Add map pair" >Add replacement pair</md-button>
+</div></div>
+<div> <md-input-container flex>
+        <label>Comment</label>
+
+        <input ng-model="functionCodeOptions.docstring" type="text" >
+    </md-input-container>
+</div>
+            <md-toolbar class="md-actions" layout="row" layout-align="right">
+                <md-button ng-click="applyCustomFunctionChanges()" aria-label="Apply custom function changes">Done</md-button>
+                <md-button ng-click="cancelCustomFunctionChanges()"  aria-label="Cancel changes to custom functions">Cancel</md-button>
+            </md-toolbar>
+    </md-dialog-content>
+</md-dialog>

@@ -1,0 +1,59 @@
+<div layout="column">
+    <div>
+        <md-button aria-label="Show/hide documentation" ng-click="switchShowUsage()"><i class="fa fa-angle-down"  >Show/hide documentation</i></md-button>
+            <div ng-show = "showUsage" layout="column" class = "api-doc-docstring">
+            <p> Adds new columns to the end of the row, with specified value copied for all rows .
+            
+            <a href="../images/addcolumn.png">view example</a>
+            <a href="http://api.grafter.org/master/grafter.tabular.html#var-add-columns" target="_blank">source</a>
+    </div>
+    </div>
+<div>
+
+            <h3>Parameters</h3>
+            <p> Columns to add </p>
+            <div layout="column" ng-repeat="columnSpec in function.columnsArray">
+                <div layout="row">
+        <md-button class="md-primary button-tight md-default-theme" ng-disabled="function.columnsArray.length === 1" ng-click="removeColumn($index)" aria-label="Remove column">
+            <i class="fa fa-trash fa-lg"></i>
+        </md-button>
+    <md-input-container flex>
+        <label>Name of new column</label>
+        <input ng-model="columnSpec.colName" type="text" required>
+    </md-input-container>
+    <md-input-container flex>
+        <label>Value</label>
+        <input ng-model="columnSpec.colValue" type="text" >
+
+    </md-input-container>
+</div>
+<div layout="row">
+    <md-input-container flex>
+            <md-select  aria-label="new column expression" placeholder="{{columnSpec.specValue?columnSpec.specValue:'Choose expression type'}}" ng-model="columnSpec.specValue">
+            <md-option ng-repeat="val in newColumnValues"  value = {{val}}>{{val}} </md-option>
+            </md-select>
+
+    </md-input-container>
+    <md-input-container ng-if="columnSpec.specValue==='custom expression'" flex>
+        <label>Expression</label>
+        <input ng-model="columnSpec.expression" type="text" >
+
+    </md-input-container>
+    </div>
+</div>
+
+<md-button class="md-raised" ng-click="addColumn()" aria-label="Add column">More Columns</md-button>
+
+    <md-input-container flex>
+        <label>Comment</label>
+
+        <input ng-model="function.docstring" type="text" >
+    </md-input-container>
+    </div>
+
+    </div>
+
+</div>
+<!--
+ng-hide="transformation.customFunctionDeclarations"
+-->

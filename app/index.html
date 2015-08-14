@@ -1,0 +1,155 @@
+<!doctype html>
+<html class="no-js" ng-app="grafterizerApp">
+  <head>
+    <meta charset="utf-8">
+    <base href="/">
+    <title ncy-breadcrumb-last="{{ncyBreadcrumbLabel}} - Grafterizer">Grafterizer</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, target-densitydpi=device-dpi" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <!-- Application icon. Really -->
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="icon" type="image/png" href="/images/icons/favicon-196x196.png" sizes="196x196">
+    <link rel="icon" type="image/png" href="/images/icons/favicon-160x160.png" sizes="160x160">
+    <link rel="icon" type="image/png" href="/images/icons/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/images/icons/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="/images/icons/favicon-32x32.png" sizes="32x32">
+    <meta name="theme-color" content="#00e756">
+    <meta name="msapplication-TileColor" content="#00e756">
+    <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css" />
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
+    <link rel="stylesheet" href="bower_components/components-font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css" />
+    <link rel="stylesheet" href="bower_components/ng-sortable/dist/ng-sortable.css" />
+    <link rel="stylesheet" href="bower_components/codemirror/lib/codemirror.css" />
+    <link rel="stylesheet" href="bower_components/v-accordion/dist/v-accordion.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+  </head>
+  <body layout="row">
+    <!--[if lt IE 9]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <div flex role="main" tabindex="-1" layout="column">
+      <md-toolbar layout="row" class="md-toolbar-tools md-whiteframe-z1">
+        <div layout="row" flex class="fill-height">
+          <div class="md-toolbar-item md-breadcrumb" ncy-breadcrumb></div>
+         <span flex></span>
+         <div layout="column" class="flex-no-shrink" ui-view="actions"></div>
+        </div>
+       </md-toolbar>
+
+      <div flex layout="column" ui-view="main"></div>
+    </div>
+
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-touch/angular-touch.js"></script>
+    <script src="bower_components/ng-file-upload/ng-file-upload.js"></script>
+    <script src="bower_components/angular-ui-grid/ui-grid.js"></script>
+    <script src="bower_components/angular-aria/angular-aria.js"></script>
+    <script src="bower_components/angular-material/angular-material.js"></script>
+    <script src="bower_components/lodash/lodash.js"></script>
+    <script src="bower_components/angular-loading-bar/build/loading-bar.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/angular-breadcrumb/release/angular-breadcrumb.js"></script>
+    <script src="bower_components/moment/moment.js"></script>
+    <script src="bower_components/angular-moment/angular-moment.js"></script>
+    <script src="bower_components/ng-sortable/dist/ng-sortable.js"></script>
+    <script src="bower_components/codemirror/lib/codemirror.js"></script>
+    <script src="bower_components/angular-ui-codemirror/ui-codemirror.js"></script>
+    <script src="bower_components/jsedn/jsedn.js"></script>
+    <script src="bower_components/angular-messages/angular-messages.js"></script>
+    <script src="bower_components/angular-recursion/angular-recursion.js"></script>
+    <script src="bower_components/v-accordion/dist/v-accordion.js"></script>
+    <script src="bower_components/raven-js/dist/raven.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:js(.) scripts/clojure.js -->
+        <script src="bower_components/codemirror/mode/clojure/clojure.js"></script>
+    <!-- endbuild -->
+
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="scripts/app.js"></script>
+    <script src="scripts/controllers/transformations.js"></script>
+    <script src="scripts/controllers/actions.js"></script>
+    <script src="scripts/controllers/transformation.js"></script>
+    <script src="scripts/controllers/transformationnew.js"></script>
+    <script src="scripts/services/pipe.js"></script>
+    <script src="scripts/services/ontotextapi.js"></script>
+    <script src="scripts/controllers/datasets.js"></script>
+    <script src="scripts/controllers/dataset.js"></script>
+    <script src="scripts/directives/pipeline.js"></script>
+    <script src="scripts/directives/pipelinefunction.js"></script>
+    <script src="scripts/directives/functionsdialogcontent.js"></script>
+    <script src="scripts/pipelineDirectives/droprowsfunction.js"></script>
+    <script src="scripts/pipelineDirectives/utilityfunction.js"></script>
+    <script src="scripts/pipelineDirectives/derivecolumnfunction.js"></script>
+    <script src="scripts/pipelineDirectives/grepfunction.js"></script>
+    <script src="scripts/pipelineDirectives/renamecolumnsfunction.js"></script>
+    <script src="scripts/services/transformationdatamodel.js"></script>
+    <script src="scripts/directives/customfunction.js"></script>
+    <script src="scripts/controllers/editprefixers.js"></script>
+    <script src="scripts/controllers/customfunctionsdialogcontroller.js"></script>
+    <script src="scripts/controllers/customstringfunctionsdialogcontroller.js"></script>
+    <script src="scripts/controllers/distribution.js"></script>
+    <script src="scripts/directives/clojurepipeline.js"></script>
+    <script src="scripts/services/generateclojure.js"></script>
+    <script src="scripts/controllers/preview.js"></script>
+    <script src="scripts/directives/previewraw.js"></script>
+    <script src="scripts/directives/rdfmapping.js"></script>
+    <script src="scripts/directives/previewtable.js"></script>
+    <script src="scripts/directives/graphmapping.js"></script>
+    <script src="scripts/controllers/mappingnodedefinitiondialog.js"></script>
+    <script src="scripts/directives/constanturinode.js"></script>
+    <script src="scripts/directives/propertynode.js"></script>
+    <script src="scripts/controllers/propertydialog.js"></script>
+    <script src="scripts/directives/columnurinode.js"></script>
+    <script src="scripts/directives/columnliteralnode.js"></script>
+    <script src="scripts/directives/constantliteralnode.js"></script>
+    <script src="scripts/directives/newblanknode.js"></script>
+    <script src="scripts/directives/addorremovenode.js"></script>
+    <script src="scripts/directives/addorremoveproperty.js"></script>
+    <script src="scripts/controllers/pipelinefunctiondialog.js"></script>
+    <script src="scripts/pipelineDirectives/makedataset.js"></script>
+    <script src="scripts/pipelineDirectives/addcolumnsfunction.js"></script>
+    <script src="scripts/pipelineDirectives/melt.js"></script>
+    <script src="scripts/pipelineDirectives/columns.js"></script>
+    <script src="scripts/pipelineDirectives/mapc.js"></script>
+    <script src="scripts/pipelineDirectives/functionlist.js"></script>
+    <script src="scripts/pipelineDirectives/splitfunction.js"></script>
+    <script src="scripts/controllers/computetriples.js"></script>
+    <script src="scripts/filters/startfrom.js"></script>
+    <script src="scripts/directives/filedropzone.js"></script>
+    <script src="scripts/controllers/filetest.js"></script>
+    <script src="scripts/services/leobject.js"></script>
+    <script src="scripts/services/datagraftpostmessage.js"></script>
+    <script src="scripts/filters/beautifyuri.js"></script>
+    <script src="scripts/controllers/apikey.js"></script>
+    <script src="scripts/services/apikeyservice.js"></script>
+    <script src="scripts/controllers/help.js"></script>
+    <script src="scripts/controllers/MappingPrefixManage.js"></script>
+    <script src="scripts/controllers/loaddistribution.js"></script>
+    <script src="scripts/directives/resizehand.js"></script>
+    <!-- endbuild -->
+</body>
+</html>

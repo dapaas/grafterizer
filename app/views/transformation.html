@@ -1,0 +1,90 @@
+<md-content flex layout-sm="column" layout="row"
+            ngf-drop ng-model="fileUpload" ngf-drag-over-class="show-upload-indicator"
+            ngf-accept="'.csv'" ngf-max-size="1048576"
+            ng-model-rejected="rejectedFileUpload">
+    <md-button aria-label="Upload dataset" class="md-accent upload-indicator">
+        <i class="fa fa-upload"></i>
+    </md-button>
+    <md-tabs class="md-accent no-border-radius md-whiteframe-z5" flex
+        id="transformationTabs"
+             md-no-disconnect md-swipe-content="{{isMobile}}" md-selected="transformationSelectedTabIndex">
+        <md-tab label="Metadata">
+            <md-tab-body>
+                <form name="transformationForm" class="md-padding" ng-submit="actions.save()">
+                    <md-input-container class="sin-no-shrink">
+                        <label>Title</label>
+                        <input ng-model="document.title" name="title" required pattern="[a-zA-Z0-9\s\-]*">
+                        <div ng-messages="transformationForm.title.$error">
+                            <div ng-message="required">This is required.</div>
+                            <div ng-message="pattern">The title shouldn't contain special characters.</div>
+                        </div>
+                    </md-input-container>
+                    <md-input-container class="sin-no-shrink">
+                        <label>Description</label>
+                        <textarea ng-model="document.description"></textarea>
+                    </md-input-container>
+                    <div layout="row">
+                        <md-switch aria-label="Expose as public" ng-model="document['dct:public']" flex>
+                            Expose as public
+                        </md-switch>
+                        <p flex ng-show="document['dct:publisher']">
+                            Publisher: <strong>{{document['dct:publisher']}}</strong> 
+                        </p>
+                    </div>
+                </form>
+            </md-tab-body>
+        </md-tab>
+        <md-tab label="Pipeline">
+            <md-tab-body>
+                <div class="md-padding">
+                    <md-button aria-label="Edit prefixes" ng-click="editPrefixers()">
+                        <i class="fa fa-cubes"></i> Edit prefixes
+                    </md-button>
+                    <md-button aria-label="Edit utility functions" ng-click="defineCustomFunctions()">
+                        <i class="fa fa-code"></i> Edit utility functions
+                    </md-button>
+                    <!--md-button aria-label="Edit string format utility functions" ng-click="defineStringCustomFunctions()">
+                        <i class="fa fa-font"></i> Edit text transformation functions
+                    </md-button-->
+                </div>
+                <div class="md-padding">
+                    <pipeline pipeline="pipeline" transformation="transformation"></pipeline>
+                </div>
+            </md-tab-body>
+        </md-tab>
+        <md-tab label="RDF Mapping">
+            <md-tab-body>
+                <rdf-mapping></rdf-mapping>
+            </md-tab-body>
+        </md-tab>
+        <md-tab label="Clojure">
+            <md-tab-body>
+                <div flex>
+                    <clojure-pipeline transformation="transformation"></clojure-pipeline>
+                </div>
+            </md-tab-body>
+        </md-tab>
+    </md-tabs>
+    <div ng-show="showPreview" flex layout="column">
+        <div layout="column" flex ui-view="preview" autoscroll="false"></div>
+    </div> 
+    <resize-hand for="transformationTabs"></resize-hand>
+</md-content>
+
+<md-fab-speed-dial class="md-fling md-fab-bottom-right" md-direction="up" ng-hide="hideUploadButton">
+    <md-fab-trigger>
+        <md-button aria-label="Open file" class="md-fab md-accent sin-fa-button" ngf-select ng-model="fileUpload" ngf-accept="'.csv'" ngf-max-size="1048576" ng-model-rejected="rejectedFileUpload" >
+            <i class="fa fa-folder-open-o"></i>
+        </md-button>
+    </md-fab-trigger>
+        <md-fab-actions>
+            <md-button aria-label="Upload a file" class="md-fab md-raised md-mini" ngf-select ng-model="fileUpload" ngf-accept="'.csv'" ngf-max-size="1048576" ng-model-rejected="rejectedFileUpload">
+                <md-tooltip md-direction="left">Upload a file</md-tooltip>
+                <i class="fa fa-upload"></i>
+            </md-button>
+            <md-button aria-label="From datagraft" class="md-fab md-raised md-mini" ng-click="loadDistribution()">
+                <md-tooltip md-direction="left">Load an existing distribution</md-tooltip>
+                <i class="fa fa-cloud-download"></i>
+            </md-button>
+        </md-fab-actions>
+</md-fab-speed-dial>

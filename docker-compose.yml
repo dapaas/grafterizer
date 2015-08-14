@@ -1,0 +1,20 @@
+web:
+  image: dapaas/grafterizer-web:latest
+  ports:
+    - "80:80"
+  links:
+    - backend
+    - vocabulary
+backend:
+  image: dapaas/grafterizer-rest:latest
+  expose:
+    - "8080"
+  restart: always
+  environment:
+    GRAFTWERK: "http://54.77.10.112:8080"
+    ONTOTEXT: "http://54.76.140.62:8080"
+vocabulary:
+  image: dapaas/grafterizer-vocabulary:latest
+  expose:
+    - "8888"
+  restart: always
