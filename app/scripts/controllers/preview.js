@@ -19,6 +19,8 @@ angular.module('grafterizerApp')
     $mdToast,
     $mdDialog) {
 
+    var paginationSize = 100;
+
     $scope.livePreview = true;
     $scope.selectedTabIndex = 0;
     
@@ -37,10 +39,16 @@ angular.module('grafterizerApp')
       $scope.distribution = null;
     }
 
+    var savedGeneratedClojure;
+    var currentPreviewPage = 0;
     var previewTransformation = function(redirect) {
       var clojure = generateClojure.fromTransformation($scope.$parent.transformation);
+      savedGeneratedClojure = clojure;
+      currentPreviewPage = 0;
+
       if (!clojure) return;
-      PipeService.preview($scope.selectedDistribution, clojure)
+
+      PipeService.preview($scope.selectedDistribution, clojure, 0, paginationSize)
             .success(function(data) {
               delete $scope.graftwerkException;
               $scope.data = data;
@@ -108,12 +116,47 @@ angular.module('grafterizerApp')
       }
     });
 
+    var currentOriginalPage = 0;
     $scope.loadOriginalData = function() {
+      // TODO CHECK distribution change
+      if ($scope.originalData) return;
+
       if ($scope.selectedDistribution) {
-        PipeService.original($scope.selectedDistribution)
+        PipeService.original($scope.selectedDistribution, 0, paginationSize)
                 .success(function(data) {
                   $scope.originalData = data;
                 });
+      }
+    };
+
+    $scope.loadMorePreview = function(callback) {
+      if (!savedGeneratedClojure) return;
+      PipeService.preview($scope.selectedDistribution,
+        savedGeneratedClojure,
+        ++currentPreviewPage, paginationSize)
+        .success(function(data) {
+          if ($scope.data && $scope.data.edn && data && data.edn) {
+            callback(undefined, data.edn);
+          } else {
+            callback(true);
+          }
+        }).error(function() {
+          callback(true);
+        });
+    };
+
+    $scope.loadMoreOriginal = function(callback) {
+      if ($scope.selectedDistribution) {
+        PipeService.original($scope.selectedDistribution, ++currentOriginalPage, paginationSize)
+          .success(function(data) {
+            if (data && data.edn) {
+              callback(undefined, data.edn);
+            } else {
+              callback(true);
+            }
+          }).error(function() {
+            callback(true);
+          });
       }
     };
 

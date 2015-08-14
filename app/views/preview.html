@@ -7,7 +7,7 @@
             <div class="md-whiteframe-z5 md-body-2 md-warm error-infos" ng-show="graftwerkException">
                 {{graftwerkException}}
             </div>
-            <preview-table class="with-bottom-switch" ng-model="data.edn"></preview-table>
+            <preview-table class="with-bottom-switch" ng-model="data.edn" ng-load-more="loadMorePreview"></preview-table>
             <md-switch class="live-preview-switch" ng-model="livePreview" aria-label="Switch live preview">
                 Automatic preview
             </md-switch>
@@ -17,7 +17,7 @@
     <md-tab label="Original data" disabled="!selectedDistribution"
         md-on-select="loadOriginalData()">
         <md-tab-body>
-            <preview-table ng-model="originalData.edn" hide-headers></preview-table>
+            <preview-table ng-model="originalData.edn" hide-headers ng-load-more="loadMoreOriginal"></preview-table>
         </md-tab-body>
     </md-tab>
 </md-tabs>

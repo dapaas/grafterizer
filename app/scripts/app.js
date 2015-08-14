@@ -33,6 +33,7 @@ angular
     'ui.grid.edit',
     'ui.grid.resizeColumns',
     'ui.grid.exporter',
+    'ui.grid.infiniteScroll',
     'ngMessages',
     'RecursionHelper',
     'vAccordion'
