@@ -782,6 +782,7 @@ angular.module('grafterizerApp')
 
     // TODO those are not needed here; may be needed afterwards?
     //    var grafterDeclarations = constructGrafterDeclarations();
+    if (!transformation) return '';
 
     /* Prefixers */
     graphPrefix = [];
