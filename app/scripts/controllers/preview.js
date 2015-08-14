@@ -25,7 +25,7 @@ angular.module('grafterizerApp')
     // TODO IT DOES WORK
     $scope.$parent.showPreview = true;
     $scope.$on('$destroy', function() {
-      hideDownloadButton();
+      hideDownloadButton(true);
       $scope.$parent.showPreview = false;
     });
 
@@ -144,7 +144,7 @@ angular.module('grafterizerApp')
           scopeDialog.transformation = transformation;
 
           // TODO
-          scopeDialog.dataset = selectedDataset;
+          // scopeDialog.dataset = selectedDataset;
 
           $mdDialog.show({
             templateUrl: 'views/computetriples.html',
@@ -153,9 +153,21 @@ angular.module('grafterizerApp')
           });
         }
       });
+      $rootScope.$emit('removeAction', 'disabledDownload');
     };
 
-    var hideDownloadButton = function() {
+    var hideDownloadButton = function(hideDisabledDownload) {
       $rootScope.$emit('removeAction', 'download');
+      if (hideDisabledDownload) {
+        $rootScope.$emit('removeAction', 'disabledDownload');
+      } else {
+        $rootScope.$emit('addAction', {
+          name: 'disabledDownload',
+          callback: true
+        });
+      }
     };
+
+    hideDownloadButton();
+
   });
