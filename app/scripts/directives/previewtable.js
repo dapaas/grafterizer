@@ -7,14 +7,18 @@
  * # previewTable
  */
 angular.module('grafterizerApp')
-  .directive('previewTable', function() {
+  .directive('previewTable', function($q) {
+
+    var paginationSize = 100;
+
     return {
       template: '<div ui-grid="gridOptions" class="sin-grid md-whiteframe-z1"' +
-        ' ui-grid-auto-resize ui-grid-resize-columns ui-grid-exporter' +
+        ' ui-grid-auto-resize ui-grid-resize-columns ui-grid-exporter ui-grid-infinite-scroll' +
         '><div class="watermark" ng-show="!gridOptions.data.length">\u2205</div></div>',
       restrict: 'E',
       scope: {
-        data: '=ngModel'
+        data: '=ngModel',
+        loadMore: '=ngLoadMore'
       },
       link: function postLink(scope, element, attrs) {
         scope.gridOptions = {
@@ -26,13 +30,53 @@ angular.module('grafterizerApp')
           exporterMenuCsv: true,
           exporterMenuPdf: false,
           enableGridMenu: true,
-          enableMinHeightCheck: false
+          enableMinHeightCheck: false,
+          infiniteScrollUp: false,
+          infiniteScrollDown: !!scope.loadMore,
+          onRegisterApi: function(gridApi) {
+            scope.gridApi = gridApi;
+
+            if (scope.loadMore) {
+              gridApi.infiniteScroll.on.needLoadMoreData(scope, scope.getDataDown);
+            }
+
+          }
+        };
+
+        scope.getDataDown = function() {
+          scope.gridApi.infiniteScroll.saveScrollPercentage();
+          var promise = $q.defer();
+          scope.loadMore(function(err, data) {
+            if (err) {
+              scope.gridApi.infiniteScroll.dataLoaded(false, false);
+              promise.reject();
+              return;
+            }
+
+            if (!data.hasOwnProperty(':rows') || !data[':rows'].length) {
+              scope.gridApi.infiniteScroll.dataLoaded(false, false);
+              promise.resolve();
+              return;
+            }
+
+            scope.gridOptions.data = scope.gridOptions.data.concat(data[':rows']);
+            scope.gridApi.infiniteScroll.dataLoaded(
+              false, data[':rows'].length >= paginationSize);
+            promise.resolve();
+          });
+
+          return promise.promise;
         };
 
         scope.$watch('data', function() {
           var data = scope.data;
           if (!data || !data.hasOwnProperty(':rows')) {
             scope.gridOptions.data = null;
+
+            if (scope.gridApi) {
+              scope.gridApi.infiniteScroll.dataLoaded(false, false);
+            }
+
             return;
           }
 
@@ -92,6 +136,10 @@ angular.module('grafterizerApp')
                 cellTooltip: true
               };
             });
+
+          if (scope.gridApi) {
+            scope.gridApi.infiniteScroll.dataLoaded(false, rows.length >= paginationSize);
+          }
 
           scope.gridOptions.data = rows;
         });

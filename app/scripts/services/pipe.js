@@ -88,7 +88,7 @@ angular.module('grafterizerApp')
         '&type=' + (type ? window.encodeURIComponent(type) : 'pipe');
     };
 
-    api.preview = function(distributionUri, clojure) {
+    api.preview = function(distributionUri, clojure, page, pageSize) {
       return $http({
         url: endpoint + '/preview',
         method: 'POST',
@@ -98,18 +98,22 @@ angular.module('grafterizerApp')
         },
         data: {
           distributionUri: distributionUri,
-          clojure: clojure
+          clojure: clojure,
+          page: page || 0,
+          pageSize: pageSize || 100
         },
         transformResponse: [transformEdnResponse]
       });
     };
 
-    api.original = function(distributionUri) {
+    api.original = function(distributionUri, page, pageSize) {
       return $http({
         url: endpoint + '/original',
         method: 'GET',
         params: {
-          distributionUri: distributionUri
+          distributionUri: distributionUri,
+          page: page || 0,
+          pageSize: pageSize || 100
         },
         headers: {
           Authorization: apiAuthorization

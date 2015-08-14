@@ -17,7 +17,7 @@ angular.module('grafterizerApp')
           scope.function = new transformationDataModel.AddColumnsFunction([newCol],null);
           scope.function.docstring="";
         }
-        scope.newColumnValues = ['Dataset filename','Current date','custom expression'];
+        scope.newColumnValues = ['Dataset filename','Current date','Row number','custom expression'];
         scope.$parent.generateCurrFunction = function() {
           return new transformationDataModel.AddColumnsFunction(
             scope.function.columnsArray,scope.function.docstring);

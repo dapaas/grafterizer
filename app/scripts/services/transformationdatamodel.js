@@ -168,6 +168,7 @@ angular.module('grafterizerApp')
     };
     AddColumnsFunction.prototype.generateClojure = function() {
     var i;
+    var newRownumMap = new jsedn.Map([]);
     var newColMap = new jsedn.Map([]);
         var ds = new Array();
     for (i=0; i < this.columnsArray.length; ++i) {
@@ -175,26 +176,33 @@ angular.module('grafterizerApp')
             case ('Dataset filename'):
                 ds.push( new jsedn.List([
                             new jsedn.sym('add-filename-to-column'),
-                            new jsedn.kw(':'+this.columnsArray[i].colName)
+                            new jsedn.kw(':' + this.columnsArray[i].colName)
                             ]));
             break;
             case ('Current date'):
                 newColMap.set( 
-                        new jsedn.kw(':'+this.columnsArray[i].colName),
+                        new jsedn.kw(':' + this.columnsArray[i].colName),
                         new jsedn.List([ 
                             new jsedn.sym('new'),
                             new jsedn.sym('java.util.Date')
                             ])
                         );
             break;
+            case ('Row number'):
+                newRownumMap.set(
+                        new jsedn.kw(':' + this.columnsArray[i].colName),
+                        new jsedn.sym('(fn [_] (grafter.sequences/integers-from 1))')
+                        );
+            break;
             case ('custom expression'):
                 newColMap.set( 
-                        new jsedn.kw(':'+this.columnsArray[i].colName),
+                        new jsedn.kw(':' + this.columnsArray[i].colName),
                         new jsedn.sym(this.columnsArray[i].expression)
                         );
             break;
             default:
                 newColMap.set( 
+                        new jsedn.kw(':' + this.columnsArray[i].colName),
                         new jsedn.kw(':'+this.columnsArray[i].colName),
                         this.columnsArray[i].colValue.toString()
                         );
@@ -203,23 +211,18 @@ angular.module('grafterizerApp')
         
     }
     var pipe=[new jsedn.sym('->')];
-    if (ds.length !== 0 && newColMap.keys.length===0) { 
-        if (ds.length === 1) {
-            return ds[0];
-        }
-            else {
-                pipe=pipe.concat(ds);
-                return new jsedn.List(pipe);
-            }
-    }
-    else if (ds.length !== 0) {
-        pipe=pipe.concat(ds);
+    
+    if (ds.length !== 0)
+        if (ds.length === 1) pipe.push(ds[0]);
+            else pipe = pipe.concat(ds);
+
+    if (newColMap.keys.length !== 0)
         pipe.push(new jsedn.List([jsedn.sym('add-columns'),newColMap]));
-        return new jsedn.List(pipe);
-    }
-          else {
-              return new jsedn.List([jsedn.sym('add-columns'),newColMap]);
-          }
+
+    if (newRownumMap.keys.length !== 0)
+        pipe.push(new jsedn.List([jsedn.sym('apply-columns'),newRownumMap]));
+
+    return new jsedn.List(pipe);
     
     };
     this.AddColumnsFunction = AddColumnsFunction;

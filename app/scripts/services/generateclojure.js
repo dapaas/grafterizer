@@ -122,7 +122,14 @@ angular.module('grafterizerApp')
     /*
        * TODO re-define me when integrating with the rest of the UI
        */
-    Raven.captureMessage(errorString, {tags: {
+    var message = errorString;
+    if (!message && error && error.message) {
+      message = message;
+    } else {
+      message = error;
+    }
+
+    Raven.captureMessage(message, {tags: {
       file: 'generateclojure',
       method: 'alertInterface'
     }});
@@ -393,8 +400,19 @@ angular.module('grafterizerApp')
         alertInterface('Empty text literal found in RDF mapping!');
       }
 
+
+      // Check if value is URI, if not -- define it as a string literal
+
+      var isURI = node.literalValue.search(/(http|https):\/\//);
+      if (isURI !== 0) 
+        return new jsedn.List([jsedn.sym("s"),node.literalValue]);
+      else
+      // return the value as string
+        return node.literalValue;
+
       // return the value as string
       return node.literalValue;
+
     }
 
     if (node instanceof transformationDataModel.ColumnURI) {
@@ -444,7 +462,11 @@ angular.module('grafterizerApp')
         return constructBlankNodeJsEdn(node, containingGraph);
 
       } else {
-        allSubElementsVector = new jsedn.Vector([constructBlankNodeJsEdn(node, containingGraph)]);
+
+        allSubElementsVector = new jsedn.Vector([]);
+
+
+
         var k;
 
     
@@ -775,6 +797,7 @@ angular.module('grafterizerApp')
 
     // TODO those are not needed here; may be needed afterwards?
     //    var grafterDeclarations = constructGrafterDeclarations();
+    if (!transformation) return '';
 
     /* Prefixers */
     graphPrefix = [];
