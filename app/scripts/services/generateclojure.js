@@ -400,6 +400,7 @@ angular.module('grafterizerApp')
         alertInterface('Empty text literal found in RDF mapping!');
       }
 
+
       // Check if value is URI, if not -- define it as a string literal
 
       var isURI = node.literalValue.search(/(http|https):\/\//);
@@ -408,6 +409,10 @@ angular.module('grafterizerApp')
       else
       // return the value as string
         return node.literalValue;
+
+      // return the value as string
+      return node.literalValue;
+
     }
 
     if (node instanceof transformationDataModel.ColumnURI) {
@@ -457,7 +462,11 @@ angular.module('grafterizerApp')
         return constructBlankNodeJsEdn(node, containingGraph);
 
       } else {
+
         allSubElementsVector = new jsedn.Vector([]);
+
+
+
         var k;
 
     

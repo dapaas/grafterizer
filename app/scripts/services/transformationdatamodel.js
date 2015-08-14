@@ -203,6 +203,7 @@ angular.module('grafterizerApp')
             default:
                 newColMap.set( 
                         new jsedn.kw(':' + this.columnsArray[i].colName),
+                        new jsedn.kw(':'+this.columnsArray[i].colName),
                         this.columnsArray[i].colValue.toString()
                         );
             break;
@@ -222,25 +223,6 @@ angular.module('grafterizerApp')
         pipe.push(new jsedn.List([jsedn.sym('apply-columns'),newRownumMap]));
 
     return new jsedn.List(pipe);
-    /*
-    if (ds.length !== 0 && newColMap.keys.length===0) { 
-        if (ds.length === 1) {
-            return ds[0];
-        }
-            else {
-                pipe=pipe.concat(ds);
-                return new jsedn.List(pipe);
-            }
-    }
-    //
-    else if (ds.length !== 0) {
-        pipe=pipe.concat(ds);
-        pipe.push(new jsedn.List([jsedn.sym('add-columns'),newColMap]));
-        return new jsedn.List(pipe);
-    }
-          else {
-              return new jsedn.List([jsedn.sym('add-columns'),newColMap]);
-          }*/
     
     };
     this.AddColumnsFunction = AddColumnsFunction;
