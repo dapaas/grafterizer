@@ -21,13 +21,15 @@ angular.module('grafterizerApp')
 
     var id = $scope.id = $stateParams.id;
     $scope.document = {
-      title: 'loading'
+      title: 'loading',
+      keywords: []
     };
 
     ontotextAPI.transformation(id).success(function(data) {
       $scope.document = data;
       $scope.document.title = data['dct:title'];
       $scope.document.description = data['dct:description'];
+      $scope.document.keywords = [];
     }).error(function() {
       $state.go('transformations');
     });
