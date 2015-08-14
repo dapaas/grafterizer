@@ -49,7 +49,7 @@ angular.module('grafterizerApp')
                 type: 'column'
             },
             {
-                displayName: 'Columns',
+                displayName: 'Take/Drop Columns',
                 name: 'columns',
                 selected: false,
                 type: 'column'
@@ -82,7 +82,7 @@ angular.module('grafterizerApp')
             //--------------------------------
 
             {
-                displayName: 'Select Rows',
+                displayName: 'Take/Drop Rows',
                 name: 'drop-rows',
                 selected: false,
                 type: 'rows'

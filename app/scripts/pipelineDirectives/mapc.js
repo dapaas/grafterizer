@@ -26,7 +26,7 @@ angular.module('grafterizerApp')
 
         scope.addKeyFunctionPair = function() {
           var newKeyFunctionPair = new transformationDataModel.KeyFunctionPair(
-            '', scope.$parent.transformation.customFunctionDeclarations[0].name);
+            '',/* scope.$parent.transformation.customFunctionDeclarations[0].name*/'string-literal');
           this.function.keyFunctionPairs.push(newKeyFunctionPair);
         };
 

@@ -13,8 +13,8 @@
     </md-input-container></div>
     <div layout="row">
         <div flex >
-            <p> Case modifications </p>
             <md-input-container>
+            <label> Case modifications </label>
             <md-select  ng-model="functionCodeOptions.textCaseOption" aria-label='text case options' ng-change="changeSample('case')">
             
             <md-option ng-repeat="case in caseOptions"  placeholder="{{functionCodeOptions.textCaseOption.name}}" value = {{case.code}}>{{case.name}}
@@ -23,8 +23,8 @@
             </md-input-container >
         </div>
         <div flex >
-            <p> Trim whitespace </p>
             <md-input-container>
+            <label> Trim whitespace </label>
             <md-select  ng-change="changeSample('trim')" aria-label='trim text options' ng-model="functionCodeOptions.textTrimOption">
             <md-option ng-repeat="trim in trimOptions"  placeholder="{{functionCodeOptions.textTrimOption.name}}" value = {{trim.code}}>{{trim.name}}
             </md-option>
@@ -33,7 +33,7 @@
         </div>
     </div>
     <div >
-        <p> Substring </p>
+        <label> Substring </label>
         <div layout="row">
             <div layout="row">
                 
@@ -50,8 +50,7 @@
         </div>
         </div>
     </div>
-        <br>
-        <p> Replace values: </p>
+        <label> Replace values: </label>
     <div layout="row" ng-repeat="i in getMapLength(functionCodeOptions.replaceMap.length)">
     
         <div layout="row"> 
