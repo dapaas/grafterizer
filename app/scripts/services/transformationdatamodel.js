@@ -732,8 +732,13 @@ angular.module('grafterizerApp')
                return new jsedn.List([
                        jsedn.sym('->'), 
                        new jsedn.List([jsedn.sym('make-dataset'), jsedn.sym('move-first-row-to-header')]),
-                       new jsedn.List([jsedn.sym('rename-columns'), jsedn.sym('keyword')])
-                       ]);
+                       new jsedn.List([jsedn.sym('rename-columns'), 
+                       new jsedn.List([
+                           jsedn.sym('comp'),
+                           jsedn.sym('keyword'),
+                           jsedn.sym('string-as-keyword')])
+                                      ])
+                                     ]);
 
           else return new jsedn.List([jsedn.sym('make-dataset')]);
                                }
