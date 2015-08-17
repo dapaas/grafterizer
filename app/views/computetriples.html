@@ -1,68 +1,51 @@
 <md-dialog aria-label='Choose download mode' class="sin-function-dialog">
-    <md-toolbar>
+  <md-toolbar>
     <div class="md-toolbar-tools">
       <h2>Transform your data</h2>
     </div>
   </md-toolbar>
-    <md-dialog-content layout="row" class="sticky-container">
-<!--         <div class="md-padding" flex="66">
-            <form ng-submit="makeNewDataset()">
-                <h4 class="md-title">Save as a new page</h4>
-                <md-input-container class="sin-no-shrink">
-                    <label>Title</label>
-                    <input ng-model="dataset.title" name="title" required pattern="[a-zA-Z0-9\s\-]*">
-                    <div ng-messages="transformationForm.title.$error">
-                        <div ng-message="required">This is required.</div>
-                        <div ng-message="pattern">The title shouldn't contain special characters.</div>
-                    </div>
-                </md-input-container>
-                <md-input-container class="sin-no-shrink">
-                    <label>Description</label>
-                    <textarea ng-model="dataset.description"></textarea>
-                </md-input-container>
-                <md-button class="md-raised md-primary sin-button-padding" aria-label="Download N-triples" type="submit">
-                    Create
-                </md-button>
-            </form>
-            <md-progress-circular style="margin: 30px auto 0px auto;" ng-if="processing" md-mode="indeterminate"></md-progress-circular>
+  <md-dialog-content layout="row" class="sticky-container">
+    <div layout="column" flex class="md-padding">
+      <div layout="row">
+        <div flex="50" style="padding-right:40px">
+          <h4 class="md-title" style="margin-bottom:0; text-align:center;">Execute transformation</h4>
+          <p class="md-caption">Compile the transformation, execute it and retrieve the results. This may take a few minutes.</p>
         </div>
- -->        
-        <div layout="column" flex class="md-padding">
-        <!-- <div layout="column" class="md-padding"> -->
-            <h4 class="md-title" style="margin-bottom:0;">Execute transformation</h4>
-            <p class="md-caption">Compile the transformation, execute it and retrieve the results. This may take a few minutes.</p>
-            <!-- <div layout-align="center center" layout="row"> -->
-                <form target="_blank" method="POST" action="{{transformEndpoint}}" ng-submit="onSubmitExecute()" flex layout="row" class="md-padding" layout-align="center center">
-                    <input type="hidden" name="clojure" value="{{jarfterClojure}}">
-                    <input type="hidden" name="csv" value="{{fullData}}">
-                    <input type="hidden" name="transformed_filename" value="{{isRDF == 1 ? 'result.rdf' : 'result.csv'}}">
-                  
-                    <md-button type="submit" class="md-fab sin-fa-fab-big md-accent" aria-label="Execute transformation" ng-disabled="!fullData">
-                        <i class="fa fa-bolt fa-5x"></i>
-                    </md-button>
-                </form>
-<!--             <div layout-align="center center" flex layout="row">
-                <md-button class="md-fab md-accent sin-fa-fab-big" aria-label="Download N-triples" ng-click="download()" ng-href="{{downloadLink}}" >
-                    <i class="fa fa-bolt fa-5x"></i>
-                </md-button>
-            </div>
- -->        </div>
-        <div layout="column" flex>
-            <h4 class="md-title" style="margin-bottom:0;">Download transformation executable</h4>
-            <p class="md-caption">Compile the transformation and retrieve an executable JAR file.</p>
-            <p class="md-caption">Usage:<br>
-            <code>java -jar jarCreatorSandAlone.jar &lt;input-file.csv&gt; &lt;output-file.(nt|rdf|n3|ttl)&gt;</code></p>
-            <!-- <div layout-align="center center" layout="row"> -->
-                <form target="_blank" method="POST" action="{{downloadJarEndpoint}}" ng-submit="onSubmitDownloadJar()" flex layout="row" class="md-padding" layout-align="center center">
-                    <input type="hidden" name="clojure" value="{{jarfterClojure}}">
-                    <md-button type="submit" class="md-fab sin-fa-fab-big md-accent" aria-label="Download JAR">
-                        <i class="fa fa-cube fa-5x"></i>
-                    </md-button>
-                </form>
-            <!-- </div> -->
+        <div flex="50">
+          <h4 class="md-title" style="margin-bottom:0; text-align:center;">Download transformation executable</h4>
+          <p class="md-caption">Compile the transformation and retrieve an executable JAR file.</p>
+          <p class="md-caption">Usage:<br>
+            <code>
+              java -jar transformation.jar &lt;input-file.csv&gt; &lt;output-file.(nt| rdf|n3|ttl)&gt;
+            </code>
+          </p>
         </div>
-    </md-dialog-content>
-    <div class="md-actions" layout="row" layout-align="right">
-        <md-button class="md-primary" aria-label="Cancel" ng-click="cancel()">Cancel</md-button>
+      </div>
+      <div layout="row">
+        <div flex="50" style="padding-right:40px">
+          <form target="_blank" method="POST" action="{{transformEndpoint}}" ng-submit="onSubmitExecute()" flex layout="row" class="md-padding" layout-align="center center">
+            <input type="hidden" name="clojure" value="{{jarfterClojure}}">
+            <input type="hidden" name="csv" value="{{fullData}}">
+            <input type="hidden" name="transformed_filename" value="{{isRDF == 1 ? 'result.rdf' : 'result.csv'}}">
+
+            <md-button type="submit" class="md-fab sin-fa-fab-big md-accent" aria-label="Execute transformation" ng-disabled="!fullData">
+              <i class="fa fa-bolt fa-5x"></i>
+            </md-button>
+          </form>
+        </div>
+        <div flex>
+          <form target="_blank" method="POST" action="{{downloadJarEndpoint}}" ng-submit="onSubmitDownloadJar()" flex layout="row" class="md-padding" layout-align="center center">
+            <input type="hidden" name="clojure" value="{{jarfterClojure}}">
+            <md-button type="submit" class="md-fab sin-fa-fab-big md-accent" aria-label="Download JAR">
+              <i class="fa fa-cube fa-5x"></i>
+            </md-button>
+          </form>
+        </div>
+      </div>
+
     </div>
+  </md-dialog-content>
+  <div class="md-actions" layout="row" layout-align="right">
+    <md-button class="md-primary" aria-label="Cancel" ng-click="cancel()">Cancel</md-button>
+  </div>
 </md-dialog>
