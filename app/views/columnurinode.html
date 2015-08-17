@@ -4,13 +4,20 @@
     <md-fab-speed-dial md-direction="down" ng-class="md-scale">
       <md-fab-trigger>
         <md-button flex class="md-raised rdf-mapping-node-button" aria-label="{{node.prefix+':'+node.column}}" ng-click="editNode()">
-          <span class="fa-stack">
-            <i class="fa fa-circle fa-stack-2x rdf-mapping-icon-background-inset"></i>
-            <i class="fa fa-columns fa-stack-1x fa-inverse"></i>
-          </span>
-          {{node.prefix+':'+node.column}}
+          <div layout="row" layout-align="start center">
+            <div class="fa-stack">
+              <i class="fa fa-circle fa-stack-2x rdf-mapping-icon-background-inset"></i>
+              <i class="fa fa-columns fa-stack-1x fa-inverse"></i>
+            </div>
+            <div class="rdf-mapping-node-text">
+              <div class="rdf-mapping-prefix-text">{{'(' + node.prefix + ')'}}</div>
+              <div class="rdf-mapping-node-text rdf-mapping-column-name-text">
+                {{node.column}}
+              </div>
+            </div>
+          </div>
           <md-tooltip>
-            {{node.prefix+':'+node.column}}
+            {{'(Column URI) ' + node.prefix+':'+node.column}}
           </md-tooltip>
         </md-button>
       </md-fab-trigger>

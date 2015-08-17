@@ -21,8 +21,7 @@ angular.module('grafterizerApp')
 
     $scope.document = {
       title: 'New transformation',
-      description: '',
-      keywords: []
+      description: ''
     };
 
     var customfunctions = [
