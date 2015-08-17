@@ -178,13 +178,10 @@ angular.module('grafterizerApp')
             type = 'graft';
           }
 
-          var downloadLink = PipeService.computeTuplesHref(
-            distribution, transformation, type);
-
           var scopeDialog = $scope.$new(false);
-          scopeDialog.downloadLink = downloadLink;
           scopeDialog.distribution = distribution;
           scopeDialog.transformation = transformation;
+          scopeDialog.type = type;
 
           // TODO
           // scopeDialog.dataset = selectedDataset;
