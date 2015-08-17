@@ -123,6 +123,35 @@ angular.module('grafterizerApp')
       }).error(errorHandler);
     };
 
+    api.download = function(distributionUri, transformationUri, type) {
+      return $http({
+        url: endpoint + '/download',
+        method: 'GET',
+        params: {
+          authorization: apiAuthorization,
+          distributionUri: distributionUri,
+          transformationUri: transformationUri,
+          type: type || 'pipe',
+          raw: true
+        },
+        transformResponse: [transformEdnResponse]
+      });
+    };
+
+    api.save = function(datasetId, distributionUri, transformationUri, type) {
+      return $http({
+        url: endpoint + '/save',
+        method: 'GET',
+        params: {
+          datasetId: datasetId,
+          authorization: apiAuthorization,
+          distributionUri: distributionUri,
+          transformationUri: transformationUri,
+          type: type || 'pipe'
+        }
+      });
+    };
+
     return api;
   };
 });

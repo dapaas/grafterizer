@@ -31,10 +31,7 @@
                             Publisher: <strong>{{document['dct:publisher']}}</strong> 
                         </p>
                     </div>
-<!--                     <div layout="row">
-                        <md-chips ng-model="document.keywords" secondary-placeholder="Add a keyword" placeholder="Add another keyword"></md-chips>
-                    </div>
- -->                </form>
+                </form>
             </md-tab-body>
         </md-tab>
         <md-tab label="Pipeline">
@@ -71,7 +68,7 @@
     <div ng-show="showPreview" flex layout="column">
         <div layout="column" flex ui-view="preview" autoscroll="false"></div>
     </div> 
-    <resize-hand for="transformationTabs" ng-if="showPreview"></resize-hand>
+    <resize-hand for="transformationTabs"></resize-hand>
 </md-content>
 
 <md-fab-speed-dial class="md-fling md-fab-bottom-right" md-direction="up" ng-hide="hideUploadButton">

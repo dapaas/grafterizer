@@ -3,13 +3,17 @@
     <md-fab-speed-dial md-direction="down" ng-class="md-scale">
       <md-fab-trigger>
         <md-button flex class="md-raised rdf-mapping-node-button" aria-label="{{node.literalValue}}" ng-click="editNode()">
-          <span class="fa-stack">
-            <i class="fa fa-circle fa-stack-2x rdf-mapping-icon-background-inset"></i>
-            <i class="fa fa-font fa-stack-1x fa-inverse"></i>
-          </span>
-          {{node.literalValue}}
+          <div layout="row">
+            <div class="fa-stack">
+              <i class="fa fa-circle fa-stack-2x rdf-mapping-icon-background-inset"></i>
+              <i class="fa fa-font fa-stack-1x fa-inverse"></i>
+            </div>
+            <div class="rdf-mapping-node-text rdf-mapping-column-name-text">
+              {{node.literalValue}}
+            </div>
+          </div>
           <md-tooltip>
-            {{node.literalValue}}
+            {{'(Column literal) ' + node.literalValue}}
           </md-tooltip>
         </md-button>
       </md-fab-trigger>

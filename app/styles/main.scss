@@ -772,10 +772,12 @@ md-fab-speed-dial.md-fab-bottom-right {
 }
 button.rdf-mapping-node-button {
   text-align: left;
-  width: 155px;
+  width: 200px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 23px;
+  padding-left: 3px;
 
 }
 
@@ -814,4 +816,45 @@ resize-hand {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+.rdf-mapping-prefix-text{
+  color: rgb(200,200,200);
+  text-align: center;
+  font-size: 12px;
+  font-weight: bold;
+  width: 167px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 2px 0px 0px;
+}
+.rdf-mapping-node-text{
+  width: 167px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  padding: 0px 0px 2px;
+  border: 0px;
+}
+
+.rdf-mapping-column-name-text {
+  font-style: italic;
+}
+
+.rdf-mapping-blank-node {
+  text-align: left;
+  line-height: 23px;
+  padding-left: 3px;
+}
+
+button.rdf-mapping-property-button {
+  text-align: left;
+  width: 170px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 23px;
+  padding-left: 3px;
+
 }
