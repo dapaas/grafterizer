@@ -29,6 +29,7 @@ angular.module('grafterizerApp')
           new transformationDataModel.CustomFunctionDeclaration('add-filename-to-column', '(defn add-filename-to-column [ds destination-column] (let [fname (:grafter.tabular/data-source (meta ds))] (add-column ds destination-column fname)))     ','UNEDITABLE',''),
           new transformationDataModel.CustomFunctionDeclaration('remove-columns', '(defn remove-columns [ds cols] (columns ds (remove (fn [item] (some (fn [a] (= item a)) cols )) (column-names ds)))) ','UNEDITABLE','Given a dataset and collection of column names narrows dataset to all but specified columns'),
           new transformationDataModel.CustomFunctionDeclaration('organize-date', '(defn organize-date "Transform date dd/mm/yyyy ~> yyyy-mm-dd" [date] (when (seq date)  (let [[d m y] (clojure.string/split date  (read-string "#\\"/\\""))]  (apply str (interpose "-" [y m d])))))','DATE FUNCTIONS','Transform date dd/mm/yyyy ~> yyyy-mm-dd'),
+          new transformationDataModel.CustomFunctionDeclaration('double-literal', '(defn integer-literal [s] (Double/parseDouble s))','CONVERT DATATYPE','Coerce to integer'),
           new transformationDataModel.CustomFunctionDeclaration('integer-literal', '(defn integer-literal [s] (Integer/parseInt s))','CONVERT DATATYPE','Coerce to integer'),
           new transformationDataModel.CustomFunctionDeclaration('fill-when', '','UNEDITABLE','Takes a sequence of values and copies a value through the sequence depending on the supplied predicate function'),
           new transformationDataModel.CustomFunctionDeclaration('transform-gender', '(def transform-gender {"f" (s "female") "m" (s "male")})','UTILITY','Maps "f" to "female" and "m" to "male"'),
@@ -190,16 +191,6 @@ angular.module('grafterizerApp')
         angular.copy($scope.originalLibraries, $scope.transformation.libraries);
       });
     };
-
-
-    $scope.editRDFPrefixes = function(){
-      $mdDialog.show({
-        templateUrl: 'views/MappingPrefixManage.html',
-        controller: 'MappingPrefixManageCtrl',
-        scope: $scope.$new(false, $scope)
-      })
-    }
-
 
     $scope.defineCustomFunctions = function() {
       $scope.originalCustomFunctionDeclarations = [];

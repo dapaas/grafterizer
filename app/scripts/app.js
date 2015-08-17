@@ -33,6 +33,7 @@ angular
     'ui.grid.edit',
     'ui.grid.resizeColumns',
     'ui.grid.exporter',
+    'ui.grid.infiniteScroll',
     'ngMessages',
     'RecursionHelper',
     'vAccordion'
@@ -54,7 +55,11 @@ angular
 
     if (typeof Raven !== 'undefined') {
 
-      Raven.config('https://cdec3ae0110344cabdd5a242d2247d07@grafterizer.datagraft.net/5', {}).install();
+      var sentryPath = developmentMode ?
+        'http://76c7f69b67a649619dbf7a9f679efb96@sentry.datagraft.net/6'
+        : 'https://cdec3ae0110344cabdd5a242d2247d07@grafterizer.datagraft.net/5';
+
+      Raven.config(sentryPath, {}).install();
 
       $provide.decorator('$exceptionHandler', ['$delegate', function($delegate) {
         return function(exception, cause) {
@@ -98,6 +103,20 @@ angular
     $urlMatcherFactoryProvider.type('nonURIEncoded', {
       encode: valToString,
       decode: valToString,
+      is: function() {
+        return true;
+      }
+    });
+
+    $urlMatcherFactoryProvider.type('previewURI', {
+      encode: function(val) {
+        return window.btoa(val);
+      },
+
+      decode: function(val) {
+        return window.atob(val);
+      },
+
       is: function() {
         return true;
       }
@@ -160,10 +179,7 @@ angular
         }
       })
       .state('transformations.transformation.preview', {
-        url: '^/transform/{id:nonURIEncoded}',
-        params: {
-          distribution: null
-        },
+        url: '^/transform/{id:nonURIEncoded}?{distribution:previewURI}',
         views: {
           preview: {
             templateUrl: 'views/preview.html',
@@ -171,7 +187,7 @@ angular
           }
         },
         ncyBreadcrumb: {
-          label: '{{(selectedDistribution || "Preview")|beautifyUri}}'
+          label: '{{(selectedDistribution || "No dataset loaded")|beautifyUri}}'
         }
       })
       .state('datasets', {

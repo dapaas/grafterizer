@@ -7,7 +7,7 @@
             <div class="md-whiteframe-z5 md-body-2 md-warm error-infos" ng-show="graftwerkException">
                 {{graftwerkException}}
             </div>
-            <preview-table class="with-bottom-switch" ng-model="data.edn"></preview-table>
+            <preview-table class="with-bottom-switch" ng-model="data.edn" ng-load-more="loadMorePreview"></preview-table>
             <md-switch class="live-preview-switch" ng-model="livePreview" aria-label="Switch live preview">
                 Automatic preview
             </md-switch>
@@ -17,34 +17,7 @@
     <md-tab label="Original data" disabled="!selectedDistribution"
         md-on-select="loadOriginalData()">
         <md-tab-body>
-            <preview-table ng-model="originalData.edn" hide-headers></preview-table>
-        </md-tab-body>
-    </md-tab>
-    <md-tab label="Sources">
-        <md-tab-body>
-
-        <p class="md-padding md-caption" style="text-align:center;" ng-if="datasets.length === 0">You don't have distributions yet. Drag and drop a CSV file.</p>
-        <p class="md-padding md-caption" style="text-align:center;" ng-if="datasets.length !== 0">Select an existing distribution or drag and drop a CSV file.</p>
-        <md-radio-group ng-model="selectedDistribution">
-        <v-accordion class="vAccordion--default md-margin" flex
-            onexpand="accordionExpandCallback(index)">
-          <v-pane ng-repeat="dataset in datasets" expanded="$first">
-            <v-pane-header layout="row">
-              <md-button class="md-raised md-primary md-hue-1">
-                {{dataset['dct:title']}}
-              </md-button>
-            </v-pane-header>
-            <v-pane-content>
-                <md-progress-circular class="md-hue-2" md-mode="indeterminate" ng-if="dataset.distributionsLoading"></md-progress-circular>
-                <div ng-repeat="distribution in dataset.distributions">
-                  <md-radio-button ng-value="distribution">{{distribution | beautifyUri}}</md-radio-button>
-                </div>
-                <div ng-if="!dataset.distributionsLoading &amp;&amp;dataset.distributions.length===0">
-                  <p class="empty-distribution md-body-1">This distribution doesn't contain datasets.</p>
-                </div>
-            </v-pane-content>
-          </v-pane>
-        </v-accordion>
+            <preview-table ng-model="originalData.edn" hide-headers ng-load-more="loadMoreOriginal"></preview-table>
         </md-tab-body>
     </md-tab>
 </md-tabs>

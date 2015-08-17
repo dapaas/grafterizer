@@ -236,15 +236,6 @@ angular.module('grafterizerApp')
       });
     };
 
-    $scope.editRDFPrefixes = function(){
-      $mdDialog.show({
-        templateUrl: 'views/MappingPrefixManage.html',
-        controller: 'MappingPrefixManageCtrl',
-        scope: $scope.$new(false, $scope)
-      })
-    }
-
-
     $scope.defineCustomFunctions = function() {
       $scope.originalCustomFunctionDeclarations = [];
       angular.copy($scope.transformation.customFunctionDeclarations, $scope
@@ -260,5 +251,19 @@ angular.module('grafterizerApp')
           angular.copy($scope.originalCustomFunctionDeclarations, $scope.transformation
             .customFunctionDeclarations);
         });
+    };
+
+    $scope.loadDistribution = function() {
+      $mdDialog.show({
+        templateUrl: 'views/loaddistribution.html',
+        controller: 'LoadDistributionCtrl',
+        scope: $scope.$new(false)
+      }).then(function(distribution) {
+        console.log("data!!!", distribution);
+        $state.go('transformations.transformation.preview', {
+          id: $stateParams.id,
+          distribution: distribution
+        });
+      });
     };
   });

@@ -6,6 +6,7 @@
         <i class="fa fa-upload"></i>
     </md-button>
     <md-tabs class="md-accent no-border-radius md-whiteframe-z5" flex
+        id="transformationTabs"
              md-no-disconnect md-swipe-content="{{isMobile}}" md-selected="transformationSelectedTabIndex">
         <md-tab label="Metadata">
             <md-tab-body>
@@ -53,11 +54,6 @@
         </md-tab>
         <md-tab label="RDF Mapping">
             <md-tab-body>
-                <div class="md-padding">
-                    <md-button aria-label="Edit RDF mapping prefixes" ng-click="editRDFPrefixes()">
-                        <i class="fa fa-cubes"></i> Edit RDF mapping prefixes
-                    </md-button>
-                </div>
                 <rdf-mapping></rdf-mapping>
             </md-tab-body>
         </md-tab>
@@ -69,11 +65,26 @@
             </md-tab-body>
         </md-tab>
     </md-tabs>
-    <div ng-show="showPreview" flex flex-gt-lg="66" layout="column">
+    <div ng-show="showPreview" flex layout="column">
         <div layout="column" flex ui-view="preview" autoscroll="false"></div>
     </div> 
+    <resize-hand for="transformationTabs"></resize-hand>
 </md-content>
 
-<md-button class="md-accent md-fab md-fab-bottom-right sin-fa-button" aria-label="Open file" ngf-select ng-model="fileUpload" ngf-accept="'.csv'" ngf-max-size="1048576" ng-model-rejected="rejectedFileUpload" ng-show="!hideUploadButton">
-    <i class="fa fa-folder-open-o"></i>
-</md-button>
+<md-fab-speed-dial class="md-fling md-fab-bottom-right" md-direction="up" ng-hide="hideUploadButton">
+    <md-fab-trigger>
+        <md-button aria-label="Open file" class="md-fab md-accent sin-fa-button" ngf-select ng-model="fileUpload" ngf-accept="'.csv'" ngf-max-size="1048576" ng-model-rejected="rejectedFileUpload" >
+            <i class="fa fa-folder-open-o"></i>
+        </md-button>
+    </md-fab-trigger>
+        <md-fab-actions>
+            <md-button aria-label="Upload a file" class="md-fab md-raised md-mini" ngf-select ng-model="fileUpload" ngf-accept="'.csv'" ngf-max-size="1048576" ng-model-rejected="rejectedFileUpload">
+                <md-tooltip md-direction="left">Upload a file</md-tooltip>
+                <i class="fa fa-upload"></i>
+            </md-button>
+            <md-button aria-label="From datagraft" class="md-fab md-raised md-mini" ng-click="loadDistribution()">
+                <md-tooltip md-direction="left">Load an existing distribution</md-tooltip>
+                <i class="fa fa-cloud-download"></i>
+            </md-button>
+        </md-fab-actions>
+</md-fab-speed-dial>
