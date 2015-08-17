@@ -3,8 +3,12 @@ Monkey testing with Gremlins.js
 
 
 ```javascript
-var s = document.createElement('script'); s.src = 'https://cdnjs.cloudflare.com/ajax/libs/gremlins.js/0.1.0/gremlins.min.js'; document.body.appendChild(s);
+var s = document.createElement('script');
+s.src = 'https://cdnjs.cloudflare.com/ajax/libs/gremlins.js/0.1.0/gremlins.min.js';
+document.body.appendChild(s);
+```
 
+```javascript
 gremlins.createHorde()
     .gremlin(gremlins.species.formFiller())
     .gremlin(gremlins.species.clicker().clickTypes(['click']))
