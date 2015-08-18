@@ -21,7 +21,7 @@ angular.module('grafterizerApp')
 
     var paginationSize = 100;
 
-    $scope.livePreview = true;
+    $scope.livePreview = !(window.sessionStorage && window.sessionStorage.livePreview === 'false');
     $scope.selectedTabIndex = 0;
     
     // TODO IT DOES WORK
@@ -94,6 +94,12 @@ angular.module('grafterizerApp')
         previewTransformation(false);
       }
     }, 1000);
+
+    if (window.sessionStorage) {
+      $scope.$watch('livePreview', function() {
+        window.sessionStorage.livePreview = $scope.livePreview ? 'true' : 'false';
+      });
+    }
 
     $scope.$watch('transformation', function() {
       if ($scope.livePreview && $scope.transformation) {
