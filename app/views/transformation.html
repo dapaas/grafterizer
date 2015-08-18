@@ -68,7 +68,7 @@
     <div ng-show="showPreview" flex layout="column">
         <div layout="column" flex ui-view="preview" autoscroll="false"></div>
     </div> 
-    <resize-hand for="transformationTabs"></resize-hand>
+    <resize-hand for="transformationTabs" ng-if="showPreview"></resize-hand>
 </md-content>
 
 <md-fab-speed-dial class="md-fling md-fab-bottom-right" md-direction="up" ng-hide="hideUploadButton">

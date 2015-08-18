@@ -92,6 +92,10 @@ angular.module('grafterizerApp')
         mask.addEventListener('mouseup', stopDrag);
         mask.addEventListener('mouseleave', stopDrag);
 
+        scope.$on('$destroy', function() {
+          target.setAttribute('flex', '');
+          target.style.width = '';
+        });
       }
     };
   });
