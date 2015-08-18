@@ -20,12 +20,7 @@
         </md-button>
         <md-input-container> 
         <md-select ng-model="rfunction.functionsToRenameWith[$index]" placeholder="{{rfunction.functionsToRenameWith[$index] ? rfunction.functionsToRenameWith[$index].name : 'Choose a function...'}}" ng-selected="{{renameFunction}}">
-                    <md-optgroup label="Custom functions">
-                    <md-option ng-repeat="customFunct in transformation.customFunctionDeclarations " title="{{customFunct.docstring}}" value="{{customFunct.name}}">{{customFunct.name}}</md-option>
-                    </md-optgroup>
-                    <md-optgroup label="Prefixers">
-                        <md-option  ng-repeat="prefixer in transformation.prefixers " value="{{prefixer.name}}">{{prefixer.name}}</md-option>
-                    </md-optgroup>
+                    <function-list> </function-list>
                 </md-select>
             </md-input-container>
     </div>

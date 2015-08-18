@@ -5,7 +5,7 @@
         <md-input-container> 
         <md-select ng-model="ufunction.functionName" placeholder="{{ufunction.functionName ? ufunction.functionName.name : 'Choose a function...'}}" ng-selected="ufunction.functionName">
                     <md-optgroup label="Custom functions">
-                    <md-option ng-repeat="customFunct in transformation.customFunctionDeclarations " title = "{{customFunct.docstring}}" value="{{customFunct.name}}">{{customFunct.name}}</md-option>
+                    <md-option ng-repeat="customFunct in transformation.customFunctionDeclarations | filter: {group: 'UTILITY'}" title = "{{customFunct.docstring}}" value="{{customFunct.name}}">{{customFunct.name}}</md-option>
                     </md-optgroup>
                 </md-select>
             </md-input-container>
