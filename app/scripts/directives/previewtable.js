@@ -84,8 +84,10 @@ angular.module('grafterizerApp')
           var rawWidths = {};
 
           _.each(data[':column-names'], function(f) {
-            // the header size is 3 times more important
-            widths[f] = f.length * 3;
+            if (f) {
+              // the header size is 3 times more important
+              widths[f] = f.length * 3;
+            }
           });
 
           var rows = data[':rows'];
@@ -103,7 +105,9 @@ angular.module('grafterizerApp')
                 irow = rows[i][key];
                 w = widths[key];
 
-                widths[key] += ('' + irow).length;
+                if (w) {
+                  widths[key] += ('' + irow).length;
+                }
               }
             }
 
