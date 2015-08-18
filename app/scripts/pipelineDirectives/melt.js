@@ -12,19 +12,20 @@ angular.module('grafterizerApp')
       templateUrl: 'views/pipelineFunctions/meltFunction.html',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
-        if (!scope.function) {
-          scope.function = new transformationDataModel.MeltFunction(
-            [],null);
-          scope.function.docstring = null;
+        if (!scope.mfunction) {
+          scope.mfunction = new transformationDataModel.MeltFunction(
+            [], null);
+          scope.mfunction.docstring = null;
         }
 
         scope.$parent.generateCurrFunction = function() {
-          return new transformationDataModel.MeltFunction(scope.function.columnsArray, scope.function.docstring);
+          return new transformationDataModel.MeltFunction(scope.mfunction.columnsArray, scope.mfunction.docstring);
         };
-        scope.showUsage=false;
-        scope.switchShowUsage=function() {
-        scope.showUsage=!scope.showUsage;
-        }
+
+        scope.showUsage = false;
+        scope.switchShowUsage = function() {
+          scope.showUsage = !scope.showUsage;
+        };
       }
     };
   });

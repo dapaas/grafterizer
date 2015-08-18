@@ -259,7 +259,6 @@ angular.module('grafterizerApp')
         controller: 'LoadDistributionCtrl',
         scope: $scope.$new(false)
       }).then(function(distribution) {
-        console.log("data!!!", distribution);
         $state.go('transformations.transformation.preview', {
           id: $stateParams.id,
           distribution: distribution

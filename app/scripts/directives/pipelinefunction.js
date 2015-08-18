@@ -35,9 +35,8 @@ angular.module('grafterizerApp')
             angular.copy(scope.originalFunction, scope.function);
           });
         };
-         // scope.showChar = element.clientWidth;
-            scope.showChar = 50;
-        //element.text('this is the pipelineFunction directive');
+      
+        scope.showChar = 50;
       }
     };
   });

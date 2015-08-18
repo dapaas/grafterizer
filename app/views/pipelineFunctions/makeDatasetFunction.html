@@ -9,32 +9,32 @@
         <h3>Parameters</h3>
         <div class="whiteframedemoBasicUsage" layout="column"  style="padding-bottom: 32px;">
         <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">
-    <md-checkbox ng-model="function.moveFirstRowToHeader" aria-label="move first row to header">
+    <md-checkbox ng-model="mfunction.moveFirstRowToHeader" aria-label="move first row to header">
     move first row to header
     </md-checkbox>
 </md-whiteframe>
         <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">
     <label>Specify column names</label>
-    <md-chips ng-disabled="function.useLazy" ng-model="function.columnsArray" readonly="ctrl.readonly">
+    <md-chips ng-disabled="mfunction.useLazy" ng-model="mfunction.columnsArray" readonly="ctrl.readonly">
         <md-chip-template>
             <strong>{{$chip}}</strong>
         </md-chip-template>
     </md-chips>
 </md-whiteframe>
         <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">
-    <md-checkbox ng-model="function.useLazy" aria-label="or specify number of columns to fetch">
+    <md-checkbox ng-model="mfunction.useLazy" aria-label="or specify number of columns to fetch">
     ...or spesify number of columns to fetch
     </md-checkbox>
     <md-input-container flex>
         <label>Number of columns</label>
-        <input ng-model="function.numberOfColumns" type="number" min="1" ng-disabled="!(function.useLazy)">
+        <input ng-model="mfunction.numberOfColumns" type="number" min="1" ng-disabled="!(mfunction.useLazy)">
 
     </md-input-container>
 </md-whiteframe>
 </div>    <md-input-container flex>
         <label>Comment</label>
 
-        <input ng-model="function.docstring" type="text" >
+        <input ng-model="mfunction.docstring" type="text" >
     </md-input-container>
                 
 </div>
