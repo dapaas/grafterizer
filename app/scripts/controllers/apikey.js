@@ -17,10 +17,11 @@ angular.module('grafterizerApp')
       apiKeyService.save();
       $mdToast.show(
         $mdToast.simple()
-        .content("API key registered")
+        .content('API key registered')
         .position('bottom left')
         .hideDelay(3000)
       );
-      $state.go('transformations')
+
+      $state.go('transformations');
     };
   });

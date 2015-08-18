@@ -13,11 +13,11 @@
             <h3>Parameters</h3>
     <md-input-container flex>
         <label>Name of new column</label>
-        <input ng-model="function.newColName" type="text" required>
+        <input ng-model="dfunction.newColName" type="text" required>
     </md-input-container>
 
     <label>Columns to derive from</label>
-    <md-chips ng-model="function.colsToDeriveFrom" readonly="ctrl.readonly">
+    <md-chips ng-model="dfunction.colsToDeriveFrom" readonly="ctrl.readonly">
         <md-chip-template>
             <strong>{{$chip}}</strong>
         </md-chip-template>
@@ -33,23 +33,23 @@
 </div>
 
 
-<div   ng-repeat="deriveFunction in function.functionsToDeriveWith track by $index ">
+<div   ng-repeat="deriveFunction in dfunction.functionsToDeriveWith track by $index ">
     <div >
-        <md-button class="md-primary button-tight md-default-theme" ng-disabled="function.functionsToDeriveWith.length === 1" ng-click="removeDeriveFunction($index)" aria-label="Remove function">
+        <md-button class="md-primary button-tight md-default-theme" ng-disabled="dfunction.functionsToDeriveWith.length === 1" ng-click="removeDeriveFunction($index)" aria-label="Remove function">
             <i class="fa fa-trash fa-lg"></i>
         </md-button>
         <div layout ="row">
             
         <md-input-container> 
-        <md-select ng-model="function.functionsToDeriveWith[$index]" placeholder="{{function.functionsToDeriveWith[$index] ? function.functionsToDeriveWith[$index].name : 'Choose a function...'}}" ng-selected="function.functionsToDeriveWith">
+        <md-select ng-model="dfunction.functionsToDeriveWith[$index]" placeholder="{{dfunction.functionsToDeriveWith[$index] ? dfunction.functionsToDeriveWith[$index].name : 'Choose a function...'}}" ng-selected="dfunction.functionsToDeriveWith">
                     <function-list> </function-list>
                 </md-select>
             </md-input-container>
-        <md-button class="md-primary button-tight md-default-theme" ng-if="function.paramsToFunctions[$index] === null" ng-click="addParamToFunction($index)" aria-label="Add parameter to function">
+        <md-button class="md-primary button-tight md-default-theme" ng-if="dfunction.paramsToFunctions[$index] === null" ng-click="addParamToFunction($index)" aria-label="Add parameter to function">
             <i class="fa fa-plus-square-o fa-lg"></i>
         </md-button>
-    <md-input-container flex ng-if="function.paramsToFunctions[$index]">
-    <label>Argument to function</label><input ng-model="function.paramsToFunctions[$index]" type="text" required>
+    <md-input-container flex ng-if="dfunction.paramsToFunctions[$index]">
+    <label>Argument to function</label><input ng-model="dfunction.paramsToFunctions[$index]" type="text" required>
     </md-input-container>
     </div>
     </div>
@@ -60,9 +60,9 @@
     <md-input-container flex>
         <label>Comment</label>
 
-        <input ng-model="function.docstring" type="text" >
+        <input ng-model="dfunction.docstring" type="text" >
     </md-input-container>
-    <!--md-select ng-model="function.functionToDeriveWith" placeholder="{{function.functionToDeriveWith ? function.functionToDeriveWith.name : 'Choose a function...'}}" ng-selected="{{function.functionToDeriveWith}}">
+    <!--md-select ng-model="dfunction.functionToDeriveWith" placeholder="{{dfunction.functionToDeriveWith ? dfunction.functionToDeriveWith.name : 'Choose a function...'}}" ng-selected="{{dfunction.functionToDeriveWith}}">
         <md-optgroup label="Custom functions">
             <md-option ng-repeat="customFunct in transformation.customFunctionDeclarations" value="{{customFunct.name}}">{{customFunct.name}}</md-option>
         </md-optgroup>

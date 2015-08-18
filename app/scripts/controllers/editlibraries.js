@@ -80,7 +80,6 @@ angular.module('grafterizerApp')
         return;
       }
 
-
       if (!$scope.transformation.addLibrary($scope.libRef)) {
         $mdToast.show(
           $mdToast.simple()

@@ -12,8 +12,8 @@ angular.module('grafterizerApp')
       templateUrl: 'views/pipelineFunctions/dropRowsFunction.html',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
-        if (!scope.function) {
-          scope.function = {
+        if (!scope.dfunction) {
+          scope.dfunction = {
             numberOfRows: 1,
             take: true,
             docstring: null
@@ -22,15 +22,17 @@ angular.module('grafterizerApp')
 
         scope.$parent.generateCurrFunction = function() {
           return new transformationDataModel.DropRowsFunction(parseInt(
-            scope.function.numberOfRows),scope.function.take, scope.function.docstring);
+            scope.dfunction.numberOfRows), scope.dfunction.take, scope.dfunction.docstring);
         };
+
         scope.doGrep = function() {
-        scope.$parent.selectedFunctionName = 'grep';
-        }
-        scope.showUsage=false;
-        scope.switchShowUsage=function() {
-        scope.showUsage=!scope.showUsage;
-        }
+          scope.$parent.selectedFunctionName = 'grep';
+        };
+
+        scope.showUsage = false;
+        scope.switchShowUsage = function() {
+          scope.showUsage = !scope.showUsage;
+        };
       }
     };
   });

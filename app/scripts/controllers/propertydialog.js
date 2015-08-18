@@ -8,13 +8,13 @@
  * Controller of the grafterizerApp
  */
 
-angular.module('grafterizerApp').controller('PropertydialogCtrl', function ($scope,
-                                                                            $rootScope,
-                                                                            $http,
-                                                                            $mdDialog,
-                                                                            $log,
-                                                                            transformationDataModel,
-                                                                            leObject) {
+angular.module('grafterizerApp').controller('PropertydialogCtrl', function($scope,
+  $rootScope,
+  $http,
+  $mdDialog,
+  $log,
+  transformationDataModel,
+  leObject) {
 
   var connection = leObject.serveraddress;
 
@@ -22,26 +22,12 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function ($sco
     value: ''
   };
 
-  var vocabItemTemplate = {
-    name: '',
-    namespace: '',
-    classes: [],
-    properties: [],
-    fromServer: false
-  };
-
-  var lowercaseTemplate = {
-    name: '',
-    lowercase: ''
-  }
-
   $scope.showSearchDialog = true;
   $scope.showProgress = false;
 
   //search dialog
   $scope.showSearchResult = false;
   $scope.showSearchEmptyResult = false;
-
 
   //add vocabulary dialog
   $scope.showSearchPagination = false;
@@ -54,7 +40,7 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function ($sco
     $scope.propertyValue.value = $scope.property.prefix + ':' + $scope.property.propertyName;
   }
 
-  $scope.addProperty = function () {
+  $scope.addProperty = function() {
     // TODO add support for absolute URIs
     /*var patt = new RegExp("(http://|https://|ftp://|smb://)[^ :]+");
      var res = patt.test($scope.propertyValue.value);
@@ -84,67 +70,66 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function ($sco
       $scope.property.prefix = $scope.propertyValue.value.substring(0, $scope.propertyValue.value.indexOf(':'));
       $scope.property.propertyName = $scope.propertyValue.value.substring($scope.propertyValue.value.indexOf(':') +
         1, $scope.propertyValue.value.length);
-    }
-    else {
+    } else {
       $scope.property.propertyName = $scope.propertyValue.value;
-      $scope.property.prefix = "";
+      $scope.property.prefix = '';
     }
-    //    }
-
 
     $mdDialog.hide($scope.property);
   };
 
-  $scope.closeDialog = function () {
+  $scope.closeDialog = function() {
     $mdDialog.cancel();
   };
 
   $scope.currentPage = 0;
   $scope.pageSize = 5;
   $scope.items = [];
-  $scope.numberOfPages = function () {
+  $scope.numberOfPages = function() {
     return Math.ceil($scope.items.length / $scope.pageSize);
   };
 
-  $scope.search = function (Para) {
+  $scope.search = function(Para) {
     if (Para === undefined) {
       return;
     }
 
     $scope.showProgress = true;
     $scope.items = [];
+
     //get search result from server
     $http.get(
       connection + 'search/' +
       Para).success(
-      function (response) {
+      function(response) {
         for (var i = response.propertyResult.length - 1; i >= 0; i--) {
           $scope.items.push(response.propertyResult[i].value);
         }
+
         if ($scope.items.length > $scope.pageSize) {
           $scope.showSearchPagination = true;
-        }
-        else {
+        } else {
           $scope.showSearchPagination = false;
         }
 
         if ($scope.items.length > 0) {
           $scope.showSearchResult = true;
           $scope.showSearchEmptyResult = false;
-        }
-        else {
+        } else {
           $scope.showSearchResult = false;
           $scope.showSearchEmptyResult = true;
         }
 
         $scope.showProgress = false;
-      }).error(function (data, status, headers, config) {
-        Raven.captureMessage('error api/vocabulary/search', {tags: {
+      }).error(function(data, status, headers, config) {
+      Raven.captureMessage('error api/vocabulary/search', {
+        tags: {
           file: 'propertydialog',
           method: 'search'
-        }});
-        $scope.showProgress = false;
+        }
       });
+      $scope.showProgress = false;
+    });
 
     //get search result from local
     var localVocabulary = $rootScope.transformation.rdfVocabs;
@@ -152,9 +137,9 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function ($sco
     for (var i = localVocabulary.length - 1; i >= 0; i--) {
 
       var propertyList = localVocabulary[i].properties;
-      if (propertyList != null) {
+      if (propertyList !== null) {
         for (var item = propertyList.length - 1; item >= 0; item--) {
-          if (propertyList[item].lowername.indexOf(Para.toLowerCase()) != -1) {
+          if (propertyList[item].lowername.indexOf(Para.toLowerCase()) !== -1) {
             $scope.items.push(propertyList[item].name);
           }
         }
@@ -164,12 +149,12 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function ($sco
     $scope.currentPage = 0;
   };
 
-  $scope.addResult = function (value) {
+  $scope.addResult = function(value) {
     $scope.propertyValue.value = value;
   };
 
-  $scope.noOperation = function () {
+  $scope.noOperation = function() {
 
-  }
+  };
 
 });

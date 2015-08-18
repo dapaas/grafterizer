@@ -12,18 +12,17 @@ angular.module('grafterizerApp')
       templateUrl: 'views/pipelineFunctions/utilityFunction.html',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
-        if (!scope.function) {
-      //    var derfunc = scope.$parent.transformation.customFunctionDeclarations[0];  
-          scope.function = new transformationDataModel.UtilityFunction(null,null);
-          scope.function.docstring = null;
+        if (!scope.ufunction) {
+          scope.ufunction = new transformationDataModel.UtilityFunction(null, null);
+          scope.ufunction.docstring = null;
         }
         
         scope.$parent.generateCurrFunction = function() {
           // TODO fix selected function bug
-            var   func = scope.$parent.transformation.findPrefixerOrCustomFunctionByName(scope.function.functionName);
+          var   func = scope.$parent.transformation.findPrefixerOrCustomFunctionByName(scope.ufunction.functionName);
           return new transformationDataModel.UtilityFunction(
-            func, 
-            scope.function.docstring);
+            func,
+            scope.ufunction.docstring);
         };
       }
     };

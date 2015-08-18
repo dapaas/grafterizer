@@ -510,7 +510,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('build', [
-    // 'check', // remove this if you are lazy
+    'check', // remove this if you are lazy
     'clean:dist',
     'wiredep:app',
     'useminPrepare',

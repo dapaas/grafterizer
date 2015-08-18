@@ -12,9 +12,9 @@
 
             <h3>Parameters</h3>
             <p> Columns to add </p>
-            <div layout="column" ng-repeat="columnSpec in function.columnsArray">
+            <div layout="column" ng-repeat="columnSpec in afunction.columnsArray">
                 <div layout="row">
-        <md-button class="md-primary button-tight md-default-theme" ng-disabled="function.columnsArray.length === 1" ng-click="removeColumn($index)" aria-label="Remove column">
+        <md-button class="md-primary button-tight md-default-theme" ng-disabled="afunction.columnsArray.length === 1" ng-click="removeColumn($index)" aria-label="Remove column">
             <i class="fa fa-trash fa-lg"></i>
         </md-button>
     <md-input-container flex>
@@ -47,7 +47,7 @@
     <md-input-container flex>
         <label>Comment</label>
 
-        <input ng-model="function.docstring" type="text" >
+        <input ng-model="afunction.docstring" type="text" >
     </md-input-container>
     </div>
 
