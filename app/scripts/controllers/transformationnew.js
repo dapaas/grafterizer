@@ -58,7 +58,7 @@ angular.module('grafterizerApp')
           new transformationDataModel.CustomFunctionDeclaration('upper-case',
         '','STRING','Converts string to all upper-case'),
           new transformationDataModel.CustomFunctionDeclaration('reverse', '','STRING','Returns given string with its characters reversed'),
-          new transformationDataModel.CustomFunctionDeclaration('string-as-keyword', '(defn string-as-keyword [s] (when (seq s) (->   s   (clojure.string/replace " " "") (clojure.string/replace ":" "") )))','STRING','Removes blanks and colons in a string thus making it possible to use it as a keyword'),
+          new transformationDataModel.CustomFunctionDeclaration('string-as-keyword', '(defn string-as-keyword [s] (when (seq s) (->   s   (clojure.string/replace " " "_") (clojure.string/replace ":" "") )))','STRING','Removes blanks and colons in a string thus making it possible to use it as a keyword'),
           new transformationDataModel.CustomFunctionDeclaration('remove-blanks', '(defn remove-blanks [s]  (when (seq s)  (clojure.string/replace s " " "")))','STRING','Removes blanks in a string'),
           new transformationDataModel.CustomFunctionDeclaration('titleize', '(defn titleize [st] (when (seq st) (let [a (clojure.string/split st (read-string "#\\" \\"")) c (map clojure.string/capitalize a)]  (->> c (interpose " ") (apply str) trim))))','STRING','Capitalizes each word in a string'),
           new transformationDataModel.CustomFunctionDeclaration('trim', '','STRING','Removes whitespace from both ends of string'),
