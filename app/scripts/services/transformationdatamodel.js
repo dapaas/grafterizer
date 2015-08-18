@@ -714,7 +714,7 @@ angular.module('grafterizerApp')
     //(make-dataset [:name :sex :age])
     var i;
     var colNamesClj = new jsedn.Vector([]);
-    var moveFirst = this.moveFirstRowToHeader?" move-first-row-to-header":"";
+   // var moveFirst = this.moveFirstRowToHeader?" move-first-row-to-header":"";
     if (this.useLazy === null) {
         if (this.columnsArray.length>0) {
             // (make-dataset [columns])
@@ -728,8 +728,20 @@ angular.module('grafterizerApp')
         else
         // (make-dataset)
         {
-            return new jsedn.List([jsedn.sym('make-dataset'+moveFirst)]);
-        }
+           if (this.moveFirstRowToHeader) 
+               return new jsedn.List([
+                       jsedn.sym('->'), 
+                       new jsedn.List([jsedn.sym('make-dataset'), jsedn.sym('move-first-row-to-header')]),
+                       new jsedn.List([jsedn.sym('rename-columns'), 
+                       new jsedn.List([
+                           jsedn.sym('comp'),
+                           jsedn.sym('keyword'),
+                           jsedn.sym('string-as-keyword')])
+                                      ])
+                                     ]);
+
+          else return new jsedn.List([jsedn.sym('make-dataset')]);
+                               }
     }
     else {
         // make dataset with lazy naming

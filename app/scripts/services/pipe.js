@@ -27,6 +27,7 @@ angular.module('grafterizerApp')
     var transformEdnResponse = function(data, headers) {
       try {
         var contentType = headers('Content-Type');
+        console.log(data);
         if (contentType && contentType.indexOf('application/json') === 0) {
           return {
             raw: data,

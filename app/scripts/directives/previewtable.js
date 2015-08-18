@@ -134,7 +134,7 @@ angular.module('grafterizerApp')
 
               return {
                 name: f,
-                displayName: f.substring(1),
+                displayName: f/*.substring(1)*/,
                 width: width,
                 minWidth: minWidth,
                 cellTooltip: true
