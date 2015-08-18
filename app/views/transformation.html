@@ -1,6 +1,6 @@
 <md-content flex layout-sm="column" layout="row"
             ngf-drop ng-model="fileUpload" ngf-drag-over-class="show-upload-indicator"
-            ngf-accept="'.csv'" ngf-max-size="1048576"
+            ngf-accept="'.csv'" ngf-max-size="10485760"
             ng-model-rejected="rejectedFileUpload">
     <md-button aria-label="Upload dataset" class="md-accent upload-indicator">
         <i class="fa fa-upload"></i>
@@ -73,12 +73,12 @@
 
 <md-fab-speed-dial class="md-fling md-fab-bottom-right" md-direction="up" ng-hide="hideUploadButton">
     <md-fab-trigger>
-        <md-button aria-label="Open file" class="md-fab md-accent sin-fa-button" ngf-select ng-model="fileUpload" ngf-accept="'.csv'" ngf-max-size="1048576" ng-model-rejected="rejectedFileUpload" >
+        <md-button aria-label="Open file" class="md-fab md-accent sin-fa-button" ngf-select ng-model="fileUpload" ngf-accept="'.csv'" ngf-max-size="10485760" ng-model-rejected="rejectedFileUpload" >
             <i class="fa fa-folder-open-o"></i>
         </md-button>
     </md-fab-trigger>
         <md-fab-actions>
-            <md-button aria-label="Upload a file" class="md-fab md-raised md-mini" ngf-select ng-model="fileUpload" ngf-accept="'.csv'" ngf-max-size="1048576" ng-model-rejected="rejectedFileUpload">
+            <md-button aria-label="Upload a file" class="md-fab md-raised md-mini" ngf-select ng-model="fileUpload" ngf-accept="'.csv'" ngf-max-size="10485760" ng-model-rejected="rejectedFileUpload">
                 <md-tooltip md-direction="left">Upload a file</md-tooltip>
                 <i class="fa fa-upload"></i>
             </md-button>
