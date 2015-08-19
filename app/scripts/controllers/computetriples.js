@@ -19,10 +19,15 @@ angular.module('grafterizerApp')
     $scope.downloadLink = PipeService.computeTuplesHref(
       $scope.distribution, $scope.transformation, $scope.type);
 
-    $scope.download = function() {
-      $mdDialog.hide();
-      window.open($scope.downloadLink, '_blank');
+    $scope.ugly = function() {
+      window.setTimeout(function() {
+        $mdDialog.hide();
+      }, 1);
+      // TODO fixme
+      
     };
+  
+    
 
     $scope.makeNewDataset = function() {
       var type = 'pipe';
