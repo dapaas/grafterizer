@@ -131,7 +131,7 @@ angular.module('grafterizerApp')
               var w = widths[f];
               var width = w === largest || isNaN(w) ? '*' : Math.floor(w * 100) + '%';
               var minWidth = isNaN(rawWidths[f]) ? 200 : Math.min(80 + rawWidths[f] * 8, 200);
-              var colNameString = f[0]===':'?f.substring(1):f;
+              var colNameString = f[0] === ':' ? f.substring(1) : f;
               return {
                 name: f,
                 displayName: colNameString,
