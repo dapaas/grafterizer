@@ -77,7 +77,7 @@ angular.module('grafterizerApp')
           var metadata = {
             '@context': ontotextAPI.getContextDeclaration(),
             '@type': 'dcat:Distribution',
-            'dct:title': moment(file.lastModified).format('MMMM') +  ' - ' + file.name,
+            'dct:title': file.name,
             'dct:description': 'File uploaded from Grafterizer in preview mode',
             'dcat:fileName': file.name,
             'dcat:mediaType': file.type

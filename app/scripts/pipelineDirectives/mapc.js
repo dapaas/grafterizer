@@ -14,7 +14,7 @@ angular.module('grafterizerApp')
       link: function postLink(scope, element, attrs) {
         if (!scope.function) {
           var keyfuncpair = new transformationDataModel.KeyFunctionPair(
-            'colName', scope.$parent.transformation.custofunctionDeclarations[0]);
+            'colName', scope.$parent.transformation.customFunctionDeclarations[0]);
 
           scope.function = new transformationDataModel.MapcFunction([keyfuncpair], null);
           scope.function.docstring = null;
