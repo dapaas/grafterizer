@@ -9,7 +9,7 @@
               <i class="fa fa-font fa-stack-1x fa-inverse"></i>
             </div>
             <div class="rdf-mapping-node-text"> 
-              <div class="rdf-mapping-prefix-text">{{'(' + node.prefix + ')'}}</div>
+              <div class="rdf-mapping-prefix-text">{{node.prefix ? '(' + node.prefix + ')' : 'no prefix'}}</div>
               <div class="rdf-mapping-node-text">
                 {{node.constant}}
               </div>

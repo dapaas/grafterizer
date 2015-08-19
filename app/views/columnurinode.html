@@ -10,14 +10,14 @@
               <i class="fa fa-columns fa-stack-1x fa-inverse"></i>
             </div>
             <div class="rdf-mapping-node-text">
-              <div class="rdf-mapping-prefix-text">{{'(' + node.prefix + ')'}}</div>
+              <div class="rdf-mapping-prefix-text">{{node.prefix ? '(' + node.prefix + ')' : 'no prefix'}}</div>
               <div class="rdf-mapping-node-text rdf-mapping-column-name-text">
                 {{node.column}}
               </div>
             </div>
           </div>
           <md-tooltip>
-            {{'(Column URI) ' + node.prefix+':'+node.column}}
+            {{'(Column URI) ' + node.prefix ? node.prefix+':'+node.column : node.column}}
           </md-tooltip>
         </md-button>
       </md-fab-trigger>
