@@ -12,16 +12,16 @@ angular.module('grafterizerApp')
       templateUrl: 'views/pipelineFunctions/splitFunction.html',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
-        if (!scope.sfunction) {
+        if (!scope.function) {
 
-          scope.sfunction = new transformationDataModel.SplitFunction('', '', '', null);
-          scope.sfunction.newColName = null;
-          scope.sfunction.docstring = null;
+          scope.function = new transformationDataModel.SplitFunction('', '', '', null);
+          scope.function.newColName = null;
+          scope.function.docstring = null;
         }
 
         scope.$parent.generateCurrFunction = function() {
           return new transformationDataModel.SplitFunction(
-            scope.sfunction.colName, scope.sfunction.newColName, scope.sfunction.separator, scope.sfunction.docstring
+            scope.function.colName, scope.function.newColName, scope.function.separator, scope.function.docstring
           );
         };
 

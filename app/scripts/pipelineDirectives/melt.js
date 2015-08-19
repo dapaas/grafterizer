@@ -12,14 +12,14 @@ angular.module('grafterizerApp')
       templateUrl: 'views/pipelineFunctions/meltFunction.html',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
-        if (!scope.mfunction) {
-          scope.mfunction = new transformationDataModel.MeltFunction(
+        if (!scope.function) {
+          scope.function = new transformationDataModel.MeltFunction(
             [], null);
-          scope.mfunction.docstring = null;
+          scope.function.docstring = null;
         }
 
         scope.$parent.generateCurrFunction = function() {
-          return new transformationDataModel.MeltFunction(scope.mfunction.columnsArray, scope.mfunction.docstring);
+          return new transformationDataModel.MeltFunction(scope.function.columnsArray, scope.function.docstring);
         };
 
         scope.showUsage = false;

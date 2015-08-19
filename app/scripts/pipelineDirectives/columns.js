@@ -12,18 +12,18 @@ angular.module('grafterizerApp')
       templateUrl: 'views/pipelineFunctions/columnsFunction.html',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
-        if (!scope.cfunction) {
-          scope.cfunction = new transformationDataModel.ColumnsFunction(
+        if (!scope.function) {
+          scope.function = new transformationDataModel.ColumnsFunction(
             [], null, 0, true, null);
-          scope.cfunction.docstring = null;
+          scope.function.docstring = null;
         }
 
         scope.$parent.generateCurrFunction = function() {
-          return new transformationDataModel.ColumnsFunction(scope.cfunction.columnsArray,
-            scope.cfunction.useLazy,
-            scope.cfunction.numberOfColumns,
-            scope.cfunction.take,
-            scope.cfunction.docstring);
+          return new transformationDataModel.ColumnsFunction(scope.function.columnsArray,
+            scope.function.useLazy,
+            scope.function.numberOfColumns,
+            scope.function.take,
+            scope.function.docstring);
         };
 
         scope.showUsage = false;

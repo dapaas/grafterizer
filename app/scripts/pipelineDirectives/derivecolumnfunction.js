@@ -12,18 +12,18 @@ angular.module('grafterizerApp')
       templateUrl: 'views/pipelineFunctions/deriveColumnFunction.html',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
-        if (!scope.dfunction) {
-          scope.dfunction = new transformationDataModel.DeriveColumnFunction(
+        if (!scope.function) {
+          scope.function = new transformationDataModel.DeriveColumnFunction(
             '', [], [null], [null], null);
-          scope.dfunction.docstring = null;
+          scope.function.docstring = null;
         }
 
         scope.$parent.generateCurrFunction = function() {
           // TODO fix selected function bug
           var functArray = [];
           var newderfunc;
-          for (var i = 0; i < scope.dfunction.functionsToDeriveWith.length; ++i) {
-            newderfunc = scope.dfunction.functionsToDeriveWith[i];
+          for (var i = 0; i < scope.function.functionsToDeriveWith.length; ++i) {
+            newderfunc = scope.function.functionsToDeriveWith[i];
 
             if (!(newderfunc instanceof transformationDataModel.CustomFunctionDeclaration || newderfunc instanceof transformationDataModel
               .Prefixer))
@@ -32,26 +32,26 @@ angular.module('grafterizerApp')
           }
 
           return new transformationDataModel.DeriveColumnFunction(
-            scope.dfunction.newColName,
-            scope.dfunction.colsToDeriveFrom,
+            scope.function.newColName,
+            scope.function.colsToDeriveFrom,
             functArray,
-            scope.dfunction.paramsToFunctions,
-            scope.dfunction.docstring);
+            scope.function.paramsToFunctions,
+            scope.function.docstring);
         };
 
         scope.addDeriveFunction = function() {
           var derfunc = scope.$parent.transformation.customFunctionDeclarations[0];
-          this.dfunction.functionsToDeriveWith.push(derfunc);
-          this.dfunction.paramsToFunctions.push(null);
+          this.function.functionsToDeriveWith.push(derfunc);
+          this.function.paramsToFunctions.push(null);
         };
         
         scope.removeDeriveFunction = function(index) {
-          scope.dfunction.functionsToDeriveWith.splice(index, 1);
-          scope.dfunction.paramsToFunctions.splice(index, 1);
+          scope.function.functionsToDeriveWith.splice(index, 1);
+          scope.function.paramsToFunctions.splice(index, 1);
         };
         
         scope.addParamToFunction = function(index) {
-          scope.dfunction.paramsToFunctions[index] = ' ';
+          scope.function.paramsToFunctions[index] = ' ';
         };
         
         scope.showUsage = false;

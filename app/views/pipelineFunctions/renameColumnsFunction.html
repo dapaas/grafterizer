@@ -13,13 +13,13 @@
         <div>
         <md-whiteframe  class="md-whiteframe-z1" layout="column" layout-align="left ">
             <p> Transform current column names </p>
-<div   ng-repeat="renameFunction in rfunction.functionsToRenameWith track by $index ">
+<div   ng-repeat="renameFunction in function.functionsToRenameWith track by $index ">
     <div >
-        <md-button class="md-primary button-tight md-default-theme" ng-click="removeRenameFunction($index)" ng-disabled="rfunction.functionsToRenameWith.length === 1" aria-label="Remove function">
+        <md-button class="md-primary button-tight md-default-theme" ng-click="removeRenameFunction($index)" ng-disabled="function.functionsToRenameWith.length === 1" aria-label="Remove function">
             <i class="fa fa-trash fa-lg"></i>
         </md-button>
         <md-input-container> 
-        <md-select ng-model="rfunction.functionsToRenameWith[$index]" placeholder="{{rfunction.functionsToRenameWith[$index] ? rfunction.functionsToRenameWith[$index].name : 'Choose a function...'}}" ng-selected="{{renameFunction}}">
+        <md-select ng-model="function.functionsToRenameWith[$index]" placeholder="{{function.functionsToRenameWith[$index] ? function.functionsToRenameWith[$index].name : 'Choose a function...'}}" ng-selected="{{renameFunction}}">
                     <function-list> </function-list>
                 </md-select>
             </md-input-container>
@@ -34,21 +34,21 @@
         <div>
         <md-whiteframe  class="md-whiteframe-z1" layout="column" layout-align="left ">
             <p> Map values </p>
-<div layout="row"  ng-repeat="i in getMapLength(rfunction.mappings.length) ">
+<div layout="row"  ng-repeat="i in getMapLength(function.mappings.length) ">
     <div layout="row"> 
-        <md-button class="md-primary button-tight md-default-theme" ng-disabled="rfunction.mappings.length === 2" ng-click="removeMappingPair(i)" aria-label="Remove column mapping">
+        <md-button class="md-primary button-tight md-default-theme" ng-disabled="function.mappings.length === 2" ng-click="removeMappingPair(i)" aria-label="Remove column mapping">
             <i class="fa fa-trash fa-lg"></i>
         </md-button>
         <div layout="column">
             <md-input-container>
             <label>Column </label>
-                <input ng-model="rfunction.mappings[i]" type="text" required>
+                <input ng-model="function.mappings[i]" type="text" required>
             </md-input-container>
         </div>
         <div layout="column">
             <md-input-container>
             <label>New column name </label>
-                <input ng-model="rfunction.mappings[i+1]" type="text" required>
+                <input ng-model="function.mappings[i+1]" type="text" required>
             </md-input-container>
         </div>
     </div>
@@ -61,6 +61,6 @@
     <md-input-container flex>
         <label>Comment</label>
 
-        <input ng-model="rfunction.docstring" type="text" >
+        <input ng-model="function.docstring" type="text" >
     </md-input-container>
 </div>

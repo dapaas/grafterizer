@@ -13,7 +13,7 @@
             <h3>Parameters</h3>
 
     <label>Columns to filter</label>
-    <md-chips ng-model="gfunction.colsToFilter" readonly="ctrl.readonly">
+    <md-chips ng-model="function.colsToFilter" readonly="ctrl.readonly">
         <md-chip-template>
             <strong>{{$chip}}</strong>
         </md-chip-template>
@@ -25,11 +25,11 @@
         <div>
     <md-input-container flex>
         <label>Text to match</label>
-        <input ng-model="gfunction.filterText" type="text" >
+        <input ng-model="function.filterText" type="text" >
     </md-input-container>
         </div>
         <div >
-    <md-checkbox  ng-model="gfunction.ignoreCase" aria-label="ignore case">
+    <md-checkbox  ng-model="function.ignoreCase" aria-label="ignore case">
     ignore case
     </md-checkbox>
         </div>
@@ -37,7 +37,7 @@
 </md-whiteframe>
         <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">
         <label>Regular expression</label>
-        <input ng-model="gfunction.filterRegex" type="text" > 
+        <input ng-model="function.filterRegex" type="text" > 
         <md-button  class="md-primary button-tight md-default-theme" ng-click="switchRegex()" aria-label="Show tutorial" >
             <i class="fa fa-question-circle fa-lg"></i>
         </md-button>
@@ -62,13 +62,13 @@
     <br>
     <!--TODO: first function - only predicates --> 
     <label>Function to filter with</label>
-<div   ng-repeat="filterFunction in gfunction.functionsToFilterWith track by $index ">
+<div   ng-repeat="filterFunction in function.functionsToFilterWith track by $index ">
     <div >
-        <md-button class="md-primary button-tight md-default-theme" ng-click="removeFilterFunction($index)" aria-label="Remove function" ng-disabled="gfunction.functionsToFilterWith.length===1">
+        <md-button class="md-primary button-tight md-default-theme" ng-click="removeFilterFunction($index)" aria-label="Remove function" ng-disabled="function.functionsToFilterWith.length===1">
             <i class="fa fa-trash fa-lg"></i>
         </md-button>
         <md-input-container> 
-        <md-select ng-model="gfunction.functionsToFilterWith[$index]" placeholder="{{gfunction.functionsToFilterWith[$index] ? gfunction.functionsToFilterWith[$index].name : 'Choose a function...'}}" ng-selected="{{filterFunction}}">
+        <md-select ng-model="function.functionsToFilterWith[$index]" placeholder="{{function.functionsToFilterWith[$index] ? function.functionsToFilterWith[$index].name : 'Choose a function...'}}" ng-selected="{{filterFunction}}">
                     <md-optgroup label="Custom functions">
                     <md-option ng-repeat="customFunct in transformation.customFunctionDeclarations  | filter: {group: 'UTILITY'}" title = "{{customFunct.docstring}}" value="{{customFunct.name}}">{{customFunct.name}}</md-option>
                     </md-optgroup>
@@ -86,7 +86,7 @@
 </div>    <md-input-container flex>
         <label>Comment</label>
 
-        <input ng-model="gfunction.docstring" type="text" >
+        <input ng-model="function.docstring" type="text" >
     </md-input-container>
     <!--md-select ng-model="function.functionToDeriveWith" placeholder="{{function.functionToDeriveWith ? function.functionToDeriveWith.name : 'Choose a function...'}}" ng-selected="{{function.functionToDeriveWith}}">
         <md-optgroup label="Custom functions">

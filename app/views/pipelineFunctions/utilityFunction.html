@@ -3,7 +3,7 @@
             <h3>Parameters</h3>
     <label>Function to use in a pipeline</label>
         <md-input-container> 
-        <md-select ng-model="ufunction.functionName" placeholder="{{ufunction.functionName ? ufunction.functionName.name : 'Choose a function...'}}" ng-selected="ufunction.functionName">
+        <md-select ng-model="function.functionName" placeholder="{{function.functionName ? function.functionName.name : 'Choose a function...'}}" ng-selected="function.functionName">
                     <md-optgroup label="Custom functions">
                     <md-option ng-repeat="customFunct in transformation.customFunctionDeclarations | filter: {group: 'UTILITY'}" title = "{{customFunct.docstring}}" value="{{customFunct.name}}">{{customFunct.name}}</md-option>
                     </md-optgroup>
@@ -12,7 +12,7 @@
     <md-input-container flex>
         <label>Comment</label>
 
-        <input ng-model="ufunction.docstring" type="text" >
+        <input ng-model="function.docstring" type="text" >
     </md-input-container>
     <!--md-select ng-model="function.functionToDeriveWith" placeholder="{{function.functionToDeriveWith ? function.functionToDeriveWith.name : 'Choose a function...'}}" ng-selected="{{function.functionToDeriveWith}}">
         <md-optgroup label="Custom functions">

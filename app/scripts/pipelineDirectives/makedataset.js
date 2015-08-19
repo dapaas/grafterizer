@@ -12,19 +12,19 @@ angular.module('grafterizerApp')
       templateUrl: 'views/pipelineFunctions/makeDatasetFunction.html',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
-        if (!scope.mfunction) {
-          scope.mfunction = new transformationDataModel.MakeDatasetFunction(
+        if (!scope.function) {
+          scope.function = new transformationDataModel.MakeDatasetFunction(
             [], null, 0, null, null);
-          scope.mfunction.docstring = null;
+          scope.function.docstring = null;
         }
 
         scope.$parent.generateCurrFunction = function() {
-          return new transformationDataModel.MakeDatasetFunction(scope.mfunction
+          return new transformationDataModel.MakeDatasetFunction(scope.function
             .columnsArray,
-            scope.mfunction.useLazy,
-            scope.mfunction.numberOfColumns,
-            scope.mfunction.moveFirstRowToHeader,
-            scope.mfunction.docstring);
+            scope.function.useLazy,
+            scope.function.numberOfColumns,
+            scope.function.moveFirstRowToHeader,
+            scope.function.docstring);
         };
 
         scope.showUsage = false;
