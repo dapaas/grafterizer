@@ -25,11 +25,9 @@ angular.module('grafterizerApp')
     }, 250);
 
     $scope.emptyCustomFunction = new transformationDataModel.CustomFunctionDeclaration(
-      '', '','','');
+      '', '', '', '');
     
     $scope.saveCustomFunct = function() {
-      // var customFunctionData = $scope.parseCustomFunctionCode($scope.selectedCustomFunction
-        // .clojureCode);
 
       var result = $scope.$parent.transformation
         .addCustomFunctionDeclaration(
@@ -37,8 +35,6 @@ angular.module('grafterizerApp')
           $scope.selectedCustomFunction.clojureCode,
           $scope.selectedCustomFunction.group,
           $scope.selectedCustomFunction.docstring);
-          // customFunctionData.name,
-          // customFunctionData.code);
 
       if (!result) {
         $mdToast.show(
@@ -56,44 +52,6 @@ angular.module('grafterizerApp')
 
     };
 
-    /*$scope.parseCustomFunctionCode = function(customCode) {
-      var functionName;
-      var tmp = customCode.split('defn');
-      var tmp1 = customCode.split('def');
-      if (tmp.length === 1 && tmp1.length === 1) {
-        return {};
-      }
-
-      tmp = tmp.length > 1 ? tmp : tmp1;
-
-      tmp = tmp[1].trim();
-      tmp = tmp.split(/\s+/);
-      if (tmp.length === 1) {
-        return {};
-      }
-
-      functionName = tmp[0];
-
-      return {
-        name: functionName,
-        code: customCode
-      };
-    };*/
-
-    /*var functionNameRegex = /\(defn?\s+([^\s\)]+)/i;
-    $scope.parseCustomFunctionCode = function(customCode) {
-      var m = customCode.match(functionNameRegex);
-
-      if (!m) {
-        return {};
-      }
-
-      return {
-        name: m[1],
-        code: customCode
-      };
-    };*/
-
     $scope.applyCustomFunctionChanges = function() {
       $mdDialog.hide();
     };
@@ -106,7 +64,7 @@ angular.module('grafterizerApp')
       $scope.$parent.transformation.removeCustomFunctionDeclaration(
         customFunct);
       $scope.selectedCustomFunction = $scope.emptyCustomFunction = new transformationDataModel.CustomFunctionDeclaration(
-      '', '','','');
+      '', '', '', '');
     };
 
     var randomA = ['convert', 'do', 'analyse', 'parse', 'process', 'ignore', 'compute', 'apply'];
@@ -115,9 +73,11 @@ angular.module('grafterizerApp')
       var name = '';
       var docstring = '';
       var cpt = 0;
+      var find = function(v) { return v.name === name; };
+      
       do {
         name = randomA[Math.floor(Math.random() * randomA.length)] + '-' + randomB[Math.floor(Math.random() * randomB.length)];
-      } while (_.find($scope.$parent.transformation.customFunctionDeclarations, function(v) { return v.name === name; }) && ++cpt < 10);
+      } while (_.find($scope.$parent.transformation.customFunctionDeclarations, find) && ++cpt < 10);
 
       $scope.emptyCustomFunction.name = name;
       $scope.emptyCustomFunction.clojureCode = '(defn ' + name + ' "" [] ())';
@@ -126,14 +86,14 @@ angular.module('grafterizerApp')
       $scope.selectedCustomFunction = $scope.emptyCustomFunction;
       $scope.saveCustomFunct();
     };
+
     $scope.createNewText = function() {
-    
       $mdDialog.show({
         templateUrl: 'views/createstringcustomfunction.html',
-        controller: 'CustomStringfunctionsdialogcontrollerCtrl'/*,
-        scope: $scope.$new(false, $scope)*/
-  })
-    }; 
+        controller: 'CustomStringfunctionsdialogcontrollerCtrl'
+      });
+    };
+
     var functionName = /\(defn?\s+([^\s\)]+)/i;
     $scope.$watch('selectedCustomFunction.clojureCode', function() {
       if (!$scope.selectedCustomFunction) return;
@@ -141,9 +101,9 @@ angular.module('grafterizerApp')
       if (!code) return;
 
       var m = code.match(functionName);
-      var d = code.match(/".*?"/g); 
-      if (d) $scope.selectedCustomFunction.docstring = d[0].replace(/^"|"$/g, "");
-      //console.log($scope.selectedCustomFunction.docstring);
+      var d = code.match(/".*?"/g);
+      if (d) $scope.selectedCustomFunction.docstring = d[0].replace(/^"|"$/g, '');
+
       if (m) {
         var name = m[1];
         if (!$scope.selectedCustomFunction.name) {

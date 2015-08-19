@@ -24,12 +24,7 @@
         <div layout="column">
             <md-input-container>
                 <md-select placeholder="Choose a function..." ng-model="keyFunctionPair.func">
-                    <md-optgroup label="Custom functions">
-                    <md-option ng-repeat="customFunct in transformation.customFunctionDeclarations" value="{{customFunct.name}}" title="{{customFunct.docstring}}">{{customFunct.name}}</md-option>
-                    </md-optgroup>
-                    <md-optgroup label="Prefixers">
-                        <md-option  ng-repeat="prefixer in transformation.prefixers" value="{{prefixer.name}}">{{prefixer.name}}</md-option>
-                    </md-optgroup>
+                    <function-list> </function-list>
                 </md-select>
             </md-input-container>
         </div>

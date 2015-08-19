@@ -99,7 +99,7 @@ angular.module('grafterizerApp')
         return;
       }
 
-      if (!$scope.transformation.addPrefixer($scope.prefixName, $scope.prefixUri,"")) {
+      if (!$scope.transformation.addPrefixer($scope.prefixName, $scope.prefixUri, '')) {
         $mdToast.show(
           $mdToast.simple()
           .content(
@@ -114,7 +114,7 @@ angular.module('grafterizerApp')
       $scope.gridOpts.data.push({
         prefixName: $scope.prefixName,
         uri: $scope.prefixUri,
-        parentPrefix: ""
+        parentPrefix: ''
       });
     };
     
@@ -142,7 +142,7 @@ angular.module('grafterizerApp')
       
       var selectedRows = $scope.gridApi.selection.getSelectedRows();
 
-      if (selectedRows.length!==1) {
+      if (selectedRows.length !== 1) {
         $mdToast.show(
           $mdToast.simple()
           .content('Error adding prefixer. One parent prefixer should be selected.')
@@ -152,7 +152,7 @@ angular.module('grafterizerApp')
         return;
       }
 
-      if (!$scope.transformation.addPrefixer($scope.prefixName, $scope.prefixUri,selectedRows[0].prefixName)) {
+      if (!$scope.transformation.addPrefixer($scope.prefixName, $scope.prefixUri, selectedRows[0].prefixName)) {
         $mdToast.show(
           $mdToast.simple()
           .content(

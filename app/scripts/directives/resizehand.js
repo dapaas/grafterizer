@@ -15,10 +15,12 @@ angular.module('grafterizerApp')
         var target = document.getElementById(attrs.
           for);
         if (!target) return;
+       
+        var mousemove;
 
         if (window.requestAnimationFrame) {
           var requestAnim = 0;
-          var mousemove = function(e) {
+          mousemove = function(e) {
             if (!requestAnim) {
               requestAnim = window.requestAnimationFrame(function() {
                 updateLayout(e.offsetX);
@@ -27,7 +29,7 @@ angular.module('grafterizerApp')
             }
           };
         } else {
-          var mousemove = _.throttle(function() {
+          mousemove = _.throttle(function(e) {
             updateLayout(e.offsetX);
           }, 1 / 2000);
         }
@@ -92,6 +94,10 @@ angular.module('grafterizerApp')
         mask.addEventListener('mouseup', stopDrag);
         mask.addEventListener('mouseleave', stopDrag);
 
+        scope.$on('$destroy', function() {
+          target.setAttribute('flex', '');
+          target.style.width = '';
+        });
       }
     };
   });

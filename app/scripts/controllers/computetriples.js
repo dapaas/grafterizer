@@ -8,8 +8,16 @@
  * Controller of the grafterizerApp
  */
 angular.module('grafterizerApp')
-  .controller('ComputetriplesCtrl', function($scope, $mdDialog, ontotextAPI,
-    $http, $rootScope, datagraftPostMessage) {
+  .controller('ComputetriplesCtrl', function(
+    $scope,
+    $rootScope,
+    $mdDialog,
+    ontotextAPI,
+    PipeService,
+    datagraftPostMessage) {
+
+    $scope.downloadLink = PipeService.computeTuplesHref(
+      $scope.distribution, $scope.transformation, $scope.type);
 
     $scope.download = function() {
       $mdDialog.hide();
@@ -31,28 +39,16 @@ angular.module('grafterizerApp')
         'dct:description': $scope.dataset.description,
         'dcat:public': 'false'
       })
-      .success(function(datasetData) {
-        $http.get($scope.downloadLink).success(function(data) {
+        .success(function(datasetData) {
+          var datasetId = datasetData['@id'];
 
-          var file = new Blob([data], {
-            type: 'application/n-triples'
-          });
-          var metadata = {
-            '@context': ontotextAPI.getContextDeclaration(),
-            '@type': 'dcat:Distribution',
-            'dct:title': type + ' computed transformation',
-            'dct:description': '[' + type + '] dataset transformed with Grafterizer',
-            'dcat:fileName': 'computed.' + (type === 'pipe' ? 'csv' : 'nt'),
-            'dcat:mediaType': (type === 'pipe' ? 'text/csv' : 'application/n-triples')
-          };
-
-          ontotextAPI.uploadDistribution(
-            datasetData['@id'],
-            file,
-            metadata).success(function(distributionData) {
+          PipeService.save(datasetId, $scope.distribution,
+            $scope.transformation, type).success(
+            function(distributionData) {
 
               var location = '/pages/publish/details.jsp?id=' +
-                    window.encodeURIComponent(datasetData['@id']);
+                window.encodeURIComponent(datasetId);
+              
               if (datagraftPostMessage.isConnected()) {
                 datagraftPostMessage.setLocation(location);
               } else {
@@ -77,7 +73,6 @@ angular.module('grafterizerApp')
             })
           );
         });
-      });
 
     };
 

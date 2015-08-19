@@ -83,7 +83,7 @@ angular
       'https://grafterizer.datagraft.net/backend'
       : '/backend');
 
-    var urlBase = $urlRouterProvider.otherwise('/transformations/new');
+    $urlRouterProvider.otherwise('/transformations/new');
 
     sessionStorage.localClassAndProperty = JSON.stringify([]);
     sessionStorage.localVocabulary = JSON.stringify([]);

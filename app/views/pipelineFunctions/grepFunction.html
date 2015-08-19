@@ -4,7 +4,7 @@
             <div ng-show = "showUsage">
             <p class="api-doc-docstring"> Filters rows in the dataset for matches. May be used for filtering on text pattern, regular expression or Clojure predicate function or composition of functions. It also takes column names as an argument to narrow the scope of filtering only to those olumns. If no columns are specified, function operates on all columns in dataset.
             
-            <img src="../images/grep.png"></img>
+            <a href="../images/grep.png">view example</a>
             <a href="http://api.grafter.org/master/grafter.tabular.html#var-grep" target="_blank"> view source</a>
     </div>
     </div>
@@ -70,10 +70,10 @@
         <md-input-container> 
         <md-select ng-model="function.functionsToFilterWith[$index]" placeholder="{{function.functionsToFilterWith[$index] ? function.functionsToFilterWith[$index].name : 'Choose a function...'}}" ng-selected="{{filterFunction}}">
                     <md-optgroup label="Custom functions">
-                    <md-option ng-repeat="customFunct in transformation.customFunctionDeclarations " title = "{{customFunct.docstring}}" value="{{customFunct.name}}">{{customFunct.name}}</md-option>
+                    <md-option ng-repeat="customFunct in transformation.customFunctionDeclarations  | filter: {group: 'UTILITY'}" title = "{{customFunct.docstring}}" value="{{customFunct.name}}">{{customFunct.name}}</md-option>
                     </md-optgroup>
-                    <md-optgroup label="Prefixers">
-                        <md-option  ng-repeat="prefixer in transformation.prefixers " value="{{prefixer.name}}">{{prefixer.name}}</md-option>
+                    <md-optgroup label="PREDICATE">
+                    <md-option ng-repeat="customFunct in transformation.customFunctionDeclarations  | filter: {group: 'PREDICATE'}" title = "{{customFunct.docstring}}" value="{{customFunct.name}}">{{customFunct.name}}</md-option>
                     </md-optgroup>
                 </md-select>
             </md-input-container>

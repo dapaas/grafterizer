@@ -16,5 +16,4 @@ angular.module('grafterizerApp')
     
     this.storage = window.localStorage;
 
-
   });

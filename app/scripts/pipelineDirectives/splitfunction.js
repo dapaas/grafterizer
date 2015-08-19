@@ -14,19 +14,21 @@ angular.module('grafterizerApp')
       link: function postLink(scope, element, attrs) {
         if (!scope.function) {
 
-          scope.function = new transformationDataModel.SplitFunction("","","",null);
+          scope.function = new transformationDataModel.SplitFunction('', '', '', null);
           scope.function.newColName = null;
           scope.function.docstring = null;
         }
 
         scope.$parent.generateCurrFunction = function() {
           return new transformationDataModel.SplitFunction(
-            scope.function.colName, scope.function.newColName, scope.function.separator, scope.function.docstring);
+            scope.function.colName, scope.function.newColName, scope.function.separator, scope.function.docstring
+          );
         };
-        scope.showUsage=false;
-        scope.switchShowUsage=function() {
-        scope.showUsage=!scope.showUsage;
-        }
+
+        scope.showUsage = false;
+        scope.switchShowUsage = function() {
+          scope.showUsage = !scope.showUsage;
+        };
       }
     };
   });
