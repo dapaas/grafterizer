@@ -22,6 +22,7 @@ angular.module('grafterizerApp')
           // TODO may be different at the end but probably need to unify with the constant uri node directive
           return RecursionHelper.compile(element, function(scope, iElement, iAttrs, controller, transcludeFn) {
             scope.editNode = function() {
+                console.log(scope.node);
               scope.originalNode = {};
               angular.copy(scope.node, scope.originalNode);
               var newScope = scope.$new(false, scope);
