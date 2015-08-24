@@ -15,8 +15,8 @@ angular.module('grafterizerApp')
         templateUrl: 'views/blanknode.html',
         restrict: 'E',
         scope: {
-          node: '=',
-          parent: '='
+          parent: '=',
+          node:'='
         },
         compile: function(element) {
           return RecursionHelper.compile(element, function(scope, iElement, iAttrs, controller, transcludeFn) {
@@ -32,7 +32,7 @@ angular.module('grafterizerApp')
                 scope: newScope
               }).then(
               function(graphNode) {
-                angular.copy(graphNode, scope.node);
+                scope.node = transformationDataModel.getGraphElement(graphNode);
               },
 
               function() {
@@ -41,7 +41,7 @@ angular.module('grafterizerApp')
               });
             };
 
-            scope.clickAddPropertyAfter = function(property) {
+            scope.addSubProperty = function(property) {
               scope.originalProperties = [];
               angular.copy(scope.node.subElements, scope.originalProperties);
               if (!property) {

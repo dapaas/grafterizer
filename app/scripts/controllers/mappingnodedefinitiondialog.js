@@ -95,8 +95,6 @@ angular.module('grafterizerApp')
           break;
         case 2:
           $scope.newNode = new transformationDataModel.BlankNode([]);
-
-          // TODO not yet implemented
           break;
       }
     };
@@ -108,6 +106,7 @@ angular.module('grafterizerApp')
     $scope.addNode = function() {
       if ($scope.newNode.__type === 'ConstantURI') {
         if ($scope.propertyValue.value.indexOf(':') >= 0) {
+          // TODO change this!!
           $scope.newNode.prefix = $scope.propertyValue.value.substring(0, $scope.propertyValue.value.indexOf(':'));
           $scope.newNode.constant = $scope.propertyValue.value.substring(
             $scope.propertyValue.value.indexOf(':') + 1, $scope.propertyValue
