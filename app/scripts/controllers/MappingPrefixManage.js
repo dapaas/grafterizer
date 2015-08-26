@@ -149,19 +149,35 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
 
   //delete local vocabulary
   $scope.deleteItem = function(vocabNamespace) {
-    //delete from local storage
-    var localVocabulary = $scope.$parent.transformation.rdfVocabs;
-    for (var i = localVocabulary.length - 1; i >= 0; i--) {
-      if( localVocabulary[i].namespace === vocabNamespace ){
-        localVocabulary.splice(i, 1);
-      }
-    }
 
-    for (var i = $scope.VocabItems.length - 1; i >= 0; i--) {
-      if ($scope.VocabItems[i].namespace === vocabNamespace){
-        $scope.VocabItems.splice(i, 1);
-      }
-    }
+    $scope.showConfirm = function(ev) {
+      // Appending dialog to document.body to cover sidenav in docs app
+      var confirm = $mdDialog.confirm()
+        .title('Delete')
+        .content('Do you want to delete prefix?')
+        .ariaLabel('Lucky day')
+        .ok('OK')
+        .cancel('Cancel')
+        .targetEvent(ev);
+      $mdDialog.show(confirm).then(function() {
+        //delete from local storage
+        var localVocabulary = $scope.$parent.transformation.rdfVocabs;
+        for (var i = localVocabulary.length - 1; i >= 0; i--) {
+          if( localVocabulary[i].namespace === vocabNamespace ){
+            localVocabulary.splice(i, 1);
+          }
+        }
+
+        for (var i = $scope.VocabItems.length - 1; i >= 0; i--) {
+          if ($scope.VocabItems[i].namespace === vocabNamespace){
+            $scope.VocabItems.splice(i, 1);
+          }
+        }
+      }, function() {
+      });
+    };
+
+
   };
 
   //editing vocabulary
@@ -243,16 +259,12 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
         var classArray = [];
         var propertyArray = [];
 
-        //var classArrayforClojureCode = [];
-        //var propertyArrayforClojureCode = [];
-
         for (var i = response.classResult.length - 1; i >= 0; i--) {
           //lower case is easier for search
           lowercaseTemplate = new Object();
           lowercaseTemplate.name = response.classResult[i].value;
           lowercaseTemplate.lowername = response.classResult[i].value.toLowerCase();
           classArray.push(lowercaseTemplate);
-          //classArrayforClojureCode.push(response.classResult[i].value);
           //console.log(response.classResult[i].value);
         }
         for (var i = response.propertyResult.length - 1; i >= 0; i--) {
@@ -260,7 +272,6 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
           lowercaseTemplate.name = response.propertyResult[i].value;
           lowercaseTemplate.lowername = response.propertyResult[i].value.toLowerCase();
           propertyArray.push(lowercaseTemplate);
-          //propertyArrayforClojureCode.push(response.propertyResult[i].value);
           //console.log(response.propertyResult[i].value);
         }
         console.log("class number: " + response.classResult.length);
@@ -308,20 +319,19 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
   // let us choose how to add vocabulary path
   //------------------------------------------
   $scope.choices = [
-    "Add vocabulary path by url",
-    "Add local vocabulary",
-    "Add vocabulary later"
+    "URL",
+    "Upload from disk"
   ];
 
   $scope.localPath = false;
   $scope.remotePath = false;
 
   $scope.onChange = function(choice) {
-    if (choice === "Add vocabulary path by url"){
+    if (choice === "URL"){
       $scope.localPath = false;
       $scope.remotePath = true;
     }
-    else if (choice === "Add local vocabulary") {
+    else if (choice === "Upload from disk") {
       $scope.localPath = true;
       $scope.remotePath = false;
     } else {

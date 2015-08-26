@@ -724,6 +724,8 @@ angular.module('grafterizerApp')
     //    var grafterDeclarations = constructGrafterDeclarations();
 
     /* Prefixers */
+    graphPrefix = [];
+    graphConcept = [];
 
     var prefixersInGUI = transformation.prefixers;
 
@@ -752,7 +754,7 @@ angular.module('grafterizerApp')
             var regexes = regexesPattern.exec(codeToParse);
         var newstring;
            while (regexes) {
-          
+
 
             newstring = regexes[0].replace('#"',' (read-string "#\\"');
             newstring = newstring.replace(/"$/, '\\"")');
@@ -764,8 +766,8 @@ angular.module('grafterizerApp')
         codeToParse
       );
 
-          
-          
+
+
     }
 
     var grafterCustomFunctions = constructUserFunctions();
@@ -795,6 +797,7 @@ angular.module('grafterizerApp')
         }
       }
     }
+
     for (i = 0; i < grafterPrefixers.length; ++i) {
       textStr += (grafterPrefixers[i].ednEncode() + '\n');
     }
