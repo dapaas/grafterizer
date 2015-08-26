@@ -14,6 +14,8 @@ angular.module('grafterizerApp')
     var r = /[ \+.\-_:]/g;
 
     return function(input) {
+      if (typeof input !== 'string') return input;
+      
       var p = input.match(m);
       if (!p) return input;
 

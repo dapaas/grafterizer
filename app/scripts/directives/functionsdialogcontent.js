@@ -22,81 +22,83 @@ angular.module('grafterizerApp')
 
         scope.availableFunctions = [
           {
-            name: 'add-columns',
-            displayName: 'Add columns',
-            selected: false
-          },
-          {
-            name: 'apply-columns',
-            displayName: 'Apply columns',
-            selected: false
-          },
-          {
-            name: 'columns',
-            displayName: 'Columns',
-            selected: false
-          },
-          {
-            name: 'derive-column',
-            displayName: 'Derive column',
-            selected: false
-          },
-          {
-            name: 'drop-rows',
-            displayName: 'Drop rows',
-            selected: false
-          },
-          {
-            name: 'grep',
-            displayName: 'Filter dataset',
-            selected: false
-          },
-          {
+            displayName: 'Make Dataset',
             name: 'make-dataset',
-            displayName: 'Make dataset',
-            selected: false
+            selected: false,
+            type: 'none'
           },
           {
-            name: 'mapc',
-            displayName: 'Map columns',
-            selected: false
-          },
-          {
-            name: 'melt',
-            displayName: 'Reshape dataset',
-            selected: false
-          },
-          {
-            name: 'remove-columns',
-            displayName: 'Remove columns',
-            selected: false
-          },
-          {
-            name: 'rename-columns',
-            displayName: 'Rename columns',
-            selected: false
-          },
-          {
-            name: 'split',
-            displayName: 'Split column',
-            selected: false
-          },
-          {
-            name: 'take-rows',
-            displayName: 'Take rows',
-            selected: false
-          },
-          {
+            displayName: 'Custom function',
             name: 'utility',
-            displayName: 'Utility function',
-            selected: false
+            selected: false,
+            type: 'none'
           },
           {
-            name: 'custom-code',
-            displayName: 'Custom code',
-            selected: false
+            displayName: 'Reshape Dataset',
+            name: 'melt',
+            selected: false,
+            type: 'none'
+          },
+          {
+            displayName: 'Add Columns',
+            name: 'add-columns',
+            selected: false,
+            type: 'column'
+          },
+          {
+            displayName: 'Take/Drop Columns',
+            name: 'columns',
+            selected: false,
+            type: 'column'
+          },
+          {
+            displayName: 'Derive Column',
+            name: 'derive-column',
+            selected: false,
+            type: 'column'
+          },
+          {
+            displayName: 'Map Columns',
+            name: 'mapc',
+            selected: false,
+            type: 'column'
+          },
+          {
+            displayName: 'Rename Columns',
+            name: 'rename-columns',
+            selected: false,
+            type: 'column'
+          },
+          {
+            displayName: 'Split Column',
+            name: 'split',
+            selected: false,
+            type: 'column'
+          },
+          {
+            displayName: 'Take/Drop Rows',
+            name: 'drop-rows',
+            selected: false,
+            type: 'rows'
+          },
+          {
+            displayName: 'Filter Rows',
+            name: 'grep',
+            selected: false,
+            type: 'rows'
           }
         ];
+
+        scope.showcolumn = false;
+        scope.showColumn = function() {
+          scope.showcolumn = !scope.showcolumn;
+        };
+
+        scope.showrows = false;
+        scope.showRows = function() {
+          scope.showrows = !scope.showrows;
+        };
+
         scope.selectedFunctionName = null;
         scope.changeSelected = function(f) {
           var i;

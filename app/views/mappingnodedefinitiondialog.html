@@ -11,7 +11,7 @@
         font-family: Arial;
       }
     </style>
-    <md-tabs class="md-primary no-border-radius sin-mapping-tabs" flex md-no-disconnect md-swipe-content="" ng-model="dialogState.selectedTab" ng-change="changeType()" md-dynamic-height md-selected="dialogState.selectedTab">
+    <md-tabs class="md-primary no-border-radius sin-mapping-tabs" flex md-no-disconnect md-swipe-content="{{isMobile}}" ng-model="dialogState.selectedTab" ng-change="changeType()" md-dynamic-height md-selected="dialogState.selectedTab">
       <md-tab label="URI node" md-on-select="changeType()">
         <md-tab-body>
           <div layout="column" class="md-padding">

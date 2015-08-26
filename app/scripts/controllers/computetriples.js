@@ -8,13 +8,26 @@
  * Controller of the grafterizerApp
  */
 angular.module('grafterizerApp')
-  .controller('ComputetriplesCtrl', function($scope, $mdDialog, ontotextAPI,
-    $http, $rootScope, datagraftPostMessage) {
+  .controller('ComputetriplesCtrl', function(
+    $scope,
+    $rootScope,
+    $mdDialog,
+    ontotextAPI,
+    PipeService,
+    datagraftPostMessage) {
 
-    $scope.download = function() {
-      $mdDialog.hide();
-      window.open($scope.downloadLink, '_blank');
+    $scope.downloadLink = PipeService.computeTuplesHref(
+      $scope.distribution, $scope.transformation, $scope.type);
+
+    $scope.ugly = function() {
+      window.setTimeout(function() {
+        $mdDialog.hide();
+      }, 1);
+      // TODO fixme
+      
     };
+  
+    
 
     $scope.makeNewDataset = function() {
       var type = 'pipe';
@@ -31,28 +44,16 @@ angular.module('grafterizerApp')
         'dct:description': $scope.dataset.description,
         'dcat:public': 'false'
       })
-      .success(function(datasetData) {
-        $http.get($scope.downloadLink).success(function(data) {
+        .success(function(datasetData) {
+          var datasetId = datasetData['@id'];
 
-          var file = new Blob([data], {
-            type: 'application/n-triples'
-          });
-          var metadata = {
-            '@context': ontotextAPI.getContextDeclaration(),
-            '@type': 'dcat:Distribution',
-            'dct:title': type + ' computed transformation',
-            'dct:description': '[' + type + '] dataset transformed with Grafterizer',
-            'dcat:fileName': 'computed.' + (type === 'pipe' ? 'csv' : 'nt'),
-            'dcat:mediaType': (type === 'pipe' ? 'text/csv' : 'application/n-triples')
-          };
-
-          ontotextAPI.uploadDistribution(
-            datasetData['@id'],
-            file,
-            metadata).success(function(distributionData) {
+          PipeService.save(datasetId, $scope.distribution,
+            $scope.transformation, type).success(
+            function(distributionData) {
 
               var location = '/pages/publish/details.jsp?id=' +
-                    window.encodeURIComponent(datasetData['@id']);
+                window.encodeURIComponent(datasetId);
+              
               if (datagraftPostMessage.isConnected()) {
                 datagraftPostMessage.setLocation(location);
               } else {
@@ -67,8 +68,16 @@ angular.module('grafterizerApp')
             });
 
           $mdDialog.hide();
+        }).error(function() {
+          $mdDialog.hide();
+          $mdDialog.show(
+            $mdDialog.alert({
+              title: 'An error occured',
+              content: 'The transformation cannot be applied to the dataset.',
+              ok: 'Ok :('
+            })
+          );
         });
-      });
 
     };
 

@@ -1,0 +1,104 @@
+<div layout="column">
+    <div>
+        <md-button aria-label="Show/hide documentation" ng-click="switchShowUsage()"><i class="fa fa-angle-down"  >Show/hide documentation</i></md-button>
+            <div ng-show = "showUsage">
+            <p class="api-doc-docstring"> Filters rows in the dataset for matches. May be used for filtering on text pattern, regular expression or Clojure predicate function or composition of functions. It also takes column names as an argument to narrow the scope of filtering only to those olumns. If no columns are specified, function operates on all columns in dataset.
+            
+            <img src="/images/grep.png"></img>
+            <a href="http://api.grafter.org/master/grafter.tabular.html#var-grep" target="_blank"> view source</a>
+    </div>
+    </div>
+<div>
+
+            <h3>Parameters</h3>
+
+    <label>Columns to filter</label>
+    <md-chips ng-model="function.colsToFilter" readonly="ctrl.readonly">
+        <md-chip-template>
+            <strong>{{$chip}}</strong>
+        </md-chip-template>
+    </md-chips>
+    <br>
+        <div class="whiteframedemoBasicUsage" layout="column"  style="padding-bottom: 32px;">
+        <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">
+    <div layout="row">
+        <div>
+    <md-input-container flex>
+        <label>Text to match</label>
+        <input ng-model="function.filterText" type="text" >
+    </md-input-container>
+        </div>
+        <div >
+    <md-checkbox  ng-model="function.ignoreCase" aria-label="ignore case">
+    ignore case
+    </md-checkbox>
+        </div>
+    </div>
+</md-whiteframe>
+        <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">
+        <label>Regular expression</label>
+        <input ng-model="function.filterRegex" type="text" > 
+        <md-button  class="md-primary button-tight md-default-theme" ng-click="switchRegex()" aria-label="Show tutorial" >
+            <i class="fa fa-question-circle fa-lg"></i>
+        </md-button>
+            <div ng-show = "showRegex">
+            <p> 
+            The most simple regular expressions are just literal characters. Example: to narrow dataset just to rows containing text fragment <mark>abc</mark> you should use <mark>abc</mark> regular expression.
+            <br>
+            <br>
+            The dot  matches any single character. Example: expression <mark>f.nd</mark> mathes <mark>find</mark>, <mark>fond</mark>, <mark>f1nd</mark> etc. 
+            <br>
+            <br>
+            You may as well specify sets of characters you expect to see in certain position. Thus, <mark>f[iI]nd</mark> pattern will math find and fInd but not f1nd. Such sets may as well be expressed in terms of ranges of characters. For example <mark>[a-n]</mark> matches any character from a to n. You may combine ranges by simply concatenating them: <mark>[a-nA-N]</mark>
+            
+            <br>
+            <br>
+            Some character groups may be easily referred to with help of simple shorthand pattern. <mark>\s</mark> is a shorthand for any whitespace character, <mark>\d</mark> is used as shorthand for "any digit" and <mark>\w</mark> may be used to express  any alphanumeric character or underscore.
+            
+            </p>
+        </div>
+            </md-whiteframe>
+        <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">
+    <br>
+    <!--TODO: first function - only predicates --> 
+    <label>Function to filter with</label>
+<div   ng-repeat="filterFunction in function.functionsToFilterWith track by $index ">
+    <div >
+        <md-button class="md-primary button-tight md-default-theme" ng-click="removeFilterFunction($index)" aria-label="Remove function" ng-disabled="function.functionsToFilterWith.length===1">
+            <i class="fa fa-trash fa-lg"></i>
+        </md-button>
+        <md-input-container> 
+        <md-select ng-model="function.functionsToFilterWith[$index]" placeholder="{{function.functionsToFilterWith[$index] ? function.functionsToFilterWith[$index].name : 'Choose a function...'}}" ng-selected="{{filterFunction}}">
+                    <md-optgroup label="Custom functions">
+                    <md-option ng-repeat="customFunct in transformation.customFunctionDeclarations  | filter: {group: 'UTILITY'}" title = "{{customFunct.docstring}}" value="{{customFunct.name}}">{{customFunct.name}}</md-option>
+                    </md-optgroup>
+                    <md-optgroup label="PREDICATE">
+                    <md-option ng-repeat="customFunct in transformation.customFunctionDeclarations  | filter: {group: 'PREDICATE'}" title = "{{customFunct.docstring}}" value="{{customFunct.name}}">{{customFunct.name}}</md-option>
+                    </md-optgroup>
+                </md-select>
+            </md-input-container>
+    </div>
+
+
+</div>
+        <md-button class="md-raised" ng-click="addFilterFunction()" aria-label="Compose with function">Compose with </md-button>
+</md-whiteframe>
+</div>    <md-input-container flex>
+        <label>Comment</label>
+
+        <input ng-model="function.docstring" type="text" >
+    </md-input-container>
+    <!--md-select ng-model="function.functionToDeriveWith" placeholder="{{function.functionToDeriveWith ? function.functionToDeriveWith.name : 'Choose a function...'}}" ng-selected="{{function.functionToDeriveWith}}">
+        <md-optgroup label="Custom functions">
+            <md-option ng-repeat="customFunct in transformation.customFunctionDeclarations" value="{{customFunct.name}}">{{customFunct.name}}</md-option>
+        </md-optgroup>
+        <md-optgroup label="Prefixers">
+            <md-option  ng-repeat="prefixer in transformation.prefixers" value="{{prefixer.name}}">{{prefixer.name}}</md-option>
+        </md-optgroup>
+    </md-select-->
+</div>
+
+</div>
+<!--
+ng-hide="transformation.customFunctionDeclarations"
+-->

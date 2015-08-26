@@ -16,5 +16,4 @@ angular.module('grafterizerApp')
     this.serveraddress = 'http://localhost:8080/ManageVocabulary/api/vocabulary/';
     this.storage = window.localStorage;
 
-
   });

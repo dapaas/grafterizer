@@ -1,0 +1,66 @@
+<div layout="column">
+    <div>
+        <md-button aria-label="Show/hide documentation" ng-click="switchShowUsage()"><i class="fa fa-angle-down"  >Show/hide documentation</i></md-button>
+            <div  class="api-doc-docstring" ng-show = "showUsage" layout="column">
+                <p>Renames the columns in the dataset. Takes either a map or a function.</p> 
+            
+            <img src="/images/renamecolumns.png"></img>
+            <a href="http://api.grafter.org/master/grafter.tabular.html#var-rename-columns" target="_blank">view source</a>
+        </div>
+        </div>
+        <h3 style="padding-left: 20px;">Parameters</h3>
+        <div class="whiteframedemoBasicUsage" layout="row"  style="padding-bottom: 32px;">
+        <div>
+        <md-whiteframe  class="md-whiteframe-z1" layout="column" layout-align="left ">
+            <p> Transform current column names </p>
+<div   ng-repeat="renameFunction in function.functionsToRenameWith track by $index ">
+    <div >
+        <md-button class="md-primary button-tight md-default-theme" ng-click="removeRenameFunction($index)" ng-disabled="function.functionsToRenameWith.length === 1" aria-label="Remove function">
+            <i class="fa fa-trash fa-lg"></i>
+        </md-button>
+        <md-input-container> 
+        <md-select ng-model="function.functionsToRenameWith[$index]" placeholder="{{function.functionsToRenameWith[$index] ? function.functionsToRenameWith[$index].name : 'Choose a function...'}}" ng-selected="{{renameFunction}}">
+                    <function-list> </function-list>
+                </md-select>
+            </md-input-container>
+    </div>
+
+
+</div>
+        <md-button class="md-raised" ng-click="addRenameFunction()" aria-label="Compose with function">Compose with </md-button>
+</md-whiteframe>
+</div>
+
+        <div>
+        <md-whiteframe  class="md-whiteframe-z1" layout="column" layout-align="left ">
+            <p> Map values </p>
+<div layout="row"  ng-repeat="i in getMapLength(function.mappings.length) ">
+    <div layout="row"> 
+        <md-button class="md-primary button-tight md-default-theme" ng-disabled="function.mappings.length === 2" ng-click="removeMappingPair(i)" aria-label="Remove column mapping">
+            <i class="fa fa-trash fa-lg"></i>
+        </md-button>
+        <div layout="column">
+            <md-input-container>
+            <label>Column </label>
+                <input ng-model="function.mappings[i]" type="text" required>
+            </md-input-container>
+        </div>
+        <div layout="column">
+            <md-input-container>
+            <label>New column name </label>
+                <input ng-model="function.mappings[i+1]" type="text" required>
+            </md-input-container>
+        </div>
+    </div>
+
+</div>
+<md-button class="md-raised" ng-click="addRenameMapping()" aria-label="Add mapping pair">Add mapping pair</md-button>
+</md-whiteframe>
+</div>
+</div>
+    <md-input-container flex>
+        <label>Comment</label>
+
+        <input ng-model="function.docstring" type="text" >
+    </md-input-container>
+</div>

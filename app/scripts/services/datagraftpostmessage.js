@@ -26,9 +26,9 @@ angular.module('grafterizerApp')
           connected = true;
           apiKeyService.setKeyPass(data.keypass);
           break;
-      };
+      }
     } catch (e) {
-      console.log(e);
+      Raven.captureException(e);
     }
   };
 

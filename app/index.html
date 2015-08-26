@@ -65,7 +65,6 @@
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-touch/angular-touch.js"></script>
     <script src="bower_components/ng-file-upload/ng-file-upload.js"></script>
-    <script src="bower_components/papaparse/papaparse.js"></script>
     <script src="bower_components/angular-ui-grid/ui-grid.js"></script>
     <script src="bower_components/angular-aria/angular-aria.js"></script>
     <script src="bower_components/angular-material/angular-material.js"></script>
@@ -75,7 +74,6 @@
     <script src="bower_components/angular-breadcrumb/release/angular-breadcrumb.js"></script>
     <script src="bower_components/moment/moment.js"></script>
     <script src="bower_components/angular-moment/angular-moment.js"></script>
-    <script src="bower_components/angular-http-auth/src/http-auth-interceptor.js"></script>
     <script src="bower_components/ng-sortable/dist/ng-sortable.js"></script>
     <script src="bower_components/codemirror/lib/codemirror.js"></script>
     <script src="bower_components/angular-ui-codemirror/ui-codemirror.js"></script>
@@ -83,6 +81,7 @@
     <script src="bower_components/angular-messages/angular-messages.js"></script>
     <script src="bower_components/angular-recursion/angular-recursion.js"></script>
     <script src="bower_components/v-accordion/dist/v-accordion.js"></script>
+    <script src="bower_components/raven-js/dist/raven.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:js(.) scripts/clojure.js -->
@@ -102,18 +101,16 @@
     <script src="scripts/directives/pipeline.js"></script>
     <script src="scripts/directives/pipelinefunction.js"></script>
     <script src="scripts/directives/functionsdialogcontent.js"></script>
-    <script src="scripts/directives/takerowsfunction.js"></script>
-    <script src="scripts/directives/droprowsfunction.js"></script>
-    <script src="scripts/directives/utilityfunction.js"></script>
-    <script src="scripts/directives/derivecolumnfunction.js"></script>
-    <script src="scripts/directives/grepfunction.js"></script>
-    <script src="scripts/directives/renamecolumnsfunction.js"></script>
-    <script src="scripts/directives/removecolumnsfunction.js"></script>
+    <script src="scripts/pipelineDirectives/droprowsfunction.js"></script>
+    <script src="scripts/pipelineDirectives/utilityfunction.js"></script>
+    <script src="scripts/pipelineDirectives/derivecolumnfunction.js"></script>
+    <script src="scripts/pipelineDirectives/grepfunction.js"></script>
+    <script src="scripts/pipelineDirectives/renamecolumnsfunction.js"></script>
     <script src="scripts/services/transformationdatamodel.js"></script>
     <script src="scripts/directives/customfunction.js"></script>
-    <script src="scripts/directives/customcode.js"></script>
     <script src="scripts/controllers/editprefixers.js"></script>
     <script src="scripts/controllers/customfunctionsdialogcontroller.js"></script>
+    <script src="scripts/controllers/customstringfunctionsdialogcontroller.js"></script>
     <script src="scripts/controllers/distribution.js"></script>
     <script src="scripts/directives/clojurepipeline.js"></script>
     <script src="scripts/services/generateclojure.js"></script>
@@ -129,21 +126,20 @@
     <script src="scripts/directives/columnurinode.js"></script>
     <script src="scripts/directives/columnliteralnode.js"></script>
     <script src="scripts/directives/constantliteralnode.js"></script>
-    <script src="scripts/directives/blanknode.js"></script>
+    <script src="scripts/directives/newblanknode.js"></script>
     <script src="scripts/directives/addorremovenode.js"></script>
     <script src="scripts/directives/addorremoveproperty.js"></script>
     <script src="scripts/controllers/pipelinefunctiondialog.js"></script>
-    <script src="scripts/directives/makedataset.js"></script>
-    <script src="scripts/directives/addcolumnfunction.js"></script>
-    <script src="scripts/directives/melt.js"></script>
-    <script src="scripts/directives/columns.js"></script>
-    <script src="scripts/directives/mapc.js"></script>
-    <script src="scripts/directives/splitfunction.js"></script>
-    <script src="scripts/directives/applycolumnsfunction.js"></script>
+    <script src="scripts/pipelineDirectives/makedataset.js"></script>
+    <script src="scripts/pipelineDirectives/addcolumnsfunction.js"></script>
+    <script src="scripts/pipelineDirectives/melt.js"></script>
+    <script src="scripts/pipelineDirectives/columns.js"></script>
+    <script src="scripts/pipelineDirectives/mapc.js"></script>
+    <script src="scripts/pipelineDirectives/functionlist.js"></script>
+    <script src="scripts/pipelineDirectives/splitfunction.js"></script>
     <script src="scripts/controllers/computetriples.js"></script>
     <script src="scripts/filters/startfrom.js"></script>
     <script src="scripts/directives/filedropzone.js"></script>
-    <script src="scripts/controllers/demo.js"></script>
     <script src="scripts/controllers/filetest.js"></script>
     <script src="scripts/services/leobject.js"></script>
     <script src="scripts/services/datagraftpostmessage.js"></script>
@@ -153,6 +149,9 @@
     <script src="scripts/controllers/help.js"></script>
     <script src="scripts/controllers/MappingPrefixManage.js"></script>
     <script src="scripts/controllers/validateMapping.js"></script>
+    <script src="scripts/controllers/loaddistribution.js"></script>
+    <script src="scripts/directives/resizehand.js"></script>
+
     <!-- endbuild -->
 </body>
 </html>

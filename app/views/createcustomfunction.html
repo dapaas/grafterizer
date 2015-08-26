@@ -7,7 +7,7 @@
     <md-dialog-content layout="row" class="sin-dark-background-fix">
         <div class="content-stuff utility-functions" layout="column" flex="33">
             <md-content class="sin-functions-list" layout="column" flex md-scroll-y>
-                <md-button ng-click="$parent.selectedCustomFunction = function" ng-repeat="function in functionsList" ng-disabled="function == $parent.selectedCustomFunction">{{function.name}}
+                <md-button ng-click="$parent.selectedCustomFunction = function" ng-repeat="function in functionsList | filter: {group: 'UTILITY'}"  ng-disabled="function == $parent.selectedCustomFunction">{{function.name}}
                     <md-button ng-if="function == $parent.selectedCustomFunction" class="button-tight" aria-label="Delete this function" ng-click="removeCustomFunct(selectedCustomFunction)">
                         <i class="fa fa-minus-circle"></i>
                         <md-tooltip>Delete this function</md-tooltip>
@@ -19,14 +19,17 @@
                 </md-button>
                 <span flex></span>
             </md-content>
-            <md-toolbar class="md-actions">
+            <md-toolbar class="md-actions" layout = "row" layout-align="left">
                 <md-button aria-label="Create new function" ng-click="createNewFunct()">
                     <i class="fa fa-plus"></i>
+                </md-button>
+                <md-button aria-label="Create new text transformation" ng-click="createNewText()">
+                    <i class="fa fa-font"></i>
                 </md-button>
             </md-toolbar>
         </div>
         <div flex layout="column">
-                <div class="code-mirror-container" flex style="font-size:1.3em;">
+                <div class="code-mirror-container" flex style="font-size:1.1em;">
                     <ui-codemirror ng-model="selectedCustomFunction.clojureCode" ui-codemirror-opts="codemirrorOpts"></ui-codemirror>
                 </div>
             <md-toolbar class="md-actions" layout="row" layout-align="right">

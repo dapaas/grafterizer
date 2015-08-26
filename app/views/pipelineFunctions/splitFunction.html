@@ -1,0 +1,29 @@
+<div layout="column">
+    <div>
+        <md-button aria-label="Show/hide documentation" ng-click="switchShowUsage()"><i class="fa fa-angle-down"  >Show/hide documentation</i></md-button>
+            <div class="api-doc-docstring" ng-show = "showUsage" layout="row">
+            <p> Splits given column on separatoronce. The first part of column obtained as a result of splitting remains in source column while the rest is copied to new column </p>
+            <img src="/images/split.png"></img>
+        </div>
+        </div>
+        <div>
+        <h3>Parameters</h3>
+  <md-input-container flex>
+        <label>Column name</label>
+        <input ng-model="function.colName" type="text" required>
+    </md-input-container>
+  <md-input-container flex>
+        <label>New column</label>
+        <input ng-model="function.newColName" type="text" >
+    </md-input-container>
+  <md-input-container flex>
+        <label>Separator</label>
+        <input ng-model="function.separator" type="text" required>
+    </md-input-container>
+    <md-input-container flex>
+        <label>Comment</label>
+
+        <input ng-model="function.docstring" type="text" >
+    </md-input-container>
+</div>
+</div>

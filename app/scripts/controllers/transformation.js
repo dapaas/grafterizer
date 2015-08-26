@@ -70,14 +70,14 @@ angular.module('grafterizerApp')
     }).error(loadEmptyTransformation);
 
     $scope.$watch('fileUpload', function() {
-      if ($scope.fileUpload && $scope.fileUpload[0]) {
-        var file = $scope.fileUpload[0];
+      if ($scope.fileUpload) {
+        var file = $scope.fileUpload;
 
         var callback = function(idDataset) {
           var metadata = {
             '@context': ontotextAPI.getContextDeclaration(),
             '@type': 'dcat:Distribution',
-            'dct:title': moment(file.lastModified).format('MMMM') +  ' - ' + file.name,
+            'dct:title': file.name,
             'dct:description': 'File uploaded from Grafterizer in preview mode',
             'dcat:fileName': file.name,
             'dcat:mediaType': file.type
@@ -236,15 +236,6 @@ angular.module('grafterizerApp')
       });
     };
 
-    $scope.editRDFPrefixes = function(){
-      $mdDialog.show({
-        templateUrl: 'views/MappingPrefixManage.html',
-        controller: 'MappingPrefixManageCtrl',
-        scope: $scope.$new(false, $scope)
-      })
-    }
-
-
     $scope.defineCustomFunctions = function() {
       $scope.originalCustomFunctionDeclarations = [];
       angular.copy($scope.transformation.customFunctionDeclarations, $scope
@@ -260,5 +251,18 @@ angular.module('grafterizerApp')
           angular.copy($scope.originalCustomFunctionDeclarations, $scope.transformation
             .customFunctionDeclarations);
         });
+    };
+
+    $scope.loadDistribution = function() {
+      $mdDialog.show({
+        templateUrl: 'views/loaddistribution.html',
+        controller: 'LoadDistributionCtrl',
+        scope: $scope.$new(false)
+      }).then(function(distribution) {
+        $state.go('transformations.transformation.preview', {
+          id: $stateParams.id,
+          distribution: distribution
+        });
+      });
     };
   });

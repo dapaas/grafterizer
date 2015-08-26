@@ -42,6 +42,7 @@ angular.module('grafterizerApp')
       } catch (e) {
         $log.debug(data);
         $log.error(e);
+        Raven.captureException(e);
         return {
           raw: data,
           jsedn: null
@@ -65,6 +66,17 @@ angular.module('grafterizerApp')
         .position('bottom left')
         .hideDelay(3000)
       );
+
+      Raven.captureMessage(message, {
+        extra: {
+          status: status,
+          data: (data ? data.error : null)
+        },
+        tags: {
+          file: 'pipe',
+          method: 'errorHandler'
+        }
+      });
     };
 
     api.computeTuplesHref = function(distributionUri, transformationUri, type) {
@@ -76,7 +88,7 @@ angular.module('grafterizerApp')
         '&type=' + (type ? window.encodeURIComponent(type) : 'pipe');
     };
 
-    api.preview = function(distributionUri, clojure) {
+    api.preview = function(distributionUri, clojure, page, pageSize) {
       return $http({
         url: endpoint + '/preview',
         method: 'POST',
@@ -86,24 +98,57 @@ angular.module('grafterizerApp')
         },
         data: {
           distributionUri: distributionUri,
-          clojure: clojure
+          clojure: clojure,
+          page: page || 0,
+          pageSize: pageSize || 100
         },
         transformResponse: [transformEdnResponse]
       });
     };
 
-    api.original = function(distributionUri) {
+    api.original = function(distributionUri, page, pageSize) {
       return $http({
         url: endpoint + '/original',
         method: 'GET',
         params: {
-          distributionUri: distributionUri
+          distributionUri: distributionUri,
+          page: page || 0,
+          pageSize: pageSize || 100
         },
         headers: {
           Authorization: apiAuthorization
         },
         transformResponse: [transformEdnResponse]
       }).error(errorHandler);
+    };
+
+    api.download = function(distributionUri, transformationUri, type) {
+      return $http({
+        url: endpoint + '/download',
+        method: 'GET',
+        params: {
+          authorization: apiAuthorization,
+          distributionUri: distributionUri,
+          transformationUri: transformationUri,
+          type: type || 'pipe',
+          raw: true
+        },
+        transformResponse: [transformEdnResponse]
+      });
+    };
+
+    api.save = function(datasetId, distributionUri, transformationUri, type) {
+      return $http({
+        url: endpoint + '/save',
+        method: 'GET',
+        params: {
+          datasetId: datasetId,
+          authorization: apiAuthorization,
+          distributionUri: distributionUri,
+          transformationUri: transformationUri,
+          type: type || 'pipe'
+        }
+      });
     };
 
     return api;

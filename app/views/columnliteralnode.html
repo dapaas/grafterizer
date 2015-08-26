@@ -1,8 +1,25 @@
 <div layout="row">
-    <div flex>
-        <md-button flex class="graph-button md-raised" aria-label="{{node.literalValue}}" ng-click="editNode()">
-            {{node.literalValue}}
+  <div flex>
+    <md-fab-speed-dial md-direction="down" ng-class="md-scale">
+      <md-fab-trigger>
+        <md-button flex class="md-raised rdf-mapping-node-button" aria-label="{{node.literalValue}}" ng-click="editNode()">
+          <div layout="row">
+            <div class="fa-stack">
+              <i class="fa fa-circle fa-stack-2x rdf-mapping-icon-background-inset"></i>
+              <i class="fa fa-font fa-stack-1x fa-inverse"></i>
+            </div>
+            <div class="rdf-mapping-node-text rdf-mapping-column-name-text">
+              {{node.literalValue}}
+            </div>
+          </div>
+          <md-tooltip>
+            {{'(Column literal) ' + node.literalValue}}
+          </md-tooltip>
         </md-button>
+      </md-fab-trigger>
+      <md-fab-actions>
         <add-or-remove-node node="node" parent="parent" ng-if="parent.__type=='Graph'"></add-or-remove-node>
-    </div>
+      </md-fab-actions>
+    </md-fab-speed-dial>
+  </div>
 </div>

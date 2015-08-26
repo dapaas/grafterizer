@@ -1,12 +1,13 @@
 <div layout="row" class="actions-view">
-	<md-switch aria-label="Preview mode" ng-model="$parent.previewTransformation" ng-if="transformationState">
-		<!-- <i class="fa fa-eye"></i> -->
-		<!-- <md-tooltip>Preview mode</md-tooltip> -->
-	</md-switch>
-	<md-button class="md-icon-button" aria-label="Download N-Tuples" ng-click="download()" ng-if="download">
+	<md-button class="md-icon-button" aria-label="Transform the data" ng-click="download()" ng-if="download">
 		<i class="fa fa-cogs"></i>
-		<md-tooltip>Transform</md-tooltip>
+		<md-tooltip>Transform data</md-tooltip>
 	</md-button>
+
+	<md-button class="md-icon-button" aria-label="Load a file to process the data N-Tuples" ng-if="disabledDownload" ng-disabled="true">
+		<i class="fa fa-cogs"></i>
+	</md-button>
+
 	<md-button class="md-icon-button" aria-label="Send" ng-click="send()" ng-if="send">
 		<i class="fa fa-send"></i>
 		<md-tooltip>Send</md-tooltip>
@@ -23,7 +24,7 @@
 		<i class="fa fa-trash"></i>
 		<md-tooltip>Delete</md-tooltip>
 	</md-button>
-	<md-button class="md-icon-button" aria-label="Help" href="http://dapaas.github.io/documentation/" target="_blank">
+	<md-button class="md-icon-button" aria-label="Help" href="http://dapaas.github.io/documentation/" target="_blank" ng-if="!isIframe">
 		<i class="fa fa-question-circle"></i>
 		<md-tooltip>Help</md-tooltip>
 	</md-button>

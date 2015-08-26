@@ -52,6 +52,17 @@ angular.module('grafterizerApp')
           .position('bottom left')
           .hideDelay(3000)
       );
+
+      Raven.captureMessage(message, {
+        extra: {
+          status: status,
+          data: (data ? data.error : null)
+        },
+        tags: {
+          file: 'ontotextapi',
+          method: 'errorHandler'
+        }
+      });
     };
 
     var transformRequest = function(data, headersGetter) {
@@ -71,7 +82,7 @@ angular.module('grafterizerApp')
     };
 
     api.dataset = function(id) {
-      return $http.get(endpoint + '/catalog/datasets', angular.merge({
+      return $http.get(endpoint + '/catalog/datasets', _.merge({
         headers: {
           'dataset-id': id,
           Authorization: apiAuthorization
@@ -80,7 +91,7 @@ angular.module('grafterizerApp')
     };
 
     api.searchDataset = function(search) {
-      return $http.get(endpoint + '/catalog/datasets/search', angular.merge({
+      return $http.get(endpoint + '/catalog/datasets/search', _.merge({
         params: {
           q: search
         }
@@ -108,7 +119,7 @@ angular.module('grafterizerApp')
     };
 
     api.transformation = function(id) {
-      return $http.get(endpoint + '/catalog/transformations', angular.merge({
+      return $http.get(endpoint + '/catalog/transformations', _.merge({
         headers: {
           'transformation-id': id,
           Authorization: apiAuthorization
@@ -171,7 +182,7 @@ angular.module('grafterizerApp')
     };
 
     api.deleteTransformation = function(id) {
-      return $http.delete(endpoint + '/catalog/transformations', angular.merge({
+      return $http.delete(endpoint + '/catalog/transformations', _.merge({
         headers: {
           'transformation-id': id,
           Authorization: apiAuthorization
@@ -210,7 +221,7 @@ angular.module('grafterizerApp')
     };
 
     api.distribution = function(id) {
-      return $http.get(endpoint + '/catalog/distributions', angular.merge({
+      return $http.get(endpoint + '/catalog/distributions', _.merge({
         headers: {
           'distrib-id': id,
           Authorization: apiAuthorization

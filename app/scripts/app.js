@@ -27,17 +27,16 @@ angular
     'angular-loading-bar',
     'ncy-angular-breadcrumb',
     'angularMoment',
-    'ui.sortable',
+    'as.sortable',
     'ui.codemirror',
     'ui.grid.selection',
     'ui.grid.edit',
     'ui.grid.resizeColumns',
     'ui.grid.exporter',
+    'ui.grid.infiniteScroll',
     'ngMessages',
     'RecursionHelper',
     'vAccordion'
-
-    //'http-auth-interceptor'
 ])
   .config(function(
     ontotextAPIProvider,
@@ -48,22 +47,48 @@ angular
     $urlMatcherFactoryProvider,
     cfpLoadingBarProvider,
     $breadcrumbProvider,
-    $locationProvider) {
+    $locationProvider,
+    $provide) {
 
-    ontotextAPIProvider.setEndpoint('http://ec2-54-76-140-62.eu-west-1.compute.amazonaws.com:8080');
+    var developmentMode = window.location.origin === 'http://localhost:9000';
+
+    if (typeof Raven !== 'undefined') {
+
+      var sentryPath = developmentMode ?
+        'http://76c7f69b67a649619dbf7a9f679efb96@sentry.datagraft.net/6'
+        : 'https://cdec3ae0110344cabdd5a242d2247d07@grafterizer.datagraft.net/5';
+
+      Raven.config(sentryPath, {}).install();
+
+      $provide.decorator('$exceptionHandler', ['$delegate', function($delegate) {
+        return function(exception, cause) {
+          $delegate(exception, cause);
+          if (typeof Raven !== 'undefined') {
+            Raven.captureException(exception, { cause: cause });
+          }
+        };
+      }]);
+
+    } else {
+      window.Raven = {
+        captureEvents: console.log,
+        captureMessage: console.log
+      };
+    }
+
+    ontotextAPIProvider.setEndpoint('https://api.datagraft.net');
 
     PipeServiceProvider.setEndpoint(
-      window.location.origin === 'http://localhost:9000' ?
+      developmentMode ?
       'https://grafterizer.datagraft.net/backend'
       : '/backend');
 
-    var urlBase = $urlRouterProvider.otherwise('/transformations/new');
+    $urlRouterProvider.otherwise('/transformations/new');
 
     sessionStorage.localClassAndProperty = JSON.stringify([]);
     sessionStorage.localVocabulary = JSON.stringify([]);
 
-    if (!window.navigator.device &&
-      window.location.origin !== 'http://localhost:9000') {
+    if (!window.navigator.device && !developmentMode) {
       $locationProvider.html5Mode(true);
     }
 
@@ -75,6 +100,20 @@ angular
     $urlMatcherFactoryProvider.type('nonURIEncoded', {
       encode: valToString,
       decode: valToString,
+      is: function() {
+        return true;
+      }
+    });
+
+    $urlMatcherFactoryProvider.type('previewURI', {
+      encode: function(val) {
+        return window.btoa(val);
+      },
+
+      decode: function(val) {
+        return window.atob(val);
+      },
+
       is: function() {
         return true;
       }
@@ -137,10 +176,7 @@ angular
         }
       })
       .state('transformations.transformation.preview', {
-        url: '^/transform/{id:nonURIEncoded}',
-        params: {
-          distribution: null
-        },
+        url: '^/transform/{id:nonURIEncoded}?{distribution:previewURI}',
         views: {
           preview: {
             templateUrl: 'views/preview.html',
@@ -148,7 +184,7 @@ angular
           }
         },
         ncyBreadcrumb: {
-          label: '{{(selectedDistribution || "Preview")|beautifyUri}}'
+          label: '{{(selectedDistribution || "No dataset loaded")|beautifyUri}}'
         }
       })
       .state('datasets', {
@@ -299,8 +335,12 @@ angular
 
     // JSEDN is too restrictive by default on valid symbols
     jsedn.Symbol.prototype.validRegex = new RegExp(/.*/);
-  }).run(function(datagraftPostMessage, apiKeyService, $state) {
+  }).run(function(datagraftPostMessage, apiKeyService, $state, $rootScope) {
     datagraftPostMessage.setup();
+
+    // Mobile detection (as Leaflet 1.0 does)
+    var ua = navigator.userAgent.toLowerCase();
+    $rootScope.isMobile = typeof orientation !== 'undefined' || ua.indexOf('mobile') !== -1;
 
     if (!apiKeyService.hasKeyPass()) {
       window.setTimeout(function() {
