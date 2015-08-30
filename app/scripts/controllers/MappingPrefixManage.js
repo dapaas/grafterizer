@@ -14,10 +14,14 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
   $http,
   $mdDialog,
   $log,
+  $mdSidenav,
+  $mdUtil,
   leObject) {
 
   var connection = leObject.serveraddress;
   var object = leObject.object;
+
+  $scope.hint = "Add, edit, delete prefixed for mapping";
 
   $scope.propertyValue = {
     value: ''
@@ -36,6 +40,8 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
     lowercase:''
   };
 
+  var oriWidth;
+
   $scope.showManageDialog = false;
   $scope.showAddDialog = false;
   $scope.showProgress = false;
@@ -44,7 +50,6 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
   $scope.showProgressCircular = false;
 
   //add vocabulary dialog
-  $scope.showVocabularyPagination = false;
   $scope.namespaceInputDisable = false;
   $scope.dragProcess = false;
 
@@ -54,15 +59,13 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
     $mdDialog.cancel();
   };
 
-  $scope.vocabcurrentPage = 0;
-  $scope.vocabpageSize = 5;
-  $scope.vocabnumberOfPages = function() {
-    return Math.ceil($scope.VocabItems.length / $scope.vocabpageSize);
-  };
-
   //show current saved vocabulary and operations
   function switchToManageDialog() {
     $scope.selection = 'manageDialog';
+
+    if(document.getElementById('abc') != null){
+      document.getElementById('abc').style.width = oriWidth;
+    }
 
     //show local vocabulary
     var localVocabulary = $rootScope.transformation.rdfVocabs;
@@ -120,9 +123,18 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
   switchToManageDialog();
 
   $scope.switchToAddDialog = function(name, namespace, fromServer) {
+    $http.get("http://api.datagraft.net:8080/dapaas-services/userid").success(
+      function(response) {
+
+
+      }).error(function(data, status, headers, config) {
+        });
+
     if (fromServer === true) {
       return;
     }
+    oriWidth = document.getElementById('abc').style.width;
+    document.getElementById('abc').style.width = '350px';
 
     $scope.selection = 'addVocabDialog';
 
@@ -150,17 +162,48 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
     }
   };
 
+  $scope.vocabClassArray = [];
+  $scope.vocabPropertyArray = [];
+
+  $scope.viewItem = function(name, namespace) {
+
+      $mdSidenav("vocabdetail")
+        .toggle()
+        .then(function () {
+      });
+
+      //show classes and properties in a vocabulary
+      $http.post(
+        connection + 'getClassAndProperty',
+        {
+          name: name,
+          namespace: namespace
+        }).success(function(response) {
+          $scope.vocabClassArray = [];
+          $scope.vocabPropertyArray = [];
+          var i;
+          for (i = response.classResult.length - 1; i >= 0; i--) {
+            $scope.vocabClassArray.push(response.classResult[i].value);
+          }
+
+          for (i = response.propertyResult.length - 1; i >= 0; i--) {
+            $scope.vocabPropertyArray.push(response.propertyResult[i].value);
+          }
+        }).error(function(data, status, headers, config) {
+
+        });
+  }
+
   //delete local vocabulary
   $scope.deleteItem = function(vocabNamespace) {
-    $scope.showConfirm = function(ev) {
       // Appending dialog to document.body to cover sidenav in docs app
       var confirm = $mdDialog.confirm()
         .title('Delete')
         .content('Do you want to delete prefix?')
         .ariaLabel('Lucky day')
         .ok('OK')
-        .cancel('Cancel')
-        .targetEvent(ev);
+        .cancel('Cancel');
+
       $mdDialog.show(confirm).then(function() {
         //delete from local storage
         var localVocabulary = $scope.$parent.transformation.rdfVocabs;
@@ -177,24 +220,6 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
         }
       }, function() {
       });
-    };
-
-
-    var i;
-
-    //delete from local storage
-    var localVocabulary = $rootScope.transformation.rdfVocabs;
-    for (i = localVocabulary.length - 1; i >= 0; i--) {
-      if (localVocabulary[i].namespace === vocabNamespace) {
-        localVocabulary.splice(i, 1);
-      }
-    }
-
-    for (i = $scope.VocabItems.length - 1; i >= 0; i--) {
-      if ($scope.VocabItems[i].namespace === vocabNamespace) {
-        $scope.VocabItems.splice(i, 1);
-      }
-    }
   };
 
   //editing vocabulary
@@ -278,9 +303,6 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
         var classArray = [];
         var propertyArray = [];
 
-        //var classArrayforClojureCode = [];
-        //var propertyArrayforClojureCode = [];
-
         var i;
 
         for (i = response.classResult.length - 1; i >= 0; i--) {
@@ -329,14 +351,6 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
         }});
         $scope.showProgress = false;
       });
-  };
-
-  $scope.addResult = function(value) {
-    $scope.propertyValue.value = value;
-  };
-
-  $scope.noOperation = function() {
-
   };
 
   // let us choose how to add vocabulary path
