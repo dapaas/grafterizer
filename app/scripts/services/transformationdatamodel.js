@@ -721,6 +721,27 @@ angular.module('grafterizerApp')
       return inputElement;
     }
   };
+  
+  var SortDatasetFunction = function(colName, docstring) {
+    // array of column names
+    this.name = 'sort-dataset';
+    this.displayName = 'sort-dataset';
+    GenericFunction.call(this);
+    this.colName = colName;
+    this.__type = 'SortDatasetFunction';
+    if (!docstring) {
+      this.docstring = 'Sort dataset by column';
+      if (colName) this.docstring += colName;
+    } else this.docstring = docstring;
+  };
+  SortDatasetFunction.revive = function(data) {
+    return new SortDatasetFunction(data.colName, data.docstring);
+  };
+  SortDatasetFunction.prototype.generateClojure = function() {
+
+        return new jsedn.List([jsedn.sym('sort-dataset'), jsedn.sym(":"+this.colName)]);
+  };
+  this.SortDatasetFunction = SortDatasetFunction;
 
   var MakeDatasetFunction = function(columnsArray, useLazy, numberOfColumns, moveFirstRowToHeader, docstring) {
     // array of column names
