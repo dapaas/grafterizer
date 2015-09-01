@@ -18,7 +18,7 @@ angular.module('grafterizerApp')
           scope.function.docstring = null;
         }
 
-        scope.$parent.generateCurfunction = function() {
+        scope.$parent.generateCurrFunction = function() {
           var functArray = [];
           var newrenfunc;
 

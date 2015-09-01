@@ -33,7 +33,7 @@ angular.module('grafterizerApp')
                 scope: newScope
               }).then(
               function(graphNode) {
-                angular.copy(graphNode, scope.node);
+                scope.node = transformationDataModel.getGraphElement(graphNode);
               },
 
               function() {
