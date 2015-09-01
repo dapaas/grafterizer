@@ -197,14 +197,16 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
   //delete local vocabulary
   $scope.deleteItem = function(vocabNamespace) {
       // Appending dialog to document.body to cover sidenav in docs app
-      var confirm = $mdDialog.confirm()
+      /*var confirm = $mdDialog.confirm()
         .title('Delete')
         .content('Do you want to delete prefix?')
         .ariaLabel('Lucky day')
         .ok('OK')
         .cancel('Cancel');
-
+      */
+    /*
       $mdDialog.show(confirm).then(function() {
+      */
         //delete from local storage
         var localVocabulary = $scope.$parent.transformation.rdfVocabs;
         for (var i = localVocabulary.length - 1; i >= 0; i--) {
@@ -218,8 +220,10 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
             $scope.VocabItems.splice(i, 1);
           }
         }
+    /*
       }, function() {
       });
+      */
   };
 
   //editing vocabulary

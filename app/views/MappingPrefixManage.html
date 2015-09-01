@@ -89,11 +89,6 @@
             <label>Prefix</label>
             <input type="text" class="form-control" ng-model="vocabName" name="prefix" required
                    pattern="^[^:]+$"/>
-            <i class="fa fa-question-circle">
-              <md-tooltip>
-                upload vocabulary specification from remote uri or local file
-              </md-tooltip>
-            </i>
             <div ng-messages="graphsForm.prefix.$error" >
               <div ng-message="required">prefix is required.</div>
               <div ng-message="pattern">Not a valid prefix.</div>
