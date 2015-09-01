@@ -98,7 +98,7 @@ angular.module('grafterizerApp')
       }, jsonLdConfig)).error(errorHandler);
     };
 
-    api.newDataset = function(meta) {
+    var saveDataset = function(meta, method) {
       var data = JSON.stringify(meta);
 
       var headers = {
@@ -108,10 +108,22 @@ angular.module('grafterizerApp')
 
       return $http({
         url: endpoint + '/catalog/datasets',
-        method: 'POST',
+        method: method,
         data: data,
         headers: headers
       }).error(errorHandler);
+    };
+
+    api.newDataset = function(meta) {
+      return saveDataset(meta, 'POST');
+    };
+
+    api.updateDataset = function(meta) {
+      if (!meta['@id']) {
+        throw new Exception('A dataset id is required');
+      }
+
+      return saveDataset(meta, 'PUT');
     };
 
     api.transformations = function() {
@@ -245,9 +257,37 @@ angular.module('grafterizerApp')
       }).error(errorHandler);
     };
 
-    api.distributionFile = function(distributionID) {
+    api.updateDistribution = function(metadata) {
+      console.log(JSON.stringify(metadata));
+      var meta = new Blob([JSON.stringify(metadata)],
+                          {type: 'application/ld+json'});
+
+      return Upload.upload({
+        url: endpoint + '/catalog/distributions',
+        method: 'PUT',
+        file: [meta],
+        fileFormDataName: ['meta'],
+        headers: {
+          Authorization: apiAuthorization
+        }
+      }).error(errorHandler);
+    };
+
+    /*api.distributionFile = function(distributionID) {
       return $http.get(endpoint + '/catalog/distributions/file', {
         headers: {
+          'distrib-id': distributionID,
+          Authorization: apiAuthorization
+        }
+      }).error(errorHandler);
+    };*/
+
+    api.createRepository = function(distributionID) {
+      return $http({
+        url: endpoint + '/catalog/distributions/repository',
+        method: 'PUT',
+        headers: {
+          Accept: 'application/ld+json',
           'distrib-id': distributionID,
           Authorization: apiAuthorization
         }

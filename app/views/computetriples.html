@@ -25,6 +25,7 @@
                 </md-button>
             </form>
             <md-progress-circular style="margin: 30px auto 0px auto;" ng-if="processing" md-mode="indeterminate"></md-progress-circular>
+            <p class="processing-status" ng-show="processingStatus">{{processingStatus}}</p>
         </div>
         <div layout="column" class="md-padding">
             <h4 class="md-title">Or download the results</h4>
