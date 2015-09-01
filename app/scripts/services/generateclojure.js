@@ -329,16 +329,22 @@ angular.module('grafterizerApp')
         // Check if value is URI, if not -- define it as a string literal
 
         var isURI = node.literalValue.search(/(http|https):\/\//);
-        if (isURI !== 0)
-          if (Number.isNaN(node.literalValue)) return new jsedn.List([jsedn.sym('s'), node.literalValue]);
-            else if (Number.isInteger) return new jsedn.List([jsedn.sym('Integer/parseInt'),node.literalValue]);
-                else return new jsedn.List([jsedn.sym('Double/parseDouble'),node.literalValue]);
 
+        var values = []; 
+        if (isURI !== 0) {
+          if (Number.isNaN(parseFloat(node.literalValue))) values.push(jsedn.sym('s'));
+            else {
+                if (Number.isInteger(parseFloat(node.literalValue))) 
+                    values.push(jsedn.sym('Integer/parseInt'));
+                else 
+                    values.push(jsedn.sym('Double/parseDouble'));
+            }
+        }
+        values.push(node.literalValue);
+        if (isURI !== 0) 
+            return new jsedn.List(values);
         else
-          return node.literalValue; // return the value as string
-
-        // return the value as string
-        return node.literalValue;
+            return node.literalValue;
 
       }
 
