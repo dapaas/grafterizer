@@ -152,6 +152,21 @@ angular.module('grafterizerApp')
       });
     };
 
+    api.fillRDFrepo = function(distributionUri, repositoryUri) {
+      return $http({
+        url: endpoint + '/fillRDFrepo',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: apiAuthorization
+        },
+        data: {
+          distributionUri: distributionUri,
+          repositoryUri: repositoryUri
+        }
+      });
+    };
+
     return api;
   };
 });
