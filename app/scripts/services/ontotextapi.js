@@ -120,7 +120,7 @@ angular.module('grafterizerApp')
 
     api.updateDataset = function(meta) {
       if (!meta['@id']) {
-        throw new Exception('A dataset id is required');
+        throw 'A dataset id is required';
       }
 
       return saveDataset(meta, 'PUT');
