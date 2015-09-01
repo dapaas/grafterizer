@@ -151,7 +151,7 @@ angular.module('grafterizerApp')
     var j;
     for (j = 0; j < customfunctions.length; ++j)
       if (customfunctions[j].name === 'keyword') break;
-    
+
     $scope.pipeline = new transformationDataModel.Pipeline([/*makeds,renamecols*/]);
     $scope.transformation = new transformationDataModel.Transformation(
       allcustomfunctions, [], [$scope.pipeline], []);
@@ -233,6 +233,23 @@ angular.module('grafterizerApp')
           angular.copy($scope.originalLibraries, $scope.transformation.libraries);
         });
     };
+
+
+    $scope.editRDFPrefixes = function(){
+      $mdDialog.show({
+        templateUrl: 'views/MappingPrefixManage.html',
+        controller: 'MappingPrefixManageCtrl',
+        scope: $scope.$new(false, $scope)
+      })
+    }
+
+    $scope.validateMapping = function(){
+      $mdDialog.show({
+        templateUrl: 'views/validateMapping.html',
+        controller: 'validateMappingCtrl',
+        scope: $scope.$new(false, $scope)
+      })
+    }
 
     $scope.defineCustomFunctions = function() {
       $scope.originalCustomFunctionDeclarations = [];
