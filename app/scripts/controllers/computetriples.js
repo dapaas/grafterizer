@@ -106,18 +106,19 @@ angular.module('grafterizerApp')
                         }
                       };
 
-                      // We try 3 times lol
-                      PipeService.fillRDFrepo(distributionId, accessUrl)
-                        .success(successFilling)
-                        .error(function() {
+                      var nbTryToFillRDFrepo = 0;
+                      var tryToFillRDFrepo = function() {
+                        ++nbTryToFillRDFrepo;
+
+                        window.setTimeout(function() {
                           PipeService.fillRDFrepo(distributionId, accessUrl)
                             .success(successFilling)
-                            .error(function() {
-                              PipeService.fillRDFrepo(distributionId, accessUrl)
-                                .success(successFilling)
-                                .error(showError);
-                            });
-                        });
+                            .error(nbTryToFillRDFrepo < 6 ? tryToFillRDFrepo : showError);
+                        }, 2000);
+                      };
+
+                      tryToFillRDFrepo();
+
                     }).error(showError);
                 }).error(showError);
               }).error(showError);
