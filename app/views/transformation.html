@@ -81,15 +81,9 @@
     <resize-hand for="transformationTabs" ng-if="showPreview"></resize-hand>
 </md-content>
 
-<md-button aria-label="File opening is disabled until you save the transformation"
-    class="md-fab md-fab-bottom-right md-accent sin-fa-button" ng-disabled="true" ng-if="hideUploadButton">
-    <i class="fa fa-folder-open-o"></i>
-    <!-- This is not displayed with the current angular-material version -->
-    <md-tooltip md-direction="left">Save the transformation first</md-tooltip>
-</md-button>
-<md-fab-speed-dial class="md-fling md-fab-bottom-right" md-direction="up" ng-hide="hideUploadButton">
+<md-fab-speed-dial class="md-fling md-fab-bottom-right" md-direction="up">
     <md-fab-trigger>
-        <md-button aria-label="Open file" class="md-fab md-accent sin-fa-button" ngf-select ng-model="fileUpload" ngf-accept="'.csv'" ngf-max-size="10485760" ng-model-rejected="rejectedFileUpload" >
+        <md-button aria-label="Open file" class="md-fab md-accent sin-fa-button" ngf-select ng-model="fileUpload" ngf-accept="'.csv'" ngf-max-size="10485760" ng-model-rejected="rejectedFileUpload" id="prout">
             <i class="fa fa-folder-open-o"></i>
         </md-button>
     </md-fab-trigger>

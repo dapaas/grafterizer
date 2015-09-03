@@ -12,6 +12,7 @@ angular.module('grafterizerApp')
     $scope,
     $stateParams,
     ontotextAPI,
+    uploadFile,
     $rootScope,
     $state,
     $mdToast,
@@ -158,7 +159,7 @@ angular.module('grafterizerApp')
     $rootScope.transformation = $scope.transformation;
 
     $rootScope.actions = {
-      save: function() {
+      save: function(distributionId) {
         var clojure = generateClojure.fromTransformation($scope.transformation);
 
         var transformationType = 'pipe';
@@ -187,22 +188,19 @@ angular.module('grafterizerApp')
               .position('bottom left')
               .hideDelay(6000)
             );
-            $state.go('transformations.transformation', {
-              id: data['@id']
-            });
+            if (distributionId) {
+              $state.go('transformations.transformation.preview', {
+                id: data['@id'],
+                distribution: distributionId
+              });
+            } else {
+              $state.go('transformations.transformation', {
+                id: data['@id']
+              });
+            }
           });
       }
     };
-    $scope.$watch('fileUpload', function() {
-      if ($scope.fileUpload) {
-        $mdToast.show(
-          $mdToast.simple()
-          .content('You need to save the transformation first')
-          .position('bottom left')
-          .hideDelay(6000)
-        );
-      }
-    });
 
     $scope.editPrefixers = function() {
       $scope.originalPrefixers = [];
@@ -276,5 +274,23 @@ angular.module('grafterizerApp')
       });
     };
 
-    $scope.hideUploadButton = true;
+    $scope.$watch('fileUpload', function() {
+      if ($scope.fileUpload) {
+        var file = $scope.fileUpload;
+
+        uploadFile.upload(file, function(data) {
+          $rootScope.actions.save(data['@id']);
+        });
+      }
+    });
+
+    $scope.loadDistribution = function() {
+      $mdDialog.show({
+        templateUrl: 'views/loaddistribution.html',
+        controller: 'LoadDistributionCtrl',
+        scope: $scope.$new(false)
+      }).then(function(distribution) {
+        $rootScope.actions.save(distribution);
+      });
+    };
   });
