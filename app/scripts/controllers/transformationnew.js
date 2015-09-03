@@ -86,12 +86,12 @@ angular.module('grafterizerApp')
           new transformationDataModel.CustomFunctionDeclaration('lower-case',
         '', 'STRING', 'Converts string to all lower-case'),
           new transformationDataModel.CustomFunctionDeclaration('upper-case',
-        '','STRING','Converts string to all upper-case'),
-          new transformationDataModel.CustomFunctionDeclaration('reverse', '','STRING','Returns given string with its characters reversed'),
+        '', 'STRING', 'Converts string to all upper-case'),
+          new transformationDataModel.CustomFunctionDeclaration('reverse', '', 'STRING', 'Returns given string with its characters reversed'),
           new transformationDataModel.CustomFunctionDeclaration('string-as-keyword', '(defn string-as-keyword [s] ( when (seq s) (->   (str s) clojure.string/trim   (clojure.string/replace "(" "-") (clojure.string/replace ")" "") (clojure.string/replace " " "_") (clojure.string/replace "," "-") (clojure.string/replace "." "") (clojure.string/replace "/" "-") (clojure.string/replace "---" "-") (clojure.string/replace "--" "-") (clojure.string/replace ":" "") (clojure.string/replace "\\"" "") )))','STRING','Removes blanks and special symbols from a string thus making it possible to use it as a keyword'),
           new transformationDataModel.CustomFunctionDeclaration('remove-blanks', '(defn remove-blanks [s]  (when (seq s)  (clojure.string/replace s " " "")))','STRING','Removes blanks in a string'),
           new transformationDataModel.CustomFunctionDeclaration('titleize', '(defn titleize [st] (when (seq st) (let [a (clojure.string/split st (read-string "#\\" \\"")) c (map clojure.string/capitalize a)]  (->> c (interpose " ") (apply str) trim))))','STRING','Capitalizes each word in a string'),
-          new transformationDataModel.CustomFunctionDeclaration('trim', '','STRING','Removes whitespace from both ends of string'),
+          new transformationDataModel.CustomFunctionDeclaration('trim', '', 'STRING', 'Removes whitespace from both ends of string'),
           new transformationDataModel.CustomFunctionDeclaration('trim-newline',
         '', 'STRING', 'Removes all trailing newline \n or return \r characters from string'),
           new transformationDataModel.CustomFunctionDeclaration('triml', '', 'STRING',
@@ -234,22 +234,21 @@ angular.module('grafterizerApp')
         });
     };
 
-
-    $scope.editRDFPrefixes = function(){
+    $scope.editRDFPrefixes = function() {
       $mdDialog.show({
         templateUrl: 'views/MappingPrefixManage.html',
         controller: 'MappingPrefixManageCtrl',
         scope: $scope.$new(false, $scope)
-      })
-    }
+      });
+    };
 
-    $scope.validateMapping = function(){
+    $scope.validateMapping = function() {
       $mdDialog.show({
         templateUrl: 'views/validateMapping.html',
         controller: 'validateMappingCtrl',
         scope: $scope.$new(false, $scope)
-      })
-    }
+      });
+    };
 
     $scope.defineCustomFunctions = function() {
       $scope.originalCustomFunctionDeclarations = [];

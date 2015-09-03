@@ -21,7 +21,7 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
   var connection = leObject.serveraddress;
   var object = leObject.object;
 
-  $scope.hint = "Add, edit, delete prefixed for mapping";
+  $scope.hint = 'Add, edit, delete prefixed for mapping';
 
   $scope.propertyValue = {
     value: ''
@@ -37,7 +37,7 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
 
   var lowercaseTemplate = {
     name: '',
-    lowercase:''
+    lowercase: ''
   };
 
   var oriWidth;
@@ -63,7 +63,7 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
   function switchToManageDialog() {
     $scope.selection = 'manageDialog';
 
-    if(document.getElementById('abc') != null){
+    if (document.getElementById('abc') !== null) {
       document.getElementById('abc').style.width = oriWidth;
     }
 
@@ -105,12 +105,14 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
 
         $scope.showProgressCircular = false;
       }).error(function(data, status, headers, config) {
-        Raven.captureMessage('error /api/vocabulary/getAll', {tags: {
+      Raven.captureMessage('error /api/vocabulary/getAll', {
+        tags: {
           file: 'MappingPrefixManage',
           method: 'switchToManageDialog'
-        }});
-        $scope.showProgressCircular = false;
+        }
       });
+      $scope.showProgressCircular = false;
+    });
 
     $scope.showManageDialog = true;
     $scope.showAddDialog = false;
@@ -123,16 +125,15 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
   switchToManageDialog();
 
   $scope.switchToAddDialog = function(name, namespace, fromServer) {
-    $http.get("http://api.datagraft.net:8080/dapaas-services/userid").success(
+    $http.get('http://api.datagraft.net:8080/dapaas-services/userid').success(
       function(response) {
 
-
-      }).error(function(data, status, headers, config) {
-        });
+      }).error(function(data, status, headers, config) {});
 
     if (fromServer === true) {
       return;
     }
+
     oriWidth = document.getElementById('abc').style.width;
     document.getElementById('abc').style.width = '350px';
 
@@ -167,59 +168,60 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
 
   $scope.viewItem = function(name, namespace) {
 
-      $mdSidenav("vocabdetail")
-        .toggle()
-        .then(function () {
-      });
+    $mdSidenav('vocabdetail')
+      .toggle()
+      .then(function() {});
 
-      //show classes and properties in a vocabulary
-      $http.post(
-        connection + 'getClassAndProperty',
-        {
-          name: name,
-          namespace: namespace
-        }).success(function(response) {
-          $scope.vocabClassArray = [];
-          $scope.vocabPropertyArray = [];
-          var i;
-          for (i = response.classResult.length - 1; i >= 0; i--) {
-            $scope.vocabClassArray.push(response.classResult[i].value);
-          }
+    //show classes and properties in a vocabulary
+    $http.post(
+      connection + 'getClassAndProperty', {
+        name: name,
+        namespace: namespace
+      }).success(function(response) {
+      $scope.vocabClassArray = [];
+      $scope.vocabPropertyArray = [];
+      var i;
+      for (i = response.classResult.length - 1; i >= 0; i--) {
+        $scope.vocabClassArray.push(response.classResult[i].value);
+      }
 
-          for (i = response.propertyResult.length - 1; i >= 0; i--) {
-            $scope.vocabPropertyArray.push(response.propertyResult[i].value);
-          }
-        }).error(function(data, status, headers, config) {
+      for (i = response.propertyResult.length - 1; i >= 0; i--) {
+        $scope.vocabPropertyArray.push(response.propertyResult[i].value);
+      }
+    }).error(function(data, status, headers, config) {
 
-        });
-  }
+    });
+  };
 
   //delete local vocabulary
   $scope.deleteItem = function(vocabNamespace) {
-      // Appending dialog to document.body to cover sidenav in docs app
-      /*var confirm = $mdDialog.confirm()
-        .title('Delete')
-        .content('Do you want to delete prefix?')
-        .ariaLabel('Lucky day')
-        .ok('OK')
-        .cancel('Cancel');
-      */
+    // Appending dialog to document.body to cover sidenav in docs app
+    /*var confirm = $mdDialog.confirm()
+      .title('Delete')
+      .content('Do you want to delete prefix?')
+      .ariaLabel('Lucky day')
+      .ok('OK')
+      .cancel('Cancel');
+    */
     /*
       $mdDialog.show(confirm).then(function() {
       */
-        //delete from local storage
-        var localVocabulary = $scope.$parent.transformation.rdfVocabs;
-        for (var i = localVocabulary.length - 1; i >= 0; i--) {
-          if( localVocabulary[i].namespace === vocabNamespace ){
-            localVocabulary.splice(i, 1);
-          }
-        }
 
-        for (var i = $scope.VocabItems.length - 1; i >= 0; i--) {
-          if ($scope.VocabItems[i].namespace === vocabNamespace){
-            $scope.VocabItems.splice(i, 1);
-          }
-        }
+    var i;
+
+    //delete from local storage
+    var localVocabulary = $scope.$parent.transformation.rdfVocabs;
+    for (i = localVocabulary.length - 1; i >= 0; i--) {
+      if (localVocabulary[i].namespace === vocabNamespace) {
+        localVocabulary.splice(i, 1);
+      }
+    }
+
+    for (i = $scope.VocabItems.length - 1; i >= 0; i--) {
+      if ($scope.VocabItems[i].namespace === vocabNamespace) {
+        $scope.VocabItems.splice(i, 1);
+      }
+    }
     /*
       }, function() {
       });
@@ -293,86 +295,86 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
 
     $scope.showProgress = true;
     $http.post(
-      connection + 'getClassAndPropertyFromVocabulary',
-      {
+      connection + 'getClassAndPropertyFromVocabulary', {
         name: vocabName,
         namespace: vocabNamespace,
         path: vocabLoc,
         data: object.data,
         islocal: isLocalfile
       }).success(function(response) {
-        //add vocabulary name, a list of classes, a list of properties in local storage
-        var localVocabulary = $rootScope.transformation.rdfVocabs;
+      //add vocabulary name, a list of classes, a list of properties in local storage
+      var localVocabulary = $rootScope.transformation.rdfVocabs;
 
-        var classArray = [];
-        var propertyArray = [];
+      var classArray = [];
+      var propertyArray = [];
 
-        var i;
+      var i;
 
-        for (i = response.classResult.length - 1; i >= 0; i--) {
-          //lower case is easier for search
-          lowercaseTemplate = {};
-          lowercaseTemplate.name = response.classResult[i].value;
-          lowercaseTemplate.lowername = response.classResult[i].value.toLowerCase();
-          classArray.push(lowercaseTemplate);
-        }
+      for (i = response.classResult.length - 1; i >= 0; i--) {
+        //lower case is easier for search
+        lowercaseTemplate = {};
+        lowercaseTemplate.name = response.classResult[i].value;
+        lowercaseTemplate.lowername = response.classResult[i].value.toLowerCase();
+        classArray.push(lowercaseTemplate);
+      }
 
-        for (i = response.propertyResult.length - 1; i >= 0; i--) {
-          lowercaseTemplate = {};
-          lowercaseTemplate.name = response.propertyResult[i].value;
-          lowercaseTemplate.lowername = response.propertyResult[i].value.toLowerCase();
-          propertyArray.push(lowercaseTemplate);
-        }
+      for (i = response.propertyResult.length - 1; i >= 0; i--) {
+        lowercaseTemplate = {};
+        lowercaseTemplate.name = response.propertyResult[i].value;
+        lowercaseTemplate.lowername = response.propertyResult[i].value.toLowerCase();
+        propertyArray.push(lowercaseTemplate);
+      }
 
-        vocabItemTemplate = {};
+      vocabItemTemplate = {};
 
-        if ($scope.namespaceInputDisable === true) {
-          //editing vocabulary
-          for (i = localVocabulary.length - 1; i >= 0; i--) {
-            if (localVocabulary[i].namespace === vocabNamespace) {
-              localVocabulary[i].name = vocabName;
-              localVocabulary[i].classes = classArray;
-              localVocabulary[i].properties = propertyArray;
-            }
+      if ($scope.namespaceInputDisable === true) {
+        //editing vocabulary
+        for (i = localVocabulary.length - 1; i >= 0; i--) {
+          if (localVocabulary[i].namespace === vocabNamespace) {
+            localVocabulary[i].name = vocabName;
+            localVocabulary[i].classes = classArray;
+            localVocabulary[i].properties = propertyArray;
           }
-        } else {
-          //adding new vocabulary
-          vocabItemTemplate.name = vocabName;
-          vocabItemTemplate.namespace = vocabNamespace;
-          vocabItemTemplate.classes = classArray;
-          vocabItemTemplate.properties = propertyArray;
-          vocabItemTemplate.fromServer = false;
-
-          localVocabulary.push(vocabItemTemplate);
         }
+      } else {
+        //adding new vocabulary
+        vocabItemTemplate.name = vocabName;
+        vocabItemTemplate.namespace = vocabNamespace;
+        vocabItemTemplate.classes = classArray;
+        vocabItemTemplate.properties = propertyArray;
+        vocabItemTemplate.fromServer = false;
 
-        switchToManageDialog();
-        $scope.showProgress = false;
-      }).error(function(data, status, headers, config) {
-        Raven.captureMessage('error api/vocabulary/getClassAndPropertyFromVocabulary', {tags: {
-          file: 'MappingPrefixManage',
+        localVocabulary.push(vocabItemTemplate);
+      }
+
+      switchToManageDialog();
+      $scope.showProgress = false;
+    }).error(function(data, status, headers, config) {
+      Raven.captureMessage('error api/vocabulary/getClassAndPropertyFromVocabulary', {
+        tags: {
+          file:   'MappingPrefixManage',
           method: 'addVocabtoLocal'
-        }});
-        $scope.showProgress = false;
+        }
       });
+      $scope.showProgress = false;
+    });
   };
 
   // let us choose how to add vocabulary path
   //------------------------------------------
   $scope.choices = [
-    "URL",
-    "Upload from disk"
+    'URL',
+    'Upload from disk'
   ];
 
   $scope.localPath = false;
   $scope.remotePath = false;
 
   $scope.onChange = function(choice) {
-    if (choice === "URL"){
+    if (choice === 'URL') {
       $scope.localPath = false;
       $scope.remotePath = true;
-    }
-    else if (choice === "Upload from disk") {
+    } else if (choice === 'Upload from disk') {
       $scope.localPath = true;
       $scope.remotePath = false;
     } else {

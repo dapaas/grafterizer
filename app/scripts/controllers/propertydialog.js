@@ -102,17 +102,19 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function($scop
       connection + 'search/' +
       Para).success(
       function(response) {
-        for (var i = response.propertyResult.length - 1; i >= 0; i--) {
+        var i;
+
+        for (i = response.propertyResult.length - 1; i >= 0; i--) {
           var value = response.propertyResult[i].value;
-          if(value.substring(0, value.indexOf(':')).toLowerCase() == Para.toLowerCase()
-            || value.substring(value.indexOf(':') + 1, value.length).toLowerCase()  == Para.toLowerCase() ){
+          if (value.substring(0, value.indexOf(':')).toLowerCase() === Para.toLowerCase() || value.substring(
+              value.indexOf(':') + 1, value.length).toLowerCase() === Para.toLowerCase()) {
             $scope.items.push(value);
             response.propertyResult.splice(i, 1);
           }
         }
 
-        for (var i = response.propertyResult.length - 1; i >= 0; i--) {
-            $scope.items.push(response.propertyResult[i].value);
+        for (i = response.propertyResult.length - 1; i >= 0; i--) {
+          $scope.items.push(response.propertyResult[i].value);
         }
 
         if ($scope.items.length > $scope.pageSize) {
