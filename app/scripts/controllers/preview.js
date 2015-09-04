@@ -19,6 +19,20 @@ angular.module('grafterizerApp')
     $mdToast,
     $mdDialog) {
 
+    var hideDownloadButton = function(hideDisabledDownload) {
+      $rootScope.$emit('removeAction', 'download');
+      if (hideDisabledDownload) {
+        $rootScope.$emit('removeAction', 'disabledDownload');
+      } else {
+        $rootScope.$emit('addAction', {
+          name: 'disabledDownload',
+          callback: true
+        });
+      }
+    };
+    
+    hideDownloadButton();
+
     var paginationSize = 100;
 
     $scope.livePreview = !(window.sessionStorage && window.sessionStorage.livePreview === 'false');
@@ -27,7 +41,10 @@ angular.module('grafterizerApp')
     // TODO IT DOES WORK
     $scope.$parent.showPreview = true;
     $scope.$on('$destroy', function() {
-      hideDownloadButton(true);
+      if (hideDisabledDownload) {
+        hideDownloadButton(true);
+      }
+
       $scope.$parent.showPreview = false;
     });
 
@@ -206,18 +223,5 @@ angular.module('grafterizerApp')
       $rootScope.$emit('removeAction', 'disabledDownload');
     };
 
-    var hideDownloadButton = function(hideDisabledDownload) {
-      $rootScope.$emit('removeAction', 'download');
-      if (hideDisabledDownload) {
-        $rootScope.$emit('removeAction', 'disabledDownload');
-      } else {
-        $rootScope.$emit('addAction', {
-          name: 'disabledDownload',
-          callback: true
-        });
-      }
-    };
-
-    hideDownloadButton();
 
   });
