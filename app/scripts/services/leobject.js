@@ -14,6 +14,6 @@ angular.module('grafterizerApp')
       'https://grafterizer.datagraft.net/ManageVocabulary/api/vocabulary/'
       : '/ManageVocabulary/api/vocabulary/';
       
-    this.storage = window.localStorage;
+    this.validationOn = false;
 
   });
