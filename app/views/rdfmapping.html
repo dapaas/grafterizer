@@ -7,9 +7,6 @@
     <md-button aria-label="Edit RDF mapping prefixes" ng-click="editRDFPrefixes()" ng-show="mappingEnabled">
         <i class="fa fa-cubes"></i> Edit RDF mapping prefixes
     </md-button>
-    <md-button aria-label="Validate mapping" ng-click="validateMapping()" ng-show="mappingEnabled">
-      <i class="fa fa-bug"></i> Validate mapping
-    </md-button>
     <md-switch ng-model="switchValidate.cb1" aria-label="Validate" ng-show="mappingEnabled" ng-change="onChange(switchValidate.cb1)">
       Validation: {{ message }}
     </md-switch>

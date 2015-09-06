@@ -112,7 +112,7 @@ angular.module('grafterizerApp')
                           if(response.errorArray.length > 0){
                             $mdToast.show(
                               $mdToast.simple()
-                                .content(response.errorArray[0])
+                                .content(response.errorArray[0].value)
                                 .position('bottom left')
                                 .hideDelay(3000)
                             );
