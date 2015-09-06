@@ -41,7 +41,7 @@ angular.module('grafterizerApp')
     // TODO IT DOES WORK
     $scope.$parent.showPreview = true;
     $scope.$on('$destroy', function() {
-      if (hideDisabledDownload) {
+      if (hideDownloadButton) {
         hideDownloadButton(true);
       }
 
@@ -222,6 +222,5 @@ angular.module('grafterizerApp')
       });
       $rootScope.$emit('removeAction', 'disabledDownload');
     };
-
 
   });
