@@ -107,14 +107,18 @@ angular.module('grafterizerApp')
                       };
 
                       var nbTryToFillRDFrepo = 0;
+                      var waitingDelay = 1000;
+                      var maxTentatives = 20;
+
                       var tryToFillRDFrepo = function() {
                         ++nbTryToFillRDFrepo;
+                        waitingDelay = Math.min(waitingDelay + waitingDelay, 32000);
 
                         window.setTimeout(function() {
                           PipeService.fillRDFrepo(distributionId, accessUrl)
                             .success(successFilling)
-                            .error(nbTryToFillRDFrepo < 6 ? tryToFillRDFrepo : showError);
-                        }, 2000);
+                            .error(nbTryToFillRDFrepo < maxTentatives ? tryToFillRDFrepo : showError);
+                        }, waitingDelay);
                       };
 
                       tryToFillRDFrepo();
