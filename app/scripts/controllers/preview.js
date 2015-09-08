@@ -223,5 +223,4 @@ angular.module('grafterizerApp')
       $rootScope.$emit('removeAction', 'disabledDownload');
     };
 
-
   });

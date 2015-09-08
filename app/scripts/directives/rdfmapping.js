@@ -49,12 +49,10 @@ angular.module('grafterizerApp')
         scope.message = 'Off';
 
         scope.onChange = function(cbState) {
-          if(cbState == true)
-          {
+          if (cbState === true) {
             scope.message = 'On';
             leObject.validationOn = true;
-          }
-          else{
+          }else {
             scope.message = 'Off';
             leObject.validationOn = false;
           }
