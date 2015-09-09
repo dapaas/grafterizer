@@ -40,10 +40,10 @@ angular.module('grafterizerApp')
           message = 'Unauthorized access to the API';
           $state.go('apikey');
         } else {
-          message = 'Error ' + status + ' while contacting ontotext\'s API';
+          message = 'Error ' + status + ' while contacting server';
         }
       } else {
-        message = 'An error occured when contacting ontotextAPI';
+        message = 'An error occured when contacting server';
       }
 
       $mdToast.show(
