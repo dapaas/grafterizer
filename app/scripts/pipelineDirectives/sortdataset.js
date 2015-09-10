@@ -2,24 +2,23 @@
 
 /**
  * @ngdoc directive
- * @name grafterizerApp.directive:meltFunction
+ * @name grafterizerApp.directive:sortDataset
  * @description
- * # meltFunction
+ * # sortDataset
  */
 angular.module('grafterizerApp')
-  .directive('meltFunction', function(transformationDataModel) {
+  .directive('sortDataset', function(transformationDataModel) {
     return {
-      templateUrl: 'views/pipelineFunctions/meltFunction.html',
+      templateUrl: 'views/pipelineFunctions/sortDatasetFunction.html',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
         if (!scope.function) {
-          scope.function = new transformationDataModel.MeltFunction(
-            [], null);
+          scope.function = new transformationDataModel.SortDatasetFunction(null, null);
           scope.function.docstring = null;
         }
 
         scope.$parent.generateCurrFunction = function() {
-          return new transformationDataModel.MeltFunction(scope.function.columnsArray, scope.function.docstring);
+          return new transformationDataModel.SortDatasetFunction(scope.function.colName,scope.function.docstring);
         };
 
         scope.showUsage = false;
@@ -29,3 +28,4 @@ angular.module('grafterizerApp')
       }
     };
   });
+  

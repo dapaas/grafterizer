@@ -18,9 +18,9 @@
   "smarttabs": true,
   "globals": {
     "angular": false,
-    "Papa": true,
     "_": true,
     "moment": true,
-    "jsedn": true
+    "jsedn": true,
+    "Raven": true
   }
 }

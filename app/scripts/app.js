@@ -86,7 +86,7 @@ angular
 
     jarfterServiceProvider.setEndpoint('http://192.168.11.43:8080');
 
-    var urlBase = $urlRouterProvider.otherwise('/transformations/new');
+    $urlRouterProvider.otherwise('/transformations/new');
 
     sessionStorage.localClassAndProperty = JSON.stringify([]);
     sessionStorage.localVocabulary = JSON.stringify([]);

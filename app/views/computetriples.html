@@ -32,6 +32,7 @@
               <i class="fa fa-bolt fa-5x"></i>
             </md-button>
           </form>
+            <p class="processing-status" ng-show="processingStatus">{{processingStatus}}</p>
         </div>
         <div flex>
           <form target="_blank" method="POST" action="{{downloadJarEndpoint}}" ng-submit="onSubmitDownloadJar()" flex layout="row" class="md-padding" layout-align="center center">

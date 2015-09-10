@@ -55,9 +55,9 @@ angular.module('grafterizerApp')
       if (data && data.error) {
         message = 'API error: ' + data.error;
       } else if (status) {
-        message = 'Error ' + status + ' while contacting the API';
+        message = 'Error ' + status + ' while contacting server';
       } else {
-        message = 'An error occured when contacting the API';
+        message = 'An error occured when contacting server';
       }
 
       $mdToast.show(
@@ -120,6 +120,50 @@ angular.module('grafterizerApp')
         },
         transformResponse: [transformEdnResponse]
       }).error(errorHandler);
+    };
+
+    api.download = function(distributionUri, transformationUri, type) {
+      return $http({
+        url: endpoint + '/download',
+        method: 'GET',
+        params: {
+          authorization: apiAuthorization,
+          distributionUri: distributionUri,
+          transformationUri: transformationUri,
+          type: type || 'pipe',
+          raw: true
+        },
+        transformResponse: [transformEdnResponse]
+      });
+    };
+
+    api.save = function(datasetId, distributionUri, transformationUri, type) {
+      return $http({
+        url: endpoint + '/save',
+        method: 'GET',
+        params: {
+          datasetId: datasetId,
+          authorization: apiAuthorization,
+          distributionUri: distributionUri,
+          transformationUri: transformationUri,
+          type: type || 'pipe'
+        }
+      });
+    };
+
+    api.fillRDFrepo = function(distributionUri, repositoryUri) {
+      return $http({
+        url: endpoint + '/fillRDFrepo',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: apiAuthorization
+        },
+        data: {
+          distributionUri: distributionUri,
+          repositoryUri: repositoryUri
+        }
+      });
     };
 
     return api;

@@ -8,7 +8,11 @@
  * Service in the grafterizerApp.
  */
 angular.module('grafterizerApp')
-.service('datagraftPostMessage', function($state, apiKeyService) {
+.service('datagraftPostMessage', function(
+  $rootScope,
+  $state,
+  apiKeyService,
+  uploadFile) {
 
   var channel = 'datagraft-post-message';
   var connected = false;
@@ -26,7 +30,15 @@ angular.module('grafterizerApp')
           connected = true;
           apiKeyService.setKeyPass(data.keypass);
           break;
-      };
+        case 'upload-and-new':
+          var file = new Blob([data.distribution], {type: data.type});
+          file.name = data.name;
+          uploadFile.upload(file, function(data) {
+            $rootScope.actions.save(data['@id']);
+          });
+
+          break;
+      }
     } catch (e) {
       Raven.captureException(e);
     }

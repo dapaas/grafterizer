@@ -6,6 +6,8 @@
         > Make Dataset </md-button>
         <md-button flex ng-click="changeSelected(availableFunctions[2].name)"
         > Reshape Dataset </md-button>
+        <!--md-button flex ng-click="changeSelected(availableFunctions[3].name)"
+        > Sort Dataset </md-button-->
         <md-button flex ng-click="showColumn()" > OPERATIONS ON COLUMNS <i class ="fa fa-chevron-down fa-lg" ng-show="!showcolumn" style="font-size:12px"></i><i class ="fa fa-chevron-up fa-lg" ng-show="showcolumn" style="font-size:12px"></i></md-button>
         <md-button flex ng-click="changeSelected(function.name)" ng-repeat="function in availableFunctions" ng-show="showcolumn && function.type === 'column'" ng-disabled="function.selected"> {{function.displayName}} </md-button>
         <md-button flex ng-click="showRows()" > OPERATIONS ON ROWS <i class ="fa fa-chevron-down fa-lg" ng-show="!showrows" style="font-size:12px"></i><i class ="fa fa-chevron-up fa-lg" ng-show="showrows" style="font-size:12px"></i></md-button>
@@ -24,6 +26,7 @@
         <drop-rows-function transformation="transformation" ng-if="selectedFunctionName === 'drop-rows'"></drop-rows-function>
         <grep-function transformation="transformation" ng-if="selectedFunctionName === 'grep'"></grep-function>
         <make-dataset transformation="transformation" ng-if="selectedFunctionName === 'make-dataset'"></make-dataset>
+        <!--sort-dataset transformation="transformation" ng-if="selectedFunctionName === 'sort-dataset'"></sort-dataset-->
         <mapc-function transformation="transformation" ng-if="selectedFunctionName === 'mapc'"></mapc-function>
         <melt-function transformation="transformation" ng-if="selectedFunctionName === 'melt'"></melt-function>
         <rename-columns-function transformation="transformation" ng-if="selectedFunctionName === 'rename-columns'"></rename-columns-function>
@@ -33,7 +36,7 @@
         <!-- <div class="md-actions" layout="row" layout-align="right"> -->
             <!-- <md-button ng-if="function" class="md-primary" ng-click="delete()" aria-label="Remove function">Remove</md-button> -->
         <!-- </div> -->
-        <md-toolbar ng-hide="!selectedFunctionName" flex="33" class="md-actions" layout="row" layout-align="right">
+        <md-toolbar ng-hide="!selectedFunctionName" class="md-actions" layout="row" layout-align="right">
             <md-button  ng-disabled="!selectedFunctionName" ng-click="add()" aria-label="{{function ? 'Edit' : 'Create'}} function">{{function ? 'Edit' : 'Create'}} function</md-button>
             <md-button  ng-click="closeDialog()" aria-label="Cancel changes to function">Cancel</md-button>
         </md-toolbar>

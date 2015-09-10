@@ -22,15 +22,17 @@ angular.module('grafterizerApp')
 
         scope.$parent.generateCurrFunction = function() {
           return new transformationDataModel.DropRowsFunction(parseInt(
-            scope.function.numberOfRows),scope.function.take, scope.function.docstring);
+            scope.function.numberOfRows), scope.function.take, scope.function.docstring);
         };
+
         scope.doGrep = function() {
-        scope.$parent.selectedFunctionName = 'grep';
-        }
-        scope.showUsage=false;
-        scope.switchShowUsage=function() {
-        scope.showUsage=!scope.showUsage;
-        }
+          scope.$parent.selectefunctionName = 'grep';
+        };
+
+        scope.showUsage = false;
+        scope.switchShowUsage = function() {
+          scope.showUsage = !scope.showUsage;
+        };
       }
     };
   });

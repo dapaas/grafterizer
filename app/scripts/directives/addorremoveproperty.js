@@ -39,6 +39,7 @@ angular.module('grafterizerApp')
             scope.clickAddPropertyAfter = function(property) {
               var newScope = scope.$new(false, scope);
               newScope.property = null;
+              newScope.isCreateNew = true;
               $mdDialog.show({
                 templateUrl: 'views/propertydialog.html',
                 controller: 'PropertydialogCtrl',

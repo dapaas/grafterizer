@@ -3,10 +3,13 @@
      Map the tabular data to RDF
    </md-switch>
 </div>
-<div class="md-padding">
+<div class="md-padding" layout="row">
     <md-button aria-label="Edit RDF mapping prefixes" ng-click="editRDFPrefixes()" ng-show="mappingEnabled">
         <i class="fa fa-cubes"></i> Edit RDF mapping prefixes
     </md-button>
+    <md-switch ng-model="switchValidate.cb1" aria-label="Validate" ng-show="mappingEnabled" ng-change="onChange(switchValidate.cb1)">
+      Validation: {{ message }}
+    </md-switch>
 </div>
 <div ng-model="transformation.graphs" layout="row" class="md-padding">
     <div ng-repeat="graph in transformation.graphs">

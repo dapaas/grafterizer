@@ -84,8 +84,10 @@ angular.module('grafterizerApp')
         var rawWidths = {};
 
         _.each(data[':column-names'], function(f) {
-          // the header size is 3 times more important
-          widths[f] = f.length * 3;
+            if (f) {
+              // the header size is 3 times more important
+              widths[f] = f.length * 3;
+            }
         });
 
         var rows = data[':rows'];
@@ -103,9 +105,11 @@ angular.module('grafterizerApp')
               irow = rows[i][key];
               w = widths[key];
 
-              widths[key] += ('' + irow).length;
+                if (w) {
+                  widths[key] += ('' + irow).length;
+                }
+              }
             }
-          }
 
           var total = 0;
           for (key in widths) {
@@ -127,10 +131,10 @@ angular.module('grafterizerApp')
           var w = widths[f];
           var width = w === largest || isNaN(w) ? '*' : Math.floor(w * 100) + '%';
           var minWidth = isNaN(rawWidths[f]) ? 200 : Math.min(80 + rawWidths[f] * 8, 200);
-
+              var colNameString = f[0] === ':' ? f.substring(1) : f;
           return {
             name: f,
-            displayName: f.substring(1),
+                displayName: colNameString,
             width: width,
             minWidth: minWidth,
             cellTooltip: true

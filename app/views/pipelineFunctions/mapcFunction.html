@@ -3,8 +3,8 @@
         <md-button aria-label="Show/hide documentation" ng-click="switchShowUsage()"><i class="fa fa-angle-down"  >Show/hide documentation</i></md-button>
             <div ng-show = "showUsage" layout="column" class="api-doc-docstring">
             <p> Takes a vector of functions and maps each to the key column for every row. Both cell-to-cell and collection-to-collection functions may be used </p>
-            <a href="../images/mapc.png">view example</a>
-            <a href="http://api.grafter.org/master/grafter.tabular.html#var-mapc" target="_blank">source</a>
+            <img src="/images/mapc.png"></img>
+            <a href="http://api.grafter.org/master/grafter.tabular.html#var-mapc" target="_blank">view source</a>
         </div>
         </div>
         <div>
@@ -24,12 +24,7 @@
         <div layout="column">
             <md-input-container>
                 <md-select placeholder="Choose a function..." ng-model="keyFunctionPair.func">
-                    <md-optgroup label="Custom functions">
-                    <md-option ng-repeat="customFunct in transformation.customFunctionDeclarations" value="{{customFunct.name}}" title="{{customFunct.docstring}}">{{customFunct.name}}</md-option>
-                    </md-optgroup>
-                    <md-optgroup label="Prefixers">
-                        <md-option  ng-repeat="prefixer in transformation.prefixers" value="{{prefixer.name}}">{{prefixer.name}}</md-option>
-                    </md-optgroup>
+                    <function-list> </function-list>
                 </md-select>
             </md-input-container>
         </div>
