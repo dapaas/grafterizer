@@ -281,14 +281,14 @@ angular.module('grafterizerApp')
       }).error(errorHandler);
     };
 
-    /*api.distributionFile = function(distributionID) {
+    api.distributionFile = function(distributionID) {
       return $http.get(endpoint + '/catalog/distributions/file', {
         headers: {
           'distrib-id': distributionID,
           Authorization: apiAuthorization
         }
       }).error(errorHandler);
-    };*/
+    };
 
     api.createRepository = function(distributionID) {
       return $http({
