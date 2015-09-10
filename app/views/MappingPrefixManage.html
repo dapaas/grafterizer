@@ -1,7 +1,7 @@
-<md-dialog aria-label='Specify property node...' class="sin-function-dialog">
+<md-dialog id="abc" aria-label='Specify property node...' class="sin-function-dialog">
   <style type="text/css">
     .dropzone {
-      width: 250px;
+
       height: 15px;
       border: 1px dashed #ccc;
       text-align: center;
@@ -9,13 +9,29 @@
       margin: 20px;
       font-family: Arial;
     }
+
+    .prefixes {
+      height: 300px;
+    }
   </style>
-  <md-toolbar>
+  <md-toolbar layout="row">
     <div class="md-toolbar-tools" ng-show="showManageDialog">
-      <h2>View prefixes</h2>
+      <h2>Edit RDF mapping vocabularies</h2>
+      <span flex></span>
+      <i class="fa fa-question-circle fa-lg">
+        <md-tooltip>
+          {{hint}}
+        </md-tooltip>
+      </i>
     </div>
     <div class="md-toolbar-tools" ng-show="showAddDialog">
-      <h2>Add new prefix</h2>
+      <h2>Import vocabulary</h2>
+      <span flex></span>
+      <i class="fa fa-question-circle">
+        <md-tooltip>
+          add prefix and upload vocabulary specification
+        </md-tooltip>
+      </i>
     </div>
     <md-progress-linear md-mode="indeterminate" ng-show="showProgress"></md-progress-linear>
   </md-toolbar>
@@ -23,51 +39,68 @@
   <md-dialog-content>
     <div class="modal-dialog animate-switch-container" ng-switch on="selection" >
       <div class="modal-content animate-switch" ng-switch-default>
-        <div class="md-padding">
-          <md-list>
-            <md-list-item ng-repeat="item in VocabItems | startFrom:vocabcurrentPage*vocabpageSize | limitTo:vocabpageSize track by $index">
-              <p ng-show="item.fromServer" style="color:#C0C0C0">  {{ item.name }} <small style="color:#C0C0C0"> ( {{item.namespace}} )</small></p>
-              <p ng-hide="item.fromServer"> {{ item.name }} <small style="color:#C0C0C0"> ( {{item.namespace}} )</small></p>
-              <md-button ng-hide="item.fromServer" aria-label='edit' class="fa fa-pencil-square-o md-icon-button md-primary fa-lg" ng-click="editItem(item.name, item.namespace, item.fromServer)"></md-button>
-              <md-button ng-hide="item.fromServer" aria-label='delete' class="fa fa-trash md-icon-button md-primary fa-lg" ng-click="deleteItem(item.namespace)"></md-button>
-            </md-list-item>
-          </md-list>
+        <md-content class="prefixes" md-scroll-y>
+              <md-list>
+                <md-list-item ng-click="viewItem(item.name, item.namespace)" ng-repeat="item in VocabItems">
+                  <p ng-show="item.fromServer" style="color:#C0C0C0">  {{ item.name }} <small style="color:#C0C0C0"> ( {{item.namespace}} )</small></p>
+                  <p ng-hide="item.fromServer"> {{ item.name }} <small style="color:#C0C0C0"> ( {{item.namespace}} )</small></p>
+                  <md-button ng-hide="item.fromServer" aria-label='edit' class="fa fa-pencil-square-o md-icon-button md-primary fa-lg" ng-click="editItem(item.name, item.namespace, item.fromServer)"></md-button>
+                  <md-button ng-hide="item.fromServer" aria-label='delete' class="fa fa-trash md-icon-button md-primary fa-lg" ng-click="deleteItem(item.namespace)"></md-button>
+                </md-list-item>
+              </md-list>
           <div align="center"><md-progress-circular ng-show="showProgressCircular" class="md-hue-2" md-mode="indeterminate"></md-progress-circular></div>
-          <div ng-show="showVocabularyPagination" >
-            <md-button aria-label='<<' class="md-icon-button fa fa-angle-double-left"  ng-disabled="vocabcurrentPage == 0" ng-click="vocabcurrentPage = 0">
-            </md-button>
-            <md-button aria-label='<' class="md-icon-button fa fa-angle-left" ng-disabled="vocabcurrentPage == 0" ng-click="vocabcurrentPage = vocabcurrentPage-1">
-            </md-button>
-            <label>{{vocabcurrentPage + 1}}</label>
-            <md-button aria-label='>' class="md-icon-button fa fa-angle-right" ng-disabled="vocabcurrentPage >= vocabnumberOfPages() - 1" ng-click="vocabcurrentPage=vocabcurrentPage+1">
-            </md-button>
-            <md-button aria-label='>>' class="md-icon-button fa fa-angle-double-right" ng-disabled="vocabcurrentPage >= vocabnumberOfPages() - 1" ng-click="vocabcurrentPage=vocabnumberOfPages() - 1">
-            </md-button>
-          </div>
-        </div>
+        </md-content>
 
-        <div class="md-actions" layout="row">
-          <md-button aria-label='Add Prefix' class="fa fa-plus md-icon-button md-primary" ng-click="switchToAddDialog('','')"></md-button>
-          <span flex></span>
-          <div align="right"><md-button class="md-primary" ng-click="closeDialog()">OK</md-button></div>
-        </div>
+        <md-sidenav class="md-sidenav-right md-whiteframe-z1" md-component-id="vocabdetail">
+          <md-toolbar class="md-theme-light">
+            <h6 class="md-toolbar-tools">Class</h6>
+          </md-toolbar>
+          <md-content layout-padding="">
+            <md-list>
+              <md-list-item ng-repeat="item in vocabClassArray">
+                <p style="color:#C0C0C0"> {{ item }} </p>
+              </md-list-item>
+            </md-list>
+          </md-content>
+          <md-toolbar class="md-theme-light">
+            <h6 class="md-toolbar-tools">Property</h6>
+          </md-toolbar>
+          <md-content layout-padding="">
+            <md-list>
+              <md-list-item ng-repeat="item in vocabPropertyArray">
+                <p style="color:#C0C0C0"> {{ item }} </p>
+              </md-list-item>
+            </md-list>
+          </md-content>
+        </md-sidenav>
+
+        <md-toolbar>
+          <div class="md-toolbar-tools" layout="row">
+            <md-button aria-label='Add Prefix' class="fa fa-plus md-icon-button" ng-click="switchToAddDialog('','')"></md-button>
+            <span flex></span>
+            <div><md-button ng-click="closeDialog()">OK</md-button></div>
+          </div>
+        </md-toolbar>
       </div>
 
       <div class="modal-content animate-switch" ng-switch-when="addVocabDialog">
         <form name="graphsForm">
-          <div class="md-padding">
           <md-input-container>
             <label>Prefix</label>
-            <input type="text" class="form-control" ng-model="vocabName" name="prefix" required/>
-            <div ng-messages="graphsForm.prefi.$error" >
+            <input type="text" class="form-control" ng-model="vocabName" name="prefix" required
+                   pattern="^[^:]+$"/>
+            <div ng-messages="graphsForm.prefix.$error" >
               <div ng-message="required">prefix is required.</div>
               <div ng-message="pattern">Not a valid prefix.</div>
             </div>
+
           </md-input-container>
+
           <md-input-container>
-            <label>Namespace</label>
-            <input type="text" ng-disabled="namespaceInputDisable" ng-model="vocabNamespace" name="namespace" required/>
-            <div ng-messages="graphsForm.namespac.$error" >
+            <label>Namespace URI</label>
+            <input type="text" ng-disabled="namespaceInputDisable" ng-model="vocabNamespace" name="namespace"
+                   required pattern="[A-Za-z][A-Za-z0-9\+\.\-]*:([A-Za-z0-9\.\-_~:/\?#\[\]@!\$&'\(\)\*\+,;=]|%[A-Fa-f0-9]{2})+"/>
+            <div ng-messages="graphsForm.namespace.$error" >
               <div ng-message="required">namespace is required.</div>
               <div ng-message="pattern">Not a valid namespace.</div>
             </div>
@@ -94,11 +127,13 @@
             <input type="text" ng-model="vocabLoc"/>
           </md-input-container>
 
-          </div>
-          <div class="md-actions" layout="row" layout-align="right">
-            <md-button class="md-primary" ng-click="addVocabtoLocal(vocabName, vocabNamespace, vocabLoc)">{{addorEdit}}</md-button>
-            <md-button class="md-primary" ng-click="switchToManageDialogScope()">Cancel</md-button>
-          </div>
+          <md-toolbar>
+            <div class="md-toolbar-tools" layout="row" layout-align="right">
+              <span flex></span>
+              <md-button ng-click="addVocabtoLocal(vocabName, vocabNamespace, vocabLoc)">{{addorEdit}}</md-button>
+              <md-button ng-click="switchToManageDialogScope()">Cancel</md-button>
+            </div>
+          </md-toolbar>
         </form>
       </div>
     </div>

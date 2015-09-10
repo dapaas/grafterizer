@@ -40,6 +40,12 @@ angular.module('grafterizerApp')
             type: 'none'
           },
           {
+            displayName: 'Sort, Dataset',
+            name: 'sort-dataset',
+            selected: false,
+            type: 'none'
+          },
+          {
             displayName: 'Add Columns',
             name: 'add-columns',
             selected: false,

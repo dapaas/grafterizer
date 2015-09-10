@@ -20,14 +20,22 @@ angular.module('grafterizerApp')
       $scope.distribution, $scope.transformation, $scope.type);
 
     $scope.ugly = function() {
+      // TODO fixme
       window.setTimeout(function() {
         $mdDialog.hide();
       }, 1);
-      // TODO fixme
-      
     };
   
-    
+    var showError = function() {
+      $mdDialog.hide();
+      $mdDialog.show(
+        $mdDialog.alert({
+          title: 'An error occured',
+          content: 'The datapage cannot be created.',
+          ok: 'Ok'
+        })
+      );
+    };
 
     $scope.makeNewDataset = function() {
       var type = 'pipe';
@@ -37,48 +45,85 @@ angular.module('grafterizerApp')
       }
 
       $scope.processing = true;
+      $scope.processingStatus = 'Making the dataset';
 
-      ontotextAPI.newDataset({
+      var today = new Date();
+      today = today.toISOString().substring(0, 10);
+
+      var metadataDataset = {
         '@context': ontotextAPI.getContextDeclaration(),
         'dct:title': $scope.dataset.title,
         'dct:description': $scope.dataset.description,
-        'dcat:public': 'false'
-      })
+        'dcat:public': 'false',
+        'dct:modified': today,
+        'dct:issued': today
+      };
+
+      ontotextAPI.newDataset(metadataDataset)
         .success(function(datasetData) {
           var datasetId = datasetData['@id'];
 
+          $scope.processingStatus = 'Transforming the data';
           PipeService.save(datasetId, $scope.distribution,
             $scope.transformation, type).success(
             function(distributionData) {
 
-              var location = '/pages/publish/details.jsp?id=' +
-                window.encodeURIComponent(datasetId);
-              
-              if (datagraftPostMessage.isConnected()) {
-                datagraftPostMessage.setLocation(location);
-              } else {
-                if (location.protocol === 'https:') {
-                  location = 'https://datagraft.net' + location;
-                } else {
-                  location = 'http://datagraft.net' + location;
-                }
+              var distributionId = distributionData['@id'];
 
-                window.location = location;
-              }
-            });
+              $scope.processingStatus = 'Fetching information';
+              ontotextAPI.distribution(distributionId)
+              .success(function(metadataDistribution) {
 
-          $mdDialog.hide();
-        }).error(function() {
-          $mdDialog.hide();
-          $mdDialog.show(
-            $mdDialog.alert({
-              title: 'An error occured',
-              content: 'The transformation cannot be applied to the dataset.',
-              ok: 'Ok :('
-            })
-          );
-        });
+                $scope.processingStatus = 'Creating the RDF repository';
+                ontotextAPI.createRepository(distributionId)
+                .success(function(repositoryData) {
+                  var accessUrl = repositoryData['access-url'];
 
+                  metadataDistribution['dcat:accessURL'] = accessUrl;
+
+                  $scope.processingStatus = 'Connecting the repository to the distribution';
+                  ontotextAPI.updateDistribution(metadataDistribution)
+                    .success(function(data) {
+
+                      $scope.processingStatus = 'Filling the repository';
+
+                      var successFilling = function(data) {
+                        $mdDialog.hide();
+
+                        var location = '/pages/publish/details.jsp?id=' +
+                          window.encodeURIComponent(datasetId);
+                        
+                        if (datagraftPostMessage.isConnected()) {
+                          datagraftPostMessage.setLocation(location);
+                        } else {
+                          if (location.protocol === 'https:') {
+                            location = 'https://datagraft.net' + location;
+                          } else {
+                            location = 'http://datagraft.net' + location;
+                          }
+
+                          window.location = location;
+                        }
+                      };
+
+                      var nbTryToFillRDFrepo = 0;
+                      var tryToFillRDFrepo = function() {
+                        ++nbTryToFillRDFrepo;
+
+                        window.setTimeout(function() {
+                          PipeService.fillRDFrepo(distributionId, accessUrl)
+                            .success(successFilling)
+                            .error(nbTryToFillRDFrepo < 6 ? tryToFillRDFrepo : showError);
+                        }, 2000);
+                      };
+
+                      tryToFillRDFrepo();
+
+                    }).error(showError);
+                }).error(showError);
+              }).error(showError);
+            }).error(showError);
+        }).error(showError);
     };
 
     $scope.cancel = function() {

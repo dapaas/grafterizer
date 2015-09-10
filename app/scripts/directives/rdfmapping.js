@@ -46,6 +46,22 @@ angular.module('grafterizerApp')
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
 
+        scope.message = 'Off';
+
+        scope.onChange = function(cbState) {
+          if (cbState === true) {
+            scope.message = 'On';
+            leObject.validationOn = true;
+          }else {
+            scope.message = 'Off';
+            leObject.validationOn = false;
+          }
+        };
+
+        scope.switchValidate = {
+          cb1: false
+        };
+
         scope.editRDFPrefixes = function() {
           $mdDialog.show({
             templateUrl: 'views/MappingPrefixManage.html',
@@ -101,3 +117,4 @@ angular.module('grafterizerApp')
       }
     };
   });
+

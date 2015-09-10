@@ -12,6 +12,7 @@ angular.module('grafterizerApp')
     $scope,
     $stateParams,
     ontotextAPI,
+    uploadFile,
     $rootScope,
     $state,
     $mdToast,
@@ -38,13 +39,16 @@ angular.module('grafterizerApp')
         '(defn organize-date "Transform date dd/mm/yyyy ~> yyyy-mm-dd" [date] (when (seq date)  (let [[d m y] (clojure.string/split date  (read-string "#\\"/\\""))]  (apply str (interpose "-" [y m d])))))',
         'DATE FUNCTIONS', 'Transform date dd/mm/yyyy ~> yyyy-mm-dd'),
           new transformationDataModel.CustomFunctionDeclaration('double-literal',
-        '(defn integer-literal [s] (Double/parseDouble s))', 'CONVERT DATATYPE', 'Coerce to integer'),
+        '(defn double-literal [s] (Double/parseDouble s))', 'CONVERT DATATYPE', 'Coerce to integer'),
           new transformationDataModel.CustomFunctionDeclaration('integer-literal',
         '(defn integer-literal [s] (Integer/parseInt s))', 'CONVERT DATATYPE', 'Coerce to integer'),
           new transformationDataModel.CustomFunctionDeclaration('fill-when', '', 'SERVICE',
         'Takes a sequence of values and copies a value through the sequence depending on the supplied predicate function'
       ),
-          new transformationDataModel.CustomFunctionDeclaration('transform-gender',
+          new transformationDataModel.CustomFunctionDeclaration('sort-dataset', '(defn sort-dataset  [ds col] (-> (make-dataset (sort-by col (:rows ds)) (column-names ds)) (with-meta (meta ds))))', 'SERVICE',
+                         'Sorts a dataset by given column'
+                              ),
+              new transformationDataModel.CustomFunctionDeclaration('transform-gender',
         '(def transform-gender {"f" (s "female") "m" (s "male")})', 'UTILITY',
         'Maps "f" to "female" and "m" to "male"'),
           new transformationDataModel.CustomFunctionDeclaration('stringToNumeric',
@@ -83,12 +87,12 @@ angular.module('grafterizerApp')
           new transformationDataModel.CustomFunctionDeclaration('lower-case',
         '', 'STRING', 'Converts string to all lower-case'),
           new transformationDataModel.CustomFunctionDeclaration('upper-case',
-        '','STRING','Converts string to all upper-case'),
-          new transformationDataModel.CustomFunctionDeclaration('reverse', '','STRING','Returns given string with its characters reversed'),
-          new transformationDataModel.CustomFunctionDeclaration('string-as-keyword', '(defn string-as-keyword [s] (when (seq s) (->   s   (clojure.string/replace " " "_") (clojure.string/replace ":" "") (clojure.string/replace "\\"" ""))))','STRING','Removes blanks, double quotes and colons in a string thus making it possible to use it as a keyword'),
+        '', 'STRING', 'Converts string to all upper-case'),
+          new transformationDataModel.CustomFunctionDeclaration('reverse', '', 'STRING', 'Returns given string with its characters reversed'),
+          new transformationDataModel.CustomFunctionDeclaration('string-as-keyword', '(defn string-as-keyword [s] ( when (seq s) (->   (str s) clojure.string/trim   (clojure.string/replace "(" "-") (clojure.string/replace ")" "") (clojure.string/replace " " "_") (clojure.string/replace "," "-") (clojure.string/replace "." "") (clojure.string/replace "/" "-") (clojure.string/replace "---" "-") (clojure.string/replace "--" "-") (clojure.string/replace ":" "") (clojure.string/replace "\\"" "") )))','STRING','Removes blanks and special symbols from a string thus making it possible to use it as a keyword'),
           new transformationDataModel.CustomFunctionDeclaration('remove-blanks', '(defn remove-blanks [s]  (when (seq s)  (clojure.string/replace s " " "")))','STRING','Removes blanks in a string'),
           new transformationDataModel.CustomFunctionDeclaration('titleize', '(defn titleize [st] (when (seq st) (let [a (clojure.string/split st (read-string "#\\" \\"")) c (map clojure.string/capitalize a)]  (->> c (interpose " ") (apply str) trim))))','STRING','Capitalizes each word in a string'),
-          new transformationDataModel.CustomFunctionDeclaration('trim', '','STRING','Removes whitespace from both ends of string'),
+          new transformationDataModel.CustomFunctionDeclaration('trim', '', 'STRING', 'Removes whitespace from both ends of string'),
           new transformationDataModel.CustomFunctionDeclaration('trim-newline',
         '', 'STRING', 'Removes all trailing newline \n or return \r characters from string'),
           new transformationDataModel.CustomFunctionDeclaration('triml', '', 'STRING',
@@ -148,14 +152,14 @@ angular.module('grafterizerApp')
     var j;
     for (j = 0; j < customfunctions.length; ++j)
       if (customfunctions[j].name === 'keyword') break;
-    
+
     $scope.pipeline = new transformationDataModel.Pipeline([/*makeds,renamecols*/]);
     $scope.transformation = new transformationDataModel.Transformation(
       allcustomfunctions, [], [$scope.pipeline], []);
     $rootScope.transformation = $scope.transformation;
 
     $rootScope.actions = {
-      save: function() {
+      save: function(distributionId) {
         var clojure = generateClojure.fromTransformation($scope.transformation);
 
         var transformationType = 'pipe';
@@ -184,22 +188,19 @@ angular.module('grafterizerApp')
               .position('bottom left')
               .hideDelay(6000)
             );
-            $state.go('transformations.transformation', {
-              id: data['@id']
-            });
+            if (distributionId) {
+              $state.go('transformations.transformation.preview', {
+                id: data['@id'],
+                distribution: distributionId
+              });
+            } else {
+              $state.go('transformations.transformation', {
+                id: data['@id']
+              });
+            }
           });
       }
     };
-    $scope.$watch('fileUpload', function() {
-      if ($scope.fileUpload) {
-        $mdToast.show(
-          $mdToast.simple()
-          .content('You need to save the transformation first')
-          .position('bottom left')
-          .hideDelay(6000)
-        );
-      }
-    });
 
     $scope.editPrefixers = function() {
       $scope.originalPrefixers = [];
@@ -231,6 +232,22 @@ angular.module('grafterizerApp')
         });
     };
 
+    $scope.editRDFPrefixes = function() {
+      $mdDialog.show({
+        templateUrl: 'views/MappingPrefixManage.html',
+        controller: 'MappingPrefixManageCtrl',
+        scope: $scope.$new(false, $scope)
+      });
+    };
+
+    $scope.validateMapping = function() {
+      $mdDialog.show({
+        templateUrl: 'views/validateMapping.html',
+        controller: 'validateMappingCtrl',
+        scope: $scope.$new(false, $scope)
+      });
+    };
+
     $scope.defineCustomFunctions = function() {
       $scope.originalCustomFunctionDeclarations = [];
       angular.copy($scope.transformation.customFunctionDeclarations, $scope
@@ -257,5 +274,23 @@ angular.module('grafterizerApp')
       });
     };
 
-    $scope.hideUploadButton = true;
+    $scope.$watch('fileUpload', function() {
+      if ($scope.fileUpload) {
+        var file = $scope.fileUpload;
+
+        uploadFile.upload(file, function(data) {
+          $rootScope.actions.save(data['@id']);
+        });
+      }
+    });
+
+    $scope.loadDistribution = function() {
+      $mdDialog.show({
+        templateUrl: 'views/loaddistribution.html',
+        controller: 'LoadDistributionCtrl',
+        scope: $scope.$new(false)
+      }).then(function(distribution) {
+        $rootScope.actions.save(distribution);
+      });
+    };
   });
