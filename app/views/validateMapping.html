@@ -1,0 +1,25 @@
+<md-dialog aria-label="validate mappings" class="sin-function-dialog">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Validation Result</h2>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content>
+        <div class="md-padding">
+            <md-list>
+                <md-subheader class="md-no-sticky">Warning list</md-subheader>
+                <md-list-item class="md-2-line" ng-repeat="item in errArray">
+                    <div class="md-list-item-text">
+                        <h3>{{ item.key }}</h3>
+                        <p>{{ item.value }}</p>
+                    </div>
+                </md-list-item>
+            </md-list>
+            <!-- <div ng-show="showNoError"><p>No warning</p></div> -->
+        </div>
+        <div class="md-actions" layout="row" layout-align="right">
+            <md-button class="md-primary" ng-click="closeDialog()">Close</md-button>
+        </div>
+    </md-dialog-content>
+</md-dialog>
