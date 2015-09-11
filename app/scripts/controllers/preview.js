@@ -31,7 +31,7 @@ angular.module('grafterizerApp')
       }
     };
     
-    hideDownloadButton();
+    hideDownloadButton(false);
 
     var paginationSize = 100;
 
@@ -106,7 +106,7 @@ angular.module('grafterizerApp')
                   );
               }
 
-              hideDownloadButton();
+              hideDownloadButton(false);
             });
     };
 
