@@ -230,7 +230,7 @@ angular.module('grafterizerApp')
       pipeline = new jsedn.List([
       jsedn.sym('defpipe'),
       jsedn.sym('my-pipe'),
-      'Pipeline to convert tabular persons data into a different tabular format.',
+      'Grafter pipeline for data clean-up and preparation.',
       new jsedn.Vector([new jsedn.sym('data-file')]),
       new jsedn.List([jsedn.sym('->'), readDatasetFunct])]);
 
@@ -793,7 +793,7 @@ angular.module('grafterizerApp')
       textStr += '\n';
 
       textStr +=
-        '(defgraft my-graft "Pipeline to convert the tabular persons data sheet into graph data." my-pipe make-graph)';
+        '(defgraft my-graft "Transformation that converts input CSV data into RDF graph data." my-pipe make-graph)';
 
       return textStr;
     }
