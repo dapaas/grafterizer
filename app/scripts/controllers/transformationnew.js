@@ -42,7 +42,7 @@ angular.module('grafterizerApp')
         '(defn double-literal [s] (Double/parseDouble s))', 'CONVERT DATATYPE', 'Coerce to integer'),
           new transformationDataModel.CustomFunctionDeclaration('integer-literal',
         '(defn integer-literal [s] (Integer/parseInt s))', 'CONVERT DATATYPE', 'Coerce to integer'),
-          new transformationDataModel.CustomFunctionDeclaration('fill-when', '', 'SERVICE',
+          new transformationDataModel.CustomFunctionDeclaration('fill-when', '(defn fill-when [col] (grafter.sequences/fill-when col))', 'SERVICE',
         'Takes a sequence of values and copies a value through the sequence depending on the supplied predicate function'
       ),
           new transformationDataModel.CustomFunctionDeclaration('sort-dataset', '(defn sort-dataset  [ds col] (-> (make-dataset (sort-by col (:rows ds)) (column-names ds)) (with-meta (meta ds))))', 'SERVICE',
