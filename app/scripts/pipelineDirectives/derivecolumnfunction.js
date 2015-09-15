@@ -12,9 +12,8 @@ angular.module('grafterizerApp')
      // require:"previewTable",
       templateUrl: 'views/pipelineFunctions/deriveColumnFunction.html',
       restrict: 'E',
-      link: function postLink(scope, element, attrs/*, prevTab*/) {
+      link: function postLink(scope, element, attrs) {
         if (!scope.function) {
-           // console.log(prevTab.gridOptions.columnDefs);
           scope.function = new transformationDataModel.DeriveColumnFunction(
             '', [], [null], [null], null);
           scope.function.docstring = null;
@@ -55,14 +54,6 @@ angular.module('grafterizerApp')
         scope.addParamToFunction = function(index) {
           scope.function.paramsToFunctions[index] = ' ';
         };
-        scope.testdata = [{
-            "id":1,
-            "name":"col1"
-        },
-          {
-              "id":2,
-              "name":"col2"
-          }]; 
         scope.showUsage = false;
         scope.switchShowUsage = function() {
           scope.showUsage = !scope.showUsage;
