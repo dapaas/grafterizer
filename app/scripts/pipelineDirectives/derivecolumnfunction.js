@@ -9,6 +9,7 @@
 angular.module('grafterizerApp')
   .directive('deriveColumnFunction', function(transformationDataModel) {
     return {
+     // require:"previewTable",
       templateUrl: 'views/pipelineFunctions/deriveColumnFunction.html',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
@@ -53,7 +54,6 @@ angular.module('grafterizerApp')
         scope.addParamToFunction = function(index) {
           scope.function.paramsToFunctions[index] = ' ';
         };
-        
         scope.showUsage = false;
         scope.switchShowUsage = function() {
           scope.showUsage = !scope.showUsage;
