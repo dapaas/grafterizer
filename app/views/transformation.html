@@ -5,9 +5,7 @@
     <md-button aria-label="Upload dataset" class="md-accent upload-indicator">
         <i class="fa fa-upload"></i>
     </md-button>
-    <md-tabs class="md-accent no-border-radius md-whiteframe-z5" flex
-        id="transformationTabs"
-             md-no-disconnect md-swipe-content="{{isMobile}}" md-selected="transformationSelectedTabIndex">
+    <md-tabs class="md-accent no-border-radius md-whiteframe-z5" flex id="transformationTabs" md-no-disconnect md-swipe-content="{{isMobile}}" md-selected="transformationSelectedTabIndex">
         <md-tab label="Metadata">
             <md-tab-body>
                 <form name="transformationForm" class="md-padding" ng-submit="actions.save()">

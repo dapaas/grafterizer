@@ -1,5 +1,5 @@
 'use strict';
-
+//TODO rename this from 'leobject' to something more meaningful
 /**
  * @ngdoc service
  * @name grafterizerApp.leObject
@@ -12,8 +12,9 @@ angular.module('grafterizerApp')
     this.object = {};
     this.serveraddress = window.location.origin === 'http://localhost:9000' ?
       'https://grafterizer.datagraft.net/ManageVocabulary/api/vocabulary/'
-      : '/ManageVocabulary/api/vocabulary/';
-      
+      : 'VocabBackend/api/vocabulary/';
+
+    //this.serveraddress = 'http://localhost:8080/VocabBackend/api/vocabulary/';
     this.validationOn = false;
 
   });

@@ -22,18 +22,12 @@
             </md-select>
             <md-input-container flex ng-if="dialogState.mappingType=='dataset-col'">
               <label>Select node prefix</label>
-              <input ng-model="newNode.prefix" type="text">
+              <input ng-model="nodeCurrentState.prefix" type="text">
             </md-input-container>
             <md-input-container flex ng-if="dialogState.mappingType=='dataset-col'">
               <label>Select column</label>
-              <input ng-model="newNode.column" type="text">
+              <input ng-model="nodeCurrentState.column" type="text">
             </md-input-container>
-            <!--
-<md-input-container flex ng-if="dialogState.mappingType=='free-defined'">
-<label>Node URI</label>
-<input ng-model="newNode.constant" type="text">
-</md-input-container>
--->
             <div class="modal-dialog animate-switch-container" ng-switch on="selection" ng-if="dialogState.mappingType=='free-defined'">
               <div class="modal-content animate-switch" ng-switch-default>
                 <form name="graphsForm" >
@@ -85,11 +79,11 @@
             </md-select>
             <md-input-container flex ng-if="dialogState.mappingType=='free-defined'">
               <label>Literal value</label>
-              <input ng-model="newNode.literalValue" type="text">
+              <input ng-model="nodeCurrentState.literalValue" type="text">
             </md-input-container>
             <md-input-container flex ng-if="dialogState.mappingType=='dataset-col'">
               <label>Select column</label>
-              <input ng-model="newNode.literalValue" type="text">
+              <input ng-model="nodeCurrentState.literalValue" type="text">
             </md-input-container>
           </div>
         </md-tab-body>

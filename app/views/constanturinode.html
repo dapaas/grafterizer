@@ -26,7 +26,7 @@
     </md-fab-speed-dial>
   </div>
   <div style="padding-top:8px" flex layout-align="start start" ng-if="parent.__type=='Graph'">
-    <md-button class="md-primary" ng-click="clickAddPropertyAfter(null)" aria-label="Add property" ng-hide="node.subElements.length!=0">
+    <md-button class="md-primary" ng-click="clickAddChildProperty()" aria-label="Add property" ng-hide="node.subElements.length!=0">
       <i class="fa fa-large fa-plus-circle"></i>&nbsp;Add property
       <md-tooltip>
         Add a new property

@@ -48,16 +48,16 @@ angular.module('grafterizerApp')
             jsedn: null
           };
         }
-      };
+      }
 
       var errorHandler = function(data, status, headers, config) {
         var message;
         if (data && data.error) {
           message = 'API error: ' + data.error;
         } else if (status) {
-          message = 'Error ' + status + ' while contacting the API';
+          message = 'Error ' + status + ' while contacting server';
         } else {
-          message = 'An error occured when contacting the API';
+          message = 'An error occured when contacting server';
         }
 
         $mdToast.show(
