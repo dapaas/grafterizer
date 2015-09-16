@@ -71,7 +71,7 @@ angular.module('grafterizerApp')
         scope.$watch('data', function() {
           var data = scope.data;
           if (!data || !data.hasOwnProperty(':rows')) {
-            scope.gridOptions.data = null;
+            scope.gridOptions.data = [];
 
             if (scope.gridApi) {
               scope.gridApi.infiniteScroll.dataLoaded(false, false);
