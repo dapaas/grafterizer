@@ -258,7 +258,6 @@ angular.module('grafterizerApp')
     };
 
     api.updateDistribution = function(metadata) {
-      console.log(JSON.stringify(metadata));
       var meta = new Blob([JSON.stringify(metadata)],
                           {type: 'application/ld+json'});
 

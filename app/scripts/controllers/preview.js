@@ -61,7 +61,7 @@ angular.module('grafterizerApp')
   }
 
   if (!$scope.selectedDistribution) {
-    $scope.go('^');
+//    $scope.go('^');
   }
 
   var savedGeneratedClojure;

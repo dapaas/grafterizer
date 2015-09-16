@@ -17,7 +17,7 @@
             </div>
           </div>
           <md-tooltip>
-            {{'(Column URI) ' + node.prefix ? node.prefix+':'+node.column : node.column}}
+            {{node.prefix ? '(Column URI) ' + node.prefix + ':' + node.column : '(Column URI) ' + node.column}}
           </md-tooltip>
         </md-button>
       </md-fab-trigger>

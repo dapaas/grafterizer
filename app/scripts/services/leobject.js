@@ -1,5 +1,5 @@
 'use strict';
-
+//TODO rename this from 'leobject' to something more meaningful
 /**
  * @ngdoc service
  * @name grafterizerApp.leObject
