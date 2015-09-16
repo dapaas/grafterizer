@@ -56,10 +56,6 @@ angular.module('grafterizerApp')
       $scope.distribution = null;
     }
 
-    if (!$scope.selectedDistribution) {
-      $scope.go('^');
-    }
-
     var savedGeneratedClojure;
     var currentPreviewPage = 0;
     var previewTransformation = function(redirect) {
