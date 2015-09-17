@@ -865,3 +865,13 @@ button.rdf-mapping-property-button {
   text-align:center;
   color: $gray;
 }
+
+.slow-mode-warning, .slow-mode-thanks {
+  text-align: center;
+  color: purple;
+  padding: 1em 2em 0.4em 2em;
+}
+
+.slow-mode-thanks {
+  color: green;
+}

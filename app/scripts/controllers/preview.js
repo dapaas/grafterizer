@@ -8,16 +8,16 @@
  * Controller of the grafterizerApp
  */
 angular.module('grafterizerApp')
-  .controller('PreviewCtrl', function(
-              $scope,
-               ontotextAPI,
-               PipeService,
-               $timeout,
-               $rootScope,
-               $stateParams,
-               generateClojure,
-               $mdToast,
-               $mdDialog) {
+.controller('PreviewCtrl', function(
+            $scope,
+            ontotextAPI,
+            PipeService,
+            $timeout,
+            $rootScope,
+            $stateParams,
+            generateClojure,
+            $mdToast,
+            $mdDialog) {
   
   // TODO fixme - slightly dusty hack - replace with something more "elegant"
   $scope.hideDisabledDownload = false;
@@ -41,7 +41,7 @@ angular.module('grafterizerApp')
   $scope.livePreview = !(window.sessionStorage && window.sessionStorage.livePreview === 'false');
   $scope.selectedTabIndex = 0;
 
-  // TODO IT DOES WORK
+  // TODO IT DOES WORK
   $scope.$parent.showPreview = true;
   $scope.$on('$destroy', function() {
 
@@ -60,10 +60,6 @@ angular.module('grafterizerApp')
     $scope.distribution = null;
   }
 
-  if (!$scope.selectedDistribution) {
-//    $scope.go('^');
-  }
-
   var savedGeneratedClojure;
   var currentPreviewPage = 0;
   var previewTransformation = function(redirect) {
@@ -74,7 +70,7 @@ angular.module('grafterizerApp')
     if (!clojure) return;
 
     PipeService.preview($scope.selectedDistribution, clojure, 0, paginationSize)
-      .success(function(data) {
+      .then(function(data) {
       delete $scope.graftwerkException;
       $scope.data = data;
       if (redirect) {
@@ -84,7 +80,9 @@ angular.module('grafterizerApp')
       }
 
       showDownloadButton();
-    }).error(function(data) {
+    },
+
+    function(data) {
       if (data) {
         if (data.edn && data.edn[':message']) {
           $scope.graftwerkException = data.edn[':message'];
@@ -92,6 +90,15 @@ angular.module('grafterizerApp')
           $scope.graftwerkException = data.json.error;
         } else {
           $scope.graftwerkException = data.raw;
+        }
+
+        if ($scope.graftwerkException.match(/(out of memory|timed out)/i)) {
+          $mdDialog.show(
+            $mdDialog.alert()
+              .title($scope.graftwerkException)
+              .content('The provided input file could not be transformed with the specified transformation due to an exceeded processing quota. We are aware of the limitation and will be extending the quotas in the near future.')
+              .ok('Ok')
+          );
         }
 
         // Delete the outdated data
@@ -149,12 +156,11 @@ angular.module('grafterizerApp')
 
   var currentOriginalPage = 0;
   $scope.loadOriginalData = function() {
-    // TODO CHECK distribution change
     if ($scope.originalData) return;
 
     if ($scope.selectedDistribution) {
       PipeService.original($scope.selectedDistribution, 0, paginationSize)
-        .success(function(data) {
+        .then(function(data) {
         $scope.originalData = data;
       });
     }
@@ -165,13 +171,15 @@ angular.module('grafterizerApp')
     PipeService.preview($scope.selectedDistribution,
                         savedGeneratedClojure,
                         ++currentPreviewPage, paginationSize)
-      .success(function(data) {
+      .then(function(data) {
       if ($scope.data && $scope.data.edn && data && data.edn) {
         callback(undefined, data.edn);
       } else {
         callback(true);
       }
-    }).error(function() {
+    },
+
+    function() {
       callback(true);
     });
   };
@@ -179,13 +187,15 @@ angular.module('grafterizerApp')
   $scope.loadMoreOriginal = function(callback) {
     if ($scope.selectedDistribution) {
       PipeService.original($scope.selectedDistribution, ++currentOriginalPage, paginationSize)
-        .success(function(data) {
+        .then(function(data) {
         if (data && data.edn) {
           callback(undefined, data.edn);
         } else {
           callback(true);
         }
-      }).error(function() {
+      },
+
+      function() {
         callback(true);
       });
     }
