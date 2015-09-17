@@ -92,6 +92,15 @@ angular.module('grafterizerApp')
           $scope.graftwerkException = data.raw;
         }
 
+        if ($scope.graftwerkException.match(/(out of memory|timed out)/i)) {
+          $mdDialog.show(
+            $mdDialog.alert()
+              .title($scope.graftwerkException)
+              .content('The provided input file could not be transformed with the specified transformation due to an exceeded processing quota. We are aware of the limitation and will be extending the quotas in the near future.')
+              .ok('Ok')
+          );
+        }
+
         // Delete the outdated data
         $scope.data = null;
 
