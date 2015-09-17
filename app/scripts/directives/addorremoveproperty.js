@@ -21,21 +21,6 @@ angular.module('grafterizerApp')
     compile: function(element) {
       return RecursionHelper.compile(element, function(scope, iElement, iAttrs, controller, transcludeFn) {
         scope.node = scope.property;
-        scope.editProperty = function() {
-          scope.originalProperties = [];
-          angular.copy(scope.parent.subElements, scope.originalProperties);
-          $mdDialog.show({
-            templateUrl: 'views/propertydialog.html',
-            controller: 'PropertydialogCtrl',
-            scope: scope.$new(false, scope)
-          }).then(
-            function(propertyNode) {
-            },
-            function() {
-              angular.copy(scope.originalProperties, scope.parent.subElements);
-            });
-        };
-
         scope.clickAddPropertyAfter = function(property) {
           var newScope = scope.$new(false, scope);
           newScope.property = null;

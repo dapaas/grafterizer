@@ -21,6 +21,17 @@ angular.module('grafterizerApp')
   var connection = leObject.serveraddress;
   $scope.dialogState = {};
   $scope.dialogState.selectedTab = 0;
+
+  $scope.disableBlankNodeOption = false;
+  console.log($scope.parentNode);
+  if($scope.parentNode) {
+    console.log($scope.parentNode instanceof transformationDataModel.Graph);
+    if($scope.parentNode instanceof transformationDataModel.Graph){
+      console.log("here");
+      $scope.disableBlankNodeOption = true;
+    }
+  }
+
   if($scope.nodeCurrentState){
     $scope.propertyValue = {
       value: $scope.nodeCurrentState.__type === "ConstantURI" ? $scope.nodeCurrentState.prefix + $scope.nodeCurrentState.constant : ''
@@ -66,7 +77,7 @@ angular.module('grafterizerApp')
   //add vocabulary dialog
   $scope.showSearchPagination = false;
 
-  
+
 
   // TODO make this more strict - i.e, implement a proper parser; implement IRIs instead of URIs
   // check if a string has a scheme and domain in it (i.e., it is not simply a qualified name)
