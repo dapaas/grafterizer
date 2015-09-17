@@ -10,14 +10,17 @@
 angular.module('grafterizerApp')
   .provider('PipeService', function() {
 
-    var endpoint = '';
-    this.setEndpoint = function(newEndpoint) {
-      endpoint = newEndpoint;
+    var endpointRest = '';
+    var endpointCache = '';
+
+    this.setEndpoints = function(newEndpointRest, newEndpointCache) {
+      endpointRest = newEndpointRest;
+      endpointCache = newEndpointCache;
     };
 
     var apiAuthorization = '';
 
-    this.$get = function($http, $log, $mdToast, $q, cfpLoadingBar) {
+    this.$get = function($http, $log, $mdToast, $q, cfpLoadingBar, $mdDialog) {
 
       var api = {};
       api.setAuthorization = function(keypass) {
@@ -48,7 +51,7 @@ angular.module('grafterizerApp')
             jsedn: null
           };
         }
-      }
+      };
 
       var errorHandler = function(data, status, headers, config) {
         var message;
@@ -80,7 +83,7 @@ angular.module('grafterizerApp')
       };
 
       api.computeTuplesHref = function(distributionUri, transformationUri, type) {
-        return endpoint + '/download?authorization=' +
+        return endpointRest + '/download?authorization=' +
           window.encodeURIComponent(apiAuthorization) +
           '&transformationUri=' +
           window.encodeURIComponent(transformationUri) +
@@ -88,36 +91,72 @@ angular.module('grafterizerApp')
           '&type=' + (type ? window.encodeURIComponent(type) : 'pipe');
       };
 
-      var loadDataAsync = function(deferred, hash, nbIterations) {
+      var loadDataAsync = function(deferred, hash, nbIterations, justTheStatusPlease) {
         if (nbIterations === 0) {
           cfpLoadingBar.start();
           cfpLoadingBar.set(0.33);
         }
 
+        var url = endpointCache + '/graftermemcache/' + hash;
+
+        var reqUrl = url;
+        if (justTheStatusPlease) {
+          reqUrl += '?status=1';
+        }
+
         $http({
-          url: 'http://localhost:8082/graftermemcache/' + hash,
+          url: reqUrl,
           method: 'GET',
           transformResponse: [transformEdnResponse],
           ignoreLoadingBar: true
-        }).error(errorHandler).error(function() {
-          deferred.reject();
+        }).error(errorHandler).error(function(data) {
+          deferred.reject(data);
           cfpLoadingBar.complete();
         }).success(function(data, status) {
           if (status === 200) {
+
+            if (justTheStatusPlease) {
+              data.url = url;
+            }
+
             deferred.resolve(data);
             cfpLoadingBar.complete();
           } else {
             cfpLoadingBar.inc();
-            window.setTimeout(loadDataAsync.bind(undefined, deferred, hash, ++nbIterations), 100);
+            window.setTimeout(loadDataAsync.bind(undefined, deferred, hash, ++nbIterations, justTheStatusPlease), 100);
           }
         });
       };
 
+      api.computeTuplesHrefAsync = function(distributionUri, transformationUri, type) {
+        var deferredFinal = $q.defer();
+        var deferredMiddle = $q.defer();
+
+        $http({
+          url: api.computeTuplesHref(distributionUri, transformationUri, type) + '&useCache=1',
+          method: 'GET'
+        }).error(errorHandler).error(function() {
+          deferredFinal.reject();
+          deferredMiddle.reject();
+        }).success(function(data) {
+          deferredMiddle.resolve();
+          loadDataAsync(deferredFinal, data.hash, 0, true);
+        });
+
+        return {
+          final: deferredFinal.promise,
+          middle: deferredMiddle.promise
+        };
+      };
+
+      var lastPreviewDuration = Number.MAX_VALUE;
+
       api.preview = function(distributionUri, clojure, page, pageSize) {
         var deferred = $q.defer();
 
+        var startTime = +new Date();
         $http({
-          url: endpoint + '/preview',
+          url: endpointRest + '/preview',
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -127,27 +166,41 @@ angular.module('grafterizerApp')
             distributionUri: distributionUri,
             clojure: clojure,
             page: page || 0,
-            pageSize: pageSize || 100
+            pageSize: pageSize || 100,
+            useCache: 1
           }
         }).error(errorHandler).error(function() {
           deferred.reject();
         }).success(function(data) {
+          if (data.duration && data.duration > 0) {
+            lastPreviewDuration = data.duration;
+          } else {
+            deferred.promise.then(function() {
+              lastPreviewDuration = (+new Date()) - startTime;
+            });
+          }
+
           loadDataAsync(deferred, data.hash, 0);
         });
 
         return deferred.promise;
       };
 
+      api.getLastPreviewDuration = function() {
+        return lastPreviewDuration;
+      };
+
       api.original = function(distributionUri, page, pageSize) {
         var deferred = $q.defer();
 
         $http({
-          url: endpoint + '/original',
+          url: endpointRest + '/original',
           method: 'GET',
           params: {
             distributionUri: distributionUri,
             page: page || 0,
-            pageSize: pageSize || 100
+            pageSize: pageSize || 100,
+            useCache: 1
           },
           headers: {
             Authorization: apiAuthorization
@@ -163,7 +216,7 @@ angular.module('grafterizerApp')
 
       api.download = function(distributionUri, transformationUri, type) {
         return $http({
-          url: endpoint + '/download',
+          url: endpointRest + '/download',
           method: 'GET',
           params: {
             authorization: apiAuthorization,
@@ -178,7 +231,7 @@ angular.module('grafterizerApp')
 
       api.save = function(datasetId, distributionUri, transformationUri, type) {
         return $http({
-          url: endpoint + '/save',
+          url: endpointRest + '/save',
           method: 'GET',
           params: {
             datasetId: datasetId,
@@ -192,7 +245,7 @@ angular.module('grafterizerApp')
 
       api.fillRDFrepo = function(distributionUri, repositoryUri) {
         return $http({
-          url: endpoint + '/fillRDFrepo',
+          url: endpointRest + '/fillRDFrepo',
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -19,11 +19,57 @@ angular.module('grafterizerApp')
     $scope.downloadLink = PipeService.computeTuplesHref(
       $scope.distribution, $scope.transformation, $scope.type);
 
+    $scope.lastPreviewDuration = PipeService.getLastPreviewDuration();
+    $scope.verySlowMode = $scope.lastPreviewDuration > 25000;
+    // $scope.verySlowMode = $scope.lastPreviewDuration > 25;
+
     $scope.ugly = function() {
       // TODO fixme
       window.setTimeout(function() {
         $mdDialog.hide();
       }, 1);
+    };
+
+    $scope.startDownloadProcessing = function() {
+      if ($scope.downloadLinkSlowMode) {
+        $scope.ugly();
+        return;
+      }
+
+      $scope.downloadProcessing = true;
+      $scope.downloadProcessingStatus = 'Preheating';
+
+      var promises = PipeService.computeTuplesHrefAsync(
+        $scope.distribution, $scope.transformation, $scope.type);
+
+      var intervalEstimatedStuff = 0;
+
+      promises.middle.then(function() {
+        $scope.downloadProcessingStatus = 'Computing stuff';
+
+        var startTime = +new Date();
+        intervalEstimatedStuff = window.setInterval(function() {
+          var duration = (+new Date()) - startTime;
+
+          var durationLeft = $scope.lastPreviewDuration + 5000 - duration;
+          $scope.downloadProcessingStatus = 'Estimated end of the processing: '
+            + moment.duration(durationLeft).humanize(true);
+        }, 1000);
+      });
+
+      promises.final.then(function(data) {
+          window.clearInterval(intervalEstimatedStuff);
+
+          $scope.downloadLinkSlowMode = data.url;
+          $scope.downloadProcessing = false;
+          $scope.downloadProcessingStatus = null;
+          $scope.slowModeThanks = true;
+        },
+
+        function() {
+          window.clearInterval(intervalEstimatedStuff);
+          $scope.downloadProcessingStatus = 'Unable to compute the data. Please try again';
+        });
     };
   
     var showError = function() {
