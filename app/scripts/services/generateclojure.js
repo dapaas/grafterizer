@@ -230,7 +230,7 @@ angular.module('grafterizerApp')
       pipeline = new jsedn.List([
       jsedn.sym('defpipe'),
       jsedn.sym('my-pipe'),
-      'Pipeline to convert tabular persons data into a different tabular format.',
+      'Grafter pipeline for data clean-up and preparation.',
       new jsedn.Vector([new jsedn.sym('data-file')]),
       new jsedn.List([jsedn.sym('->'), readDatasetFunct])]);
 
@@ -299,7 +299,7 @@ angular.module('grafterizerApp')
       var k;
       var allSubElementsVector;
       var subElementEdn;
-
+      node = transformationDataModel.getGraphElement(node);
       if (node instanceof transformationDataModel.Property) {
         if (node.subElements.length === 0) {
           alertInterface('Error found in RDF mapping for the sub-elements node ' + node.propertyName + '!');
@@ -703,7 +703,6 @@ angular.module('grafterizerApp')
       graphPrefix = [];
       graphConcept = [];
       var prefixersInGUI = transformation.prefixers;
-
       // add only custom prefixers - the Grafter ones are available by default
       for (var i = 0; i < prefixersInGUI.length; ++i) {
         var name = prefixersInGUI[i].name;
@@ -741,7 +740,6 @@ angular.module('grafterizerApp')
       }
 
       var grafterCustomFunctions = constructUserFunctions();
-
       /* Graph Template */
 
       var graphTemplate = constructRDFGraphFunction(transformation);
@@ -778,13 +776,13 @@ angular.module('grafterizerApp')
 
         textStr += '\n';
       }
-
+      
       for (i = 0; i < grafterCustomFunctions.length; ++i) {
         textStr += (grafterCustomFunctions[i].ednEncode() + '\n');
       }
 
       textStr += graphTemplate.ednEncode();
-
+      
       textStr += '\n';
       textStr += '\n';
       textStr += (resultingPipeline.ednEncode());
@@ -793,15 +791,14 @@ angular.module('grafterizerApp')
       textStr += '\n';
 
       textStr +=
-        '(defgraft my-graft "Pipeline to convert the tabular persons data sheet into graph data." my-pipe make-graph)';
-
+        '(defgraft my-graft "Transformation that converts input CSV data into RDF graph data." my-pipe make-graph)';
       return textStr;
     }
 
     // TODO this is just a PoC
     var overridedClojure = null;
     var generatedClojureBeforeGeneration = null;
-
+  
     this.fromTransformation = function(transformation, noOverride) {
       try {
         var generatedCode = generateGrafterCode(transformation);
@@ -812,6 +809,8 @@ angular.module('grafterizerApp')
         return generatedCode;
       } catch (e) {
         Raven.captureException(e);
+        console.error(e);
+        // TODO print some error pls
         return '';
       }
     };

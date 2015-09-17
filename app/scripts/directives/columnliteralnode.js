@@ -24,9 +24,12 @@ angular.module('grafterizerApp')
                                                         iAttrs, controller, transcludeFn) {
         scope.editNode = function() {
           scope.originalNode = {};
+          scope.nodeCurrentState = {};
           angular.copy(scope.node, scope.originalNode);
+          angular.copy(scope.node, scope.nodeCurrentState);
           var newScope = scope.$new(false, scope);
-          newScope.newNode = scope.node;
+          newScope.nodeCurrentState = scope.nodeCurrentState;
+          newScope.parentNode = scope.parent;
           newScope.isCreate = false;
           $mdDialog.show({
             templateUrl: 'views/mappingnodedefinitiondialog.html',
@@ -34,11 +37,9 @@ angular.module('grafterizerApp')
             scope: newScope
           }).then(
             function(graphNode) {
-              scope.node = transformationDataModel.getGraphElement(graphNode);
+              scope.parent.replaceChild(scope.node, graphNode);
             },
-
             function() {
-              angular.copy(scope.originalNode, scope.node);
               newScope.$destroy();
             });
         };
