@@ -52,8 +52,8 @@ angular.module('grafterizerApp')
           var duration = (+new Date()) - startTime;
 
           var durationLeft = $scope.lastPreviewDuration + 5000 - duration;
-          $scope.downloadProcessingStatus = 'Estimated end of the processing: '
-            + moment.duration(durationLeft).humanize(true);
+          $scope.downloadProcessingStatus = 'Estimated end of the processing: ' +
+            moment.duration(durationLeft).humanize(true);
         }, 1000);
       });
 

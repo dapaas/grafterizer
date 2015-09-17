@@ -8,7 +8,7 @@
  * Controller of the grafterizerApp
  */
 angular.module('grafterizerApp')
-  .controller('MappingnodedefinitiondialogCtrl', function(
+.controller('MappingnodedefinitiondialogCtrl', function(
               $scope,
                $http,
                $mdDialog,
@@ -23,21 +23,24 @@ angular.module('grafterizerApp')
   $scope.dialogState.selectedTab = 0;
 
   $scope.disableBlankNodeOption = false;
-  console.log($scope.parentNode);
-  if($scope.parentNode) {
-    console.log($scope.parentNode instanceof transformationDataModel.Graph);
-    if($scope.parentNode instanceof transformationDataModel.Graph){
-      console.log("here");
+
+  // console.log($scope.parentNode);
+  if ($scope.parentNode) {
+    // console.log($scope.parentNode instanceof transformationDataModel.Graph);
+    if ($scope.parentNode instanceof transformationDataModel.Graph) {
+      //console.log("here");
       $scope.disableBlankNodeOption = true;
     }
   }
 
-  if($scope.nodeCurrentState){
+  if ($scope.nodeCurrentState) {
     $scope.propertyValue = {
-      value: $scope.nodeCurrentState.__type === "ConstantURI" ? $scope.nodeCurrentState.prefix + $scope.nodeCurrentState.constant : ''
-    }; 
+      value: $scope.nodeCurrentState.__type === 'ConstantURI' ? $scope.nodeCurrentState.prefix + $scope.nodeCurrentState.constant : ''
+    };
+
     // serialise the node state object to the proper RDF element type
     $scope.nodeCurrentState = transformationDataModel.getGraphElement($scope.nodeCurrentState);
+
     // put dialog in the proper state
     switch ($scope.nodeCurrentState.__type) {
       case 'ConstantURI':
@@ -60,7 +63,7 @@ angular.module('grafterizerApp')
   } else {
     $scope.propertyValue = {
       value: ''
-    }; 
+    };
     $scope.nodeCurrentState = {};
   }
 
@@ -77,34 +80,34 @@ angular.module('grafterizerApp')
   //add vocabulary dialog
   $scope.showSearchPagination = false;
 
-
-
   // TODO make this more strict - i.e, implement a proper parser; implement IRIs instead of URIs
   // check if a string has a scheme and domain in it (i.e., it is not simply a qualified name)
-  $scope.isProbablyUri = function (string) {
+  $scope.isProbablyUri = function(string) {
     //    var url = new URI("foaf:asdf");
-    var uriRegEx = new RegExp("^" +
-                              "(?:" +
-                              "([^:/?#]+)" +         // scheme
-                              ":)?" +
-                              "(?://" +
-                              "(?:([^/?#]*)@)?" +    // credentials
-                              "([^/?#:@]*)" +        // domain
-                              "(?::([0-9]+))?" +     // port
-                              ")?" +
-                              "([^?#]+)?" +            // path
-                              "(?:\\?([^#]*))?" +      // query
-                              "(?:#(.*))?" +           // fragment
-                              "$");
+    var uriRegEx = new RegExp('^' +
+                              '(?:' +
+                              '([^:/?#]+)' +         // scheme
+                              ':)?' +
+                              '(?://' +
+                              '(?:([^/?#]*)@)?' +    // credentials
+                              '([^/?#:@]*)' +        // domain
+                              '(?::([0-9]+))?' +     // port
+                              ')?' +
+                              '([^?#]+)?' +            // path
+                              '(?:\\?([^#]*))?' +      // query
+                              '(?:#(.*))?' +           // fragment
+                              '$');
     var match = ('' + string).match(uriRegEx);
+
     // probably a full URI (and not a qualified name) if it has a scheme and a domain
-    if(match[1]){
+    if (match[1]) {
       // has a scheme
-      if(match[3]){
+      if (match[3]) {
         // has a domain
         return true;
       }
     }
+
     return false;
   };
 
@@ -116,7 +119,7 @@ angular.module('grafterizerApp')
             $scope.nodeCurrentState = new transformationDataModel.ColumnURI(
               $scope.nodeCurrentState.prefix ? $scope.nodeCurrentState.prefix : '',
               $scope.nodeCurrentState.column ? $scope.nodeCurrentState.column : '',
-              $scope.nodeCurrentStateSubElements ? $scope.nodeCurrentStateSubElements : [] 
+              $scope.nodeCurrentStateSubElements ? $scope.nodeCurrentStateSubElements : []
             );
           }
         } else {
@@ -124,10 +127,11 @@ angular.module('grafterizerApp')
             $scope.nodeCurrentState = new transformationDataModel.ConstantURI(
               $scope.nodeCurrentState.prefix ? $scope.nodeCurrentState.prefix : '',
               $scope.nodeCurrentState.constant ? $scope.nodeCurrentState.constant : '',
-              $scope.nodeCurrentStateSubElements ? $scope.nodeCurrentStateSubElements : [] 
+              $scope.nodeCurrentStateSubElements ? $scope.nodeCurrentStateSubElements : []
             );
-          } 
+          }
         }
+
         break;
       case 1:
         if ($scope.dialogState.mappingType === 'dataset-col') {
@@ -151,6 +155,7 @@ angular.module('grafterizerApp')
             $scope.nodeCurrentState.subElements ? $scope.nodeCurrentState.subElements : []
           );
         }
+
         break;
     }
   };
@@ -161,20 +166,20 @@ angular.module('grafterizerApp')
 
   $scope.addNode = function() {
     if ($scope.nodeCurrentState.__type === 'ConstantURI') {
-      if($scope.isProbablyUri($scope.propertyValue.value)){
+      if ($scope.isProbablyUri($scope.propertyValue.value)) {
         // probably an outright URI - we put the whole URI in there
         $scope.nodeCurrentState.prefix = '';
         $scope.nodeCurrentState.constant = $scope.propertyValue.value;
         $scope.nodeCurrentState.subElements = $scope.nodeCurrentStateSubElements;
       } else {
         // probably a qualified name - we need to split it into parts
-        if($scope.propertyValue.value.indexOf(':') != -1){
+        if ($scope.propertyValue.value.indexOf(':') !== -1) {
           $scope.nodeCurrentState.prefix = $scope.propertyValue.value.substring(0, $scope.propertyValue.value.indexOf(':'));
           $scope.nodeCurrentState.constant = $scope.propertyValue.value.substring($scope.propertyValue.value.indexOf(':') + 1, $scope.propertyValue.value.length);
         } else {
           $mdToast.show(
             $mdToast.simple()
-            .content("Error: Invalid node name. Please use a prefixed name (e.g., owl:Thing), or an IRI (e.g., 'http://www.w3.org/2002/07/owl#Thing')")
+            .content('Error: Invalid node name. Please use a prefixed name (e.g., owl:Thing), or an IRI (e.g., \'http://www.w3.org/2002/07/owl#Thing\')')
             .position('bottom left')
             .hideDelay(4000)
           );
@@ -182,10 +187,12 @@ angular.module('grafterizerApp')
       }
     } else if ($scope.nodeCurrentState.__type === 'ColumnURI') {
       $scope.nodeCurrentState.subElements = $scope.nodeCurrentStateSubElements;
-    } else if ($scope.nodeCurrentState.__type === 'ConstantLiteral') {
+    }
+
+    /*else if ($scope.nodeCurrentState.__type === 'ConstantLiteral') {
     } else if ($scope.nodeCurrentState.__type === 'ColumnLiteral') {
     } else if ($scope.nodeCurrentState.__type === 'BlankNode') {
-    }
+    }*/
 
     $mdDialog.hide($scope.nodeCurrentState);
   };
@@ -214,8 +221,8 @@ angular.module('grafterizerApp')
 
         for (i = response.classResult.length - 1; i >= 0; i--) {
           var value = response.classResult[i].value;
-          if (value.substring(0, value.indexOf(':')).toLowerCase() === Para.toLowerCase() 
-              || value.substring( value.indexOf(':') + 1, value.length).toLowerCase() === Para.toLowerCase()
+          if (value.substring(0, value.indexOf(':')).toLowerCase() === Para.toLowerCase() ||
+              value.substring(value.indexOf(':') + 1, value.length).toLowerCase() === Para.toLowerCase()
              ) {
             $scope.items.push(value);
             response.classResult.splice(i, 1);

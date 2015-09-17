@@ -8,7 +8,7 @@
  * Service in the grafterizerApp.
  */
 angular.module('grafterizerApp')
-  .service('transformationDataModel', function($mdToast) {
+.service('transformationDataModel', function($mdToast) {
   var _this = this;
 
   var Prefixer = function(name, uri, parentPrefix) {
@@ -946,8 +946,8 @@ angular.module('grafterizerApp')
     this.functions.splice(index, 1);
     return true;
   };
-  this.Pipeline = Pipeline;
 
+  this.Pipeline = Pipeline;
 
   this.getGraphElement = function(inputElement) {
     if (!(inputElement instanceof RDFElement)) {
@@ -956,7 +956,6 @@ angular.module('grafterizerApp')
       return inputElement;
     }
   };
-
   
   // TODO remove subElements and move to URINode (which are the only elements that can have subelements)
   var RDFElement = function(subElements) {
