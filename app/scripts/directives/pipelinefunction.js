@@ -23,7 +23,6 @@ angular.module('grafterizerApp')
           var newScope = scope.$new(false, scope);
           newScope.transformation = scope.transformation;
           $mdDialog.show({
-            controller: 'PipelinefunctiondialogCtrl',
             templateUrl: 'views/editPipelineFunctionDialog.html',
             scope: newScope
           }).then(
