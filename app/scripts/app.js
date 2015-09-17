@@ -81,11 +81,11 @@ angular
     if (developmentMode) {
       PipeServiceProvider.setEndpoints(
         'https://grafterizer.datagraft.net/backend',
-        'https://grafterizer.datagraft.net/cache/');
+        'https://grafterizer.datagraft.net/cache');
 
       // PipeServiceProvider.setEndpoints('http://localhost:8080', 'http://localhost:8082');
     } else {
-      PipeServiceProvider.setEndpoints('/backend', '/cache/');
+      PipeServiceProvider.setEndpoints('/backend', '/cache');
     }
 
     $urlRouterProvider.otherwise('/transformations/new');
