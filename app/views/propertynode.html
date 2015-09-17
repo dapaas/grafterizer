@@ -29,7 +29,7 @@
       <column-uri-node ng-if="node.__type=='ColumnURI'" node="$parent.node" parent="$parent.property"></column-uri-node>
       <constant-literal-node ng-if="node.__type=='ConstantLiteral'" node="$parent.node" parent="$parent.property"></constant-literal-node>
       <column-literal-node ng-if="node.__type=='ColumnLiteral'" node="$parent.node" parent="$parent.property"></column-literal-node>
-      <new-blank-node ng-if="node.__type=='BlankNode'" node="$parent.node" parent="$parent.property"></new-blank-node>
+      <blank-node ng-if="node.__type=='BlankNode'" node="$parent.node" parent="$parent.property"></blank-node>
     </div>
   </div>
 </div>
