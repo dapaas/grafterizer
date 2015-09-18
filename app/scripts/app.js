@@ -84,7 +84,7 @@ angular
       'https://grafterizer.datagraft.net/backend'
       : '/backend');
 
-    jarfterServiceProvider.setEndpoint('http://192.168.11.43:8080');
+    jarfterServiceProvider.setEndpoint('http://54.76.91.86:8080');
 
     $urlRouterProvider.otherwise('/transformations/new');
 
