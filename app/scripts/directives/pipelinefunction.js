@@ -24,7 +24,8 @@ angular.module('grafterizerApp')
           newScope.transformation = scope.transformation;
           $mdDialog.show({
             templateUrl: 'views/editPipelineFunctionDialog.html',
-            scope: newScope
+            scope: newScope,
+            clickOutsideToClose: true
           }).then(
           function(pipeFunct) {
             angular.copy(pipeFunct, scope.function);

@@ -33,7 +33,8 @@ angular.module('grafterizerApp')
           $mdDialog.show({
             templateUrl: 'views/mappingnodedefinitiondialog.html',
             controller: 'MappingnodedefinitiondialogCtrl',
-            scope: newScope
+            scope: newScope,
+            clickOutsideToClose: true
           }).then(
             function(graphNode) {
               scope.parent.replaceChild(scope.node, graphNode);
@@ -51,7 +52,8 @@ angular.module('grafterizerApp')
           $mdDialog.show({
             templateUrl: 'views/propertydialog.html',
             controller: 'PropertydialogCtrl',
-            scope: scope.$new(false, scope)
+            scope: scope.$new(false, scope),
+            clickOutsideToClose: true
           }).then(
             function(propertyNode) {
               if (propertyNode) {

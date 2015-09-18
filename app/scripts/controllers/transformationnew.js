@@ -208,7 +208,8 @@ angular.module('grafterizerApp')
       $mdDialog.show({
         templateUrl: 'views/editprefixes.html',
         controller: 'EditprefixersCtrl',
-        scope: $scope.$new(false, $scope)
+        scope: $scope.$new(false, $scope),
+        clickOutsideToClose: true
       }).then(
         function() {},
 
@@ -223,7 +224,8 @@ angular.module('grafterizerApp')
       $mdDialog.show({
         templateUrl: 'views/editlibraries.html',
         controller: 'EditlibrariesCtrl',
-        scope: $scope.$new(false, $scope)
+        scope: $scope.$new(false, $scope),
+        clickOutsideToClose: true
       }).then(
         function() {},
 
@@ -236,7 +238,8 @@ angular.module('grafterizerApp')
       $mdDialog.show({
         templateUrl: 'views/MappingPrefixManage.html',
         controller: 'MappingPrefixManageCtrl',
-        scope: $scope.$new(false, $scope)
+        scope: $scope.$new(false, $scope),
+        clickOutsideToClose: true
       });
     };
 
@@ -244,7 +247,8 @@ angular.module('grafterizerApp')
       $mdDialog.show({
         templateUrl: 'views/validateMapping.html',
         controller: 'validateMappingCtrl',
-        scope: $scope.$new(false, $scope)
+        scope: $scope.$new(false, $scope),
+        clickOutsideToClose: true
       });
     };
 
@@ -256,7 +260,8 @@ angular.module('grafterizerApp')
       $mdDialog.show({
         templateUrl: 'views/createcustomfunction.html',
         controller: 'CustomfunctionsdialogcontrollerCtrl',
-        scope: $scope.$new(false, $scope)
+        scope: $scope.$new(false, $scope),
+        clickOutsideToClose: true
       }).then(
         function() {},
 
@@ -270,7 +275,8 @@ angular.module('grafterizerApp')
       $mdDialog.show({
         templateUrl: 'views/createstringcustomfunction.html',
         controller: 'CustomStringfunctionsdialogcontrollerCtrl',
-        scope: $scope.$new(false, $scope)
+        scope: $scope.$new(false, $scope),
+        clickOutsideToClose: true
       });
     };
 
@@ -288,7 +294,8 @@ angular.module('grafterizerApp')
       $mdDialog.show({
         templateUrl: 'views/loaddistribution.html',
         controller: 'LoadDistributionCtrl',
-        scope: $scope.$new(false)
+        scope: $scope.$new(false),
+        clickOutsideToClose: true
       }).then(function(distribution) {
         $rootScope.actions.save(distribution);
       });

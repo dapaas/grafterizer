@@ -198,7 +198,8 @@ angular.module('grafterizerApp')
       $mdDialog.show({
         templateUrl: 'views/editprefixes.html',
         controller: 'EditprefixersCtrl',
-        scope: $scope.$new(false, $scope)
+        scope: $scope.$new(false, $scope),
+        clickOutsideToClose: true
       }).then(
       function() {},
 
@@ -214,7 +215,8 @@ angular.module('grafterizerApp')
       $mdDialog.show({
         templateUrl: 'views/createcustomfunction.html',
         controller: 'CustomfunctionsdialogcontrollerCtrl',
-        scope: $scope.$new(false, $scope)
+        scope: $scope.$new(false, $scope),
+        clickOutsideToClose: true
       }).then(
         function() {},
 
@@ -228,7 +230,8 @@ angular.module('grafterizerApp')
       $mdDialog.show({
         templateUrl: 'views/loaddistribution.html',
         controller: 'LoadDistributionCtrl',
-        scope: $scope.$new(false)
+        scope: $scope.$new(false),
+        clickOutsideToClose: true
       }).then(function(distribution) {
         $state.go('transformations.transformation.preview', {
           id: $stateParams.id,

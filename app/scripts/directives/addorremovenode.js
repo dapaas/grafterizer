@@ -46,7 +46,8 @@ angular.module('grafterizerApp')
           $mdDialog.show({
             templateUrl: 'views/mappingnodedefinitiondialog.html',
             controller: 'MappingnodedefinitiondialogCtrl',
-            scope: newScope
+            scope: newScope,
+            clickOutsideToClose: true
           }).then(function(graphNode) {
             if (graphNode) {
               scope.parent.addNodeAfter(scope.node, graphNode);

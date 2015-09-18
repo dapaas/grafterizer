@@ -66,7 +66,8 @@ angular.module('grafterizerApp')
           $mdDialog.show({
             templateUrl: 'views/MappingPrefixManage.html',
             controller: 'MappingPrefixManageCtrl',
-            scope: $rootScope.$new(false)
+            scope: $rootScope.$new(false),
+            clickOutsideToClose: true
           });
         };
 

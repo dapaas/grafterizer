@@ -35,7 +35,8 @@ angular.module('grafterizerApp')
           newScope.transformation = scope.transformation;
           $mdDialog.show({
             templateUrl: 'views/pipelineFunctionDialog.html',
-            scope: newScope
+            scope: newScope,
+            clickOutsideToClose: true
           }).then(function(pipeFunct) {
             if (pipeFunct) {
               scope.pipeline.addAfter(funct, pipeFunct);

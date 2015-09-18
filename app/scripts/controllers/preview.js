@@ -230,7 +230,8 @@ angular.module('grafterizerApp')
         $mdDialog.show({
           templateUrl: 'views/computetriples.html',
           controller: 'ComputetriplesCtrl',
-          scope: scopeDialog
+          scope: scopeDialog,
+          clickOutsideToClose: true
         });
       }
     });
