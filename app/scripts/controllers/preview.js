@@ -133,6 +133,12 @@ angular.module('grafterizerApp')
     });
   }
 
+  $scope.$watch('livePreview', function(newValue, oldValue) {
+    if (newValue === true && oldValue === false) {
+      previewTransformation(false);
+    }
+  });
+
   $scope.$watch('transformation', function() {
     if ($scope.livePreview && $scope.transformation) {
       throttlePreview();
