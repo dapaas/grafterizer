@@ -7,7 +7,7 @@
  * # grepFunction
  */
 angular.module('grafterizerApp')
-  .directive('grepFunction', function(transformationDataModel) {
+  .directive('grepFunction', function(transformationDataModel, $mdDialog) {
     return {
       templateUrl: 'views/pipelineFunctions/grepFunction.html',
       restrict: 'E',
@@ -53,8 +53,9 @@ angular.module('grafterizerApp')
         };
         
         scope.showRegexTutorial = function() {
-          scope.$parent.$mdDialog.show({
-            templateUrl: 'views/regextutorial.html'
+          $mdDialog.show({
+            templateUrl: 'views/regextutorial.html',
+            clickOutsideToClose: true
           });
         };
         
