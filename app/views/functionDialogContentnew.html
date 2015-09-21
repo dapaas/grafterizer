@@ -36,8 +36,8 @@
         <!-- <div class="md-actions" layout="row" layout-align="right"> -->
             <!-- <md-button ng-if="function" class="md-primary" ng-click="delete()" aria-label="Remove function">Remove</md-button> -->
         <!-- </div> -->
-        <md-toolbar ng-hide="!selectedFunctionName" class="md-actions" layout="row" layout-align="right">
-            <md-button  ng-disabled="!selectedFunctionName" ng-click="add()" aria-label="{{function ? 'Edit' : 'Create'}} function">{{function ? 'Edit' : 'Create'}} function</md-button>
+        <md-toolbar class="md-actions" layout="row" layout-align="right">
+            <md-button  ng-show="selectedFunctionName" ng-click="add()" aria-label="{{function ? 'Edit' : 'Create'}} function">{{function ? 'Edit' : 'Create'}} function</md-button>
             <md-button  ng-click="closeDialog()" aria-label="Cancel changes to function">Cancel</md-button>
         </md-toolbar>
     </div>
