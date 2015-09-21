@@ -22,7 +22,8 @@ angular.module('grafterizerApp')
 
     $scope.document = {
       title: 'New transformation',
-      description: ''
+      description: '',
+      keywords: []
     };
 
     var customfunctions = [
@@ -179,7 +180,8 @@ angular.module('grafterizerApp')
           'dcat:public': $scope.document['dct:public'] ? 'true' : 'false',
           'dct:modified': moment().format('YYYY-MM-DD'),
           'dcat:transformationType': transformationType,
-          'dcat:transformationCommand': transformationCommand
+          'dcat:transformationCommand': transformationCommand,
+          'dcat:keyword': $scope.document.keywords
         }, clojure, $scope.transformation)
           .success(function(data) {
             $mdToast.show(

@@ -22,13 +22,22 @@ angular.module('grafterizerApp')
 
     var id = $scope.id = $stateParams.id;
     $scope.document = {
-      title: 'loading'
+      title: 'loading',
+      keywords: []
     };
 
     ontotextAPI.transformation(id).success(function(data) {
       $scope.document = data;
       $scope.document.title = data['dct:title'];
       $scope.document.description = data['dct:description'];
+      $scope.document.keywords = data['dcat:keyword'];
+
+      if (!$scope.document.keywords ||
+        typeof $scope.document.keywords.length === 'undefined') {
+        $scope.document.keywords = [];
+      } else {
+        $scope.document.keywords.sort();
+      }
     }).error(function() {
       $state.go('transformations');
     });
@@ -175,6 +184,7 @@ angular.module('grafterizerApp')
             'dct:description': $scope.document.description,
             'dcat:public': $scope.document['dct:public'] ? 'true' : 'false',
             'dct:modified': moment().format('YYYY-MM-DD'),
+            'dcat:keyword': $scope.document.keywords,
             'dcat:transformationType': transformationType,
             'dcat:transformationCommand': transformationCommand
           }, clojure, $scope.transformation)

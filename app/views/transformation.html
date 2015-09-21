@@ -21,6 +21,11 @@
                         <label>Description</label>
                         <textarea ng-model="document.description"></textarea>
                     </md-input-container>
+                    <div class="keywords-container">
+                    <!-- <md-input-container class="sin-no-shrink"> -->
+                        <md-chips ng-model="document.keywords" secondary-placeholder="Add a keyword" placeholder="Enter a new keyword"></md-chips>
+                    </div>
+                    <!-- </md-input-container> -->
                     <div layout="row">
                         <md-switch aria-label="Expose as public" ng-model="document['dct:public']" flex>
                             Expose as public
