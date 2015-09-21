@@ -11,7 +11,7 @@
                 <form name="transformationForm" class="md-padding" ng-submit="actions.save()">
                     <md-input-container class="sin-no-shrink">
                         <label>Title</label>
-                        <input ng-model="document.title" name="title" required pattern="[a-zA-Z0-9\s\-]*">
+                        <input ng-model="document.title" name="title" required pattern="[a-zA-Z0-9\s\-]*" ng-readonly="readonlymode">
                         <div ng-messages="transformationForm.title.$error">
                             <div ng-message="required">This is required.</div>
                             <div ng-message="pattern">The title shouldn't contain special characters.</div>
@@ -19,15 +19,15 @@
                     </md-input-container>
                     <md-input-container class="sin-no-shrink">
                         <label>Description</label>
-                        <textarea ng-model="document.description"></textarea>
+                        <textarea ng-model="document.description" ng-readonly="readonlymode"></textarea>
                     </md-input-container>
                     <div class="keywords-container">
                     <!-- <md-input-container class="sin-no-shrink"> -->
-                        <md-chips ng-model="document.keywords" secondary-placeholder="Add a keyword" placeholder="Enter a new keyword"></md-chips>
+                        <md-chips ng-model="document.keywords" secondary-placeholder="Add a keyword" placeholder="Enter a new keyword" readonly="readonlymode"></md-chips>
                     </div>
                     <!-- </md-input-container> -->
                     <div layout="row">
-                        <md-switch aria-label="Expose as public" ng-model="document['dct:public']" flex>
+                        <md-switch aria-label="Expose as public" ng-model="document['dct:public']" ng-disabled="readonlymode" flex>
                             Expose as public
                         </md-switch>
                         <p flex ng-show="document['dct:publisher']">
@@ -40,10 +40,10 @@
         <md-tab label="Pipeline">
             <md-tab-body>
                 <div class="md-padding">
-                    <md-button aria-label="Edit prefixes" ng-click="editPrefixers()">
+                    <md-button aria-label="Edit prefixes" ng-click="editPrefixers()" ng-disabled="readonlymode">
                         <i class="fa fa-cubes"></i> Edit prefixes
                     </md-button>
-                    <md-button aria-label="Edit utility functions" ng-click="defineCustomFunctions()">
+                    <md-button aria-label="Edit utility functions" ng-click="defineCustomFunctions()" ng-disabled="readonlymode">
                         <i class="fa fa-code"></i> Edit utility functions
                     </md-button>
                     <!--md-button aria-label="Edit string format utility functions" ng-click="defineStringCustomFunctions()">
@@ -84,7 +84,7 @@
     <resize-hand for="transformationTabs" ng-if="showPreview"></resize-hand>
 </md-content>
 
-<md-fab-speed-dial class="md-fling md-fab-bottom-right" md-direction="left">
+<md-fab-speed-dial class="md-fling md-fab-bottom-right" md-direction="left" ng-hide="readonlymode">
     <md-fab-trigger>
         <md-button aria-label="Open file" class="md-fab md-accent sin-fa-button" id="prout">
             <i class="fa fa-folder-open-o"></i>

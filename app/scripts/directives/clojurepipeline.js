@@ -7,7 +7,7 @@
  * # clojurePipeline
  */
 angular.module('grafterizerApp')
-  .directive('clojurePipeline', function(generateClojure) {
+  .directive('clojurePipeline', function(generateClojure, $rootScope) {
     return {
       template: '<div ui-codemirror="editorOptions" ng-model="clojure"></div>',
       restrict: 'E',
@@ -19,10 +19,10 @@ angular.module('grafterizerApp')
           scope.editorOptions = {
             lineWrapping: true,
             mode: 'clojure',
-            dragDrop: false
+            dragDrop: false,
+            readOnly: $rootScope.readonlymode
 
             // lineNumbers: true,
-            // readOnly: true
           };
         },
 

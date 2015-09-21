@@ -22,11 +22,17 @@ angular.module('grafterizerApp')
 
     var id = $scope.id = $stateParams.id;
     $scope.document = {
-      title: 'loading',
+      title: 'transformation loading',
       keywords: []
     };
 
+    $scope.loading = true;
+    $rootScope.readonlymode = true;
+
+    setTimeout(function() {
     ontotextAPI.transformation(id).success(function(data) {
+      $scope.loading = false;
+      // $rootScope.readonlymode = false;
       $scope.document = data;
       $scope.document.title = data['dct:title'];
       $scope.document.description = data['dct:description'];
@@ -39,8 +45,10 @@ angular.module('grafterizerApp')
         $scope.document.keywords.sort();
       }
     }).error(function() {
+      $rootScope.readonlymode = false;
       $state.go('transformations');
     });
+  }, 40)
 
     // ontotextAPI.getClojure(id).success(function(data){
     //     $scope.clojure = data;
@@ -81,6 +89,19 @@ angular.module('grafterizerApp')
 
     $scope.$watch('fileUpload', function() {
       if ($scope.fileUpload) {
+        if ($rootScope.readonlymode) {
+          $mdToast.show(
+            $mdToast.simple()
+            .content($scope.loading ?
+              'Please wait the transformation loading before uploading files' :
+              'File upload is disabled in readonly mode')
+            .position('bottom left')
+            .hideDelay(6000)
+          );
+          delete $scope.fileUpload;
+          return;
+        }
+
         var file = $scope.fileUpload;
 
         uploadFile.upload(file, function(data) {

@@ -12,7 +12,7 @@
 		<i class="fa fa-send"></i>
 		<md-tooltip>Send</md-tooltip>
 	</md-button>
-	<md-button class="md-icon-button" aria-label="Save" ng-click="save()" ng-if="save">
+	<md-button class="md-icon-button" aria-label="Save" ng-click="save()" ng-if="save &amp;&amp; !readonlymode">
 		<i class="fa fa-save"></i>
 		<md-tooltip>Save</md-tooltip>
 	</md-button>
@@ -20,7 +20,7 @@
 		<i class="fa fa-code-fork"></i>
 		<md-tooltip>Fork</md-tooltip>
 	</md-button>
-	<md-button class="md-icon-button" aria-label="Delete" ng-click="delete()" ng-if="delete">
+	<md-button class="md-icon-button" aria-label="Delete" ng-click="delete()" ng-if="delete &amp;&amp; !readonlymode">
 		<i class="fa fa-trash"></i>
 		<md-tooltip>Delete</md-tooltip>
 	</md-button>

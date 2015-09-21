@@ -1,4 +1,4 @@
-<md-button class="md-primary md-whiteframe-z5" ng-click="clickAddNodeAfter(null)" ng-hide="graph.graphRoots.length!=0" aria-label="Add node">
+<md-button class="md-primary md-whiteframe-z5" ng-click="clickAddNodeAfter(null)" ng-hide="graph.graphRoots.length!=0" aria-label="Add node" ng-disabled="$root.readonlymode">
     <i class="fa fa-large fa-plus-circle"></i>&nbsp;Add node
   <md-tooltip>
         Add a root node to the graph
