@@ -13,7 +13,7 @@
         <add-or-remove-node node="node" parent="parent" ng-if="parent.__type=='Graph'"></add-or-remove-node>
     </div>
     <div style="padding-top:8px" flex layout-align="start start">
-        <md-button class="md-primary" aria-label="Add property" ng-click="addSubProperty(null)" ng-hide="node.subElements.length!=0">
+        <md-button class="md-primary" aria-label="Add property" ng-click="addSubProperty(null)" ng-hide="node.subElements.length!=0" ng-disabled="$root.readonlymode">
             <i class="fa fa-large fa-plus-circle"></i>&nbsp;Add property
         </md-button>
         <div ng-repeat="property in node.subElements">

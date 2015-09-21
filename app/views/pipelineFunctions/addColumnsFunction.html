@@ -14,40 +14,40 @@
     <p> Columns to add </p>
     <div layout="column" ng-repeat="columnSpec in function.columnsArray">
       <div layout="row">
-        <md-button class="md-primary button-tight md-default-theme" ng-disabled="function.columnsArray.length === 1" ng-click="removeColumn($index)" aria-label="Remove column">
+        <md-button class="md-primary button-tight md-default-theme" ng-disabled="function.columnsArray.length === 1 || $root.readonlymode" ng-click="removeColumn($index)" aria-label="Remove column">
           <i class="fa fa-trash fa-lg"></i>
         </md-button>
         <md-input-container flex>
           <label>Name of new column</label>
-          <input ng-model="columnSpec.colName" type="text" required>
+          <input ng-model="columnSpec.colName" type="text" required ng-readonly="$root.readonlymode">
         </md-input-container>
         <md-input-container flex>
           <label>Value</label>
-          <input ng-model="columnSpec.colValue" type="text" >
+          <input ng-model="columnSpec.colValue" type="text" ng-readonly="$root.readonlymode" >
 
         </md-input-container>
       </div>
       <div layout="row">
         <md-input-container flex>
-          <md-select  aria-label="new column expression" placeholder="{{columnSpec.specValue?columnSpec.specValue:'Choose expression type'}}" ng-model="columnSpec.specValue">
+          <md-select  aria-label="new column expression" placeholder="{{columnSpec.specValue?columnSpec.specValue:'Choose expression type'}}" ng-model="columnSpec.specValue" ng-disabled="$root.readonlymode">
             <md-option ng-repeat="val in newColumnValues"  value = {{val}}>{{val}} </md-option>
           </md-select>
 
         </md-input-container>
         <md-input-container ng-if="columnSpec.specValue==='custom expression'" flex>
           <label>Expression</label>
-          <input ng-model="columnSpec.expression" type="text" >
+          <input ng-model="columnSpec.expression" type="text" ng-readonly="$root.readonlymode">
 
         </md-input-container>
       </div>
     </div>
 
-    <md-button class="md-raised" ng-click="addColumn()" aria-label="Add column">More Columns</md-button>
+    <md-button class="md-raised" ng-click="addColumn()" aria-label="Add column" ng-disabled="$root.readonlymode">More Columns</md-button>
 
     <md-input-container flex>
       <label>Comment</label>
 
-      <input ng-model="function.docstring" type="text" >
+      <input ng-model="function.docstring" type="text" ng-readonly="$root.readonlymode">
     </md-input-container>
   </div>
 

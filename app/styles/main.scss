@@ -325,12 +325,16 @@ md-tab-content .CodeMirror {
       bottom: -5px;
       background-color:$color;
     }
-  }
 
-  pipeline-function {
-    .pipeline-button {
+    &.pipeline-flow-line-readonly {
+      margin-left:9px;
     }
   }
+
+  /*pipeline-function {
+    .pipeline-button {
+    }
+  }*/
 
 }
 

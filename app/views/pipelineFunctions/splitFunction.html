@@ -10,20 +10,20 @@
         <h3>Parameters</h3>
   <md-input-container flex>
         <label>Column name</label>
-        <input ng-model="function.colName" type="text" required>
+        <input ng-model="function.colName" type="text" required ng-readonly="$root.readonlymode">
     </md-input-container>
   <md-input-container flex>
         <label>New column</label>
-        <input ng-model="function.newColName" type="text" >
+        <input ng-model="function.newColName" type="text" ng-readonly="$root.readonlymode">
     </md-input-container>
   <md-input-container flex>
         <label>Separator</label>
-        <input ng-model="function.separator" type="text" required>
+        <input ng-model="function.separator" type="text" required ng-readonly="$root.readonlymode">
     </md-input-container>
     <md-input-container flex>
         <label>Comment</label>
 
-        <input ng-model="function.docstring" type="text" >
+        <input ng-model="function.docstring" type="text" ng-readonly="$root.readonlymode">
     </md-input-container>
 </div>
 </div>
