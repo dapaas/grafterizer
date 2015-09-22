@@ -1,6 +1,7 @@
 <div layout="row" layout-align="start start">
   <div  layout-align="start start">
-    <md-fab-speed-dial md-direction="down" ng-class="md-scale">
+    <md-fab-speed-dial md-direction="down" class="md-scale" md-open="fabIsOpen"
+                         ng-mouseenter="fabIsOpen=true" ng-mouseleave="fabIsOpen=false">
       <md-fab-trigger>
         <md-button flex class="md-raised rdf-mapping-node-button" aria-label="{{node.literalValue}}" ng-click="editNode()">
           <div layout="row">
@@ -17,8 +18,9 @@
           </md-tooltip>
         </md-button>
       </md-fab-trigger>
-      <md-fab-actions>
-        <add-or-remove-node node="node" parent="parent" ng-if="parent.__type=='Graph'"></add-or-remove-node>
+      <md-fab-actions ng-if="parent.__type === 'Graph'" class="layout-row">
+        <add-or-remove-node node="node" parent="parent" mode="add"></add-or-remove-node>
+        <add-or-remove-node node="node" parent="parent" mode="delete"></add-or-remove-node>
       </md-fab-actions>
     </md-fab-speed-dial>
   </div>

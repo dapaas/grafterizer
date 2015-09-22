@@ -22,6 +22,7 @@ angular.module('grafterizerApp')
     compile: function(element) {
       return RecursionHelper.compile(element, function(scope, iElement,
                                                         iAttrs, controller, transcludeFn) {
+        scope.mode = iAttrs.mode;
         scope.clickRemoveNode = function(node) {
           $mdDialog.show(
             $mdDialog.confirm()

@@ -19,7 +19,7 @@ angular.module('grafterizerApp')
 
     //load server vocabulary
 
-    var localVocabulary = $rootScope.transformation.rdfVocabs;
+    var localVocabulary = $rootScope.transformation ? $rootScope.transformation.rdfVocabs : [];
     $http.get(
       connection + 'getAll'
     ).success(

@@ -883,3 +883,7 @@ button.rdf-mapping-property-button {
 .keywords-container {
   margin-bottom: 1em;
 }
+
+md-fab-speed-dial.md-down md-fab-actions.layout-row {
+  flex-direction: row;
+}

@@ -20,6 +20,8 @@ angular.module('grafterizerApp')
     },
     compile: function(element) {
       return RecursionHelper.compile(element, function(scope, iElement, iAttrs, controller, transcludeFn) {
+        scope.mode = iAttrs.mode;
+
         scope.node = scope.property;
         scope.clickAddPropertyAfter = function(property) {
           var newScope = scope.$new(false, scope);
