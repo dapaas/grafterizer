@@ -29,10 +29,10 @@ angular.module('grafterizerApp')
     $scope.loading = true;
     $rootScope.readonlymode = true;
 
-    setTimeout(function() {
+    // setTimeout(function() {
     ontotextAPI.transformation(id).success(function(data) {
       $scope.loading = false;
-      // $rootScope.readonlymode = false;
+      $rootScope.readonlymode = false;
       $scope.document = data;
       $scope.document.title = data['dct:title'];
       $scope.document.description = data['dct:description'];
@@ -48,7 +48,7 @@ angular.module('grafterizerApp')
       $rootScope.readonlymode = false;
       $state.go('transformations');
     });
-  }, 40)
+  // }, 40)
 
     // ontotextAPI.getClojure(id).success(function(data){
     //     $scope.clojure = data;
