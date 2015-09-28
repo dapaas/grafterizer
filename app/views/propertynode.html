@@ -16,7 +16,7 @@
           </md-tooltip>
         </md-button>
       </md-fab-trigger>
-      <md-fab-actions class="layout-row">
+      <md-fab-actions class="layout-row" ng-if="!$root.readonlymode">
         <add-property property="property" parent="parent"></add-property>
         <remove-property property="property" parent="parent"></remove-property>
       </md-fab-actions>
