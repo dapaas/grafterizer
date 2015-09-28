@@ -21,8 +21,8 @@
         </md-button>
       </md-fab-trigger>
       <md-fab-actions ng-if="parent.__type === 'Graph'" class="layout-row">
-        <add-or-remove-node node="node" parent="parent" mode="add"></add-or-remove-node>
-        <add-or-remove-node node="node" parent="parent" mode="delete"></add-or-remove-node>
+        <add-node node="node" parent="parent"></add-node>
+        <remove-node node="node" parent="parent"></remove-node>
       </md-fab-actions>
     </md-fab-speed-dial>
   </div>

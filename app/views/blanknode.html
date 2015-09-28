@@ -10,7 +10,10 @@
             RDF blank node
           </md-tooltip>
         </md-button>
-        <add-or-remove-node node="node" parent="parent" ng-if="parent.__type=='Graph'"></add-or-remove-node>
+        <div ng-if="parent.__type === 'Graph'">
+            <add-node node="$parent.node" parent="$parent.parent"></add-node>
+            <remove-node node="$parent.node" parent="$parent.parent"></remove-node>
+        </div>
     </div>
     <div style="padding-top:8px" flex layout-align="start start">
         <md-button class="md-primary" aria-label="Add property" ng-click="addSubProperty(null)" ng-hide="node.subElements.length!=0" ng-disabled="$root.readonlymode">
