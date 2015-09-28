@@ -1,6 +1,6 @@
 <div layout="row" layout-align="start start">
     <div layout-align="start start">
-        <md-button flex class="graph-button md-raised rdf-mapping-blank-node" aria-label="blank node" ng-click="editNode()">
+        <md-button flex class="graph-button md-raised rdf-mapping-blank-node" aria-label="blank node" ng-click="editNode()" ng-disabled="$root.readonlymode">
           <span class="fa-stack">
             <i class="fa fa-circle fa-stack-2x rdf-mapping-icon-background-inset"></i>
             <i class="fa fa-circle-thin fa-stack-1x fa-inverse"></i>
@@ -10,7 +10,7 @@
             RDF blank node
           </md-tooltip>
         </md-button>
-        <div ng-if="parent.__type === 'Graph'">
+        <div ng-if="parent.__type === 'Graph' &amp;&amp; !$root.readonlymode">
             <add-node node="$parent.node" parent="$parent.parent"></add-node>
             <remove-node node="$parent.node" parent="$parent.parent"></remove-node>
         </div>

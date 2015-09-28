@@ -1,0 +1,22 @@
+<md-tabs class="md-accent no-border-radius" flex id="transformationTabs" md-no-disconnect md-swipe-content="{{isMobile}}" md-selected="transformationSelectedTabIndex">
+<md-tab label="&nbsp;" ng-disabled="true"></md-tab>
+<md-tab label="Pipeline">
+<md-tab-body>
+<div class="md-padding">
+    <pipeline pipeline="pipeline" transformation="transformation"></pipeline>
+</div>
+</md-tab-body>
+</md-tab>
+<md-tab label="RDF Mapping">
+<md-tab-body>
+<rdf-mapping></rdf-mapping>
+</md-tab-body>
+</md-tab>
+<md-tab label="Clojure">
+<md-tab-body>
+<div flex>
+    <clojure-pipeline transformation="transformation"></clojure-pipeline>
+</div>
+</md-tab-body>
+</md-tab>
+</md-tabs>

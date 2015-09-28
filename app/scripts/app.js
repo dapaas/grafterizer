@@ -260,6 +260,18 @@ angular
         ncyBreadcrumb: {
           label: 'Help'
         }
+      })
+      .state('readonly', {
+        url: '^/readonly/{id:nonURIEncoded}',
+        views: {
+          main: {
+            templateUrl: 'views/readonly.html',
+            controller: 'ReadOnlyCtrl'
+          }
+        },
+        ncyBreadcrumb: {
+          label: '{{document.title || "File "+id}}'
+        }
       });
 
     // The spinner is a bit too much

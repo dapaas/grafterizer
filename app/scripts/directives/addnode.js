@@ -7,7 +7,7 @@
  * # addNode
  */
 angular.module('grafterizerApp')
-  .directive('addNode', function ($mdDialog) {
+  .directive('addNode', function($mdDialog) {
     return {
       templateUrl: 'views/addnode.html',
       restrict: 'E',

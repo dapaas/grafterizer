@@ -32,7 +32,7 @@ angular.module('grafterizerApp')
     // setTimeout(function() {
     ontotextAPI.transformation(id).success(function(data) {
       $scope.loading = false;
-      $rootScope.readonlymode = false;
+      $rootScope.readonlymode = $state.is('readonly');
       $scope.document = data;
       $scope.document.title = data['dct:title'];
       $scope.document.description = data['dct:description'];
@@ -45,7 +45,7 @@ angular.module('grafterizerApp')
         $scope.document.keywords.sort();
       }
     }).error(function() {
-      $rootScope.readonlymode = false;
+      $rootScope.readonlymode = $state.is('readonly');
       $state.go('transformations');
     });
   // }, 40)

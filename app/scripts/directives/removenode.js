@@ -7,7 +7,7 @@
  * # removeNode
  */
 angular.module('grafterizerApp')
-  .directive('removeNode', function ($mdDialog) {
+  .directive('removeNode', function($mdDialog) {
     return {
       templateUrl: 'views/removenode.html',
       restrict: 'E',

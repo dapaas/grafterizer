@@ -10,7 +10,7 @@ angular.module('grafterizerApp')
   .directive('clojurePipeline', function(generateClojure, $rootScope) {
   return {
       template: '<div class="warningMsg" ng-show="isOverrided"><i class="fa fa-exclamation-triangle"></i> ' +
-      'Clojure editing is an experimental feature. ' + 
+      'Clojure editing is an experimental feature. ' +
       'Your modifications will be lost if you edit the transformation.</div>' +
       '<div></div>',
     restrict: 'E',
@@ -62,9 +62,9 @@ angular.module('grafterizerApp')
         var editorArea = angular.element(element.children()[1]);
 
         $rootScope.$watch('readonlymode', function() {
-          codeMirror = new window.CodeMirror(function(cm_el) {
+          codeMirror = new window.CodeMirror(function(dom) {
             editorArea.empty();
-            editorArea.append(cm_el);
+            editorArea.append(dom);
           }, {
             lineWrapping: true,
             mode: 'clojure',
