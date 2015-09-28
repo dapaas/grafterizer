@@ -139,7 +139,6 @@ angular.module('grafterizerApp')
   });
 
   $scope.$watch('transformation', function() {
-    console.log("transformation changed1");
     
     if ($scope.livePreview && $scope.transformation) {
       throttlePreview(false);

@@ -7,41 +7,19 @@
  * # clojurePipeline
  */
 angular.module('grafterizerApp')
-  .directive('clojurePipeline', function(generateClojure, $rootScope) {
-  return {
+  .directive('clojurePipeline', function($compile, generateClojure, $rootScope) {
+    return {
       template: '<div class="warningMsg" ng-show="isOverrided"><i class="fa fa-exclamation-triangle"></i> ' +
       'Clojure editing is an experimental feature. ' +
       'Your modifications will be lost if you edit the transformation.</div>' +
       '<div></div>',
-    restrict: 'E',
-    scope: {
-      transformation: '='
-    },
+      restrict: 'E',
+      scope: {
+        transformation: '='
+      },
       link: function postLink(scope, element, attrs) {
         var generatedClojure = '';
         var codeMirror = null;
-          // lineNumbers: true,
-          // readOnly: true
-        };
-      },
-        $rootScope.$watch('transformation', function() {
-
-          if (!scope.transformation) {
-            
-            return;
-          }
-
-          scope.clojure = generatedClojure = generateClojure.fromTransformation(
-            scope.transformation);
-          scope.isOverrided = false;
-          if($rootScope.currentlyPreviewedFunction){
-            if($rootScope.currentlyPreviewedFunction.isPreviewed){
-              partialTransformation = scope.transformation.getPartialTransformation($rootScope.currentlyPreviewedFunction);
-              $rootScope.previewedClojure = generateClojure.fromTransformation(partialTransformation);
-            }
-          }
-
-        }, true);
 
         var throttledPreviewRequest = _.debounce(function() {
           scope.$parent.$parent.$broadcast('preview-request');
@@ -71,7 +49,7 @@ angular.module('grafterizerApp')
             dragDrop: false,
             readOnly: $rootScope.readonlymode,
             value: generatedClojure
-        });
+          });
 
           codeMirror.on('changes', changeEventListener);
         });
