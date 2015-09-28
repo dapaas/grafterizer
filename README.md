@@ -1,4 +1,4 @@
- ![](http://dapaas.github.io/api-documentation/grafterizer_logo.png)
+ ![](https://raw.githubusercontent.com/dapaas/grafterizer/master/app/apple-touch-icon.png)
  
 Grafterizer
 ===========
