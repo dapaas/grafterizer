@@ -824,4 +824,8 @@ angular.module('grafterizerApp')
       overridedClojure = null;
       generatedClojureBeforeGeneration = null;
     };
+
+    this.hasOveriddedClojure = function() {
+      return overridedClojure !== null;
+    };
   });

@@ -71,8 +71,8 @@ angular.module('grafterizerApp')
           });
         };
 
-        scope.$watch('$parent.transformation.graphs.length', function() {
-          scope.mappingEnabled = scope.$parent.transformation.graphs.length > 0;
+        scope.$watch('$parent.transformation.graphs.length', function(newLength) {
+          scope.mappingEnabled = newLength > 0;
         });
 
         scope.switchMapping = function() {
