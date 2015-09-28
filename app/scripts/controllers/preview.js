@@ -121,7 +121,7 @@ angular.module('grafterizerApp')
     });
   };
 
-  var throttlePreview = _.throttle(function() {
+  var throttlePreview = _.debounce(function() {
     if ($scope.selectedDistribution) {
       previewTransformation(false);
     }
