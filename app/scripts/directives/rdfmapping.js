@@ -19,7 +19,7 @@ angular.module('grafterizerApp')
 
     //load server vocabulary
 
-    var localVocabulary = $rootScope.transformation.rdfVocabs;
+    var localVocabulary = $rootScope.transformation ? $rootScope.transformation.rdfVocabs : [];
     $http.get(
       connection + 'getAll'
     ).success(
@@ -66,12 +66,13 @@ angular.module('grafterizerApp')
           $mdDialog.show({
             templateUrl: 'views/MappingPrefixManage.html',
             controller: 'MappingPrefixManageCtrl',
-            scope: $rootScope.$new(false)
+            scope: $rootScope.$new(false),
+            clickOutsideToClose: true
           });
         };
 
-        scope.$watch('$parent.transformation.graphs.length', function() {
-          scope.mappingEnabled = scope.$parent.transformation.graphs.length > 0;
+        scope.$watch('$parent.transformation.graphs.length', function(newLength) {
+          scope.mappingEnabled = newLength > 0;
         });
 
         scope.switchMapping = function() {

@@ -59,14 +59,9 @@
         "catch",
         "typeof"
     ],
-    "requirePaddingNewLinesBeforeLineComments": {
-        "allExcept": "firstAfterCurly"
-    },
-    "requirePaddingNewLinesAfterBlocks": true,
     "requireSemicolons": true,
     "safeContextKeyword": "_this",
     "validateQuoteMarks": "'",
-    "validateIndentation": 2,
 
     "disallowTrailingWhitespace": "ignoreEmptyLines"
 }

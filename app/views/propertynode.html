@@ -2,9 +2,10 @@
   <div layout="row" layout-align="start start">
 
     <md-fab-speed-dial md-direction="down"
-                       ng-class="md-scale">
+                       class="md-scale" md-open="fabIsOpen"
+                         ng-mouseenter="fabIsOpen=true" ng-mouseleave="fabIsOpen=false">
       <md-fab-trigger>
-        <md-button class="rdf-mapping-property-button" ng-click="editProperty()">
+        <md-button class="rdf-mapping-property-button" ng-click="editProperty()" ng-disabled="$root.readonlymode">
           <span class="fa-stack">
             <i class="fa fa-circle fa-stack-2x rdf-mapping-icon-background-inset"></i>
             <i class="fa fa-arrow-right fa-stack-1x fa-inverse"></i>
@@ -15,8 +16,9 @@
           </md-tooltip>
         </md-button>
       </md-fab-trigger>
-      <md-fab-actions>
-        <add-or-remove-property property="property" parent="parent"></add-or-remove-property>
+      <md-fab-actions class="layout-row">
+        <add-property property="property" parent="parent"></add-property>
+        <remove-property property="property" parent="parent"></remove-property>
       </md-fab-actions>
     </md-fab-speed-dial>
   </div>

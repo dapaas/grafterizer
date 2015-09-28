@@ -45,7 +45,7 @@ angular.module('grafterizerApp')
         options.replaceMap[i + 1] ? options.replaceMap[i + 1] : '') + '") ';
       functionCode += ')))';
       var result = $scope.$parent.transformation.addCustomFunctionDeclaration($scope.functionCodeOptions.name,
-        functionCode, 'UTILITY',$scope.functionCodeOptions.docstring);
+        functionCode, 'UTILITY', $scope.functionCodeOptions.docstring);
 
       if (!result) {
         $mdToast.show(

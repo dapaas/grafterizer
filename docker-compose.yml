@@ -5,16 +5,31 @@ web:
   links:
     - backend
     - vocabulary
+    - graftwerkcache
 backend:
   image: dapaas/grafterizer-rest:latest
   expose:
     - "8080"
   restart: always
+  links:
+    - graftwerkcache
   environment:
     GRAFTWERK: "http://54.77.10.112:8080"
+    GRAFTWERK_CACHE: "http://localhost:8082"
     ONTOTEXT: "http://54.76.140.62:8080"
+    SENTRY: "http://90ff15ecca0d4e31a06de545aa6ae716:46b07e45826a487280d4547f0b4cbed6@sentry.datagraft.net/4"
 vocabulary:
   image: dapaas/grafterizer-vocabulary:latest
   expose:
     - "8888"
   restart: always
+graftwerkcache:
+  image: dapaas/graftwerk-memcache:latest
+  expose:
+    - "8082"
+  restart: always
+  environment:
+    GRAFTWERK: "54.77.10.112"
+    GRAFTWERK_PORT: "8080"
+
+1 256

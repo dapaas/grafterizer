@@ -1,7 +1,7 @@
-<md-dialog aria-label='Edit {{function.displayName}} function' class="sin-function-dialog">
+<md-dialog aria-label="{{$root.readonlymode ? 'View' : 'Edit'}} {{function.displayName}} function" class="sin-function-dialog">
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2>Edit {{function.displayName}} function</h2>
+            <h2>{{$root.readonlymode ? 'View' : 'Edit'}} {{function.displayName}} function</h2>
         </div>
     </md-toolbar>
     <md-dialog-content layout="row">

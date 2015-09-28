@@ -20,9 +20,12 @@ angular.module('grafterizerApp')
     transformationDataModel,
     generateClojure) {
 
+    // $scope.readonlymode = true;
+
     $scope.document = {
       title: 'New transformation',
-      description: ''
+      description: '',
+      keywords: []
     };
 
     var customfunctions = [
@@ -179,7 +182,8 @@ angular.module('grafterizerApp')
           'dcat:public': $scope.document['dct:public'] ? 'true' : 'false',
           'dct:modified': moment().format('YYYY-MM-DD'),
           'dcat:transformationType': transformationType,
-          'dcat:transformationCommand': transformationCommand
+          'dcat:transformationCommand': transformationCommand,
+          'dcat:keyword': $scope.document.keywords
         }, clojure, $scope.transformation)
           .success(function(data) {
             $mdToast.show(
@@ -208,7 +212,8 @@ angular.module('grafterizerApp')
       $mdDialog.show({
         templateUrl: 'views/editprefixes.html',
         controller: 'EditprefixersCtrl',
-        scope: $scope.$new(false, $scope)
+        scope: $scope.$new(false, $scope),
+        clickOutsideToClose: true
       }).then(
         function() {},
 
@@ -223,7 +228,8 @@ angular.module('grafterizerApp')
       $mdDialog.show({
         templateUrl: 'views/editlibraries.html',
         controller: 'EditlibrariesCtrl',
-        scope: $scope.$new(false, $scope)
+        scope: $scope.$new(false, $scope),
+        clickOutsideToClose: true
       }).then(
         function() {},
 
@@ -236,7 +242,8 @@ angular.module('grafterizerApp')
       $mdDialog.show({
         templateUrl: 'views/MappingPrefixManage.html',
         controller: 'MappingPrefixManageCtrl',
-        scope: $scope.$new(false, $scope)
+        scope: $scope.$new(false, $scope),
+        clickOutsideToClose: true
       });
     };
 
@@ -244,7 +251,8 @@ angular.module('grafterizerApp')
       $mdDialog.show({
         templateUrl: 'views/validateMapping.html',
         controller: 'validateMappingCtrl',
-        scope: $scope.$new(false, $scope)
+        scope: $scope.$new(false, $scope),
+        clickOutsideToClose: true
       });
     };
 
@@ -256,7 +264,8 @@ angular.module('grafterizerApp')
       $mdDialog.show({
         templateUrl: 'views/createcustomfunction.html',
         controller: 'CustomfunctionsdialogcontrollerCtrl',
-        scope: $scope.$new(false, $scope)
+        scope: $scope.$new(false, $scope),
+        clickOutsideToClose: true
       }).then(
         function() {},
 
@@ -270,7 +279,8 @@ angular.module('grafterizerApp')
       $mdDialog.show({
         templateUrl: 'views/createstringcustomfunction.html',
         controller: 'CustomStringfunctionsdialogcontrollerCtrl',
-        scope: $scope.$new(false, $scope)
+        scope: $scope.$new(false, $scope),
+        clickOutsideToClose: true
       });
     };
 
@@ -288,7 +298,8 @@ angular.module('grafterizerApp')
       $mdDialog.show({
         templateUrl: 'views/loaddistribution.html',
         controller: 'LoadDistributionCtrl',
-        scope: $scope.$new(false)
+        scope: $scope.$new(false),
+        clickOutsideToClose: true
       }).then(function(distribution) {
         $rootScope.actions.save(distribution);
       });

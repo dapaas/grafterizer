@@ -248,8 +248,7 @@ angular.module('grafterizerApp')
       return Upload.upload({
         url: endpoint + '/catalog/distributions',
         method: 'POST',
-        file: [file, meta],
-        fileFormDataName: ['file', 'meta'],
+        file: {file: file, meta:meta},
         headers: {
           'dataset-id': datasetId,
           Authorization: apiAuthorization
@@ -264,8 +263,7 @@ angular.module('grafterizerApp')
       return Upload.upload({
         url: endpoint + '/catalog/distributions',
         method: 'PUT',
-        file: [meta],
-        fileFormDataName: ['meta'],
+        file: {meta: meta},
         headers: {
           Authorization: apiAuthorization
         }

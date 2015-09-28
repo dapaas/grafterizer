@@ -22,16 +22,33 @@ angular.module('grafterizerApp')
 
     var id = $scope.id = $stateParams.id;
     $scope.document = {
-      title: 'loading'
+      title: 'transformation loading',
+      keywords: []
     };
 
+    $scope.loading = true;
+    $rootScope.readonlymode = true;
+
+    // setTimeout(function() {
     ontotextAPI.transformation(id).success(function(data) {
+      $scope.loading = false;
+      $rootScope.readonlymode = false;
       $scope.document = data;
       $scope.document.title = data['dct:title'];
       $scope.document.description = data['dct:description'];
+      $scope.document.keywords = data['dcat:keyword'];
+
+      if (!$scope.document.keywords ||
+        typeof $scope.document.keywords.length === 'undefined') {
+        $scope.document.keywords = [];
+      } else {
+        $scope.document.keywords.sort();
+      }
     }).error(function() {
+      $rootScope.readonlymode = false;
       $state.go('transformations');
     });
+  // }, 40)
 
     // ontotextAPI.getClojure(id).success(function(data){
     //     $scope.clojure = data;
@@ -72,6 +89,19 @@ angular.module('grafterizerApp')
 
     $scope.$watch('fileUpload', function() {
       if ($scope.fileUpload) {
+        if ($rootScope.readonlymode) {
+          $mdToast.show(
+            $mdToast.simple()
+            .content($scope.loading ?
+              'Please wait the transformation loading before uploading files' :
+              'File upload is disabled in readonly mode')
+            .position('bottom left')
+            .hideDelay(6000)
+          );
+          delete $scope.fileUpload;
+          return;
+        }
+
         var file = $scope.fileUpload;
 
         uploadFile.upload(file, function(data) {
@@ -175,6 +205,7 @@ angular.module('grafterizerApp')
             'dct:description': $scope.document.description,
             'dcat:public': $scope.document['dct:public'] ? 'true' : 'false',
             'dct:modified': moment().format('YYYY-MM-DD'),
+            'dcat:keyword': $scope.document.keywords,
             'dcat:transformationType': transformationType,
             'dcat:transformationCommand': transformationCommand
           }, clojure, $scope.transformation)
@@ -198,7 +229,8 @@ angular.module('grafterizerApp')
       $mdDialog.show({
         templateUrl: 'views/editprefixes.html',
         controller: 'EditprefixersCtrl',
-        scope: $scope.$new(false, $scope)
+        scope: $scope.$new(false, $scope),
+        clickOutsideToClose: true
       }).then(
       function() {},
 
@@ -214,7 +246,8 @@ angular.module('grafterizerApp')
       $mdDialog.show({
         templateUrl: 'views/createcustomfunction.html',
         controller: 'CustomfunctionsdialogcontrollerCtrl',
-        scope: $scope.$new(false, $scope)
+        scope: $scope.$new(false, $scope),
+        clickOutsideToClose: true
       }).then(
         function() {},
 
@@ -228,7 +261,8 @@ angular.module('grafterizerApp')
       $mdDialog.show({
         templateUrl: 'views/loaddistribution.html',
         controller: 'LoadDistributionCtrl',
-        scope: $scope.$new(false)
+        scope: $scope.$new(false),
+        clickOutsideToClose: true
       }).then(function(distribution) {
         $state.go('transformations.transformation.preview', {
           id: $stateParams.id,
@@ -236,4 +270,12 @@ angular.module('grafterizerApp')
         });
       });
     };
+
+    // Save the selected md-tab panel in session because we can
+    $scope.transformationSelectedTabIndex =
+      window.sessionStorage && window.sessionStorage.transformationSelectedTabIndex ?
+        (parseInt(window.sessionStorage.transformationSelectedTabIndex) || 0) : 0;
+    $scope.$watch('transformationSelectedTabIndex', function(newValue) {
+        window.sessionStorage.transformationSelectedTabIndex = newValue;
+    });
   });
