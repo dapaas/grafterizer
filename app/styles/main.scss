@@ -453,6 +453,13 @@ md-tab-content {
     left: 10px;
     right: 10px;
     top: 10px;
+    bottom: 300px;
+
+    .warningMsg {
+      color: purple;
+      padding: 15px;
+      line-height: 30px;
+    }
   }
   preview-raw {
     left:8px; 
