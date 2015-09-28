@@ -90,7 +90,8 @@ angular.module('grafterizerApp')
     $scope.createNewText = function() {
       $mdDialog.show({
         templateUrl: 'views/createstringcustomfunction.html',
-        controller: 'CustomStringfunctionsdialogcontrollerCtrl'
+        controller: 'CustomStringfunctionsdialogcontrollerCtrl',
+        clickOutsideToClose: true
       });
     };
 

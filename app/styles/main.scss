@@ -325,12 +325,16 @@ md-tab-content .CodeMirror {
       bottom: -5px;
       background-color:$color;
     }
-  }
 
-  pipeline-function {
-    .pipeline-button {
+    &.pipeline-flow-line-readonly {
+      margin-left:9px;
     }
   }
+
+  /*pipeline-function {
+    .pipeline-button {
+    }
+  }*/
 
 }
 
@@ -450,6 +454,13 @@ md-tab-content {
     left: 10px;
     right: 10px;
     top: 10px;
+    bottom: 300px;
+
+    .warningMsg {
+      color: purple;
+      padding: 15px;
+      line-height: 30px;
+    }
   }
   preview-raw {
     left:8px; 
@@ -865,6 +876,29 @@ button.rdf-mapping-property-button {
   font-size: small;
   text-align:center;
   color: $gray;
+}
+
+.slow-mode-warning, .slow-mode-thanks {
+  text-align: center;
+  color: purple;
+  padding: 1em 2em 0.4em 2em;
+}
+
+.slow-mode-thanks {
+  color: green;
+}
+
+.keywords-container {
+  margin-bottom: 1em;
+}
+
+md-fab-speed-dial.md-down md-fab-actions.layout-row {
+  flex-direction: row;
+}
+
+// Temporary workaround for https://github.com/angular/material/issues/2936
+body {
+  overflow-y: hidden;
 }
 
 div.previewed-pipeline-function-overlay {

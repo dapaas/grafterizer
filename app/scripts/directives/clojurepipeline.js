@@ -9,25 +9,21 @@
 angular.module('grafterizerApp')
   .directive('clojurePipeline', function(generateClojure, $rootScope) {
   return {
-    template: '<div ui-codemirror="editorOptions" ng-model="clojure"></div>',
+      template: '<div class="warningMsg" ng-show="isOverrided"><i class="fa fa-exclamation-triangle"></i> ' +
+      'Clojure editing is an experimental feature. ' + 
+      'Your modifications will be lost if you edit the transformation.</div>' +
+      '<div></div>',
     restrict: 'E',
     scope: {
       transformation: '='
     },
-    link: {
-      pre: function(scope) {
-        scope.editorOptions = {
-          lineWrapping: true,
-          mode: 'clojure'
-
+      link: function postLink(scope, element, attrs) {
+        var generatedClojure = '';
+        var codeMirror = null;
           // lineNumbers: true,
           // readOnly: true
         };
       },
-
-      post: function(scope, element, attrs) {
-        var generatedClojure = null, partialTransformation = {};
-
         $rootScope.$watch('transformation', function() {
 
           if (!scope.transformation) {
@@ -47,45 +43,51 @@ angular.module('grafterizerApp')
 
         }, true);
 
-        var warningMsg = '; WARNING: Clojure editing is an experimental feature\n' +
-            '; The changes will be lost if you edit the transformation';
-
-        var throttledPreviewRequest = _.throttle(function() {
+        var throttledPreviewRequest = _.debounce(function() {
           scope.$parent.$parent.$broadcast('preview-request');
-        }, 1000);
+        }, 1000, {leading: false});
 
-        scope.$watch('clojure', function() {
-          if (generatedClojure !== scope.clojure) {
+        scope.isOverrided = generateClojure.hasOveriddedClojure();
+
+        var changeEventListener = function() {
+          var value = codeMirror.getValue();
+          if (value && generatedClojure !== value) {
             scope.isOverrided = true;
-            if (scope.clojure.indexOf(warningMsg) === -1) {
-              scope.clojure = warningMsg + '\n\n' + scope.clojure;
-            }
 
-            generateClojure.overrideClojure(scope.clojure,
-                                            generatedClojure);
+            generateClojure.overrideClojure(value, generatedClojure);
             throttledPreviewRequest();
           }
+        };
+
+        var editorArea = angular.element(element.children()[1]);
+
+        $rootScope.$watch('readonlymode', function() {
+          codeMirror = new window.CodeMirror(function(cm_el) {
+            editorArea.empty();
+            editorArea.append(cm_el);
+          }, {
+            lineWrapping: true,
+            mode: 'clojure',
+            dragDrop: false,
+            readOnly: $rootScope.readonlymode,
+            value: generatedClojure
         });
 
-        // TODO workaround random bug
-        scope.$watch('$parent.selectedTabIndex', function() {
-          if (scope.$parent.selectedTabIndex) {
-            window.setTimeout(function() {
-              try {
-                element.children().children()[0].CodeMirror.refresh();
-              } catch (e) {
-                console.error(e);
-              }
-            }, 1);
+          codeMirror.on('changes', changeEventListener);
+        });
+
+        scope.$watch('transformation', function() {
+          if (!scope.transformation) {
+            return;
           }
-        });
 
-        window.setTimeout(function() {
-          try {
-            element.children().children()[0].CodeMirror.refresh();
-          } catch (e) {}
-        }, 1);
+          generatedClojure = generateClojure.fromTransformation(scope.transformation);
+          scope.isOverrided = generateClojure.hasOveriddedClojure();
+
+          if (codeMirror) {
+            codeMirror.setValue(generatedClojure);
+          }
+        }, true);
       }
-    }
-  };
-});
+    };
+  });
