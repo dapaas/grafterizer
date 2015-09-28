@@ -894,3 +894,8 @@ button.rdf-mapping-property-button {
 md-fab-speed-dial.md-down md-fab-actions.layout-row {
   flex-direction: row;
 }
+
+// Temporary workaround for https://github.com/angular/material/issues/2936
+body {
+  overflow-y: hidden;
+}
