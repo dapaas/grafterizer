@@ -1,8 +1,16 @@
-<div flex layout="row" layout-align="center">
-    <md-button class="pipeline-button md-raised" aria-label="Edit pipeline step" ng-click="editFunction()">
-        {{function.displayName}}
-        <md-tooltip>
-            {{function.docstring}}
-        </md-tooltip>
-    </md-button>
+
+<div class="previewed-pipeline-function-overlay" ng-hide="!function.isPreviewed">
+  <md-button class="md-primary button-tight close-preview-button" aria-label="Edit pipeline step" ng-click="closePreviewOfFunction()">
+    <i class="fa fa-times fa-2x close-preview-icon"></i>
+    <md-tooltip>
+      Reset preview
+    </md-tooltip>
+  </md-button>
 </div>
+<md-button class="pipeline-button md-raised" aria-label="Preview until this step" ng-click="previewUntilStep()">
+  {{function.displayName}}
+  <md-tooltip>
+    {{function.docstring}}
+  </md-tooltip>
+
+</md-button>

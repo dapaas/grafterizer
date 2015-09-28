@@ -23,11 +23,8 @@ angular.module('grafterizerApp')
   $scope.dialogState.selectedTab = 0;
 
   $scope.disableBlankNodeOption = false;
-  console.log($scope.parentNode);
   if($scope.parentNode) {
-    console.log($scope.parentNode instanceof transformationDataModel.Graph);
     if($scope.parentNode instanceof transformationDataModel.Graph){
-      console.log("here");
       $scope.disableBlankNodeOption = true;
     }
   }

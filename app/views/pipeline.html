@@ -1,21 +1,33 @@
 <div layout="column" class="pipeline-flow">
-    <div class="pipeline-flow-line"></div>
-    <div as-sortable="dragControlListeners" ng-model="pipeline.functions">
-        <div as-sortable-item ng-repeat="funct in pipeline.functions" flex>
-            <div as-sortable-item-handle layout="row" layout-align="center">
-                <pipeline-function transformation="transformation" function="funct"></pipeline-function>
-                <md-button class="md-primary button-tight" aria-label="Add pipeline step" ng-click="clickAddAfter(funct)">
-                <i class="fa fa-large fa-plus-circle"></i>
-                </md-button>
-                <md-button class="md-primary button-tight" aria-label="Remove pipeline step" ng-click="clickRemove(funct)">
-                <i class="fa fa-large fa-minus-circle"></i>
-                </md-button>
-            </div>
-        </div>
-    </div>
-    <div layout="row" layout-align="center" ng-hide="pipeline.functions.length!=0">
-        <md-button class="md-primary button-not-tight" aria-label="Add pipeline step" ng-click="clickAddAfter(null)">
-        <i class="fa fa-large fa-plus-circle"></i>
+  <div class="pipeline-flow-line"></div>
+  <div as-sortable="dragControlListeners" ng-model="pipeline.functions">
+    <div as-sortable-item ng-repeat="funct in pipeline.functions" flex>
+      <div as-sortable-item-handle layout="row" layout-align="center">
+        <pipeline-function transformation="transformation" function="funct"></pipeline-function>
+        <md-button class="md-primary button-tight pipeline-action-icon" aria-label="Edit pipeline step" ng-click="clickEditFunction(funct)">
+          <i class="fa fa-large fa-pencil"></i>
+          <md-tooltip>
+            Edit pipeline function parameters
+          </md-tooltip>
         </md-button>
+        <md-button class="md-primary button-tight pipeline-action-icon" aria-label="Add pipeline step" ng-click="clickAddAfter(funct)">
+          <i class="fa fa-large fa-plus-circle"></i>
+          <md-tooltip>
+            Add new pipeline function after the current
+          </md-tooltip>
+        </md-button>
+        <md-button class="md-primary button-tight pipeline-action-icon" aria-label="Remove pipeline step" ng-click="clickRemove(funct)">
+          <i class="fa fa-large fa-minus-circle"></i>
+          <md-tooltip>
+            Remove the current pipeline function
+          </md-tooltip>
+        </md-button>
+      </div>
     </div>
+  </div>
+  <div layout="row" layout-align="center" ng-hide="pipeline.functions.length!=0">
+    <md-button class="md-primary button-not-tight" aria-label="Add pipeline step" ng-click="clickAddAfter(null)">
+      <i class="fa fa-large fa-plus-circle"></i>
+    </md-button>
+  </div>
 </div>

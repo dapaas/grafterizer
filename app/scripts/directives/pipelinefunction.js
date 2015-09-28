@@ -7,36 +7,41 @@
  * # pipelineFunction
  */
 angular.module('grafterizerApp')
-  .directive('pipelineFunction', function($mdDialog) {
-    return {
-      templateUrl: 'views/pipelinefunction.html',
-      restrict: 'E',
-      scope: {
-        function: '=',
-        transformation: '='
-      },
-      link: function postLink(scope, element, attrs) {
-        scope.editFunction = function() {
-          scope.originalFunction = {};
-          scope.selectedFunctionName = scope.function.name;
-          angular.copy(scope.function, scope.originalFunction);
-          var newScope = scope.$new(false, scope);
-          newScope.transformation = scope.transformation;
-          $mdDialog.show({
-            controller: 'PipelinefunctiondialogCtrl',
-            templateUrl: 'views/editPipelineFunctionDialog.html',
-            scope: newScope
-          }).then(
-          function(pipeFunct) {
-            angular.copy(pipeFunct, scope.function);
-          },
+  .directive('pipelineFunction', function($mdDialog, generateClojure, PipeService, $rootScope) {
+  return {
+    templateUrl: 'views/pipelinefunction.html',
+    restrict: 'E',
+    scope: {
+      function: '=',
+      transformation: '='
+    },
+    link: function postLink(scope, element, attrs) {
+      scope.previewUntilStep = function () {
+        
+        if(!$rootScope.currentlyPreviewedFunction){
+          // initialise previewed funct
+          $rootScope.currentlyPreviewedFunction = {};
+        }
+        if(!scope.function.isPreviewed) {
+          // toggle the currently previewed function
+          $rootScope.currentlyPreviewedFunction.isPreviewed = false;
+          $rootScope.currentlyPreviewedFunction = scope.function;
+          scope.function.isPreviewed = true;
+          var partialTransformation = scope.transformation.getPartialTransformation(scope.function);
+          
+          // TODO maybe it is better not to use a "global" variable
+          $rootScope.previewedClojure = generateClojure.fromTransformation(partialTransformation);
+        }
+      };
+      scope.closePreviewOfFunction = function () {
+        
+        $rootScope.currentlyPreviewedFunction.isPreviewed = false;
 
-          function() {
-            angular.copy(scope.originalFunction, scope.function);
-          });
-        };
-      
-        scope.showChar = 50;
-      }
-    };
-  });
+        // TODO maybe it is better not to use a "global" variable
+        $rootScope.previewedClojure = generateClojure.fromTransformation(scope.transformation);
+      };
+
+      scope.showChar = 50;
+    }
+  };
+});
