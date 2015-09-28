@@ -8,9 +8,11 @@
  * Controller of the grafterizerApp
  */
 angular.module('grafterizerApp')
-  .controller('ReadOnlyCtrl', function ($scope, $controller, $rootScope) {
-    $controller('TransformationCtrl', {$scope: $scope});
-    
+  .controller('ReadOnlyCtrl', function($scope, $controller, $rootScope) {
+    $controller('TransformationCtrl', {
+      $scope: $scope
+    });
+
     $rootScope.hideToolbar = true;
     $scope.$on('$destroy', function() {
       delete $rootScope.hideToolbar;

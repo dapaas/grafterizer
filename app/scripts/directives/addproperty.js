@@ -7,7 +7,7 @@
  * # addProperty
  */
 angular.module('grafterizerApp')
-  .directive('addProperty', function ($mdDialog) {
+  .directive('addProperty', function($mdDialog) {
     return {
       templateUrl: 'views/addproperty.html',
       restrict: 'E',

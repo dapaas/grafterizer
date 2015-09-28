@@ -264,7 +264,7 @@ angular
       .state('readonly', {
         url: '^/readonly/{id:nonURIEncoded}',
         views: {
-          'main': {
+          main: {
             templateUrl: 'views/readonly.html',
             controller: 'ReadOnlyCtrl'
           }
