@@ -60,10 +60,15 @@ angular.module('grafterizerApp')
     $scope.distribution = null;
   }
 
+  $scope.totalNumberOfCalls = 0;
   var savedGeneratedClojure;
   var currentPreviewPage = 0;
-  var previewTransformation = function(redirect) {
-    var clojure = generateClojure.fromTransformation($scope.$parent.transformation);
+  var previewTransformation = function() {
+//    var clojure = generateClojure.fromTransformation($scope.$parent.transformation);
+    // TODO not sure this works properly - need to clarify the way the throttle passes arguments
+    
+    var clojure = $rootScope.previewedClojure ? $rootScope.previewedClojure : generateClojure.fromTransformation($scope.$parent.transformation);
+    $scope.totalNumberOfCalls++;
     savedGeneratedClojure = clojure;
     currentPreviewPage = 0;
 
@@ -73,12 +78,6 @@ angular.module('grafterizerApp')
       .then(function(data) {
       delete $scope.graftwerkException;
       $scope.data = data;
-      if (redirect) {
-        $timeout(function() {
-          $scope.selectedTabIndex = 0;
-        });
-      }
-
       showDownloadButton();
     },
 
@@ -123,9 +122,9 @@ angular.module('grafterizerApp')
 
   var throttlePreview = _.debounce(function() {
     if ($scope.selectedDistribution) {
-      previewTransformation(false);
+      previewTransformation();
     }
-  }, 1000);
+  }, 1000, {leading: false});
 
   if (window.sessionStorage) {
     $scope.$watch('livePreview', function() {
@@ -140,15 +139,16 @@ angular.module('grafterizerApp')
   });
 
   $scope.$watch('transformation', function() {
+    
     if ($scope.livePreview && $scope.transformation) {
-      throttlePreview();
+      throttlePreview(false);
       fileSaved = false;
     }
   }, true);
 
   var fileSaved = false;
   $scope.$on('preview-request', function() {
-    throttlePreview();
+    throttlePreview(false);
     fileSaved = true;
   });
 
@@ -156,7 +156,7 @@ angular.module('grafterizerApp')
     if ($scope.selectedDistribution) {
       delete $scope.originalData;
       delete $scope.data;
-      previewTransformation(true);
+      throttlePreview(true);
     }
   });
 

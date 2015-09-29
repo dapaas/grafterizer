@@ -28,6 +28,8 @@ angular.module('grafterizerApp')
         return new jsedn.List([jsedn.sym(this.name)]);
       };
     }
+    // shows if we are currently previewing the partial transformation up to that function
+    this.isPreviewed = false;
   };
 
   var CustomFunctionDeclaration = function(name, clojureCode, group, docstring) {
@@ -56,6 +58,7 @@ angular.module('grafterizerApp')
   DropRowsFunction.revive = function(data) {
     return new DropRowsFunction(data.numberOfRows, data.take, data.docstring);
   };
+  DropRowsFunction.prototype = Object.create(GenericFunction.prototype);
   DropRowsFunction.prototype.generateClojure = function() {
     return new jsedn.List([jsedn.sym((this.take ? 'take-rows' : 'drop-rows')), this.numberOfRows]);
   };
@@ -76,22 +79,24 @@ angular.module('grafterizerApp')
   SplitFunction.revive = function(data) {
     return new SplitFunction(data.colName, data.newColName, data.separator, data.docstring);
   };
+  SplitFunction.prototype = Object.create(GenericFunction.prototype);
   SplitFunction.prototype.generateClojure = function() {
 
     var regex = new jsedn.List([jsedn.sym('read-string'), '#\"' + this.separator + '\"']);
     var split = new jsedn.List([jsedn.sym('clojure.string/split'), jsedn.sym('col'), regex]);
-    var func = new jsedn.List([jsedn.sym('fn'), new jsedn.Vector([jsedn.sym('col')]), new jsedn.List([
-      jsedn.sym('clojure.string/join'), this.separator, new jsedn.List([
-        jsedn.sym('rest'), split])
+    var func = new jsedn.List([jsedn.sym('fn'),new jsedn.Vector([jsedn.sym('col')]), new jsedn.List([
+      jsedn.sym('clojure.string/join'),this.separator, new jsedn.List([
+        jsedn.sym('rest'),split])
     ])
                               ]);
+    var deriveNew = new jsedn.List([jsedn.sym('derive-column'), new jsedn.kw(':'+this.newColName), new jsedn.Vector([new jsedn.kw(':'+this.colName)]), func]);
     var deriveNew = new jsedn.List([jsedn.sym('derive-column'), new jsedn.kw(':' + this.newColName), new jsedn.Vector(
       [new jsedn.kw(':' + this.colName)]), func]);
     var mapOld = new jsedn.List([jsedn.sym('mapc'),
                                  new jsedn.Map([new jsedn.kw(':' + this.colName),
                                                 new jsedn.List([jsedn.sym('fn'),
-                                                                new jsedn.Vector([jsedn.sym('col')]),
-                                                                new jsedn.List([jsedn.sym('first'), split])
+                                                                new jsedn.Vector([jsedn.sym('col')]), 
+                                                                new jsedn.List([jsedn.sym('first'),split])
                                                                ])
                                                ])
                                 ]);
@@ -117,6 +122,7 @@ angular.module('grafterizerApp')
   UtilityFunction.revive = function(data) {
     return new UtilityFunction(data.functionName, data.docstring);
   };
+  UtilityFunction.prototype = Object.create(GenericFunction.prototype);
   UtilityFunction.prototype.generateClojure = function() {
     return new jsedn.List([jsedn.sym(this.functionName.name)]);
   };
@@ -147,6 +153,7 @@ angular.module('grafterizerApp')
   AddColumnsFunction.revive = function(data) {
     return new AddColumnsFunction(data.columnsArray, data.docstring);
   };
+  AddColumnsFunction.prototype = Object.create(GenericFunction.prototype);
   AddColumnsFunction.prototype.generateClojure = function() {
     var i;
     var newRownumMap = new jsedn.Map([]);
@@ -197,20 +204,22 @@ angular.module('grafterizerApp')
 
     if (ds.length !== 0) {
       if (ds.length === 1) {
-        pipe.push(ds[0]);
+        return ds[0];
       } else {
         pipe = pipe.concat(ds);
+        return new jsedn.List(pipe);
       }
     }
 
-    if (newColMap.keys.length !== 0)
-      pipe.push(new jsedn.List([jsedn.sym('add-columns'), newColMap]));
+    pipe=pipe.concat(ds);
+    pipe.push(new jsedn.List([jsedn.sym('add-columns'),newColMap]));
 
-    if (newRownumMap.keys.length !== 0)
+    if (newRownumMap.keys.length !== 0){
       pipe.push(new jsedn.List([jsedn.sym('apply-columns'), newRownumMap]));
-
-    return new jsedn.List(pipe);
-
+      return new jsedn.List(pipe);
+    } else {
+      return new jsedn.List([jsedn.sym('add-columns'),newColMap]);
+    }
   };
   this.AddColumnsFunction = AddColumnsFunction;
 
@@ -229,6 +238,7 @@ angular.module('grafterizerApp')
   AddColumnFunction.revive = function(data) {
     return new AddColumnFunction(data.newColName, data.fileName, data.colValue, data.colExpr, data.docstring);
   };
+  AddColumnFunction.prototype = Object.create(GenericFunction.prototype);
   AddColumnFunction.prototype.generateClojure = function() {
     if (this.fileName) return new jsedn.List([jsedn.sym('add-filename-to-column'), new jsedn.kw(':' + this.newColName)]);
     if (!this.colExpr) return new jsedn.List([jsedn.sym('add-column'), new jsedn.kw(':' + this.newColName), this.colValue]);
@@ -276,16 +286,18 @@ angular.module('grafterizerApp')
                             data.ignoreCase,
                             data.docstring);
   };
+  GrepFunction.prototype = Object.create(GenericFunction.prototype);
   GrepFunction.prototype.generateClojure = function() {
     var colsToFilter = new jsedn.Vector([]);
     var flag = false;
     var filterFunc;
     var i;
-
-    if (this.colsToFilter.length > 0) {
-      for (i = 0; i < this.colsToFilter.length; ++i) {
-        colsToFilter.val.push(new jsedn.kw(':' + this.colsToFilter[i]));
-        flag = true;
+    for (var i = 0; i < this.colsToFilter.length; ++i) {
+      if (this.colsToFilter.length > 0) {
+        for (i = 0; i < this.colsToFilter.length; ++i) {
+          colsToFilter.val.push(new jsedn.kw(':' + this.colsToFilter[i]));
+          flag = true;
+        }
       }
     }
 
@@ -371,12 +383,15 @@ angular.module('grafterizerApp')
       for (i = 0; i < colsToDeriveFrom.length; ++i) {
         this.docstring += colsToDeriveFrom[i].toString() + ' ';
       }
-    } else this.docstring = docstring;
+    } else {
+      this.docstring = docstring;
+    }
   };
   DeriveColumnFunction.revive = function(data) {
     return new DeriveColumnFunction(data.newColName, data.colsToDeriveFrom, data.functionsToDeriveWith, data.paramsToFunctions,
                                     data.docstring);
   };
+  DeriveColumnFunction.prototype = Object.create(GenericFunction.prototype);
   DeriveColumnFunction.prototype.generateClojure = function() {
     var colsToDeriveFromClj = new jsedn.Vector([]);
     var flag = false;
@@ -459,16 +474,20 @@ angular.module('grafterizerApp')
             renameFunc = functionsToRenameWith[i];
             if (renameFunc !== null) this.docstring += renameFunc.name + ' ';
           }
-
-          this.docstring += 'function(s).';
         }
-      } else
+
+        this.docstring += 'function(s).';
+      }  else {
         this.docstring += ' map';
-    } else this.docstring = docstring;
+      }
+    } else {
+      this.docstring = docstring;
+    }
   };
   RenameColumnsFunction.revive = function(data) {
     return new RenameColumnsFunction(data.functionsToRenameWith, data.mappings, data.docstring);
   };
+  RenameColumnsFunction.prototype = Object.create(GenericFunction.prototype);
   RenameColumnsFunction.prototype.generateClojure = function() {
     var i;
 
@@ -507,31 +526,6 @@ angular.module('grafterizerApp')
 
   var KeyFunctionPair = function(key, funcName) {
     this.key = key;
-
-    //        if (func !== null) {
-    //            console.log('mapc');
-    //            console.log(key, func);
-    //            try{
-    //                var tmp = JSON.parse(func);
-    //                func = tmp;
-    //            } catch(e) {
-    //                console.log('couldn't parse, moving on');
-    //            }
-    //            console.log('after parsing');
-    //            console.log(key, func);
-    //            funcName = func.name;
-    // TODO is reviving necessary here? we only need the name which we can get from parsing
-    ////            if(func)
-    //            if (!(func instanceof CustomFunctionDeclaration) && func.__type === 'CustomFunctionDeclaration') {
-    //                func = CustomFunctionDeclaration.revive(func);
-    //            }
-    //            // Prefixers are also functions
-    //            if (!(func instanceof Prefixer)  && func.__type === 'Prefixer') {
-    //                func = Prefixer.revive(func);
-    //            }
-    //        } else {
-    //            console.error('NULL function mapping');
-    //        }
     this.func = funcName;
     this.__type = 'KeyFunctionPair';
   };
@@ -578,6 +572,7 @@ angular.module('grafterizerApp')
   ApplyColumnsFunction.revive = function(data) {
     return new ApplyColumnsFunction(data.keyFunctionPairs, data.docstring);
   };
+  ApplyColumnsFunction.prototype = Object.create(GenericFunction.prototype);
   ApplyColumnsFunction.prototype.generateClojure = function() {
     var i;
     var keyFunctionPairsClj = new jsedn.Map([]);
@@ -634,6 +629,7 @@ angular.module('grafterizerApp')
   MapcFunction.revive = function(data) {
     return new MapcFunction(data.keyFunctionPairs, data.docstring);
   };
+  MapcFunction.prototype = Object.create(GenericFunction.prototype);
   MapcFunction.prototype.generateClojure = function() {
     var i;
     var mkeyFunctionPairsClj = new jsedn.Map([]);
@@ -730,6 +726,7 @@ angular.module('grafterizerApp')
   MakeDatasetFunction.revive = function(data) {
     return new MakeDatasetFunction(data.columnsArray, data.useLazy, data.numberOfColumns, data.moveFirstRowToHeader);
   };
+  MakeDatasetFunction.prototype = Object.create(GenericFunction.prototype);
   MakeDatasetFunction.prototype.generateClojure = function() {
     //(make-dataset [:name :sex :age])
     var i;
@@ -795,6 +792,7 @@ angular.module('grafterizerApp')
   ColumnsFunction.revive = function(data) {
     return new ColumnsFunction(data.columnsArray, data.useLazy, data.numberOfColumns, data.take, data.docstring);
   };
+  ColumnsFunction.prototype = Object.create(GenericFunction.prototype);
   ColumnsFunction.prototype.generateClojure = function() {
     var i;
     var colNamesClj = new jsedn.Vector([]);
@@ -834,6 +832,7 @@ angular.module('grafterizerApp')
   MeltFunction.revive = function(data) {
     return new MeltFunction(data.columnsArray, data.docstring);
   };
+  MeltFunction.prototype = Object.create(GenericFunction.prototype);
   MeltFunction.prototype.generateClojure = function() {
     var i;
     var colNamesClj = new jsedn.Vector([]);
@@ -854,10 +853,6 @@ angular.module('grafterizerApp')
     for (i = 0; i < functions.length; ++i) {
       funct = functions[i];
       if (!(funct instanceof GenericFunction)) {
-        /*  if (funct.__type === 'CustomCode') {
-          functions[i] = CustomCode.revive(funct);
-        }
-*/
         if (funct.__type === 'DropRowsFunction') {
           functions[i] = DropRowsFunction.revive(funct);
         }
@@ -970,32 +965,6 @@ angular.module('grafterizerApp')
 
     this.subElements = resolvedSubElements;
   };
-//  RDFElement.prototype.changeType = function (newType, propertyValuePairs) {
-//    //    if(!(newType.prototype instanceof RDFElement)){
-//    //      console.error("Invalid RDF element type for: ", newType);
-//    //      return;
-//    //    }
-//
-//
-//
-//
-//
-//    // clear current properties
-//    for (var currentElementProperty in this) {
-//      if (currentElementProperty == '$$hashKey'  || currentElementProperty == 'subElements') {
-//        continue;
-//      }
-//      delete this[currentElementProperty];
-//    }
-//    delete this.__proto__;
-//    console.log(this);
-////    this.prototype = ConstantURI.prototype;
-////    console.log(this);
-//    for (var newProperty in propertyValuePairs) {
-//      this[newProperty] = propertyValuePairs[newProperty];
-//    }
-//
-//  };
 
   var URINode = function(prefix, subElements) {
     RDFElement.call(this, subElements);
@@ -1320,26 +1289,16 @@ angular.module('grafterizerApp')
     this.customFunctionDeclarations.push(new CustomFunctionDeclaration(name, clojureCode, group, docstring));
     return true;
   };
-  Transformation.prototype.removeCustomFunctionDeclaration = function(customFunct) {
+  Transformation.prototype.removeCustomFunctionDeclaration = function (customFunct) {
     for (var i = 0; i < this.customFunctionDeclarations.length; ++i) {
       if (this.customFunctionDeclarations[i].name === customFunct.name.trim()) {
         this.customFunctionDeclarations.splice(i, 1);
         return true;
       }
     }
-
     return false;
-
-    //        var index = this.customFunctionDeclarations.indexOf(customFunct);
-    //        if(!customFunct || index === -1) {
-    //            console.log('Nothing to do here');
-    //            return false;
-    //        } else {
-    //            this.customFunctionDeclarations.splice(index, 1);
-    //            return true;
-    //        }
   };
-  Transformation.prototype.findPrefixerOrCustomFunctionByName = function(name) {
+  Transformation.prototype.findPrefixerOrCustomFunctionByName = function (name) {
     var i;
     for (i = 0; i < this.prefixers.length; ++i) {
       if (this.prefixers[i].name === name) {
@@ -1372,7 +1331,7 @@ angular.module('grafterizerApp')
 
     return requestedColumnKeys;
   };
-  Transformation.prototype.getColumnKeysFromPipeline = function() {
+  Transformation.prototype.getColumnKeysFromPipeline = function () {
     var i;
     var j;
     var k;
@@ -1420,7 +1379,6 @@ angular.module('grafterizerApp')
     return availableColumnKeys;
 
   };
-  this.Transformation = Transformation;
 
   // TODO should this just be a prototype function of every RDFElement?
   var getKeysFromSubs = function(rootNode, subColKeys) {
@@ -1436,6 +1394,35 @@ angular.module('grafterizerApp')
 
     return subColKeys;
   };
-  
+  Transformation.prototype.getPartialTransformation = function (untilFunction) {
+    // TODO report errors?
+    // TODO how to support multi-pipe transformation??
+    if(!untilFunction){
+      console.error("Unable to compute partial transformation: empty until function"); 
+      return;
+    }
+    if(!(untilFunction instanceof GenericFunction)){
+      console.error("Unable to compute partial transformation: wrong type of input parameter"); 
+      return;
+    }
+    
+    var index = this.pipelines[0].functions.indexOf(untilFunction);
+    if (index == -1) {
+      console.error("Unable to compute partial transformation: unable to find until function"); 
+      return;
+    }
+    
+    var partialPipelineFunctions = this.pipelines[0].functions.slice(0, index + 1);
+    
+    var partialPipeline = new Pipeline(partialPipelineFunctions);
+    
+    
+    var partialTransformation = new Transformation(this.customFunctionDeclarations, this.prefixers, [partialPipeline], [/* no graphs needed for this */], this.rdfVocabs);
+    
+    
+    return partialTransformation;
+    
+  };
+  this.Transformation = Transformation;
   // AngularJS will instantiate a singleton by calling 'new' on this function
 });

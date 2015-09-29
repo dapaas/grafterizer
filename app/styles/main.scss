@@ -301,7 +301,7 @@ md-tab-content .CodeMirror {
     bottom:5px;
     left:50%;
     // margin-left:-37px;
-    margin-left:-22px;
+    margin-left:-35px;
     background:$color;
     position:absolute;
 
@@ -372,6 +372,7 @@ md-tab-content .CodeMirror {
 
 pipeline-function {
   margin-right: 8px;
+  position: relative;
 }
 
 .button-tight {
@@ -907,4 +908,32 @@ md-fab-speed-dial.md-down md-fab-actions.layout-row {
 // Temporary workaround for https://github.com/angular/material/issues/2936
 body {
   overflow-y: hidden;
+}
+
+div.previewed-pipeline-function-overlay {
+  background-color: rgba(200,200,200,0.5);
+//  border: 1px solid;
+  border-radius: 25px;
+  position: absolute;
+  left: -55px;
+  top: 1px;
+  width: 335px;
+  bottom: 1px;
+}
+
+.close-preview-button {
+  position: absolute;
+  top: 5px;
+  left: 9px;
+}
+
+.close-preview-icon {
+  color: rgb(160,160,160);
+  position: relative;
+  top: 4px;
+}
+
+.pipeline-action-icon {
+  position: relative;
+  bottom: 1px;
 }
