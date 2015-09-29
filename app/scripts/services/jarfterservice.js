@@ -41,10 +41,10 @@ angular.module('grafterizerApp')
       if (rScope.transformation.graphs &&
           rScope.transformation.graphs.length !== 0) {
         // if graft - execute the pipeline and then the graft
-        clojure += "(defn import-data\r\n  [quads-seq destination]\r\n  (add (ses\/rdf-serializer destination) quads-seq)\r\n)\r\n\r\n(defn my-transformation [dataset output]\r\n\r\n  (import-data \r\n    (make-graph (my-pipe dataset))\r\n  output)\r\n";
+        clojure += "\r\n(defn import-data\r\n  [quads-seq destination]\r\n  (add (ses\/rdf-serializer destination) quads-seq)\r\n)\r\n\r\n(defn my-transformation [dataset output]\r\n\r\n  (import-data \r\n    (make-graph (my-pipe dataset))\r\n  output)\r\n)";
       } else {
         // if pipe - execute just pipe
-        clojure += "(defn import-data\r\n  [pipe-result destination]\r\n  (write-dataset destination pipe-result)\r\n)\r\n\r\n(defn my-transformation [dataset output]\r\n\r\n  (import-data \r\n    (make-graph (my-pipe dataset))\r\n  output)\r\n";
+        clojure += "\r\n(defn import-data\r\n  [pipe-result destination]\r\n  (write-dataset destination pipe-result)\r\n)\r\n\r\n(defn my-transformation [dataset output]\r\n\r\n  (import-data \r\n    (make-graph (my-pipe dataset))\r\n  output)\r\n)";
       }
 
       console.log(clojure);
