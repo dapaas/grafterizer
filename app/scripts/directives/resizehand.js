@@ -12,6 +12,8 @@ angular.module('grafterizerApp')
       template: '<div></div>',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
+        var margin = attrs.margin ? parseInt(attrs.margin) : 300;
+
         var target = document.getElementById(attrs.
           for);
         if (!target) return;
@@ -39,13 +41,18 @@ angular.module('grafterizerApp')
           if (window.innerWidth < 600) {
             element.css('display', 'none');
             target.setAttribute('flex', '');
+            target.style.width = '';
+            angular.element(target).addClass('flex');
             return;
           }
 
           element.css('display', 'block');
           target.removeAttribute('flex');
+          angular.element(target).removeClass('flex');
 
-          w = Math.max(Math.round(w), 300);
+          var containerWidth = element.parent()[0].clientWidth;
+
+          w = Math.min(Math.max(Math.round(w), margin), containerWidth-margin);
           element.css('left', (w - 3) + 'px');
           element.css('height', target.clientHeight + 'px');
           target.style.width = w + 'px';
@@ -81,6 +88,10 @@ angular.module('grafterizerApp')
           isDragging = true;
           element.parent().append(mask);
           mask.addEventListener('mousemove', mousemove);
+        });
+
+        element.on('dragstart', function(ev) {
+          ev.preventDefault();
         });
 
         var stopDrag = function() {
