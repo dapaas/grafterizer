@@ -41,6 +41,7 @@ angular
   .config(function(
     ontotextAPIProvider,
     PipeServiceProvider,
+    jarfterServiceProvider,
     $mdThemingProvider,
     $stateProvider,
     $urlRouterProvider,
@@ -87,6 +88,8 @@ angular
     } else {
       PipeServiceProvider.setEndpoints('/backend', '/cache');
     }
+
+    jarfterServiceProvider.setEndpoint('http://54.76.91.86:8080');
 
     $urlRouterProvider.otherwise('/transformations/new');
 

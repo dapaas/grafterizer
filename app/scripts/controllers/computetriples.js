@@ -14,7 +14,8 @@ angular.module('grafterizerApp')
     $mdDialog,
     ontotextAPI,
     PipeService,
-    datagraftPostMessage) {
+    datagraftPostMessage,
+    jarfterService) {
 
     $scope.downloadLink = PipeService.computeTuplesHref(
       $scope.distribution, $scope.transformation, $scope.type);
@@ -28,6 +29,15 @@ angular.module('grafterizerApp')
       window.setTimeout(function() {
         $mdDialog.hide();
       }, 1);
+    };
+
+    $scope.isRDF = $rootScope.transformation.graphs.length ? $rootScope.transformation.graphs.length : 0;
+    $scope.downloadJarEndpoint = jarfterService.getJarCreatorStandAloneEndpoint();
+    $scope.transformEndpoint = jarfterService.getTransformStandAloneEndpoint();
+
+    $scope.onSubmitDownloadJar = function() {
+      $scope.jarfterClojure = jarfterService.generateClojure($rootScope.transformation);
+      $mdDialog.hide();
     };
 
     $scope.startDownloadProcessing = function() {
@@ -71,7 +81,7 @@ angular.module('grafterizerApp')
           $scope.downloadProcessingStatus = 'Unable to compute the data. Please try again';
         });
     };
-  
+
     var showError = function() {
       $mdDialog.hide();
       $mdDialog.show(
@@ -118,60 +128,61 @@ angular.module('grafterizerApp')
 
               $scope.processingStatus = 'Fetching information';
               ontotextAPI.distribution(distributionId)
-              .success(function(metadataDistribution) {
+                .success(function(metadataDistribution) {
 
-                $scope.processingStatus = 'Creating the RDF repository';
-                ontotextAPI.createRepository(distributionId)
-                .success(function(repositoryData) {
-                  var accessUrl = repositoryData['access-url'];
+                  $scope.processingStatus = 'Creating the RDF repository';
+                  ontotextAPI.createRepository(distributionId)
+                    .success(function(repositoryData) {
+                      var accessUrl = repositoryData['access-url'];
 
-                  metadataDistribution['dcat:accessURL'] = accessUrl;
+                      metadataDistribution['dcat:accessURL'] = accessUrl;
 
-                  $scope.processingStatus = 'Connecting the repository to the distribution';
-                  ontotextAPI.updateDistribution(metadataDistribution)
-                    .success(function(data) {
+                      $scope.processingStatus = 'Connecting the repository to the distribution';
+                      ontotextAPI.updateDistribution(metadataDistribution)
+                        .success(function(data) {
 
-                      $scope.processingStatus = 'Filling the repository';
+                          $scope.processingStatus = 'Filling the repository';
 
-                      var successFilling = function(data) {
-                        $mdDialog.hide();
+                          var successFilling = function(data) {
+                            $mdDialog.hide();
 
-                        var location = '/pages/publish/details.jsp?id=' +
-                          window.encodeURIComponent(datasetId);
-                        
-                        if (datagraftPostMessage.isConnected()) {
-                          datagraftPostMessage.setLocation(location);
-                        } else {
-                          if (location.protocol === 'https:') {
-                            location = 'https://datagraft.net' + location;
-                          } else {
-                            location = 'http://datagraft.net' + location;
-                          }
+                            var location = '/pages/publish/details.jsp?id=' +
+                              window.encodeURIComponent(datasetId);
 
-                          window.location = location;
-                        }
-                      };
+                            if (datagraftPostMessage.isConnected()) {
+                              datagraftPostMessage.setLocation(location);
+                            } else {
+                              if (location.protocol === 'https:') {
+                                location = 'https://datagraft.net' + location;
+                              } else {
+                                location = 'http://datagraft.net' + location;
+                              }
 
-                      var nbTryToFillRDFrepo = 0;
-                      var waitingDelay = 1000;
-                      var maxTentatives = 20;
+                              window.location = location;
+                            }
+                          };
 
-                      var tryToFillRDFrepo = function() {
-                        ++nbTryToFillRDFrepo;
-                        waitingDelay = Math.min(waitingDelay + waitingDelay, 32000);
+                          var nbTryToFillRDFrepo = 0;
+                          var waitingDelay = 1000;
+                          var maxTentatives = 20;
 
-                        window.setTimeout(function() {
-                          PipeService.fillRDFrepo(distributionId, accessUrl)
-                            .success(successFilling)
-                            .error(nbTryToFillRDFrepo < maxTentatives ? tryToFillRDFrepo : showError);
-                        }, waitingDelay);
-                      };
+                          var tryToFillRDFrepo = function() {
+                            ++nbTryToFillRDFrepo;
+                            waitingDelay = Math.min(waitingDelay + waitingDelay, 32000);
 
-                      tryToFillRDFrepo();
+                            window.setTimeout(function() {
+                              PipeService.fillRDFrepo(distributionId, accessUrl)
+                                .success(successFilling)
+                                .error(nbTryToFillRDFrepo < maxTentatives ? tryToFillRDFrepo :
+                                  showError);
+                            }, waitingDelay);
+                          };
 
+                          tryToFillRDFrepo();
+
+                        }).error(showError);
                     }).error(showError);
                 }).error(showError);
-              }).error(showError);
             }).error(showError);
         }).error(showError);
     };

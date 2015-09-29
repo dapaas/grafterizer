@@ -3,7 +3,7 @@
 angular.module('grafterizerApp')
   .controller('TransformationsCtrl', function($scope, ontotextAPI, $state) {
 
-    ontotextAPI.transformations().success(function(data) {
+    ontotextAPI.publicTransformations().success(function(data) {
       $scope.transformations = data['dcat:record'].reverse();
     });
 

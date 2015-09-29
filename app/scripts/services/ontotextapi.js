@@ -130,6 +130,14 @@ angular.module('grafterizerApp')
       return $http.get(endpoint + '/catalog/transformations/catalog', jsonLdConfig).error(errorHandler);
     };
 
+    api.publicTransformations = function() {
+      return $http.get(endpoint + '/catalog/transformations/catalog', _.merge({
+        headers: {
+          showShared: 'y'
+        },
+      }, jsonLdConfig)).error(errorHandler);
+    };
+
     api.transformation = function(id) {
       return $http.get(endpoint + '/catalog/transformations', _.merge({
         headers: {
@@ -270,14 +278,14 @@ angular.module('grafterizerApp')
       }).error(errorHandler);
     };
 
-    /*api.distributionFile = function(distributionID) {
+    api.distributionFile = function(distributionID) {
       return $http.get(endpoint + '/catalog/distributions/file', {
         headers: {
           'distrib-id': distributionID,
           Authorization: apiAuthorization
         }
       }).error(errorHandler);
-    };*/
+    };
 
     api.createRepository = function(distributionID) {
       return $http({
