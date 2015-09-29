@@ -38,11 +38,18 @@ angular.module('grafterizerApp')
 
         var savedW = 0;
         var updateLayout = function(w)  {
-          if (window.innerWidth < 600) {
+          var parent = element.parent();
+          var containerWidth = parent.length > 0 ? parent[0].clientWidth : window.innerWidth;
+
+          if (containerWidth < 600) {
             element.css('display', 'none');
             target.setAttribute('flex', '');
             target.style.width = '';
             angular.element(target).addClass('flex');
+            scope.$emit('resize-hand', {
+              left: containerWidth,
+              right: containerWidth
+            });
             return;
           }
 
@@ -50,13 +57,16 @@ angular.module('grafterizerApp')
           target.removeAttribute('flex');
           angular.element(target).removeClass('flex');
 
-          var containerWidth = element.parent()[0].clientWidth;
-
           w = Math.min(Math.max(Math.round(w), margin), containerWidth-margin);
           element.css('left', (w - 3) + 'px');
           element.css('height', target.clientHeight + 'px');
           target.style.width = w + 'px';
           savedW = w;
+
+          scope.$emit('resize-hand', {
+            left: w,
+            right: containerWidth-w
+          });
 
           if (window.sessionStorage) {
             window.sessionStorage.setItem('resizeHand' + attrs.for, w);
@@ -108,7 +118,26 @@ angular.module('grafterizerApp')
         scope.$on('$destroy', function() {
           target.setAttribute('flex', '');
           target.style.width = '';
+          angular.element(target).addClass('flex');
+        });
+      }
+    };
+  })
+  .directive('resizeHandTabsFix', function($rootScope) {
+    return {
+      restrict: 'A',
+      require: 'mdTabs',
+      link: function postLink(scope, element, attrs, mdTabsCtrl) {
+        var side = attrs.resizeHandTabsFix || 'left';
+        var previousMaxWidth = 0;
+        $rootScope.$on('resize-hand', function(event, args) {
+          var newWidth = args[side];
+          if (Math.abs(previousMaxWidth - newWidth) > 10) {
+            mdTabsCtrl.maxTabWidth = newWidth;
+            previousMaxWidth = newWidth;
+          }
         });
       }
     };
   });
+
