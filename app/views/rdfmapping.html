@@ -7,9 +7,11 @@
     <md-button aria-label="Edit RDF mapping prefixes" ng-click="editRDFPrefixes()" ng-show="mappingEnabled" ng-disabled="readonlymode">
         <i class="fa fa-cubes"></i> Edit RDF mapping prefixes
     </md-button>
+<!--
     <md-switch ng-model="switchValidate.cb1" aria-label="Validate" ng-show="mappingEnabled &amp;&amp; !readonlymode" ng-change="onChange(switchValidate.cb1)">
       Mapping validation: {{ message }}
     </md-switch>
+-->
 </div>
 <div ng-model="transformation.graphs" layout="row" class="md-padding">
     <div ng-repeat="graph in transformation.graphs">
