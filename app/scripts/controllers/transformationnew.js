@@ -87,6 +87,9 @@ angular.module('grafterizerApp')
           new transformationDataModel.CustomFunctionDeclaration('join',
         '(defn join [& strings] (clojure.string/join " " strings))', 'STRING',
         'Returns a string of all elements in the collection separated by space.'),
+          new transformationDataModel.CustomFunctionDeclaration('join-with',
+        '(defn join-with [sep] ( fn [& strings] (clojure.string/join sep strings)))', 'STRING',
+        'Returns a string of all elements in the collection separated by custom separator.'),
           new transformationDataModel.CustomFunctionDeclaration('lower-case',
         '', 'STRING', 'Converts string to all lower-case'),
           new transformationDataModel.CustomFunctionDeclaration('upper-case',
@@ -102,6 +105,8 @@ angular.module('grafterizerApp')
         'Removes whitespace from the left side of string'),
           new transformationDataModel.CustomFunctionDeclaration('trimr', '', 'STRING',
         'Removes whitespace from the right side of string'),
+          new transformationDataModel.CustomFunctionDeclaration('str', '', 'STRING',
+        'With one arg x, returns x.toString(). (str nil) returns the empty string. With more than one arg, returns the concatenation of the str values of the args.'),
           new transformationDataModel.CustomFunctionDeclaration('rem', '', 'NUMBER',
         'Returns remainder of dividing numerator by denominator')];
     customfunctions.sort(function(a, b) {
