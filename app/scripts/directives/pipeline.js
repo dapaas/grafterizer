@@ -35,8 +35,8 @@ angular.module('grafterizerApp')
         newScope.transformation = scope.transformation;
         $mdDialog.show({
           templateUrl: 'views/pipelineFunctionDialog.html',
-            scope: newScope,
-            clickOutsideToClose: true
+          scope: newScope,
+          clickOutsideToClose: true
         }).then(function(pipeFunct) {
           if (pipeFunct) {
             scope.pipeline.addAfter(funct, pipeFunct);
@@ -47,7 +47,8 @@ angular.module('grafterizerApp')
             $rootScope.currentlyPreviewedFunction.isPreviewed = false;
             $rootScope.currentlyPreviewedFunction = pipeFunct;
             pipeFunct.isPreviewed = true;
-            $rootScope.previewedClojure = scope.transformation.getPartialTransformation(pipeFunct);
+
+            $rootScope.previewedClojure = generateClojure.fromTransformation(scope.transformation.getPartialTransformation(pipeFunct));
           }
         });
       };
@@ -64,7 +65,7 @@ angular.module('grafterizerApp')
             $rootScope.currentlyPreviewedFunction = {};
             $rootScope.previewedClojure = generateClojure.fromTransformation(scope.transformation);
           }
-          $rootScope.previewedClojure = scope.transformation.getPartialTransformation(funct);
+          $rootScope.previewedClojure = generateClojure.fromTransformation(scope.transformation.getPartialTransformation(funct));
           scope.pipeline.remove(funct);
         });
       };
