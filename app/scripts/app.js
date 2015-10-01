@@ -141,7 +141,7 @@ angular
         }
       })
       .state('transformations', {
-        url: '/transformations',
+        url: '/transformations?showShared&search',
         views: {
           main: {
             templateUrl: 'views/transformations.html',
@@ -194,6 +194,22 @@ angular
         },
         ncyBreadcrumb: {
           label: '{{(selectedDistribution || "No dataset loaded")|beautifyUri}}'
+        }
+      })
+      .state('transformations.readonly', {
+        url: '^/readonly/{id:nonURIEncoded}',
+        views: {
+          'main@': {
+            templateUrl: 'views/readonly.html',
+            controller: 'ReadOnlyCtrl'
+          },
+          'actions@': {
+            templateUrl: 'views/actions.html',
+            controller: 'ActionsCtrl'
+          }
+        },
+        ncyBreadcrumb: {
+          label: '{{document.title || "File "+id}}'
         }
       })
       .state('datasets', {
@@ -263,18 +279,6 @@ angular
         },
         ncyBreadcrumb: {
           label: 'Help'
-        }
-      })
-      .state('readonly', {
-        url: '^/readonly/{id:nonURIEncoded}',
-        views: {
-          main: {
-            templateUrl: 'views/readonly.html',
-            controller: 'ReadOnlyCtrl'
-          }
-        },
-        ncyBreadcrumb: {
-          label: '{{document.title || "File "+id}}'
         }
       });
 

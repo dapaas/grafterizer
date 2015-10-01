@@ -1,7 +1,7 @@
 <md-toolbar class="md-accent">
   <div class="md-toolbar-tools">
     <!-- <h2 class="md-flex">Toolbar: md-warn</h2> -->
-	  <form layout="row" layout-sm="column" ng-submit="load()">
+	  <form layout="row" layout-sm="column" ng-submit="submit()">
 	    <md-input-container>
 	   		<label>&nbsp;</label>
 	      <input ng-model="searchinput" placeholder="Search">
@@ -12,8 +12,8 @@
     </form>
 	  <div class="flex"></div>
     <!-- <h2>My transformations</h2> -->
-    <md-switch ng-model="showPublic" aria-label="Switch 1" class="md-hue-1 md-warn">
-	    Public transformations
+    <md-switch ng-model="showShared" aria-label="Switch 1" class="md-hue-1 md-warn" ng-change="submit()">
+	    Show shared
 	  </md-switch>
   </div>
 </md-toolbar>

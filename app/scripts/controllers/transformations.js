@@ -3,27 +3,34 @@
 angular.module('grafterizerApp')
   .controller('TransformationsCtrl', function($scope, ontotextAPI, $state) {
 
-    $scope.selectTransformation = function(transformation) {
-      $state.go('transformations.transformation', {
-        id: transformation['foaf:primaryTopic']
-      });
-    };
-
     var showTransformations = function(data) {
       $scope.transformations = data['dcat:record'].reverse();
     };
 
-    $scope.load = function() {
-      $scope.transformations = [];
-      if ($scope.searchinput) {
-        ontotextAPI.searchTransformations($scope.searchinput, $scope.showPublic ? 'y' : 'n')
-         .success(showTransformations);
-      } else if ($scope.showPublic) {
-        ontotextAPI.publicTransformations().success(showTransformations);
-      } else {
-        ontotextAPI.transformations().success(showTransformations);
-      }
+    $scope.searchinput = $state.params.search;
+    $scope.showShared = $state.params.showShared ? $state.params.showShared !== 'false' : false;
+
+    $scope.transformations = [];
+    if ($scope.searchinput) {
+      ontotextAPI.searchTransformations($scope.searchinput, $scope.showShared ? 'y' : 'n')
+       .success(showTransformations);
+    } else if ($scope.showShared) {
+      ontotextAPI.publicTransformations().success(showTransformations);
+    } else {
+      ontotextAPI.transformations().success(showTransformations);
+    }
+
+    $scope.submit = function() {
+      $state.go('.', {
+        search: $scope.searchinput,
+        showShared: $scope.showShared
+      });
     };
 
-    $scope.$watch('showPublic', $scope.load);
+    $scope.selectTransformation = function(transformation) {
+      $state.go($scope.showshared ? 'transformations.readonly' : 'transformations.transformation', {
+        id: transformation['foaf:primaryTopic']
+      });
+    };
+
   });
