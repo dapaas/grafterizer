@@ -234,10 +234,8 @@ angular.module('grafterizerApp')
       new jsedn.Vector([new jsedn.sym('data-file')]),
       new jsedn.List([jsedn.sym('->'), readDatasetFunct])]);
 
-      pipeline.val[4].val.push(jsedn.sym('\n '));
       pipelineFunctions.map(function(arg) {
         pipeline.val[4].val.push(arg);
-        pipeline.val[4].val.push(jsedn.sym('\n '));
       });
 
       //(read-dataset data-file :format :csv)
@@ -265,16 +263,13 @@ angular.module('grafterizerApp')
         if (columnKeysFromPipeline.indexOf(columnKeysFromGraph[i]) === -1 && typeof columnKeysFromGraph[i] ===
           'string') {
           colKeysClj.val.push(new jsedn.sym(columnKeysFromGraph[i]));
-          colKeysClj.val.push(jsedn.sym('\n '));
         }
 
       var graphFunction = new jsedn.List([
         new jsedn.sym('graph-fn'),
-        new jsedn.sym('\n '),
         new jsedn.Vector([
           new jsedn.Map([new jsedn.kw(':keys'), colKeysClj])
-        ]),
-        new jsedn.sym('\n ')
+        ])
       ]);
 
       var currentGraphJsEdn = null;
@@ -286,8 +281,7 @@ angular.module('grafterizerApp')
 
         // construct a vector for each of the roots and add it to the graph jsedn
         for (j = 0; j < currentGraph.graphRoots.length; ++j) {
-          currentRootJsEdn = constructNodeVectorEdn(currentGraph.graphRoots[j], currentGraph, 0);
-          currentGraphJsEdn.val.push(jsedn.sym('\n   '));
+          currentRootJsEdn = constructNodeVectorEdn(currentGraph.graphRoots[j], currentGraph);
           currentGraphJsEdn.val.push(currentRootJsEdn);
         }
 
@@ -299,7 +293,7 @@ angular.module('grafterizerApp')
       return result;
     }
 
-    function constructNodeVectorEdn(node, containingGraph, nbRecursion) {
+    function constructNodeVectorEdn(node, containingGraph) {
 
       var i;
       var k;
@@ -313,13 +307,9 @@ angular.module('grafterizerApp')
         }
 
         var propertyValue = node.subElements[0];
-        var text = '\n';
-        for (i = -1; i < nbRecursion; ++i) {
-          text += '   ';
-        }
 
         // [name {either single node or URI node with sub-nodes (as vector)}
-        return new jsedn.List([jsedn.sym(text), new jsedn.Vector([constructPropertyJsEdn(node), constructNodeVectorEdn(propertyValue, containingGraph, nbRecursion + 1)])]);
+        return new jsedn.Vector([constructPropertyJsEdn(node), constructNodeVectorEdn(propertyValue, containingGraph)]);
       }
 
       if (node instanceof transformationDataModel.ColumnLiteral) {
@@ -374,7 +364,7 @@ angular.module('grafterizerApp')
           allSubElementsVector = new jsedn.Vector([constructColumnURINodeJsEdn(node, containingGraph)]);
 
           for (k = 0; k < node.subElements.length; ++k) {
-            subElementEdn = constructNodeVectorEdn(node.subElements[k], undefined, nbRecursion + 1);
+            subElementEdn = constructNodeVectorEdn(node.subElements[k]);
 
             allSubElementsVector.val.push(subElementEdn);
 
@@ -394,7 +384,7 @@ angular.module('grafterizerApp')
           // [node-uri-as-generated {sub-1's edn representation} {sub-2's edn representation} ... {sub-n's edn representation}]
           allSubElementsVector = new jsedn.Vector([constructConstantURINodeJsEdn(node, containingGraph)]);
           for (i = 0; i < node.subElements.length; ++i) {
-            subElementEdn = constructNodeVectorEdn(node.subElements[i], undefined, nbRecursion + 1);
+            subElementEdn = constructNodeVectorEdn(node.subElements[i]);
             allSubElementsVector.val.push(subElementEdn);
           }
 
@@ -412,7 +402,7 @@ angular.module('grafterizerApp')
           allSubElementsVector = new jsedn.Vector([]);
 
           for (k = 0; k < node.subElements.length; ++k) {
-            subElementEdn = constructNodeVectorEdn(node.subElements[k], undefined, nbRecursion + 1);
+            subElementEdn = constructNodeVectorEdn(node.subElements[k]);
 
             allSubElementsVector.val.push(subElementEdn);
 
@@ -790,7 +780,6 @@ angular.module('grafterizerApp')
       for (i = 0; i < grafterCustomFunctions.length; ++i) {
         textStr += (grafterCustomFunctions[i].ednEncode() + '\n');
       }
-      textStr += '\n';
 
       textStr += graphTemplate.ednEncode();
       
