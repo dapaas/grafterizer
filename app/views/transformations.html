@@ -1,15 +1,17 @@
-<md-content md-scroll-y class="dapaas-list">
-	<md-list>
-	  <md-list-item class="md-2-line" ng-repeat="transformation in transformations" ng-click="selectTransformation(transformation)">
-	  <div class="md-avatar fa fa-filter">
-	  	<!-- <i class="fa fa-filter"></i> -->
-	  </div>
-	    <div class="md-list-item-text">
-		    <h3>{{transformation['dct:title']}}</h3>
-			<p>{{transformation['dct:modified'] | date:'d/M/yyyy'}}</p>
-		</div>
-	  </md-list-item>
-	</md-list>
+<md-content flex layout="column" class="dapaas-list">
+	<md-virtual-repeat-container flex>
+		<md-list>
+		  <md-list-item class="md-2-line" md-virtual-repeat="transformation in transformations" ng-click="selectTransformation(transformation)">
+			  <div class="md-avatar fa fa-filter">
+			  	<!-- <i class="fa fa-filter"></i> -->
+			  </div>
+			    <div class="md-list-item-text">
+				    <h3>{{transformation['dct:title']}}</h3>
+					<p>{{transformation['dct:modified'] | date:'d/M/yyyy'}}</p>
+				</div>
+		  </md-list-item>
+	  </md-list>
+  </md-virtual-repeat-container>
 </md-content>
 
 <md-button class="md-accent md-fab md-fab-bottom-right sin-fa-button" ui-sref="transformations.new" aria-label="New transformation">
