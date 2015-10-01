@@ -53,6 +53,12 @@ angular.module('grafterizerApp')
         });
 
         codeMirror.on('changes', changeEventListener);
+
+        window.setTimeout(function() {
+          if (codeMirror !== null) {
+            codeMirror.refresh();
+          }
+        }, 1000);
       });
 
       scope.$watch('transformation', function() {
