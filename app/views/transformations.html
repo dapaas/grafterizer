@@ -1,3 +1,22 @@
+<md-toolbar class="md-accent">
+  <div class="md-toolbar-tools">
+    <!-- <h2 class="md-flex">Toolbar: md-warn</h2> -->
+	  <form layout="row" layout-sm="column" ng-submit="load()">
+	    <md-input-container>
+	   		<label>&nbsp;</label>
+	      <input ng-model="searchinput" placeholder="Search">
+	    </md-input-container>
+			<md-button class="md-icon-button" type="submit">
+				<i class="fa fa-search"></i>
+			</md-button>
+    </form>
+	  <div class="flex"></div>
+    <!-- <h2>My transformations</h2> -->
+    <md-switch ng-model="showPublic" aria-label="Switch 1" class="md-hue-1 md-warn">
+	    Public transformations
+	  </md-switch>
+  </div>
+</md-toolbar>
 <md-content flex layout="column" class="dapaas-list">
 	<md-virtual-repeat-container flex>
 		<md-list>

@@ -953,3 +953,24 @@ div.previewed-pipeline-function-overlay {
 md-tabs .md-tab {
   min-width: 150px !important;
 }
+
+md-toolbar md-input-container .md-input {
+  color:white!important;
+
+  &::-webkit-input-placeholder {
+    color: rgba(255,255,255,0.87) !important;
+  }
+
+  &::-moz-placeholder {
+    color: rgba(255,255,255,0.87) !important;
+  }
+
+  &:-ms-input-placeholder {
+    color: rgba(255,255,255,0.87) !important;
+  }
+}
+
+md-toolbar .md-button[type=submit] {
+  top: 18px;
+  font-size: 26px;
+}
