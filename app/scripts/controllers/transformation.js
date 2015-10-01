@@ -220,6 +220,20 @@ angular.module('grafterizerApp')
               id: data['@id']
             });
           });
+      },
+
+      download: function(ev) {
+        if ($rootScope.actions && $rootScope.actions.save) {
+          // Save but without a preview
+          $rootScope.actions.save(true);
+        }
+
+        $mdDialog.show({
+          templateUrl: 'views/computetriples.html',
+          controller: 'ComputetriplesCtrl',
+          scope: $scope.$new(false),
+          clickOutsideToClose: true
+        });
       }
     };
 

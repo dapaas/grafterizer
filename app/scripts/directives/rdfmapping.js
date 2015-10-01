@@ -24,6 +24,10 @@ angular.module('grafterizerApp')
       connection + 'getAll'
     ).success(
       function(response) {
+        if (!response || !response.result) {
+          return;
+        }
+        
         for (var i = response.result.length - 1; i >= 0; i--) {
           var vocabItemTemplate = {
             name: response.result[i].name,

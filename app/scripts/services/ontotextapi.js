@@ -138,6 +138,17 @@ angular.module('grafterizerApp')
       }, jsonLdConfig)).error(errorHandler);
     };
 
+    api.searchTransformations = function(search, showShared) {
+      return $http.get(endpoint + '/catalog/transformations/search', _.merge({
+        params: {
+          q: search
+        },
+        headers: {
+          showShared: showShared || 'n'
+        },
+      }, jsonLdConfig)).error(errorHandler);
+    };
+
     api.transformation = function(id) {
       return $http.get(endpoint + '/catalog/transformations', _.merge({
         headers: {

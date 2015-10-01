@@ -13,7 +13,7 @@ angular.module('grafterizerApp')
       $scope: $scope
     });
 
-    $rootScope.hideToolbar = true;
+    $rootScope.hideToolbar = window !== window.top;
     $scope.$on('$destroy', function() {
       delete $rootScope.hideToolbar;
     });

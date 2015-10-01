@@ -20,23 +20,6 @@ angular.module('grafterizerApp')
             $mdDialog,
             transformationDataModel) {
   
-  // TODO fixme - slightly dusty hack - replace with something more "elegant"
-  $scope.hideDisabledDownload = false;
-  var hideDownloadButton = function(hideDisabledDownload) {
-    $scope.hideDisabledDownload = hideDisabledDownload;
-    $rootScope.$emit('removeAction', 'download');
-    if (hideDisabledDownload) {
-      $rootScope.$emit('removeAction', 'disabledDownload');
-    } else {
-      $rootScope.$emit('addAction', {
-        name: 'disabledDownload',
-        callback: true
-      });
-    }
-  };
-
-  hideDownloadButton(false);
-
   var paginationSize = 100;
 
   $scope.livePreview = !(window.sessionStorage && window.sessionStorage.livePreview === 'false');
@@ -45,11 +28,6 @@ angular.module('grafterizerApp')
   // TODO IT DOES WORK
   $scope.$parent.showPreview = true;
   $scope.$on('$destroy', function() {
-
-    if ($scope.hideDisabledDownload) {
-      hideDownloadButton(true);
-    }
-
     $scope.$parent.showPreview = false;
   });
 
@@ -79,7 +57,6 @@ angular.module('grafterizerApp')
       .then(function(data) {
       delete $scope.graftwerkException;
       $scope.data = data;
-      showDownloadButton();
     },
 
     function(data) {
@@ -116,8 +93,6 @@ angular.module('grafterizerApp')
           .hideDelay(6000)
         );
       }
-
-      hideDownloadButton(false);
     });
   };
 
@@ -214,41 +189,34 @@ angular.module('grafterizerApp')
     }
   };
 
-  var showDownloadButton = function() {
-    var distribution = $scope.selectedDistribution;
-    var transformation = $scope.$parent.id;
+  // $rootScope.actions.download = function() {
+  //   var distribution = $scope.selectedDistribution;
+  //   var transformation = $scope.$parent.id;
+  //   if ($rootScope.actions && $rootScope.actions.save) {
+  //     // Save but without a preview
+  //     $rootScope.actions.save(true);
+  //   }
 
-    $rootScope.$emit('addAction', {
-      name: 'download',
-      callback: function() {
-        if ($rootScope.actions && $rootScope.actions.save) {
-          // Save but without a preview
-          $rootScope.actions.save(true);
-        }
+  //   var type = 'pipe';
+  //   if ($rootScope.transformation.graphs &&
+  //       $rootScope.transformation.graphs.length !== 0) {
+  //     type = 'graft';
+  //   }
 
-        var type = 'pipe';
-        if ($rootScope.transformation.graphs &&
-            $rootScope.transformation.graphs.length !== 0) {
-          type = 'graft';
-        }
+  //   var scopeDialog = $scope.$new(false);
+  //   scopeDialog.distribution = distribution;
+  //   scopeDialog.transformation = transformation;
+  //   scopeDialog.type = type;
 
-        var scopeDialog = $scope.$new(false);
-        scopeDialog.distribution = distribution;
-        scopeDialog.transformation = transformation;
-        scopeDialog.type = type;
+  //   // TODO
+  //   // scopeDialog.dataset = selectedDataset;
 
-        // TODO
-        // scopeDialog.dataset = selectedDataset;
-
-        $mdDialog.show({
-          templateUrl: 'views/computetriples.html',
-          controller: 'ComputetriplesCtrl',
-          scope: scopeDialog,
-          clickOutsideToClose: true
-        });
-      }
-    });
-    $rootScope.$emit('removeAction', 'disabledDownload');
-  };
+  //   $mdDialog.show({
+  //     templateUrl: 'views/computetriples.html',
+  //     controller: 'ComputetriplesCtrl',
+  //     scope: scopeDialog,
+  //     clickOutsideToClose: true
+  //   });
+  // };
 
 });
