@@ -168,9 +168,28 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
 
   $scope.viewItem = function(name, namespace) {
 
+    $scope.vocabClassArray = [];
+    $scope.vocabPropertyArray = [];
     $mdSidenav('vocabdetail')
       .toggle()
       .then(function() {});
+
+    var localVocabulary = $rootScope.transformation.rdfVocabs;
+
+    for (var i = 0; i < localVocabulary.length; i++) {
+      if (localVocabulary[i].namespace === namespace) {
+
+        for (var j = 0; j < localVocabulary[i].classes.length; j++) {
+          $scope.vocabClassArray.push(localVocabulary[i].classes[j].name.substring(
+            localVocabulary[i].classes[j].name.indexOf(":") + 1));
+        }
+
+        for (var j = 0; j < localVocabulary[i].properties.length; j++) {
+          $scope.vocabPropertyArray.push(localVocabulary[i].properties[j].name.substring(
+            localVocabulary[i].properties[j].name.indexOf(":") + 1));
+        }
+      }
+    }
 
     //show classes and properties in a vocabulary
     $http.post(
@@ -178,19 +197,22 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
         name: name,
         namespace: namespace
       }).success(function(response) {
-      $scope.vocabClassArray = [];
-      $scope.vocabPropertyArray = [];
-      var i;
-      for (i = response.classResult.length - 1; i >= 0; i--) {
-        $scope.vocabClassArray.push(response.classResult[i].value);
-      }
+        
+        var i;
+        if ($scope.vocabClassArray.length === 0) {
+          for (i = response.classResult.length - 1; i >= 0; i--) {
+            $scope.vocabClassArray.push(response.classResult[i].value);
+          }
+        }
 
-      for (i = response.propertyResult.length - 1; i >= 0; i--) {
-        $scope.vocabPropertyArray.push(response.propertyResult[i].value);
-      }
-    }).error(function(data, status, headers, config) {
+        if ($scope.vocabPropertyArray.length === 0){
+          for (i = response.propertyResult.length - 1; i >= 0; i--) {
+            $scope.vocabPropertyArray.push(response.propertyResult[i].value);
+          }
+        }
+      }).error(function(data, status, headers, config) {
 
-    });
+      });
   };
 
   //delete local vocabulary

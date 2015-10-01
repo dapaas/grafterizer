@@ -44,7 +44,7 @@ angular.module('grafterizerApp')
         $scope.dialogState.selectedTab = 0;
         $scope.dialogState.mappingType = $scope.nodeCurrentState.__type ===
           'ConstantURI' ? 'free-defined' : 'dataset-col';
-        $scope.nodeCurrentStateSubElements = $scope.nodeCurrentState.subElements;
+        $scope.nodeCurrentStateSubElements = $scope.nodeCurrentState.subElements ? $scope.nodeCurrentState.subElements : [];
         break;
       case 'ColumnLiteral':
       case 'ConstantLiteral':
@@ -166,7 +166,7 @@ angular.module('grafterizerApp')
         // probably an outright URI - we put the whole URI in there
         $scope.nodeCurrentState.prefix = '';
         $scope.nodeCurrentState.constant = $scope.propertyValue.value;
-        $scope.nodeCurrentState.subElements = $scope.nodeCurrentStateSubElements;
+        $scope.nodeCurrentState.subElements = $scope.nodeCurrentStateSubElements ? $scope.nodeCurrentStateSubElements : [];
       } else {
         // probably a qualified name - we need to split it into parts
         if ($scope.propertyValue.value.indexOf(':') !== -1) {
@@ -182,7 +182,7 @@ angular.module('grafterizerApp')
         }
       }
     } else if ($scope.nodeCurrentState.__type === 'ColumnURI') {
-      $scope.nodeCurrentState.subElements = $scope.nodeCurrentStateSubElements;
+      $scope.nodeCurrentState.subElements = $scope.nodeCurrentStateSubElements ? $scope.nodeCurrentStateSubElements : [];
     }
 
     /*else if ($scope.nodeCurrentState.__type === 'ConstantLiteral') {
