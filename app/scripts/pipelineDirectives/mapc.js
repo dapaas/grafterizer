@@ -14,10 +14,17 @@ angular.module('grafterizerApp')
       link: function postLink(scope, element, attrs) {
         if (!scope.function) {
           var keyfuncpair = new transformationDataModel.KeyFunctionPair(
-            'colName', scope.$parent.transformation.customFunctionDeclarations[0]);
+            '', scope.$parent.transformation.customFunctionDeclarations[0]);
 
           scope.function = new transformationDataModel.MapcFunction([keyfuncpair], null);
           scope.function.docstring = null;
+        }
+        
+        // TODO fix this when Javascript adds better support for OOP: this is a "hack" to ensure that the object received is of the proper type; Needs to be done due to the way Javascript objects/classes work
+        if(!(scope.function instanceof transformationDataModel.MapcFunction)){
+          var newFunction = new transformationDataModel.MapcFunction([], '');
+          _.extend(newFunction, scope.function);
+          scope.function = newFunction;
         }
 
         scope.$parent.generateCurrFunction = function() {
