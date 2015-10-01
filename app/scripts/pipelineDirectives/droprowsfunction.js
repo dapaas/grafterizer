@@ -15,7 +15,7 @@ angular.module('grafterizerApp')
         if (!scope.function) {
           scope.function = {
             numberOfRows: 1,
-            take: true,
+            take: false,
             docstring: null
           };
         }
