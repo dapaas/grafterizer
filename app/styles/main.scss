@@ -943,3 +943,13 @@ div.previewed-pipeline-function-overlay {
   position: relative;
   bottom: 1px;
 }
+
+#mainview {
+  min-height:0;
+}
+
+// Fix md-tab 0 min-width 
+// Should be fixed with angular-material 0.12.0
+md-tabs .md-tab {
+  min-width: 150px !important;
+}
