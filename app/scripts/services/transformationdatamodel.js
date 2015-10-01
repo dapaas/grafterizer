@@ -8,7 +8,7 @@
  * Service in the grafterizerApp.
  */
 angular.module('grafterizerApp')
-.service('transformationDataModel', function($mdToast) {
+  .service('transformationDataModel', function($mdToast) {
   var _this = this;
 
   var Prefixer = function(name, uri, parentPrefix) {
@@ -951,7 +951,7 @@ angular.module('grafterizerApp')
       return inputElement;
     }
   };
-  
+
   // TODO remove subElements and move to URINode (which are the only elements that can have subelements)
   var RDFElement = function(subElements) {
     var i;
@@ -1397,31 +1397,36 @@ angular.module('grafterizerApp')
   Transformation.prototype.getPartialTransformation = function (untilFunction) {
     // TODO report errors?
     // TODO how to support multi-pipe transformation??
-    if(!untilFunction){
-      console.error("Unable to compute partial transformation: empty until function"); 
-      return;
+    try{
+      if(!untilFunction){
+        console.log("Unable to compute partial transformation: empty until function");
+        return this;
+      }
+      if(!(untilFunction instanceof GenericFunction)){
+        console.log("Unable to compute partial transformation: wrong type of input parameter"); 
+        return this;
+      }
+
+      var index = this.pipelines[0].functions.indexOf(untilFunction);
+      if (index == -1) {
+        console.error("Unable to compute partial transformation: unable to find until function"); 
+        return this;
+      }
+
+      var partialPipelineFunctions = this.pipelines[0].functions.slice(0, index + 1);
+
+      var partialPipeline = new Pipeline(partialPipelineFunctions);
+
+
+      var partialTransformation = new Transformation(this.customFunctionDeclarations, this.prefixers, [partialPipeline], [/* no graphs needed for this */], this.rdfVocabs);
+
+
+      return partialTransformation;
+    } catch (e) {
+      console.log("Unable to compute partial transformation: unknown error", e);
+      return this;
     }
-    if(!(untilFunction instanceof GenericFunction)){
-      console.error("Unable to compute partial transformation: wrong type of input parameter"); 
-      return;
-    }
-    
-    var index = this.pipelines[0].functions.indexOf(untilFunction);
-    if (index == -1) {
-      console.error("Unable to compute partial transformation: unable to find until function"); 
-      return;
-    }
-    
-    var partialPipelineFunctions = this.pipelines[0].functions.slice(0, index + 1);
-    
-    var partialPipeline = new Pipeline(partialPipelineFunctions);
-    
-    
-    var partialTransformation = new Transformation(this.customFunctionDeclarations, this.prefixers, [partialPipeline], [/* no graphs needed for this */], this.rdfVocabs);
-    
-    
-    return partialTransformation;
-    
+
   };
   this.Transformation = Transformation;
   // AngularJS will instantiate a singleton by calling 'new' on this function

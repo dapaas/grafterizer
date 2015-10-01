@@ -8,64 +8,73 @@
  */
 angular.module('grafterizerApp')
   .directive('clojurePipeline', function($compile, generateClojure, $rootScope) {
-    return {
-      template: '<div class="warningMsg" ng-show="isOverrided"><i class="fa fa-exclamation-triangle"></i> ' +
-      'Clojure editing is an experimental feature. ' +
-      'Your modifications will be lost if you edit the transformation.</div>' +
-      '<div></div>',
-      restrict: 'E',
-      scope: {
-        transformation: '='
-      },
-      link: function postLink(scope, element, attrs) {
-        var generatedClojure = '';
-        var codeMirror = null;
+  return {
+    template: '<div class="warningMsg" ng-show="isOverrided"><i class="fa fa-exclamation-triangle"></i> ' +
+    'Clojure editing is an experimental feature. ' +
+    'Any modifications are <b>only shown in the "Previewed data"</b> view and will not be reflected on the specified pipeline.</div>' +
+    '<div></div>',
+    restrict: 'E',
+    scope: {
+      transformation: '='
+    },
+    link: function postLink(scope, element, attrs) {
+      var currentClojure = '';
+      var codeMirror = null;
 
-        var throttledPreviewRequest = _.debounce(function() {
-          scope.$parent.$parent.$broadcast('preview-request');
-        }, 1000, {leading: false});
+      var throttledPreviewRequest = _.debounce(function() {
+        scope.$parent.$parent.$broadcast('preview-request');
+      }, 1000, {leading: false});
 
-        scope.isOverrided = generateClojure.hasOveriddedClojure();
+      var changeEventListener = function() {
 
-        var changeEventListener = function() {
-          var value = codeMirror.getValue();
-          if (value && generatedClojure !== value) {
-            scope.isOverrided = true;
+        var value = codeMirror.getValue();
 
-            generateClojure.overrideClojure(value, generatedClojure);
-            throttledPreviewRequest();
-          }
-        };
+        if (value && currentClojure !== value) {
+          // manual override (experimental)
+          scope.isOverrided = true;
+          $rootScope.previewedClojure = value;
+          currentClojure = value;
+          throttledPreviewRequest();
+        } 
+      };
 
-        var editorArea = angular.element(element.children()[1]);
+      var editorArea = angular.element(element.children()[1]);
 
-        $rootScope.$watch('readonlymode', function() {
-          codeMirror = new window.CodeMirror(function(dom) {
-            editorArea.empty();
-            editorArea.append(dom);
-          }, {
-            lineWrapping: true,
-            mode: 'clojure',
-            dragDrop: false,
-            readOnly: $rootScope.readonlymode,
-            value: generatedClojure
-          });
-
-          codeMirror.on('changes', changeEventListener);
+      $rootScope.$watch('readonlymode', function() {
+        codeMirror = new window.CodeMirror(function(dom) {
+          editorArea.empty();
+          editorArea.append(dom);
+        }, {
+          lineWrapping: true,
+          mode: 'clojure',
+          dragDrop: false,
+          readOnly: $rootScope.readonlymode,
+          value: currentClojure
         });
 
-        scope.$watch('transformation', function() {
-          if (!scope.transformation) {
-            return;
-          }
+        codeMirror.on('changes', changeEventListener);
+      });
 
-          generatedClojure = generateClojure.fromTransformation(scope.transformation);
-          scope.isOverrided = generateClojure.hasOveriddedClojure();
+      scope.$watch('transformation', function() {
+        if (!scope.transformation) {
+          return;
+        }
 
-          if (codeMirror) {
-            codeMirror.setValue(generatedClojure);
-          }
-        }, true);
-      }
-    };
-  });
+
+        if($rootScope.currentlyPreviewedFunction){
+          var partialTransformation = $rootScope.transformation.getPartialTransformation($rootScope.currentlyPreviewedFunction);
+          $rootScope.previewedClojure = generateClojure.fromTransformation(partialTransformation);
+        } else {
+          var tmpClojure = generateClojure.fromTransformation(scope.transformation);
+          currentClojure = tmpClojure;
+          $rootScope.previewedClojure = currentClojure;
+        }
+
+        if (codeMirror) {
+          codeMirror.setValue(currentClojure);
+        }
+
+      }, true);
+    }
+  };
+});

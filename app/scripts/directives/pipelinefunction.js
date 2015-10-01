@@ -36,6 +36,7 @@ angular.module('grafterizerApp')
       scope.closePreviewOfFunction = function () {
         
         $rootScope.currentlyPreviewedFunction.isPreviewed = false;
+        $rootScope.currentlyPreviewedFunction = {};
 
         // TODO maybe it is better not to use a "global" variable
         $rootScope.previewedClojure = generateClojure.fromTransformation(scope.transformation);

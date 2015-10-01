@@ -17,7 +17,8 @@ angular.module('grafterizerApp')
             $stateParams,
             generateClojure,
             $mdToast,
-            $mdDialog) {
+            $mdDialog,
+            transformationDataModel) {
   
   // TODO fixme - slightly dusty hack - replace with something more "elegant"
   $scope.hideDisabledDownload = false;
@@ -139,8 +140,14 @@ angular.module('grafterizerApp')
   });
 
   $scope.$watch('transformation', function() {
-    
-    if ($scope.livePreview && $scope.transformation) {
+    if ($scope.livePreview && $rootScope.transformation) {
+      if($rootScope.currentlyPreviewedFunction){
+        var partialTransformation = $rootScope.transformation.getPartialTransformation($rootScope.currentlyPreviewedFunction);
+        $rootScope.previewedClojure = generateClojure.fromTransformation(partialTransformation);
+      } else { 
+        $rootScope.previewedClojure = generateClojure.fromTransformation($rootScope.transformation);
+        // we probably deleted the previewed function - preview whole transformation
+      }
       throttlePreview(false);
       fileSaved = false;
     }

@@ -806,16 +806,9 @@ angular.module('grafterizerApp')
       return textStr;
     }
 
-    // TODO this is just a PoC
-    var overridedClojure = null;
-    var generatedClojureBeforeGeneration = null;
-  
     this.fromTransformation = function(transformation, noOverride) {
       try {
         var generatedCode = generateGrafterCode(transformation);
-        if (!noOverride && overridedClojure && generatedClojureBeforeGeneration === generatedCode) {
-          return overridedClojure;
-        }
 
         return generatedCode;
       } catch (e) {
@@ -824,16 +817,6 @@ angular.module('grafterizerApp')
         // TODO print some error pls
         return '';
       }
-    };
-
-    this.overrideClojure = function(overrided, before) {
-      overridedClojure = overrided;
-      generatedClojureBeforeGeneration = before;
-    };
-
-    this.removeOverrideClojure = function() {
-      overridedClojure = null;
-      generatedClojureBeforeGeneration = null;
     };
 
     this.hasOveriddedClojure = function() {
