@@ -309,4 +309,5 @@ angular.module('grafterizerApp')
         $rootScope.actions.save(distribution);
       });
     };
+
   });

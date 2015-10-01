@@ -1,27 +1,44 @@
 <div layout="column" class="pipeline-flow">
-    <div ng-class="$root.readonlymode ? 'pipeline-flow-line pipeline-flow-line-readonly' : 'pipeline-flow-line'"></div>
+    <div ng-class="{
+      'pipeline-flow-line-readonly': $root.readonlymode,
+      'pipeline-flow-line-preview': $root.previewmode
+    }"
+    class="pipeline-flow-line"></div>
     <div as-sortable="dragControlListeners" ng-model="pipeline.functions" ng-if="!$root.readonlymode">
     <div as-sortable-item ng-repeat="funct in pipeline.functions" flex>
       <div as-sortable-item-handle layout="row" layout-align="center">
-                <pipeline-function transformation="$parent.transformation" function="funct"></pipeline-function>
-        <md-button class="md-primary button-tight pipeline-action-icon" aria-label="Edit pipeline step" ng-click="clickEditFunction(funct)">
-          <i class="fa fa-large fa-pencil"></i>
-          <md-tooltip>
-            Edit pipeline function parameters
-          </md-tooltip>
-        </md-button>
-        <md-button class="md-primary button-tight pipeline-action-icon" aria-label="Add pipeline step" ng-click="clickAddAfter(funct)">
-          <i class="fa fa-large fa-plus-circle"></i>
-          <md-tooltip>
-            Add new pipeline function after the current
-          </md-tooltip>
-        </md-button>
-        <md-button class="md-primary button-tight pipeline-action-icon" aria-label="Remove pipeline step" ng-click="clickRemove(funct)">
-          <i class="fa fa-large fa-minus-circle"></i>
-          <md-tooltip>
-            Remove the current pipeline function
-          </md-tooltip>
-        </md-button>
+      <md-fab-speed-dial md-direction="right" class="md-scale" md-open="funct.fabIsOpen"
+                         ng-mouseenter="funct.fabIsOpen=true" ng-mouseleave="funct.fabIsOpen=funct.isPreviewed||funct.leaveFabOpen" ng-click="toggleFabStates(funct)">
+      <md-fab-trigger>
+          <pipeline-function transformation="$parent.transformation" function="funct"></pipeline-function>
+      </md-fab-trigger>
+      <md-fab-actions class="layout-row" ng-if="!$root.readonlymode">
+          <md-button class="md-primary button-tight pipeline-action-icon" aria-label="Preview until this step" ng-click="previewUntilStep(funct)" ng-hide="funct.isPreviewed || !$root.previewmode">
+            <i class="fa fa-large fa-eye"></i>
+            <md-tooltip>
+              Preview until this step
+            </md-tooltip>
+          </md-button>
+          <md-button class="md-primary button-tight pipeline-action-icon" aria-label="Reset preview" ng-click="closePreviewOfFunction(funct)" ng-show="funct.isPreviewed">
+            <i class="fa fa-large fa-eye-slash"></i>
+            <md-tooltip>
+              Reset preview
+            </md-tooltip>
+          </md-button>
+          <md-button class="md-primary button-tight pipeline-action-icon" aria-label="Add pipeline step" ng-click="clickAddAfter(funct)">
+            <i class="fa fa-large fa-plus-circle"></i>
+            <md-tooltip>
+              Add new pipeline function after the current
+            </md-tooltip>
+          </md-button>
+          <md-button class="md-primary button-tight pipeline-action-icon" aria-label="Remove pipeline step" ng-click="clickRemove(funct)">
+            <i class="fa fa-large fa-minus-circle"></i>
+            <md-tooltip>
+              Remove the current pipeline function
+            </md-tooltip>
+          </md-button>
+        </md-fab-actions>
+      </md-fab-speed-dial>
       </div>
     </div>
   </div>
