@@ -763,7 +763,7 @@ mark {
 
 // Workaround until https://github.com/angular/material/pull/3693 is merged in angular-material
 md-fab-speed-dial.md-fab-bottom-right {
-  z-index:100;
+  z-index:64;
   top: auto;
   right: 20px;
   bottom: 20px;
@@ -888,9 +888,9 @@ button.rdf-mapping-property-button {
 }
 
 .slow-mode-warning, .slow-mode-thanks {
-  text-align: center;
+  // text-align: center;
   color: purple;
-  padding: 1em 2em 0.4em 2em;
+  // padding: 1em 2em 0.4em 2em;
 }
 
 .md-button.sin-fa-fab-big {
@@ -973,4 +973,17 @@ md-toolbar md-input-container .md-input {
 md-toolbar .md-button[type=submit] {
   top: 18px;
   font-size: 26px;
+}
+
+@media (max-width: 600px) {
+  md-toolbar input[type=text] {
+    max-width: 100px;
+    font-size:16px;
+  }
+
+  md-switch .md-label {
+    font-size:14px;
+    margin:0;
+    line-height:30px;
+  }
 }

@@ -4,37 +4,42 @@
       <h2>Transform your data</h2>
     </div>
   </md-toolbar>
-    <md-dialog-content layout="row" class="sticky-container">
-        <div class="md-padding" flex="66">
+    <md-dialog-content layout="row" layout-sm="column" class="sticky-container" layout-align="center">
+        <div class="md-padding" flex-gt-sm="33" layout="column" ng-show="distribution">
+                <h4 class="md-title">Execute and save</h4>
+             <p class="md-caption">Execute the transformation on the dataset and save the results in a new datapage. This may take a few minutes.</p>
             <md-progress-circular style="margin: 30px auto 0px auto;" ng-if="processing" md-mode="indeterminate"></md-progress-circular>
             <p class="processing-status" ng-show="processingStatus">{{processingStatus}}</p>
-            <form ng-submit="makeNewDataset()" ng-hide="processing">
-                <h4 class="md-title">Save as a new page</h4>
-                <p class="slow-mode-warning" ng-if="verySlowMode">
-                    <i class="fa fa-exclamation-triangle"></i>
-
-                    Datapage creation is not supported for transformation that take longer than 25 seconds. You can however download the results.
-                </p>
-                <md-input-container class="sin-no-shrink">
+            <form ng-submit="makeNewDataset()" ng-hide="processing" layout="column" layout-align="center center">
+                <md-input-container class="sin-no-shrink" ng-hide="verySlowMode">
                     <label>Title</label>
                     <input ng-model="dataset.title" name="title" required pattern="[a-zA-Z0-9\s\-]*">
                     <div ng-messages="transformationForm.title.$error">
                         <div ng-message="required">This is required.</div>
-                        <div ng-message="pattern">The title shouldn't contain special characters.</div>
+                        <div ng-message="pattern">The title shouldn't <command type="command checkbox radio" label="Use Command" title="Use Command does stuff" icon="/icons/command.png">ntain special characters.</div>
                     </div>
                 </md-input-container>
-                <md-input-container class="sin-no-shrink">
+                <md-input-container class="sin-no-shrink" ng-hide="verySlowMode">
                     <label>Description</label>
                     <textarea ng-model="dataset.description"></textarea>
                 </md-input-container>
-                <md-button class="md-raised md-primary sin-button-padding" aria-label="Download N-triples" type="submit" ng-disabled="verySlowMode">
-                    Create
+                <div flex></div> 
+                <md-button class="md-fab sin-fa-button md-accent" aria-label="Download N-triples" type="submit" ng-disabled="verySlowMode">
+                    <i class="fa fa-coffee"></i>
                 </md-button>
+                <p class="slow-mode-warning" ng-if="verySlowMode">
+                    <i class="fa fa-exclamation-triangle"></i>
+
+                    Datapage creation is not supported for transformation that take longer than 25 seconds. You can however download the results or the transformation executable.
+                </p>
             </form>
         </div>
-        <div layout="column" class="md-padding">
-            <h4 class="md-title">Or download the results</h4>
+        <div layout="column" class="md-padding" flex-gt-sm="33" ng-show="distribution">
+            <h4 class="md-title">Execute and retrieve</h4>
+             <p class="md-caption">Execute the transformation on the dataset and retrieve the results. This may take a few minutes.</p>
+            <div flex></div> 
             <div layout-align="center center" layout="column">
+
                 <md-button class="md-fab md-accent sin-fa-button" aria-label="Download N-triples" ng-href="{{downloadLink}}" target="_blank" ng-click="ugly()" ng-if="!verySlowMode">
                     <i class="fa fa-cloud-download"></i>
                 </md-button>
@@ -55,16 +60,21 @@
                 <p class="processing-status" ng-show="downloadProcessingStatus">{{downloadProcessingStatus}}</p>
             </div>
         </div>
-        <div layout="column" class="md-padding">
-            <form target="_blank" method="POST" action="{{transformEndpoint}}" ng-submit="onSubmitExecute()" flex layout="row" class="md-padding" layout-align="center center">
-            <input type="hidden" name="clojure" value="{{jarfterClojure}}">
-            <input type="hidden" name="csv" value="{{fullData}}">
-            <input type="hidden" name="transformed_filename" value="{{isRDF == 1 ? 'result.rdf' : 'result.csv'}}">
-
-            <md-button type="submit" class="md-fab sin-fa-fab-big md-accent" aria-label="Execute transformation" ng-disabled="!fullData">
-              <i class="fa fa-bolt fa-5x"></i>
-            </md-button>
-          </form> 
+        <div layout="column" class="md-padding" flex-gt-sm="33">
+            <h4 class="md-title">Download executable</h4>
+            <p class="md-caption">Compile the transformation and retrieve an executable JAR file. You can then execute the transformation on your own system. It is the recommended solution for large datasets.</p>
+              <p class="md-caption">Usage:<br>
+                <code>
+                  java -jar transformation.jar &lt;input-file.csv&gt; &lt;output-file.(nt| rdf|n3|ttl)&gt;
+                </code>
+              </p>
+            <div flex></div>
+            <form target="_blank" method="POST" action="{{downloadJarEndpoint}}" ng-submit="onSubmitDownloadJar()" layout="row" layout-align="center center">
+                <input type="hidden" name="clojure" value="{{jarfterClojure}}">
+                <md-button type="submit" class="md-fab sin-fa-button md-accent" aria-label="Download JAR">
+                  <i class="fa fa-cube"></i>
+                </md-button>
+              </form>
         </div>
     </md-dialog-content>
     <div class="md-actions" layout="row" layout-align="right">

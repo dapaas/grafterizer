@@ -12,10 +12,28 @@ angular.module('grafterizerApp')
     $scope,
     $rootScope,
     $mdDialog,
+    $stateParams,
     ontotextAPI,
     PipeService,
     datagraftPostMessage,
-    jarfterService) {
+    jarfterService,
+    $sanitize) {
+
+    try {
+      $scope.distribution = $stateParams.distribution ?
+        window.atob($stateParams.distribution) : undefined;
+    } catch (e) {
+      $scope.distribution = null;
+    }
+
+    $scope.transformation = $stateParams.id;
+    console.log($scope.transformation);
+
+    $scope.type = 'pipe';
+    if ($rootScope.transformation.graphs &&
+      $rootScope.transformation.graphs.length !== 0) {
+      $scope.type = 'graft';
+    }
 
     $scope.downloadLink = PipeService.computeTuplesHref(
       $scope.distribution, $scope.transformation, $scope.type);
@@ -82,23 +100,31 @@ angular.module('grafterizerApp')
         });
     };
 
-    var showError = function() {
+    var showError = function(data) {
+      alert(data);
+      console.log(data);
       $mdDialog.hide();
-      $mdDialog.show(
-        $mdDialog.alert({
-          title: 'An error occured',
-          content: 'The datapage cannot be created.',
-          ok: 'Ok'
-        })
-      );
+
+      var contentError = '';
+
+      if (data && data.error) {
+        contentError = '<br><pre><code>' + $sanitize(data.error) + '</code></pre>';
+      }
+
+      window.setTimeout(function() {
+        $mdDialog.show(
+          $mdDialog.alert({
+            title: 'An error occured',
+            content: 'The datapage cannot be created.' +
+              '<br>Last processing status: "' + $scope.processingStatus + '"' +
+              contentError,
+            ok: 'Ok'
+          })
+        );
+      }, 500);
     };
 
     $scope.makeNewDataset = function() {
-      var type = 'pipe';
-      if ($rootScope.transformation.graphs &&
-        $rootScope.transformation.graphs.length !== 0) {
-        type = 'graft';
-      }
 
       $scope.processing = true;
       $scope.processingStatus = 'Making the dataset';
@@ -121,7 +147,7 @@ angular.module('grafterizerApp')
 
           $scope.processingStatus = 'Transforming the data';
           PipeService.save(datasetId, $scope.distribution,
-            $scope.transformation, type).success(
+            $scope.transformation, $scope.type).success(
             function(distributionData) {
 
               var distributionId = distributionData['@id'];
@@ -129,6 +155,29 @@ angular.module('grafterizerApp')
               $scope.processingStatus = 'Fetching information';
               ontotextAPI.distribution(distributionId)
                 .success(function(metadataDistribution) {
+
+                  var finalizeDatapage = function() {
+
+                    var location = '/pages/publish/details.jsp?id=' +
+                      window.encodeURIComponent(datasetId);
+
+                    if (datagraftPostMessage.isConnected()) {
+                      datagraftPostMessage.setLocation(location);
+                    } else {
+                      if (location.protocol === 'https:') {
+                        location = 'https://datagraft.net' + location;
+                      } else {
+                        location = 'http://datagraft.net' + location;
+                      }
+
+                      window.location = location;
+                    }
+                  };
+
+                  if ($scope.type === 'pipe') {
+                    finalizeDatapage();
+                    return;
+                  }
 
                   $scope.processingStatus = 'Creating the RDF repository';
                   ontotextAPI.createRepository(distributionId)
@@ -139,28 +188,9 @@ angular.module('grafterizerApp')
 
                       $scope.processingStatus = 'Connecting the repository to the distribution';
                       ontotextAPI.updateDistribution(metadataDistribution)
-                        .success(function(data) {
+                        .success(function() {
 
                           $scope.processingStatus = 'Filling the repository';
-
-                          var successFilling = function(data) {
-                            $mdDialog.hide();
-
-                            var location = '/pages/publish/details.jsp?id=' +
-                              window.encodeURIComponent(datasetId);
-
-                            if (datagraftPostMessage.isConnected()) {
-                              datagraftPostMessage.setLocation(location);
-                            } else {
-                              if (location.protocol === 'https:') {
-                                location = 'https://datagraft.net' + location;
-                              } else {
-                                location = 'http://datagraft.net' + location;
-                              }
-
-                              window.location = location;
-                            }
-                          };
 
                           var nbTryToFillRDFrepo = 0;
                           var waitingDelay = 1000;
@@ -168,11 +198,14 @@ angular.module('grafterizerApp')
 
                           var tryToFillRDFrepo = function() {
                             ++nbTryToFillRDFrepo;
+                            if (tryToFillRDFrepo > 3) {
+                              $scope.processingStatus = 'The repository is not ready yet. It might take few minutes.';
+                            }
                             waitingDelay = Math.min(waitingDelay + waitingDelay, 32000);
 
                             window.setTimeout(function() {
                               PipeService.fillRDFrepo(distributionId, accessUrl)
-                                .success(successFilling)
+                                .success(finalizeDatapage)
                                 .error(nbTryToFillRDFrepo < maxTentatives ? tryToFillRDFrepo :
                                   showError);
                             }, waitingDelay);
