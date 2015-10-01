@@ -355,7 +355,7 @@ angular
     // .accentPalette('customAccent');
 
     // JSEDN is too restrictive by default on valid symbols
-    jsedn.Symbol.prototype.validRegex = new RegExp(/.*/);
+    jsedn.Symbol.prototype.validRegex = new RegExp(/[\s\S]*/);
   }).run(function(datagraftPostMessage, apiKeyService, $state, $rootScope) {
     datagraftPostMessage.setup();
 
