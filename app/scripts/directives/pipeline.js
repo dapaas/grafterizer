@@ -21,15 +21,6 @@ angular.module('grafterizerApp')
       //scope.pipeline = new transformationDataModel.Pipeline([]);
       // }
 
-      scope.dragControlListeners = {
-        accept: function() {
-          return true;
-        },
-
-        itemMoved: function(event) {},
-
-        orderChanged: function(event) {}
-      };
       scope.clickAddAfter = function(funct) {
         var newScope = scope.$new(false, scope);
         newScope.transformation = scope.transformation;
