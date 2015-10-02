@@ -9,12 +9,13 @@
  */
 
 angular.module('grafterizerApp').controller('PropertydialogCtrl', function($scope,
-  $rootScope,
-  $http,
-  $mdDialog,
-  $log,
-  transformationDataModel,
-  leObject) {
+                                                                            $rootScope,
+                                                                            $http,
+                                                                            $mdDialog,
+                                                                            $log,
+                                                                            transformationDataModel,
+                                                                            leObject,
+                                                                            $mdToast) {
 
   var connection = leObject.serveraddress;
 
@@ -34,12 +35,55 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function($scop
 
   $scope.VocabItems = [];
 
+
+
+
+  // TODO turn this into a utility function (in a utilityFunctions service)!!
+  $scope.isProbablyUri = function(string) {
+    //    var url = new URI("foaf:asdf");
+    var uriRegEx = new RegExp('^' +
+                              '(?:' +
+                              '([^:/?#]+)' +         // scheme
+                              ':)?' +
+                              '(?://' +
+                              '(?:([^/?#]*)@)?' +    // credentials
+                              '([^/?#:@]*)' +        // domain
+                              '(?::([0-9]+))?' +     // port
+                              ')?' +
+                              '([^?#]+)?' +            // path
+                              '(?:\\?([^#]*))?' +      // query
+                              '(?:#(.*))?' +           // fragment
+                              '$');
+    var match = ('' + string).match(uriRegEx);
+
+    // probably a full URI (and not a qualified name) if it has a scheme and a domain
+    if (match[1]) {
+      // has a scheme
+      if (match[3]) {
+        // has a domain
+        return true;
+      }
+    }
+
+    return false;
+  };
   if (!$scope.property) {
     $scope.property = new transformationDataModel.Property('', '', []);
   } else {
-    $scope.propertyValue.value = $scope.property.prefix + ':' + $scope.property.propertyName;
+    if($scope.property.prefix) {
+      // we have a prefix - display prefix:property-name
+      $scope.propertyValue.value = $scope.property.prefix + ':' + $scope.property.propertyName;
+    } else {
+      // no prefix, need to determine if it is a URI or non-prefixed value
+      if ($scope.isProbablyUri($scope.property.propertyName)){
+        // (probably) a URI - display the property name (no ':')
+        $scope.propertyValue.value = $scope.property.propertyName;
+      } else {
+        // a non-prefixed property - use the base graph URI in that case (with ':')
+        $scope.propertyValue.value = ':' + $scope.property.propertyName;
+      }
+    }
   }
-
   $scope.addProperty = function() {
     // TODO add support for absolute URIs
     /*var patt = new RegExp("(http://|https://|ftp://|smb://)[^ :]+");
@@ -66,15 +110,26 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function($scop
 
      } else { */
 
-    if ($scope.propertyValue.value.indexOf(':') >= 0) {
-      $scope.property.prefix = $scope.propertyValue.value.substring(0, $scope.propertyValue.value.indexOf(':'));
-      $scope.property.propertyName = $scope.propertyValue.value.substring($scope.propertyValue.value.indexOf(':') +
-        1, $scope.propertyValue.value.length);
-    } else {
-      $scope.property.propertyName = $scope.propertyValue.value;
-      $scope.property.prefix = '';
-    }
 
+    if ($scope.isProbablyUri($scope.propertyValue.value)) {
+      // probably an outright URI - we put the whole URI in there
+      $scope.property.prefix = '';
+      $scope.property.propertyName = $scope.propertyValue.value;
+    } else {
+      // probably a qualified name - we need to split it into parts
+      if ($scope.propertyValue.value.indexOf(':') >= 0) {
+        $scope.property.prefix = $scope.propertyValue.value.substring(0, $scope.propertyValue.value.indexOf(':'));
+        $scope.property.propertyName = $scope.propertyValue.value.substring($scope.propertyValue.value.indexOf(':') +
+                                                                            1, $scope.propertyValue.value.length);
+      } else {
+        $mdToast.show(
+          $mdToast.simple()
+          .content('Error: Invalid property name. Please use a prefixed name (e.g., owl:sameAs), or an IRI (e.g., \'http://www.w3.org/2002/07/owl#sameAs\')')
+          .position('bottom left')
+          .hideDelay(4000)
+        );
+      }
+    }
     $mdDialog.hide($scope.property);
   };
 
@@ -107,7 +162,7 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function($scop
         for (i = response.propertyResult.length - 1; i >= 0; i--) {
           var value = response.propertyResult[i].value;
           if (value.substring(0, value.indexOf(':')).toLowerCase() === Para.toLowerCase() || value.substring(
-              value.indexOf(':') + 1, value.length).toLowerCase() === Para.toLowerCase()) {
+            value.indexOf(':') + 1, value.length).toLowerCase() === Para.toLowerCase()) {
             $scope.items.push(value);
             response.propertyResult.splice(i, 1);
           }

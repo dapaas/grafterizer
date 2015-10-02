@@ -10,9 +10,9 @@
             <i class="fa fa-circle fa-stack-2x rdf-mapping-icon-background-inset"></i>
             <i class="fa fa-arrow-right fa-stack-1x fa-inverse"></i>
           </span>
-          {{property.prefix}}:{{property.propertyName}}
+          {{property.prefix ? property.prefix + ':' : '' }}{{property.propertyName}}
           <md-tooltip>
-            {{property.prefix}}:{{property.propertyName}}
+            {{property.prefix ? property.prefix + ':' : '' }}{{property.propertyName}}
           </md-tooltip>
         </md-button>
       </md-fab-trigger>

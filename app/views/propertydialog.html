@@ -26,7 +26,7 @@
               <label>Property name</label>
               <input ng-model="propertyValue.value" type="text" name="searchInput" required>
               <div ng-messages="graphsForm.searchInput.$error">
-                <div ng-message="required">property is required.</div>
+                <div ng-message="required">Property name must be specified.</div>
                 <div ng-message="pattern">Not a valid property.</div>
               </div>
             </md-input-container>
@@ -53,7 +53,7 @@
 				<div ng-show="showSearchResult" >
 					<md-list>
 						<md-list-item ng-click="addResult(item)" ng-repeat="item in items | startFrom:currentPage*pageSize | limitTo:pageSize track by $index">
-							<p> {{ item}} </p>
+							<p> {{item}} </p>
 							<md-button aria-label='add' class="md-primary md-icon-button fa fa-plus" ng-click="addResult(item)"></md-button>
 						</md-list-item>
 					</md-list>

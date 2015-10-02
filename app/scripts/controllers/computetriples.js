@@ -27,7 +27,6 @@ angular.module('grafterizerApp')
     }
 
     $scope.transformation = $stateParams.id;
-    console.log($scope.transformation);
 
     $scope.type = 'pipe';
     if ($rootScope.transformation.graphs &&
@@ -102,7 +101,6 @@ angular.module('grafterizerApp')
 
     var showError = function(data) {
       alert(data);
-      console.log(data);
       $mdDialog.hide();
 
       var contentError = '';
