@@ -20,7 +20,7 @@ angular.module('grafterizerApp')
     transformationDataModel,
     generateClojure) {
 
-    // $scope.readonlymode = true;
+    $scope.readonlymode = false;
 
     $scope.document = {
       title: 'New transformation',
