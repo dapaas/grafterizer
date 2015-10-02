@@ -8,14 +8,15 @@
  * Controller of the grafterizerApp
  */
 
-angular.module('grafterizerApp').controller('PropertydialogCtrl', function($scope,
-                                                                            $rootScope,
-                                                                            $http,
-                                                                            $mdDialog,
-                                                                            $log,
-                                                                            transformationDataModel,
-                                                                            leObject,
-                                                                            $mdToast) {
+angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
+  $scope,
+  $rootScope,
+  $http,
+  $mdDialog,
+  $log,
+  transformationDataModel,
+  leObject,
+  $mdToast) {
 
   var connection = leObject.serveraddress;
 
@@ -34,9 +35,6 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function($scop
   $scope.showSearchPagination = false;
 
   $scope.VocabItems = [];
-
-
-
 
   // TODO turn this into a utility function (in a utilityFunctions service)!!
   $scope.isProbablyUri = function(string) {
@@ -70,12 +68,12 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function($scop
   if (!$scope.property) {
     $scope.property = new transformationDataModel.Property('', '', []);
   } else {
-    if($scope.property.prefix) {
+    if ($scope.property.prefix) {
       // we have a prefix - display prefix:property-name
       $scope.propertyValue.value = $scope.property.prefix + ':' + $scope.property.propertyName;
     } else {
       // no prefix, need to determine if it is a URI or non-prefixed value
-      if ($scope.isProbablyUri($scope.property.propertyName)){
+      if ($scope.isProbablyUri($scope.property.propertyName)) {
         // (probably) a URI - display the property name (no ':')
         $scope.propertyValue.value = $scope.property.propertyName;
       } else {
@@ -85,31 +83,6 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function($scop
     }
   }
   $scope.addProperty = function() {
-    // TODO add support for absolute URIs
-    /*var patt = new RegExp("(http://|https://|ftp://|smb://)[^ :]+");
-     var res = patt.test($scope.propertyValue.value);
-
-     if(res){
-     var trimmedPropertyValue = $scope.propertyValue.value.trim();
-     var lastSlashIndex = trimmedPropertyValue.lastIndexOf("/");
-     var propertyValueLength = trimmedPropertyValue.length;
-     $scope.property.prefix = trimmedPropertyValue.substring(0, lastSlashIndex);
-
-     while (lastSlashIndex == propertyValueLength) {
-     // we have a prefix ending in a slash: http://[prefix/][value/]
-     trimmedPropertyValue = trimmedPropertyValue.substring(0, propertyValueLength - 1);
-     lastSlashIndex = trimmedPropertyValue.lastIndexOf("/");
-     if(!patt.test($scope.propertyValue.value)){
-     return;
-     }
-     // http://www.example.com
-     }
-
-     $scope.property.value = $scope.propertyValue.value.trim().substring(lastSlashIndex + 1, $scope.propertyValue.value.length);
-     // what to do??
-
-     } else { */
-
 
     if ($scope.isProbablyUri($scope.propertyValue.value)) {
       // probably an outright URI - we put the whole URI in there

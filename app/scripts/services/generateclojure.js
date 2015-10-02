@@ -282,7 +282,7 @@ angular.module('grafterizerApp')
       // construct a vector for each of the roots and add it to the graph jsedn
       for (j = 0; j < currentGraph.graphRoots.length; ++j) {
         currentRootJsEdn = constructNodeVectorEdn(currentGraph.graphRoots[j], currentGraph);
-        if(currentRootJsEdn){
+        if (currentRootJsEdn) {
           currentGraphJsEdn.val.push(currentRootJsEdn);
         }
       }
@@ -299,8 +299,7 @@ angular.module('grafterizerApp')
     var k;
     var allSubElementsVector;
     var subElementEdn;
-    if(!node){
-      
+    if (!node) {
       return;
     }
     node = transformationDataModel.getGraphElement(node);
@@ -312,11 +311,11 @@ angular.module('grafterizerApp')
         return;
       }
 
-      var propertyValue = node.subElements[0],
-          propertyJsEdn = constructPropertyJsEdn(node),
-          nodeVectorJsEdn = constructNodeVectorEdn(propertyValue, containingGraph);
+      var propertyValue = node.subElements[0];
+      var propertyJsEdn = constructPropertyJsEdn(node);
+      var nodeVectorJsEdn = constructNodeVectorEdn(propertyValue, containingGraph);
 
-      if(propertyJsEdn && nodeVectorJsEdn) {
+      if (propertyJsEdn && nodeVectorJsEdn) {
         return new jsedn.Vector([propertyJsEdn, nodeVectorJsEdn]);
       } else {
         return;
@@ -378,7 +377,7 @@ angular.module('grafterizerApp')
 
         for (k = 0; k < node.subElements.length; ++k) {
           subElementEdn = constructNodeVectorEdn(node.subElements[k]);
-          if(subElementEdn){
+          if (subElementEdn) {
             allSubElementsVector.val.push(subElementEdn);
           }
         }
@@ -398,9 +397,9 @@ angular.module('grafterizerApp')
         // [node-uri-as-generated {sub-1's edn representation} {sub-2's edn representation} ... {sub-n's edn representation}]
         allSubElementsVector = new jsedn.Vector([constructConstantURINodeJsEdn(node, containingGraph)]);
         for (i = 0; i < node.subElements.length; ++i) {
-          if(node.subElements[i]){
+          if (node.subElements[i]) {
             subElementEdn = constructNodeVectorEdn(node.subElements[i]);
-            if(subElementEdn){
+            if (subElementEdn) {
               allSubElementsVector.val.push(subElementEdn);
             }
           }
@@ -421,7 +420,7 @@ angular.module('grafterizerApp')
         for (k = 0; k < node.subElements.length; ++k) {
           subElementEdn = constructNodeVectorEdn(node.subElements[k]);
 
-          if(subElementEdn){
+          if (subElementEdn) {
             allSubElementsVector.val.push(subElementEdn);
           }
 
@@ -440,13 +439,12 @@ angular.module('grafterizerApp')
     // graph URI as prefix, add nothing
     var propertyPrefix = property.prefix;
     var propertyName = property.propertyName;
-    if (!propertyPrefix === null) {
+    if (propertyPrefix === null) {
       alertInterface('Property prefix cannot be null:' + propertyName + '. What happened?');
       return;
     } else if (propertyPrefix === '') {
       
-      
-      if(isProbablyURI(propertyName)){
+      if (isProbablyURI(propertyName)) {
         return propertyName;
       } else {
         // property name has been omitted! - in that case we use the base graph URI
@@ -773,10 +771,9 @@ angular.module('grafterizerApp')
     
     // add prefixers for each graph
     
-    for(i = 0; i < transformation.graphs.length; ++i) {
-      addGrafterPrefixer("graph" + i, transformation.graphs[i].graphURI, '');
+    for (i = 0; i < transformation.graphs.length; ++i) {
+      addGrafterPrefixer('graph' + i, transformation.graphs[i].graphURI, '');
     }
-    
     
     var grafterPrefixers = constructGrafterPrefixersArray();
     /* User functions */
