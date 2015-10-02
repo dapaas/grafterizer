@@ -808,7 +808,4 @@ angular.module('grafterizerApp')
       }
     };
 
-    this.hasOveriddedClojure = function() {
-      return overridedClojure !== null;
-    };
   });

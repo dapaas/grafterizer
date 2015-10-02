@@ -16,9 +16,6 @@ angular.module('grafterizerApp')
       transformation: '='
     },
     link: function postLink(scope, element, attrs) {
-
-
-      
   
       scope.clickEditFunction = function() {
         var funct = scope.function;
@@ -37,7 +34,7 @@ angular.module('grafterizerApp')
         }).then(
           function(pipeFunct) {
             angular.copy(pipeFunct, funct);
-            if(!$rootScope.currentlyPreviewedFunction){
+            if (!$rootScope.currentlyPreviewedFunction) {
               // initialise previewed funct if null
               $rootScope.currentlyPreviewedFunction = {};
             }

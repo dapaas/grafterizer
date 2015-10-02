@@ -178,15 +178,15 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
 
     for (var i = 0; i < localVocabulary.length; i++) {
       if (localVocabulary[i].namespace === namespace) {
-
-        for (var j = 0; j < localVocabulary[i].classes.length; j++) {
+        var j;
+        for (j = 0; j < localVocabulary[i].classes.length; j++) {
           $scope.vocabClassArray.push(localVocabulary[i].classes[j].name.substring(
-            localVocabulary[i].classes[j].name.indexOf(":") + 1));
+            localVocabulary[i].classes[j].name.indexOf(':') + 1));
         }
 
-        for (var j = 0; j < localVocabulary[i].properties.length; j++) {
+        for (j = 0; j < localVocabulary[i].properties.length; j++) {
           $scope.vocabPropertyArray.push(localVocabulary[i].properties[j].name.substring(
-            localVocabulary[i].properties[j].name.indexOf(":") + 1));
+            localVocabulary[i].properties[j].name.indexOf(':') + 1));
         }
       }
     }
@@ -205,7 +205,7 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
           }
         }
 
-        if ($scope.vocabPropertyArray.length === 0){
+        if ($scope.vocabPropertyArray.length === 0) {
           for (i = response.propertyResult.length - 1; i >= 0; i--) {
             $scope.vocabPropertyArray.push(response.propertyResult[i].value);
           }

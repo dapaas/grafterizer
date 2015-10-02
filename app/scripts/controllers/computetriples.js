@@ -101,8 +101,6 @@ angular.module('grafterizerApp')
     };
 
     var showError = function(data) {
-      alert(data);
-      console.log(data);
       $mdDialog.hide();
 
       var contentError = '';

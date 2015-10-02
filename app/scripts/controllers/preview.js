@@ -125,10 +125,10 @@ angular.module('grafterizerApp')
 
   $scope.$watch('transformation', function() {
     if ($scope.livePreview && $rootScope.transformation) {
-      if($rootScope.currentlyPreviewedFunction){
+      if ($rootScope.currentlyPreviewedFunction) {
         var partialTransformation = $rootScope.transformation.getPartialTransformation($rootScope.currentlyPreviewedFunction);
         $rootScope.previewedClojure = generateClojure.fromTransformation(partialTransformation);
-      } else { 
+      } else {
         $rootScope.previewedClojure = generateClojure.fromTransformation($rootScope.transformation);
         // we probably deleted the previewed function - preview whole transformation
       }

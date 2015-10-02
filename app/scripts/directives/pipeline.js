@@ -40,7 +40,7 @@ angular.module('grafterizerApp')
             if (!$rootScope.previewmode) {
               return;
             }
-            if(!$rootScope.currentlyPreviewedFunction) {
+            if (!$rootScope.currentlyPreviewedFunction) {
               // initialise previewed funct if null
               $rootScope.currentlyPreviewedFunction = {};
             }
@@ -62,7 +62,7 @@ angular.module('grafterizerApp')
           .ok('Yes')
           .cancel('Cancel'))
           .then(function() {
-          if(funct.isPreviewed){
+          if (funct.isPreviewed) {
             $rootScope.currentlyPreviewedFunction = {};
             $rootScope.previewedClojure = generateClojure.fromTransformation(scope.transformation);
           }
