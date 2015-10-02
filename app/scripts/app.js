@@ -91,8 +91,7 @@ angular
       jarfterServiceProvider.setEndpoint('');
     }
 
-
-    $urlRouterProvider.otherwise('/transformations/new');
+    $urlRouterProvider.otherwise('/transformations');
 
     sessionStorage.localClassAndProperty = JSON.stringify([]);
     sessionStorage.localVocabulary = JSON.stringify([]);

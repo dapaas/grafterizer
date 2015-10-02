@@ -84,19 +84,19 @@ angular.module('grafterizerApp')
 
     var regex = new jsedn.List([jsedn.sym('read-string'), '#\"' + this.separator + '\"']);
     var split = new jsedn.List([jsedn.sym('clojure.string/split'), jsedn.sym('col'), regex]);
-    var func = new jsedn.List([jsedn.sym('fn'),new jsedn.Vector([jsedn.sym('col')]), new jsedn.List([
-      jsedn.sym('clojure.string/join'),this.separator, new jsedn.List([
-        jsedn.sym('rest'),split])
+    var func = new jsedn.List([jsedn.sym('fn'), new jsedn.Vector([jsedn.sym('col')]), new jsedn.List([
+      jsedn.sym('clojure.string/join'), this.separator, new jsedn.List([
+        jsedn.sym('rest'), split])
     ])
                               ]);
-    var deriveNew = new jsedn.List([jsedn.sym('derive-column'), new jsedn.kw(':'+this.newColName), new jsedn.Vector([new jsedn.kw(':'+this.colName)]), func]);
+    // var deriveNew = new jsedn.List([jsedn.sym('derive-column'), new jsedn.kw(':' + this.newColName), new jsedn.Vector([new jsedn.kw(':' + this.colName)]), func]);
     var deriveNew = new jsedn.List([jsedn.sym('derive-column'), new jsedn.kw(':' + this.newColName), new jsedn.Vector(
       [new jsedn.kw(':' + this.colName)]), func]);
     var mapOld = new jsedn.List([jsedn.sym('mapc'),
                                  new jsedn.Map([new jsedn.kw(':' + this.colName),
                                                 new jsedn.List([jsedn.sym('fn'),
-                                                                new jsedn.Vector([jsedn.sym('col')]), 
-                                                                new jsedn.List([jsedn.sym('first'),split])
+                                                                new jsedn.Vector([jsedn.sym('col')]),
+                                                                new jsedn.List([jsedn.sym('first'), split])
                                                                ])
                                                ])
                                 ]);
@@ -211,14 +211,14 @@ angular.module('grafterizerApp')
       }
     }
 
-    pipe=pipe.concat(ds);
-    pipe.push(new jsedn.List([jsedn.sym('add-columns'),newColMap]));
+    pipe = pipe.concat(ds);
+    pipe.push(new jsedn.List([jsedn.sym('add-columns'), newColMap]));
 
-    if (newRownumMap.keys.length !== 0){
+    if (newRownumMap.keys.length !== 0) {
       pipe.push(new jsedn.List([jsedn.sym('apply-columns'), newRownumMap]));
       return new jsedn.List(pipe);
     } else {
-      return new jsedn.List([jsedn.sym('add-columns'),newColMap]);
+      return new jsedn.List([jsedn.sym('add-columns'), newColMap]);
     }
   };
   this.AddColumnsFunction = AddColumnsFunction;
@@ -292,13 +292,9 @@ angular.module('grafterizerApp')
     var flag = false;
     var filterFunc;
     var i;
-    for (var i = 0; i < this.colsToFilter.length; ++i) {
-      if (this.colsToFilter.length > 0) {
-        for (i = 0; i < this.colsToFilter.length; ++i) {
-          colsToFilter.val.push(new jsedn.kw(':' + this.colsToFilter[i]));
-          flag = true;
-        }
-      }
+    for (i = 0; i < this.colsToFilter.length; ++i) {
+      colsToFilter.val.push(new jsedn.kw(':' + this.colsToFilter[i]));
+      flag = true;
     }
 
     var values = [jsedn.sym('grep')];
@@ -1289,7 +1285,7 @@ angular.module('grafterizerApp')
     this.customFunctionDeclarations.push(new CustomFunctionDeclaration(name, clojureCode, group, docstring));
     return true;
   };
-  Transformation.prototype.removeCustomFunctionDeclaration = function (customFunct) {
+  Transformation.prototype.removeCustomFunctionDeclaration = function(customFunct) {
     for (var i = 0; i < this.customFunctionDeclarations.length; ++i) {
       if (this.customFunctionDeclarations[i].name === customFunct.name.trim()) {
         this.customFunctionDeclarations.splice(i, 1);
@@ -1298,7 +1294,7 @@ angular.module('grafterizerApp')
     }
     return false;
   };
-  Transformation.prototype.findPrefixerOrCustomFunctionByName = function (name) {
+  Transformation.prototype.findPrefixerOrCustomFunctionByName = function(name) {
     var i;
     for (i = 0; i < this.prefixers.length; ++i) {
       if (this.prefixers[i].name === name) {
@@ -1331,7 +1327,7 @@ angular.module('grafterizerApp')
 
     return requestedColumnKeys;
   };
-  Transformation.prototype.getColumnKeysFromPipeline = function () {
+  Transformation.prototype.getColumnKeysFromPipeline = function() {
     var i;
     var j;
     var k;
@@ -1394,21 +1390,21 @@ angular.module('grafterizerApp')
 
     return subColKeys;
   };
-  Transformation.prototype.getPartialTransformation = function (untilFunction) {
+  Transformation.prototype.getPartialTransformation = function(untilFunction) {
     // TODO report errors?
     // TODO how to support multi-pipe transformation??
-    try{
-      if(!untilFunction){
+    try {
+      if (!untilFunction) {
 //        console.log("Unable to compute partial transformation: empty until function");
         return this;
       }
-      if(!(untilFunction instanceof GenericFunction)){
+      if (!(untilFunction instanceof GenericFunction)) {
 //        console.log("Unable to compute partial transformation: wrong type of input parameter"); 
         return this;
       }
 
       var index = this.pipelines[0].functions.indexOf(untilFunction);
-      if (index == -1) {
+      if (index === -1) {
 //        console.error("Unable to compute partial transformation: unable to find until function"); 
         return this;
       }
@@ -1417,13 +1413,11 @@ angular.module('grafterizerApp')
 
       var partialPipeline = new Pipeline(partialPipelineFunctions);
 
-
       var partialTransformation = new Transformation(this.customFunctionDeclarations, this.prefixers, [partialPipeline], [/* no graphs needed for this */], this.rdfVocabs);
-
 
       return partialTransformation;
     } catch (e) {
-      console.log("Unable to compute partial transformation: unknown error", e);
+      console.log('Unable to compute partial transformation: unknown error', e);
       return this;
     }
 

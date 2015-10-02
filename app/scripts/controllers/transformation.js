@@ -223,8 +223,9 @@ angular.module('grafterizerApp')
       },
 
       download: function(ev) {
-        if ($rootScope.actions && $rootScope.actions.save) {
+        if ($rootScope.actions && $rootScope.actions.save && !$state.is('transformations.readonly')) {
           // Save but without a preview
+
           $rootScope.actions.save(true);
         }
 
@@ -292,4 +293,8 @@ angular.module('grafterizerApp')
     $scope.$watch('transformationSelectedTabIndex', function(newValue) {
         window.sessionStorage.transformationSelectedTabIndex = newValue;
     });
+
+    if ($rootScope.currentlyPreviewedFunction) {
+      $rootScope.currentlyPreviewedFunction.isPreviewed = false;
+    }
   });

@@ -21,7 +21,7 @@ angular.module('grafterizerApp')
         }
         
         // TODO fix this when Javascript adds better support for OOP: this is a "hack" to ensure that the object received is of the proper type; Needs to be done due to the way Javascript objects/classes work
-        if(!(scope.function instanceof transformationDataModel.MapcFunction)){
+        if (!(scope.function instanceof transformationDataModel.MapcFunction)) {
           var newFunction = new transformationDataModel.MapcFunction([], '');
           _.extend(newFunction, scope.function);
           scope.function = newFunction;
