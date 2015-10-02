@@ -69,6 +69,7 @@ angular.module('grafterizerApp')
         if ($rootScope.currentlyPreviewedFunction) {
           var partialTransformation = $rootScope.transformation.getPartialTransformation($rootScope.currentlyPreviewedFunction);
           $rootScope.previewedClojure = generateClojure.fromTransformation(partialTransformation);
+          currentClojure = generateClojure.fromTransformation(scope.transformation);
         } else {
           var tmpClojure = generateClojure.fromTransformation(scope.transformation);
           currentClojure = tmpClojure;
