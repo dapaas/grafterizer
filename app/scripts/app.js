@@ -197,6 +197,9 @@ angular
       })
       .state('transformations.readonly', {
         url: '^/readonly/{id:nonURIEncoded}',
+        params: {
+          showToolbar: null,
+        },
         views: {
           'main@': {
             templateUrl: 'views/readonly.html',
