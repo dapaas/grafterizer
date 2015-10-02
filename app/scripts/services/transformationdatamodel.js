@@ -1395,17 +1395,17 @@ angular.module('grafterizerApp')
     // TODO how to support multi-pipe transformation??
     try {
       if (!untilFunction) {
-        console.log('Unable to compute partial transformation: empty until function');
+//        console.log("Unable to compute partial transformation: empty until function");
         return this;
       }
       if (!(untilFunction instanceof GenericFunction)) {
-        console.log('Unable to compute partial transformation: wrong type of input parameter');
+//        console.log("Unable to compute partial transformation: wrong type of input parameter"); 
         return this;
       }
 
       var index = this.pipelines[0].functions.indexOf(untilFunction);
       if (index === -1) {
-        console.error('Unable to compute partial transformation: unable to find until function');
+//        console.error("Unable to compute partial transformation: unable to find until function"); 
         return this;
       }
 

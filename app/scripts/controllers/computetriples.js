@@ -27,7 +27,6 @@ angular.module('grafterizerApp')
     }
 
     $scope.transformation = $stateParams.id;
-    console.log($scope.transformation);
 
     $scope.type = 'pipe';
     if ($rootScope.transformation.graphs &&
