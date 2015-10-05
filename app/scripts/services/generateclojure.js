@@ -391,7 +391,7 @@ angular.module('grafterizerApp')
         // return the column - single-noded graph
         // TODO check in keywords array if this exists
         var nodeText = constructConstantURINodeJsEdn(node, containingGraph);
-        return new jsedn.Vector([nodeText]);
+        return nodeText;
 
       } else {
         // [node-uri-as-generated {sub-1's edn representation} {sub-2's edn representation} ... {sub-n's edn representation}]
@@ -459,7 +459,7 @@ angular.module('grafterizerApp')
       } else {
         // TODO make a check if we have defined the prefix
         // some custom prefix, that is hopefully defined in the UI (Edit Prefixes...)
-        return new jsedn.List([new jsedn.sym(propertyPrefix), propertyName]);
+        return new jsedn.sym(propertyPrefix + ':' + propertyName);
       }
     }
 
@@ -510,7 +510,7 @@ angular.module('grafterizerApp')
       if (isSupportedPrefix(nodePrefix.trim())) {
         // supported prefix - no need to use prefixer - simple library call
         // nodePrefix:nodeValue (e.g. vcard:Address)
-        alertInterface('Cannot associate column \'' + nodeValue + '\' with prefix \'' + nodePrefix + '\'!');
+//        alertInterface('Cannot associate column \'' + nodeValue + '\' with prefix \'' + nodePrefix + '\'!');
 
         //                return;
         return new jsedn.sym(nodePrefix + ':' + nodeValue);
@@ -547,7 +547,7 @@ angular.module('grafterizerApp')
         // some custom prefix, that is hopefully defined in the UI (Edit Prefixes...)
         // both are symbols and we get (nodePrefix nodeValue) as a result
 
-        return new jsedn.List([new jsedn.sym(nodePrefix), nodeValue]);
+        return new jsedn.sym(nodePrefix + ':' + nodeValue);
       }
     }
 
