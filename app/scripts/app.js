@@ -371,7 +371,7 @@ angular
 
     if (!apiKeyService.hasKeyPass()) {
       window.setTimeout(function() {
-        if (!apiKeyService.hasKeyPass()) {
+        if (!apiKeyService.hasKeyPass() && !$state.is('transformations.readonly')) {
           $state.go('apikey');
         }
       }, 2000);

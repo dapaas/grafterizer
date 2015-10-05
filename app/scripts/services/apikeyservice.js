@@ -26,6 +26,10 @@ angular.module('grafterizerApp')
     };
 
     this.setKeyPass = function(newKeypass) {
+      if (!newKeypass || !newKeypass.length) {
+        return;
+      }
+      
       keypass = newKeypass;
       var split = keypass.split(':');
       key = split[0];
