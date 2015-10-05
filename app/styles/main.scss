@@ -58,6 +58,7 @@ md-toolbar i.fa {
 }
 
 .sin-fa-button {
+  flex-shrink: 0;
   font-size:28px;
   i {line-height:56px;margin-left:1px;}
 }
