@@ -50,7 +50,7 @@ angular.module('grafterizerApp')
     this.name = 'drop-rows';
     if (take) this.displayName = 'take-rows';
     else this.displayName = 'drop-rows';
-    if (!docstring) this.docstring = (take ? 'Take ' : 'Drop ') + numberOfRows;
+    if (!docstring) this.docstring = (take ? 'Take ' : 'Drop ') + numberOfRows + (numberOfRows === 1 ? ' first row' : ' first rows');
     else this.docstring = docstring;
     this.take = take;
     this.__type = 'DropRowsFunction';
