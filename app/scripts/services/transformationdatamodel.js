@@ -50,7 +50,7 @@ angular.module('grafterizerApp')
     this.name = 'drop-rows';
     if (take) this.displayName = 'take-rows';
     else this.displayName = 'drop-rows';
-    if (!docstring) this.docstring = (take ? 'Take ' : 'Drop ') + numberOfRows.toString() + ' first row(s)';
+    if (!docstring) this.docstring = (take ? 'Take ' : 'Drop ') + numberOfRows;
     else this.docstring = docstring;
     this.take = take;
     this.__type = 'DropRowsFunction';
@@ -193,7 +193,7 @@ angular.module('grafterizerApp')
           newColMap.set(
             new jsedn.kw(':' + this.columnsArray[i].colName),
             new jsedn.kw(':' + this.columnsArray[i].colName),
-            this.columnsArray[i].colValue.toString()
+            '' + this.columnsArray[i].colValue
           );
           break;
       }
@@ -231,7 +231,7 @@ angular.module('grafterizerApp')
     this.fileName = fileName;
     this.name = 'add-column';
     this.displayName = 'add-column';
-    if (!docstring) this.docstring = 'Add new column ' + newColName.toString();
+    if (!docstring) this.docstring = 'Add new column ' + newColName;
     else this.docstring = docstring;
     this.__type = 'AddColumnFunction';
   };
@@ -375,9 +375,9 @@ angular.module('grafterizerApp')
     this.functionsToDeriveWith = functionsToDeriveWith;
     this.__type = 'DeriveColumnFunction';
     if (!docstring) {
-      this.docstring = 'Derive column ' + newColName.toString() + ' from column(s) ';
+      this.docstring = 'Derive column ' + newColName + ' from column(s) ';
       for (i = 0; i < colsToDeriveFrom.length; ++i) {
-        this.docstring += colsToDeriveFrom[i].toString() + ' ';
+        this.docstring += '' + colsToDeriveFrom[i] + ' ';
       }
     } else {
       this.docstring = docstring;
@@ -405,7 +405,7 @@ angular.module('grafterizerApp')
 
     if (this.functionsToDeriveWith.length === 1) {
       if (this.paramsToFunctions[0]) values.push(new jsedn.List([jsedn.sym(this.functionsToDeriveWith[0].name),
-                                                                 this.paramsToFunctions[0].toString()]));
+                                                                 '' + this.paramsToFunctions[0]]));
       else
         values.push(jsedn.sym(this.functionsToDeriveWith[0].name));
     } else {
@@ -774,12 +774,12 @@ angular.module('grafterizerApp')
 
       this.docstring = (take ? 'Narrow dataset to ' : 'Exclude columns ');
       if (useLazy) {
-        this.docstring += numberOfColumns.toString() + ' columns';
+        this.docstring += '' + numberOfColumns + ' columns';
       } else {
         var i;
         this.docstring += (take ? ' columns:' : '');
         for (i = 0; i < columnsArray.length; ++i) {
-          this.docstring += ' ' + columnsArray[i].toString();
+          this.docstring += ' ' + columnsArray[i];
         }
       }
 
@@ -818,7 +818,7 @@ angular.module('grafterizerApp')
       this.docstring = 'Reshape dataset on columns: ';
       var i;
       for (i = 0; i < columnsArray.length; ++i) {
-        this.docstring += ' ' + columnsArray[i].toString();
+        this.docstring += ' ' + columnsArray[i];
       }
     } else {
       this.docstring = docstring;
