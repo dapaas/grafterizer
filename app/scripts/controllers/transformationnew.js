@@ -42,9 +42,9 @@ angular.module('grafterizerApp')
         '(defn organize-date "Transform date dd/mm/yyyy ~> yyyy-mm-dd" [date] (when (seq date)  (let [[d m y] (clojure.string/split date  (read-string "#\\"/\\""))]  (apply str (interpose "-" [y m d])))))',
         'DATE FUNCTIONS', 'Transform date dd/mm/yyyy ~> yyyy-mm-dd'),
           new transformationDataModel.CustomFunctionDeclaration('double-literal',
-        '(defn double-literal [s] (Double/parseDouble s))', 'CONVERT DATATYPE', 'Coerce to integer'),
+        '(defn double-literal [s] (if (nil? (re-matches #"[0-9.]+" s)) 0 (Double/parseDouble s)))', 'CONVERT DATATYPE', 'Coerce to double. Null and non-valid values are replaced with zero'),
           new transformationDataModel.CustomFunctionDeclaration('integer-literal',
-        '(defn integer-literal [s] (Integer/parseInt s))', 'CONVERT DATATYPE', 'Coerce to integer'),
+        '(defn integer-literal [s] (if (nil? (re-matches #"[0-9.]+" s)) 0 (Integer/parseInt s)))', 'CONVERT DATATYPE', 'Coerce to integer. Null and non-valid values are replaced with zero'),
           new transformationDataModel.CustomFunctionDeclaration('fill-when', '(defn fill-when [col] (grafter.sequences/fill-when col))', 'SERVICE',
         'Takes a sequence of values and copies a value through the sequence depending on the supplied predicate function'
       ),
