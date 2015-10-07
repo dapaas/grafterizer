@@ -32,11 +32,6 @@ angular.module('grafterizerApp')
         scope.removeColumn = function(index) {
           scope.function.columnsArray.splice(index, 1);
         };
-
-        scope.showUsage = false;
-        scope.switchShowUsage = function() {
-          scope.showUsage = !scope.showUsage;
-        };
       }
     };
   });

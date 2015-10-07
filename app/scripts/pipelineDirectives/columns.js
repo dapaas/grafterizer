@@ -25,11 +25,6 @@ angular.module('grafterizerApp')
             scope.function.take,
             scope.function.docstring);
         };
-
-        scope.showUsage = false;
-        scope.switchShowUsage = function() {
-          scope.showUsage = !scope.showUsage;
-        };
       }
     };
   });

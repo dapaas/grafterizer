@@ -1,10 +1,10 @@
 <div layout="column">
     <div>
-        <md-button aria-label="Show/hide documentation" ng-click="switchShowUsage()"><i class="fa fa-angle-down"  >Show/hide documentation</i></md-button>
-            <div ng-show = "showUsage">
+        <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
+        <div ng-show = "showUsage">
             <p class="api-doc-docstring"> Filters rows in the dataset for matches. May be used for filtering on text pattern, regular expression or Clojure predicate function or composition of functions. It also takes column names as an argument to narrow the scope of filtering only to those olumns. If no columns are specified, function operates on all columns in dataset.
-            
-            <img src="/images/grep.png"></img>
+           
+            <p><img src="/images/grep.png"></p>
             <a href="http://api.grafter.org/master/grafter.tabular.html#var-grep" target="_blank"> view source</a>
     </div>
     </div>

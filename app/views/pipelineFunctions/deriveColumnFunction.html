@@ -1,10 +1,10 @@
 <div layout="column">
     <div>
-        <md-button aria-label="Show/hide documentation" ng-click="switchShowUsage()"><i class="fa fa-angle-down"  >Show/hide documentation</i></md-button>
-            <div class="api-doc-docstring" ng-show = "showUsage" layout="column">
+        <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
+        <div class="api-doc-docstring" ng-show = "showUsage" layout="column">
             <p> Adds a new column to the end of the row which is derived from existing column(s) with help of specified function.
             
-            <img src="/images/derivecolumn.png"></img>
+            <p><img src="/images/derivecolumn.png"></p>
             <a href="http://api.grafter.org/master/grafter.tabular.html#var-derive-column" target="_blank">view source</a>
     </div>
     </div>

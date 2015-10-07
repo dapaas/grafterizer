@@ -1,8 +1,8 @@
 <div layout="row" flex>
     <div layout="column" flex="33" ng-if="!function">
         <md-content class="sin-functions-list" flex layout="column" md-scroll-y >
-            <md-button flex ng-click="changeSelected(availableFunctions[0].name)">Make Dataset</md-button>
-            <md-button flex ng-click="changeSelected(availableFunctions[2].name)">Reshape Dataset</md-button>
+            <md-button flex ng-click="changeSelected(availableFunctions[0].name)" ng-disabled="availableFunctions[0].selected">Make Dataset</md-button>
+            <md-button flex ng-click="changeSelected(availableFunctions[2].name)" ng-disabled="availableFunctions[2].selected">Reshape Dataset</md-button>
             <!--md-button flex ng-click="changeSelected(availableFunctions[3].name)"> Sort Dataset </md-button-->
             <md-button flex ng-click="showColumn()" class="sin-functions-list-categorie" >
                 OPERATIONS ON COLUMNS
@@ -28,7 +28,7 @@
             </div>
             <!--md-button flex ng-click="showModify()" > MODIFY DATASET <i class ="fa fa-chevron-down fa-lg" ng-show="!showmodify" style="font-size:12px"></i><i class ="fa fa-chevron-up fa-lg" ng-show="showmodify" style="font-size:12px"></i></md-button>
             <md-button flex ng-click="changeSelected(function.name)" ng-repeat="function in availableFunctions" ng-show="showmodify && function.type === 'modify'" ng-disabled="function.selected"> {{function.displayName}} </md-button-->
-            <md-button flex ng-click="changeSelected(availableFunctions[1].name)">Custom function</md-button>
+            <md-button flex ng-click="changeSelected(availableFunctions[1].name)" ng-disabled="availableFunctions[1].selected">Custom function</md-button>
         </md-content>
     </div>
     <div layout="column" flex>

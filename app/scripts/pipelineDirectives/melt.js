@@ -21,11 +21,6 @@ angular.module('grafterizerApp')
         scope.$parent.generateCurrFunction = function() {
           return new transformationDataModel.MeltFunction(scope.function.columnsArray, scope.function.docstring);
         };
-
-        scope.showUsage = false;
-        scope.switchShowUsage = function() {
-          scope.showUsage = !scope.showUsage;
-        };
       }
     };
   });

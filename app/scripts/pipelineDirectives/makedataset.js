@@ -27,10 +27,29 @@ angular.module('grafterizerApp')
             scope.function.docstring);
         };
 
-        scope.showUsage = false;
-        scope.switchShowUsage = function() {
-          scope.showUsage = !scope.showUsage;
-        };
+        if (scope.function.useLazy) {
+          scope.makedatasetmode = 'fetch';
+        } else if (scope.function.moveFirstRowToHeader) {
+          scope.makedatasetmode = 'header';
+        } else {
+          scope.makedatasetmode = 'specify';
+        }
+
+        scope.$watch('makedatasetmode', function(value) {
+          switch (value) {
+            case 'specify':
+              scope.function.useLazy = false;
+              scope.function.moveFirstRowToHeader = false;
+              break;
+            case 'header':
+              scope.function.moveFirstRowToHeader = true;
+              scope.function.useLazy = false;
+              break;
+            case 'fetch':
+              scope.function.moveFirstRowToHeader = false;
+              scope.function.useLazy = true;
+          }
+        });
       }
     };
   });

@@ -21,10 +21,6 @@ angular.module('grafterizerApp')
           return new transformationDataModel.SortDatasetFunction(scope.function.colName,scope.function.docstring);
         };
 
-        scope.showUsage = false;
-        scope.switchShowUsage = function() {
-          scope.showUsage = !scope.showUsage;
-        };
       }
     };
   });
