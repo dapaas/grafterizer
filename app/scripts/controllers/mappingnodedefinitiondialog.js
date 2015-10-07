@@ -31,7 +31,7 @@ angular.module('grafterizerApp')
 
   if ($scope.nodeCurrentState) {
     $scope.propertyValue = {
-      value: $scope.nodeCurrentState.__type === 'ConstantURI' ? $scope.nodeCurrentState.prefix + $scope.nodeCurrentState.constant : ''
+      value: $scope.nodeCurrentState.__type === 'ConstantURI' ? $scope.nodeCurrentState.prefix + ':' + $scope.nodeCurrentState.constant : ''
     };
 
     // serialise the node state object to the proper RDF element type

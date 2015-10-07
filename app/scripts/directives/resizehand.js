@@ -57,7 +57,7 @@ angular.module('grafterizerApp')
           target.removeAttribute('flex');
           angular.element(target).removeClass('flex');
 
-          w = Math.min(Math.max(Math.round(w), margin), containerWidth-margin);
+          w = Math.min(Math.max(Math.round(w), margin), containerWidth - margin);
           element.css('left', (w - 3) + 'px');
           element.css('height', target.clientHeight + 'px');
           target.style.width = w + 'px';
@@ -65,7 +65,7 @@ angular.module('grafterizerApp')
 
           scope.$emit('resize-hand', {
             left: w,
-            right: containerWidth-w
+            right: containerWidth - w
           });
 
           if (window.sessionStorage) {

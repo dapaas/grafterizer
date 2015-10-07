@@ -25,10 +25,19 @@ angular.module('grafterizerApp')
   $scope.livePreview = !(window.sessionStorage && window.sessionStorage.livePreview === 'false');
   $scope.selectedTabIndex = 0;
 
+  // $rootScope.previewmode = true;
+  $rootScope.$evalAsync('previewmode = true');
+
   // TODO IT DOES WORK
   $scope.$parent.showPreview = true;
   $scope.$on('$destroy', function() {
     $scope.$parent.showPreview = false;
+    // $rootScope.previewmode = false;
+    $rootScope.$evalAsync('previewmode = false');
+    if ($rootScope.currentlyPreviewedFunction) {
+      $rootScope.currentlyPreviewedFunction.isPreviewed = false;
+      $rootScope.currentlyPreviewedFunction = {};
+    }
   });
 
   try {
@@ -116,10 +125,10 @@ angular.module('grafterizerApp')
 
   $scope.$watch('transformation', function() {
     if ($scope.livePreview && $rootScope.transformation) {
-      if($rootScope.currentlyPreviewedFunction){
+      if ($rootScope.currentlyPreviewedFunction) {
         var partialTransformation = $rootScope.transformation.getPartialTransformation($rootScope.currentlyPreviewedFunction);
         $rootScope.previewedClojure = generateClojure.fromTransformation(partialTransformation);
-      } else { 
+      } else {
         $rootScope.previewedClojure = generateClojure.fromTransformation($rootScope.transformation);
         // we probably deleted the previewed function - preview whole transformation
       }
@@ -188,35 +197,5 @@ angular.module('grafterizerApp')
       });
     }
   };
-
-  // $rootScope.actions.download = function() {
-  //   var distribution = $scope.selectedDistribution;
-  //   var transformation = $scope.$parent.id;
-  //   if ($rootScope.actions && $rootScope.actions.save) {
-  //     // Save but without a preview
-  //     $rootScope.actions.save(true);
-  //   }
-
-  //   var type = 'pipe';
-  //   if ($rootScope.transformation.graphs &&
-  //       $rootScope.transformation.graphs.length !== 0) {
-  //     type = 'graft';
-  //   }
-
-  //   var scopeDialog = $scope.$new(false);
-  //   scopeDialog.distribution = distribution;
-  //   scopeDialog.transformation = transformation;
-  //   scopeDialog.type = type;
-
-  //   // TODO
-  //   // scopeDialog.dataset = selectedDataset;
-
-  //   $mdDialog.show({
-  //     templateUrl: 'views/computetriples.html',
-  //     controller: 'ComputetriplesCtrl',
-  //     scope: scopeDialog,
-  //     clickOutsideToClose: true
-  //   });
-  // };
 
 });

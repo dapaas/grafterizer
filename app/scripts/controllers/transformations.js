@@ -29,7 +29,8 @@ angular.module('grafterizerApp')
 
     $scope.selectTransformation = function(transformation) {
       $state.go($scope.showShared ? 'transformations.readonly' : 'transformations.transformation', {
-        id: transformation['foaf:primaryTopic']
+        id: transformation['foaf:primaryTopic'],
+        showToolbar: true
       });
     };
 

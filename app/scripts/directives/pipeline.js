@@ -21,15 +21,6 @@ angular.module('grafterizerApp')
       //scope.pipeline = new transformationDataModel.Pipeline([]);
       // }
 
-      scope.dragControlListeners = {
-        accept: function() {
-          return true;
-        },
-
-        itemMoved: function(event) {},
-
-        orderChanged: function(event) {}
-      };
       scope.clickAddAfter = function(funct) {
         var newScope = scope.$new(false, scope);
         newScope.transformation = scope.transformation;
@@ -40,10 +31,20 @@ angular.module('grafterizerApp')
         }).then(function(pipeFunct) {
           if (pipeFunct) {
             scope.pipeline.addAfter(funct, pipeFunct);
-            if(!$rootScope.currentlyPreviewedFunction){
+            angular.forEach(scope.pipeline.functions, function(f) {
+              f.fabIsOpen = false;
+              f.leaveFabOpen = false;
+            });
+            pipeFunct.fabIsOpen = true;
+            pipeFunct.leaveFabOpen = true;
+            if (!$rootScope.previewmode) {
+              return;
+            }
+            if (!$rootScope.currentlyPreviewedFunction) {
               // initialise previewed funct if null
               $rootScope.currentlyPreviewedFunction = {};
             }
+            //$rootScope.currentlyPreviewedFunction.fabIsOpen = false;
             $rootScope.currentlyPreviewedFunction.isPreviewed = false;
             $rootScope.currentlyPreviewedFunction = pipeFunct;
             pipeFunct.isPreviewed = true;
@@ -61,7 +62,7 @@ angular.module('grafterizerApp')
           .ok('Yes')
           .cancel('Cancel'))
           .then(function() {
-          if(funct.isPreviewed){
+          if (funct.isPreviewed) {
             $rootScope.currentlyPreviewedFunction = {};
             $rootScope.previewedClojure = generateClojure.fromTransformation(scope.transformation);
           }
@@ -69,36 +70,53 @@ angular.module('grafterizerApp')
           scope.pipeline.remove(funct);
         });
       };
-      scope.clickEditFunction = function(funct) {
-        scope.originalFunction = {};
-        scope.functionCurrentState = {};
-        scope.selectedFunctionName = funct.name;
-        angular.copy(funct, scope.originalFunction);
-        angular.copy(funct, scope.functionCurrentState);
-        var newScope = scope.$new(false, scope);
-        newScope.transformation = scope.transformation;
-        newScope.function = scope.functionCurrentState;
-        // trigger a preview!
-        $mdDialog.show({
-          templateUrl: 'views/editPipelineFunctionDialog.html',
-          scope: newScope
-        }).then(
-          function(pipeFunct) {
-            angular.copy(pipeFunct, funct);
-            if(!$rootScope.currentlyPreviewedFunction){
-              // initialise previewed funct if null
-              $rootScope.currentlyPreviewedFunction = {};
-            }
-            $rootScope.currentlyPreviewedFunction.isPreviewed = false;
-            $rootScope.currentlyPreviewedFunction = funct;
-            funct.isPreviewed = true;
-            var partialTransformation = scope.transformation.getPartialTransformation(funct);
-            $rootScope.previewedClojure = generateClojure.fromTransformation(partialTransformation);
-          },
+      
+      scope.previewUntilStep = function(funct) {
+        
+        angular.forEach(scope.pipeline.functions, function(f) {
+          f.fabIsOpen = false;
+          f.leaveFabOpen = false;
+        });
+        if (!$rootScope.currentlyPreviewedFunction) {
+          // initialise previewed funct
+          $rootScope.currentlyPreviewedFunction = {};
+        }
+        if (!funct.isPreviewed) {
+          // toggle the currently previewed function
+          $rootScope.currentlyPreviewedFunction.isPreviewed = false;
+          $rootScope.currentlyPreviewedFunction = funct;
+          funct.isPreviewed = true;
+          var partialTransformation = scope.transformation.getPartialTransformation(funct);
+          
+          // TODO maybe it is better not to use a "global" variable
+          $rootScope.previewedClojure = generateClojure.fromTransformation(partialTransformation);
+        }
+      };
 
-          function() {
-            angular.copy(scope.originalFunction, funct);
-          });
+      scope.closePreviewOfFunction = function() {
+        
+        angular.forEach(scope.pipeline.functions, function(f) {
+          f.leaveFabOpen = false;
+        });
+        $rootScope.currentlyPreviewedFunction.isPreviewed = false;
+        $rootScope.currentlyPreviewedFunction = {};
+
+        // TODO maybe it is better not to use a "global" variable
+        $rootScope.previewedClojure = generateClojure.fromTransformation(scope.transformation);
+      };
+
+      scope.previousFunct = null;
+
+      scope.toggleFabStates = function(funct) {
+        if (scope.previousFunct) {
+          scope.previousFunct.fabIsOpen = false;
+        }
+
+        scope.previousFunct = funct;
+
+        window.setTimeout(function() {
+          scope.$evalAsync('previousFunct.fabIsOpen = true') ;
+         }, 0);
       };
     }
 

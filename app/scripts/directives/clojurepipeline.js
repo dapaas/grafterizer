@@ -35,7 +35,7 @@ angular.module('grafterizerApp')
           $rootScope.previewedClojure = value;
           currentClojure = value;
           throttledPreviewRequest();
-        } 
+        }
       };
 
       var editorArea = angular.element(element.children()[1]);
@@ -66,10 +66,10 @@ angular.module('grafterizerApp')
           return;
         }
 
-
-        if($rootScope.currentlyPreviewedFunction){
+        if ($rootScope.currentlyPreviewedFunction) {
           var partialTransformation = $rootScope.transformation.getPartialTransformation($rootScope.currentlyPreviewedFunction);
           $rootScope.previewedClojure = generateClojure.fromTransformation(partialTransformation);
+          currentClojure = generateClojure.fromTransformation(scope.transformation);
         } else {
           var tmpClojure = generateClojure.fromTransformation(scope.transformation);
           currentClojure = tmpClojure;

@@ -58,6 +58,7 @@ md-toolbar i.fa {
 }
 
 .sin-fa-button {
+  flex-shrink: 0;
   font-size:28px;
   i {line-height:56px;margin-left:1px;}
 }
@@ -301,7 +302,7 @@ md-tab-content .CodeMirror {
     bottom:5px;
     left:50%;
     // margin-left:-37px;
-    margin-left:-35px;
+    margin-left:-21px;
     background:$color;
     position:absolute;
 
@@ -329,6 +330,10 @@ md-tab-content .CodeMirror {
     &.pipeline-flow-line-readonly {
       margin-left:9px;
     }
+
+    &.pipeline-flow-line-preview {
+      margin-left:-35px;
+    }
   }
 
   /*pipeline-function {
@@ -339,7 +344,7 @@ md-tab-content .CodeMirror {
 }
 
 .pipeline-button {
-  min-width: 9em;
+  min-width: 11em;
   margin-left: 40px;
   // transition: min-width 0.66s ease;
 }
@@ -919,12 +924,12 @@ body {
 div.previewed-pipeline-function-overlay {
   background-color: rgba(200,200,200,0.5);
 //  border: 1px solid;
-  border-radius: 25px;
+  border-radius: 10px;
   position: absolute;
-  left: -55px;
-  top: 1px;
-  width: 335px;
-  bottom: 1px;
+  left: 28px;
+  top: -10px;
+  width: 178px;
+  height:45px;
 }
 
 .close-preview-button {
@@ -985,5 +990,13 @@ md-toolbar .md-button[type=submit] {
     font-size:14px;
     margin:0;
     line-height:30px;
+  }
+}
+
+.sin-function-sublist {
+  background-color: #373A3E;
+
+  .md-button {
+    padding-left: 30px;
   }
 }

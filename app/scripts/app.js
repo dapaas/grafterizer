@@ -91,8 +91,7 @@ angular
       jarfterServiceProvider.setEndpoint('');
     }
 
-
-    $urlRouterProvider.otherwise('/transformations/new');
+    $urlRouterProvider.otherwise('/transformations');
 
     sessionStorage.localClassAndProperty = JSON.stringify([]);
     sessionStorage.localVocabulary = JSON.stringify([]);
@@ -198,6 +197,9 @@ angular
       })
       .state('transformations.readonly', {
         url: '^/readonly/{id:nonURIEncoded}',
+        params: {
+          showToolbar: null,
+        },
         views: {
           'main@': {
             templateUrl: 'views/readonly.html',
@@ -369,7 +371,7 @@ angular
 
     if (!apiKeyService.hasKeyPass()) {
       window.setTimeout(function() {
-        if (!apiKeyService.hasKeyPass()) {
+        if (!apiKeyService.hasKeyPass() && !$state.is('transformations.readonly')) {
           $state.go('apikey');
         }
       }, 2000);
