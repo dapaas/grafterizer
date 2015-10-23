@@ -60,11 +60,6 @@ angular.module('grafterizerApp')
         };
         
         scope.showRegex = false;
-        scope.showUsage = false;
-        scope.switchShowUsage = function() {
-          scope.showUsage = !scope.showUsage;
-        };
-        
         scope.switchRegex = function() {
           scope.showRegex = !scope.showRegex;
         };

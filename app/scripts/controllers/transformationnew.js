@@ -310,4 +310,11 @@ angular.module('grafterizerApp')
       });
     };
 
+    // Save the selected md-tab panel in session because we can
+    $scope.transformationSelectedTabIndex =
+      window.sessionStorage && window.sessionStorage.transformationSelectedTabIndex ?
+        (parseInt(window.sessionStorage.transformationSelectedTabIndex) || 0) : 0;
+    $scope.$watch('transformationSelectedTabIndex', function(newValue) {
+        window.sessionStorage.transformationSelectedTabIndex = newValue;
+    });
   });

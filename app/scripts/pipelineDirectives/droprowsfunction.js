@@ -21,18 +21,14 @@ angular.module('grafterizerApp')
         }
 
         scope.$parent.generateCurrFunction = function() {
-          return new transformationDataModel.DropRowsFunction(parseInt(
-            scope.function.numberOfRows), scope.function.take, scope.function.docstring);
+          return new transformationDataModel.DropRowsFunction(
+            parseInt(scope.function.numberOfRows), scope.function.take, scope.function.docstring);
         };
 
         scope.doGrep = function() {
           scope.$parent.selectefunctionName = 'grep';
         };
 
-        scope.showUsage = false;
-        scope.switchShowUsage = function() {
-          scope.showUsage = !scope.showUsage;
-        };
       }
     };
   });

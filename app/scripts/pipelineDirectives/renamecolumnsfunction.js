@@ -62,10 +62,6 @@ angular.module('grafterizerApp')
           return b;
         };
 
-        scope.showUsage = false;
-        scope.switchShowUsage = function() {
-          scope.showUsage = !scope.showUsage;
-        };
       }
     };
   });

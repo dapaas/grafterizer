@@ -54,10 +54,7 @@ angular.module('grafterizerApp')
         scope.addParamToFunction = function(index) {
           scope.function.paramsToFunctions[index] = ' ';
         };
-        scope.showUsage = false;
-        scope.switchShowUsage = function() {
-          scope.showUsage = !scope.showUsage;
-        };
+
       }
     };
   });

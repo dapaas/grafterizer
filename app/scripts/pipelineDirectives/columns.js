@@ -26,11 +26,6 @@ return new transformationDataModel.ColumnsFunction(scope.function.columnsArray,
             scope.function.take,
             scope.function.docstring);
         };
-
-        scope.showUsage = false;
-        scope.switchShowUsage = function() {
-          scope.showUsage = !scope.showUsage;
-        };
       }
     };
   });

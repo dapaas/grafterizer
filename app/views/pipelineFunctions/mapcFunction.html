@@ -1,9 +1,9 @@
 <div layout="column">
     <div>
-        <md-button aria-label="Show/hide documentation" ng-click="switchShowUsage()"><i class="fa fa-angle-down"  >Show/hide documentation</i></md-button>
-            <div ng-show = "showUsage" layout="column" class="api-doc-docstring">
+        <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
+        <div ng-show = "showUsage" layout="column" class="api-doc-docstring">
             <p> Takes a vector of functions and maps each to the key column for every row. Both cell-to-cell and collection-to-collection functions may be used </p>
-            <img src="/images/mapc.png"></img>
+            <p><img src="/images/mapc.png"></p>
             <a href="http://api.grafter.org/master/grafter.tabular.html#var-mapc" target="_blank">view source</a>
         </div>
         </div>

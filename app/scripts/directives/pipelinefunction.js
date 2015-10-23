@@ -7,7 +7,7 @@
  * # pipelineFunction
  */
 angular.module('grafterizerApp')
-  .directive('pipelineFunction', function($mdDialog, generateClojure, PipeService, $rootScope) {
+  .directive('pipelineFunction', function($mdDialog, generateClojure, PipeService, $rootScope, $state) {
   return {
     templateUrl: 'views/pipelinefunction.html',
     restrict: 'E',
@@ -39,10 +39,12 @@ angular.module('grafterizerApp')
               $rootScope.currentlyPreviewedFunction = {};
             }
             $rootScope.currentlyPreviewedFunction.isPreviewed = false;
-            $rootScope.currentlyPreviewedFunction = funct;
-            funct.isPreviewed = true;
-            var partialTransformation = scope.transformation.getPartialTransformation(funct);
-            $rootScope.previewedClojure = generateClojure.fromTransformation(partialTransformation);
+            if ($state.is('transformations.transformation.preview')) {
+              $rootScope.currentlyPreviewedFunction = funct;
+              funct.isPreviewed = true;
+              var partialTransformation = scope.transformation.getPartialTransformation(funct);
+              $rootScope.previewedClojure = generateClojure.fromTransformation(partialTransformation);
+            }
           },
 
           function() {

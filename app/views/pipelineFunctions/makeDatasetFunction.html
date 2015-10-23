@@ -1,42 +1,37 @@
 <div layout="column">
-    <div>
-        <md-button aria-label="Show/hide documentation" ng-click="switchShowUsage()"><i class="fa fa-angle-down"  >Show/hide documentation</i></md-button>
-            <div class="api-doc-docstring" ng-show = "showUsage" layout="column">
-            <p> Creates a dataset either by taking specified number of columns or by inspecting the amount of columns in the first row, and taking that many column names from the sequence. </p>
-            <a href="http://api.grafter.org/master/grafter.tabular.html#var-make-dataset" target="_blank">view source</a>
-    </div>
-    <div>
-        <h3>Parameters</h3>
-        <div class="whiteframedemoBasicUsage" layout="column"  style="padding-bottom: 32px;">
-        <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">
-    <md-checkbox ng-model="function.moveFirstRowToHeader" aria-label="move first row to header" ng-disabled="$root.readonlymode">
-    move first row to header
-    </md-checkbox>
-</md-whiteframe>
-        <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">
-    <label>Specify column names</label>
+  <div>
+    <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
+    <div class="api-doc-docstring" ng-show="showUsage" layout="column">
+      <p>
+        Creates a dataset either by taking specified number of columns or by inspecting the amount of columns in the first row, and taking that many column names from the sequence.
+      </p>
+      <a href="http://api.grafter.org/master/grafter.tabular.html#var-make-dataset" target="_blank">view source</a>
+      <hr></div>
+  </div>
+  <h2 class="md-title">Parameters</h2>
+  <div>
+    <md-radio-group ng-model="makedatasetmode" readonly="$root.readonlymode">
+      <md-radio-button value="specify">Specify column names</md-radio-button>
+      <md-radio-button value="header">Use the first row as header</md-radio-button>
+      <md-radio-button value="fetch">Specify a number of columns to fetch</md-radio-button>
+    </md-radio-group>
+  </div>
+  <br>
+  <div ng-show="makedatasetmode === 'specify'">
+    <label>Column names: </label>
         <oi-select oi-options="column.value for column in $root.colnames() track by column.id" ng-model="function.columnsArray" multiple ng-disabled="$root.readonlymode"></oi-select>
-    <!--md-chips ng-disabled="function.useLazy" ng-model="function.columnsArray" readonly="$root.readonlymode">
-        <md-chip-template>
-            <strong>{{$chip}}</strong>
-        </md-chip-template>
-    </md-chips-->
-</md-whiteframe>
-        <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">
-    <md-checkbox ng-model="function.useLazy" aria-label="or specify number of columns to fetch" ng-disabled="$root.readonlymode">
-    ...or spesify number of columns to fetch
-    </md-checkbox>
-    <md-input-container flex>
-        <label>Number of columns</label>
-        <input ng-model="function.numberOfColumns" type="number" min="1" ng-readonly="!(function.useLazy) || $root.readonlymode">
-
+  </div>
+  <div ng-show="makedatasetmode === 'fetch'">
+    <md-input-container>
+      <label>Number of columns</label>
+      <input ng-model="function.numberOfColumns" type="number" min="1" ng-readonly="$root.readonlymode" />
     </md-input-container>
-</md-whiteframe>
-</div>    <md-input-container flex>
-        <label>Comment</label>
+  </div>
+</div>
+<md-input-container flex>
+  <label>Comment</label>
 
-        <input ng-model="function.docstring" type="text" ng-readonly="$root.readonlymode">
-    </md-input-container>
-                
+  <input ng-model="function.docstring" type="text" ng-readonly="$root.readonlymode" />
+</md-input-container>
 </div>
 </div>
