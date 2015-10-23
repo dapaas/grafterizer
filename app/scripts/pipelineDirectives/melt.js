@@ -7,7 +7,7 @@
  * # meltFunction
  */
 angular.module('grafterizerApp')
-  .directive('meltFunction', function(transformationDataModel) {
+  .directive('meltFunction', function(transformationDataModel,$rootScope) {
     return {
       templateUrl: 'views/pipelineFunctions/meltFunction.html',
       restrict: 'E',

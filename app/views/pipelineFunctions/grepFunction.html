@@ -13,11 +13,13 @@
             <h3>Parameters</h3>
 
     <label>Columns to filter</label>
-    <md-chips ng-model="function.colsToFilter" readonly="$root.readonlymode">
+    <!--md-chips ng-model="function.colsToFilter" readonly="$root.readonlymode">
         <md-chip-template>
             <strong>{{$chip}}</strong>
         </md-chip-template>
-    </md-chips>
+    </md-chips-->
+
+        <oi-select oi-options="column.value for column in $root.colnames() track by column.id" multiple ng-model="function.colsToFilter" ng-disabled="$root.readonlymode"></oi-select>
     <br>
         <div class="whiteframedemoBasicUsage" layout="column"  style="padding-bottom: 32px;">
         <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">

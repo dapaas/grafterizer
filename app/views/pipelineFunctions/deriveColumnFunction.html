@@ -17,17 +17,12 @@
     </md-input-container>
 
     <label>Columns to derive from</label>
-    <md-chips ng-model="function.colsToDeriveFrom" readonly="$root.readonlymode">
+    <!--md-chips ng-model="function.colsToDeriveFrom" readonly="$root.readonlymode">
         <md-chip-template>
             <strong>{{$chip}}</strong>
         </md-chip-template>
-    </md-chips>
-    <!--oi-select
-        oi-options="item.name for item in testdata track by item.id"
-            ng-model="function.colsToDeriveFrom"
-                multiple
-                    placeholder="Select"
-                        ></oi-select-->
+    </md-chips-->
+        <oi-select oi-options="column.value for column in $root.colnames() track by column.id" ng-model="function.colsToDeriveFrom" multiple ng-disabled="$root.readonlymode"></oi-select>
     <br>
     <div layout="row">
         

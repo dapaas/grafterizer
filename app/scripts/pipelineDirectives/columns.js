@@ -19,7 +19,8 @@ angular.module('grafterizerApp')
         }
 
         scope.$parent.generateCurrFunction = function() {
-          return new transformationDataModel.ColumnsFunction(scope.function.columnsArray,
+ 
+return new transformationDataModel.ColumnsFunction(scope.function.columnsArray,
             scope.function.useLazy,
             scope.function.numberOfColumns,
             scope.function.take,

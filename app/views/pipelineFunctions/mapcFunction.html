@@ -16,10 +16,11 @@
             <i class="fa fa-trash fa-lg"></i>
         </md-button>
         <div layout="column">
-            <md-input-container>
+            <!--md-input-container-->
                 <label>Column</label>
-                <input ng-model="keyFunctionPair.key" type="text" required ng-readonly="$root.readonlymode">
-            </md-input-container>
+        <oi-select oi-options="column.value for column in $root.colnames() track by column.id" ng-model="keyFunctionPair.key" ng-disabled="$root.readonlymode"></oi-select>
+                <!--input ng-model="keyFunctionPair.key" type="text" required ng-readonly="$root.readonlymode"-->
+            <!--/md-input-container-->
         </div>
         <div layout="column">
             <md-input-container>

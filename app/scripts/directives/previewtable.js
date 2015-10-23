@@ -7,7 +7,7 @@
  * # previewTable
  */
 angular.module('grafterizerApp')
-  .directive('previewTable', function($q) {
+  .directive('previewTable', function($q,$rootScope) {
 
     var paginationSize = 100;
 
@@ -125,7 +125,6 @@ angular.module('grafterizerApp')
               }
             }
           }
-
           scope.gridOptions.columnDefs =
             _.map(data[':column-names'], function(f) {
               var w = widths[f];
@@ -145,6 +144,15 @@ angular.module('grafterizerApp')
             scope.gridApi.infiniteScroll.dataLoaded(false, rows.length >= paginationSize);
           }
 
+$rootScope.colnames = function() {
+    var i;
+    var namesArray = [];
+    for (i=0;i<scope.gridOptions.columnDefs.length;++i) {
+        var colname = {id:i,value:scope.gridOptions.columnDefs[i].displayName};
+        namesArray.push(colname);
+    }
+    return namesArray;
+};
           scope.gridOptions.data = rows;
         });
       }

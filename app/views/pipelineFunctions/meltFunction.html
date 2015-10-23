@@ -11,11 +11,12 @@
         <div>
         <h3>Parameters</h3>
         <label>Specify column names</label>
-    <md-chips ng-model="function.columnsArray" readonly="$root.readonlymode" >
+    <!--md-chips ng-model="function.columnsArray" readonly="$root.readonlymode" >
         <md-chip-template>
             <strong>{{$chip}}</strong>
         </md-chip-template>
-    </md-chips>
+    </md-chips-->
+        <oi-select oi-options="column.value for column in $root.colnames() track by column.id" ng-model="function.columnsArray" multiple></oi-select>
                 
     <md-input-container flex>
         <label>Comment</label>

@@ -8,10 +8,11 @@
         </div>
         <div>
         <h3>Parameters</h3>
-  <md-input-container flex>
+  <!--md-input-container flex-->
         <label>Column name</label>
-        <input ng-model="function.colName" type="text" required ng-readonly="$root.readonlymode">
-    </md-input-container>
+        <oi-select oi-options="column.value for column in $root.colnames() track by column.value" ng-model="function.colName" ng-disabled="$root.readonlymode"></oi-select>
+        <!--input ng-model="function.colName" type="text" required ng-readonly="$root.readonlymode">
+    </md-input-container-->
   <md-input-container flex>
         <label>New column</label>
         <input ng-model="function.newColName" type="text" ng-readonly="$root.readonlymode">

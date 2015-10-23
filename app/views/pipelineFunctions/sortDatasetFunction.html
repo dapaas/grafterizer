@@ -8,7 +8,8 @@
         <h3>Parameters</h3>
     <md-input-container flex>
         <label>Column name</label>
-        <input ng-model="function.colName" type="text" required ng-readonly="$root.readonlymode">
+        <!--input ng-model="function.colName" type="text" required ng-readonly="$root.readonlymode"-->
+        <oi-select oi-options="column.value for column in $root.colnames() track by column.id" ng-model="function.colName"  ng-disabled="$root.readonlymode"></oi-select>
 
     </md-input-container>
 </md-whiteframe>

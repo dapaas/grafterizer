@@ -13,11 +13,12 @@
         <div class="whiteframedemoBasicUsage" layout="column"  style="padding-bottom: 32px;">
         <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">
         <label>Specify column names</label>
-    <md-chips ng-model="function.columnsArray" readonly="function.useLazy || $root.readonlymode">
+        <oi-select oi-options="column.value for column in $root.colnames() track by column.id" ng-model="function.columnsArray" multiple></oi-select>
+    <!--md-chips ng-model="function.columnsArray" readonly="function.useLazy || $root.readonlymode">
         <md-chip-template>
             <strong>{{$chip}}</strong>
         </md-chip-template>
-    </md-chips>
+    </md-chips-->
     <div style="align:right">
     <md-switch ng-disabled="function.useLazy || $root.readonlymode"  ng-model="function.take" aria-label="switch mode">
     {{function.take?"Take only listed columns":"Take all columns EXCEPT of listed"}}

@@ -40,10 +40,11 @@
             <i class="fa fa-trash fa-lg"></i>
         </md-button>
         <div layout="column">
-            <md-input-container>
+            <!--md-input-container-->
             <label>Column </label>
-                <input ng-model="function.mappings[i]" type="text" required ng-readonly="$root.readonlymode">
-            </md-input-container>
+        <oi-select oi-options="column.value for column in $root.colnames() track by column.id" ng-model="function.mappings[i]" ng-disabled="$root.readonlymode"></oi-select>
+                <!--input ng-model="function.mappings[i]" type="text" required ng-readonly="$root.readonlymode">
+            </md-input-container-->
         </div>
         <div layout="column">
             <md-input-container>

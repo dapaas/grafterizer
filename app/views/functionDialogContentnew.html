@@ -3,7 +3,7 @@
         <md-content class="sin-functions-list" flex layout="column" md-scroll-y >
             <md-button flex ng-click="changeSelected(availableFunctions[0].name)">Make Dataset</md-button>
             <md-button flex ng-click="changeSelected(availableFunctions[2].name)">Reshape Dataset</md-button>
-            <!--md-button flex ng-click="changeSelected(availableFunctions[3].name)"> Sort Dataset </md-button-->
+            <md-button flex ng-click="changeSelected(availableFunctions[3].name)"> Sort Dataset </md-button>
             <md-button flex ng-click="showColumn()" class="sin-functions-list-categorie" >
                 OPERATIONS ON COLUMNS
                 <i class ="fa fa-chevron-down fa-lg" ng-show="!showcolumn" style="font-size:12px"></i>
@@ -39,7 +39,7 @@
         <drop-rows-function transformation="transformation" ng-if="selectedFunctionName === 'drop-rows'"></drop-rows-function>
         <grep-function transformation="transformation" ng-if="selectedFunctionName === 'grep'"></grep-function>
         <make-dataset transformation="transformation" ng-if="selectedFunctionName === 'make-dataset'"></make-dataset>
-        <!--sort-dataset transformation="transformation" ng-if="selectedFunctionName === 'sort-dataset'"></sort-dataset-->
+        <sort-dataset transformation="transformation" ng-if="selectedFunctionName === 'sort-dataset'"></sort-dataset>
         <mapc-function transformation="transformation" ng-if="selectedFunctionName === 'mapc'"></mapc-function>
         <melt-function transformation="transformation" ng-if="selectedFunctionName === 'melt'"></melt-function>
         <rename-columns-function transformation="transformation" ng-if="selectedFunctionName === 'rename-columns'"></rename-columns-function>
