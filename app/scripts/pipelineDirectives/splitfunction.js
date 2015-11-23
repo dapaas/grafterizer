@@ -21,7 +21,7 @@ angular.module('grafterizerApp')
 
         scope.$parent.generateCurrFunction = function() {
           return new transformationDataModel.SplitFunction(
-            scope.function.colName, scope.function.newColName, scope.function.separator, scope.function.docstring
+            scope.function.colName, scope.function.separator, scope.function.docstring
           );
         };
 

@@ -2,40 +2,113 @@
     <div>
         <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
         <div class="api-doc-docstring" ng-show = "showUsage" layout="column">
-            <p> Given a dataset and a sequence of column identifiers, narrows the dataset to just the specified columns.
+            <p> Reduces number of columns in a given dataset. It is possible to specify columns to leave in a dataset by specifying their names or indices or alternatively specify columns to remove from a dataset by specifying their names or indices.
             </p>
+                <p> Example: </p>
+                <p> Given original dataset containing records about orders made by clients: </p>
+                <table>
+                    <tr>
+                        <td> firstName </td>
+                        <td> lastName </td>
+                        <td> orderDate </td>
+                        <td> address </td>
+                        <td> phoneNumber </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Smith </td>
+                        <td> 10.11.2015 </td>
+                        <td> New York, Harrison Street, 507 </td>
+                        <td> 263-86-335 </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> Johnson </td>
+                        <td> 13.11.2015 </td>
+                        <td> Richmond, Main Street, 17 </td>
+                        <td> 227-11-594 </td>
+                    </tr>
+
+                    <tr>
+                        <td> Alice </td>
+                        <td> Williams </td>
+                        <td> 25.11.2015 </td>
+                        <td> New York, East 52nd Street, 55 </td>
+                        <td> 493-78-145 </td>
+                    </tr>
+                    <tr>
+                        <td> Mary </td>
+                        <td> Williams </td>
+                        <td> 29.11.2015 </td>
+                        <td> Florida, Orange, Orlando, East Winter Park Road, 1842 </td>
+                        <td> 278-32-169 </td>
+                    </tr>
+                </table>
+                <p> It is possible to leave only columns containing information about person's first name, last name and phone number. This can be done in several ways:</p>
+                
             <p><img src="/images/columns.png"></p>
-            <a href="http://api.grafter.org/master/grafter.tabular.html#var-columns" target="_blank">view source</a>
+                <table align="center">
+                    <tr>
+                        <td> firstName </td>
+                        <td> lastName </td>
+                        <td> phoneNumber </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Smith </td>
+                        <td> 263-86-335 </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> Johnson </td>
+                        <td> 227-11-594 </td>
+                    </tr>
+
+                        <td> Alice </td>
+                        <td> Williams </td>
+                        <td> 493-78-145 </td>
+                    </tr>
+                    <tr>
+                        <td> Mary </td>
+                        <td> Williams </td>
+                        <td> 278-32-169 </td>
+                    </tr>
+                </table>
         </div>
         </div>
         <div>
         <h3>Parameters</h3>
-        <div class="whiteframedemoBasicUsage" layout="column"  style="padding-bottom: 32px;">
-        <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">
-        <label>Specify column names</label>
-        <oi-select oi-options="column.value for column in $root.colnames() track by column.id" ng-model="function.columnsArray" multiple></oi-select>
-    <!--md-chips ng-model="function.columnsArray" readonly="function.useLazy || $root.readonlymode">
-        <md-chip-template>
-            <strong>{{$chip}}</strong>
-        </md-chip-template>
-    </md-chips-->
     <div style="align:right">
     <md-switch ng-disabled="function.useLazy || $root.readonlymode"  ng-model="function.take" aria-label="switch mode">
     {{function.take?"Take only listed columns":"Take all columns EXCEPT of listed"}}
     </md-switch>
     </div>
-</md-whiteframe>
-        <md-whiteframe  class="md-whiteframe-z1"  layout-align="left ">
-    <md-checkbox ng-model="function.useLazy" aria-label="or specify number of columns to fetch" ng-disabled="$root.readonlymode">
-    ...or specify number of columns to fetch
-    </md-checkbox>
+  <div>
+    <md-radio-group ng-model="columnsmode" readonly="$root.readonlymode">
+      <md-radio-button value="names">Specify column names</md-radio-button>
+      <md-radio-button value="indices">Specify range of column indices</md-radio-button>
+    </md-radio-group>
+  </div>
+  <br>
+    <div style="align:right">
+    </div>
+  <div ng-show = "columnsmode === 'names'">
+        <label>Specify column names</label>
+        <oi-select oi-options="column.value for column in $root.colnames() track by column.id" ng-model="function.columnsArray" multiple></oi-select>
+    </div>
+    <div ng-show = "columnsmode === 'indices'"> 
+        <div layout = "row">
     <md-input-container flex>
-        <label>Number of columns</label>
-        <input ng-model="function.numberOfColumns" type="number" min="1" ng-disabled="!(function.useLazy)">
+        <label>Index from</label>
+            <input ng-model="function.indexFrom" type="number" class="numberinput"  min="0" >
     </md-input-container>
+    <md-input-container flex>
+        <label>Index to</label>
+            <input ng-model="function.indexTo" class="numberinput" type="number" min="0" >
+    </md-input-container>
+        </div>
+    </div>
                 
-</md-whiteframe>
-</div>
     <md-input-container flex>
         <label>Comment</label>
 

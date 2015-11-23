@@ -32,7 +32,6 @@
     <link rel="stylesheet" href="bower_components/ng-sortable/dist/ng-sortable.css" />
     <link rel="stylesheet" href="bower_components/codemirror/lib/codemirror.css" />
     <link rel="stylesheet" href="bower_components/v-accordion/dist/v-accordion.css" />
-    <link rel="stylesheet" href="bower_components/oi.select/dist/select.css" />
     <link rel="stylesheet" href="bower_components/oi.select/dist/select.min.css" />
     <!-- endbower -->
     <!-- endbuild -->
@@ -84,8 +83,8 @@
     <script src="bower_components/angular-recursion/angular-recursion.js"></script>
     <script src="bower_components/v-accordion/dist/v-accordion.js"></script>
     <script src="bower_components/raven-js/dist/raven.js"></script>
-    <script src="bower_components/oi.select/dist/select.js"></script>
-    <script src="bower_components/oi.select/dist/select.min.js"></script>
+    <script src="bower_components/angular-mocks/angular-mocks.js"></script>
+    <script src="bower_components/oi.select/dist/select-tpls.min.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:js(.) scripts/clojure.js -->
@@ -109,6 +108,8 @@
     <script src="scripts/pipelineDirectives/utilityfunction.js"></script>
     <script src="scripts/pipelineDirectives/derivecolumnfunction.js"></script>
     <script src="scripts/pipelineDirectives/grepfunction.js"></script>
+    <script src="scripts/pipelineDirectives/mergecolumnsfunction.js"></script>
+    <script src="scripts/pipelineDirectives/removeduplicates.js"></script>
     <script src="scripts/pipelineDirectives/renamecolumnsfunction.js"></script>
     <script src="scripts/services/transformationdatamodel.js"></script>
     <script src="scripts/directives/customfunction.js"></script>
@@ -132,8 +133,12 @@
     <script src="scripts/directives/constantliteralnode.js"></script>
     <script src="scripts/directives/blanknode.js"></script>
     <script src="scripts/pipelineDirectives/sortdataset.js"></script>
+    <script src="scripts/pipelineDirectives/grouprows.js"></script>
     <script src="scripts/pipelineDirectives/makedataset.js"></script>
     <script src="scripts/pipelineDirectives/addcolumnsfunction.js"></script>
+    <script src="scripts/pipelineDirectives/addrow.js"></script>
+    <script src="scripts/pipelineDirectives/shiftcolumn.js"></script>
+    <script src="scripts/pipelineDirectives/shiftrow.js"></script>
     <script src="scripts/pipelineDirectives/melt.js"></script>
     <script src="scripts/pipelineDirectives/columns.js"></script>
     <script src="scripts/pipelineDirectives/mapc.js"></script>

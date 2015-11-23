@@ -1,9 +1,109 @@
 <div layout="column">
     <div>
         <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
-        <div class="api-doc-docstring" ng-show = "showUsage" layout="row">
-            <p> Splits given column on separatoronce. The first part of column obtained as a result of splitting remains in source column while the rest is copied to new column </p>
+        <div class="api-doc-docstring" ng-show = "showUsage" >
+            <p> Splits given column into multiple by separator. New columns get names of a form [original-column-name]_splitted_0, [original-column-name]_splitted_1, ... </p>
+                <p> Example: </p>
+                <p> Given original dataset containing records about orders made by clients: </p>
+                <table>
+                    <tr>
+                        <td> firstName </td>
+                        <td> lastName </td>
+                        <td> address </td>
+                        <td> phoneNumber </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Smith </td>
+                        <td> New York, Harrison Street, 507 </td>
+                        <td> 263-86-335 </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> Johnson </td>
+                        <td> Richmond, Main Street, 17 </td>
+                        <td> 227-11-594 </td>
+                    </tr>
+
+                    <tr>
+                        <td> Alice </td>
+                        <td> Smith </td>
+                        <td> New York, Harrison Street, 29, H0512 </td>
+                        <td> 263-86-335 </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Williams </td>
+                        <td> New York, East 52nd Street, 55 </td>
+                        <td> 493-78-145 </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> Johnson </td>
+                        <td> Richmond, Main Street, 17 </td>
+                        <td> 482-16-177 </td>
+                    </tr>
+                </table>
+
+                <p> It is possible to split column address by comma to get every individual element of address in separate column.</p>
             <p><img src="/images/split.png"></p>
+                <table>
+                    <tr>
+                        <td> firstName </td>
+                        <td> lastName </td>
+                        <td> address_splitted_0 </td>
+                        <td> address_splitted_1 </td>
+                        <td> address_splitted_2 </td>
+                        <td> address_splitted_3 </td>
+                        <td> phoneNumber </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Smith </td>
+                        <td> New York </td>
+                        <td> Harrison Street </td>
+                        <td> 507 </td>
+                        <td>  </td>
+                        <td> 263-86-335 </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> Johnson </td>
+                        <td> Richmond </td>
+                        <td> Main Street </td>
+                        <td> 17 </td>
+                        <td> </td>
+                        <td> 227-11-594 </td>
+                    </tr>
+
+                    <tr>
+                        <td> Alice </td>
+                        <td> Smith </td>
+                        <td> New York </td>
+                        <td> Harrison Street </td>
+                        <td> 29</td>
+                        <td> H0512 </td>
+                        <td> 263-86-335 </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Williams </td>
+                        <td> New York </td>
+                        <td> East 52nd Street </td>
+                        <td> 55 </td>
+                        <td>  </td>
+                        <td> 493-78-145 </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> Johnson </td>
+                        <td> Richmond </td>
+                        <td> Main Street </td>
+                        <td> 17 </td>
+                        <td>  </td>
+                        <td> 482-16-177 </td>
+                    </tr>
+                </table>
         </div>
         </div>
         <div>
@@ -14,12 +114,8 @@
         <!--input ng-model="function.colName" type="text" required ng-readonly="$root.readonlymode">
     </md-input-container-->
   <md-input-container flex>
-        <label>New column</label>
-        <input ng-model="function.newColName" type="text" ng-readonly="$root.readonlymode">
-    </md-input-container>
-  <md-input-container flex>
         <label>Separator</label>
-        <input ng-model="function.separator" type="text" required ng-readonly="$root.readonlymode">
+        <input ng-model="function.separator" ng-trim="false" type="text" required ng-readonly="$root.readonlymode">
     </md-input-container>
     <md-input-container flex>
         <label>Comment</label>

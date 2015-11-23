@@ -1,0 +1,146 @@
+<div layout="column">
+    <div>
+        <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
+            <div class="api-doc-docstring" ng-show = "showUsage" layout="column">
+                <p> Groups dataset by given column(set of columns) and creates specified aggregations on other columns. </p>
+                <p> Set of available aggregations: </p>
+                <ul>
+                    <li> MIN -- find minimum value in group
+                    <li> MAX -- find maximum value in group
+                    <li> SUM -- find summation of values in group
+                    <li> AVG -- find average value in group
+                    <li> COUNT -- find number of non-empty values in group
+                </ul>
+
+                <p> Example: 
+                 Given original dataset containing records about orders made by clients: </p>
+                <table>
+                    <tr>
+                        <td> firstName </td>
+                        <td> lastName </td>
+                        <td> orderNumber </td>
+                        <td> totalItems </td>
+                        <td> totalCost </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Smith </td>
+                        <td> 1111 </td>
+                        <td> 5 </td>
+                        <td> 150 </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> Johnson </td>
+                        <td> 857 </td>
+                        <td> 7 </td>
+                        <td> 70 </td>
+                    </tr>
+
+                    <tr>
+                        <td> Alice </td>
+                        <td> Smith </td>
+                        <td> 1112 </td>
+                        <td> 30 </td>
+                        <td> 340 </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Williams </td>
+                        <td> 505 </td>
+                        <td> 1 </td>
+                        <td> 170 </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> Johnson </td>
+                        <td> 858 </td>
+                        <td> 3 </td>
+                        <td> 370 </td>
+                    </tr>
+                    <tr>
+                        <td> Mary </td>
+                        <td> Williams </td>
+                        <td> 1543 </td>
+                        <td> 1 </td>
+                        <td> 15 </td>
+                    </tr>
+                </table>
+                <p> It is possible to calculate total number of orders each client made, total number of items each client orderered, average and maximum total cost per one order: </p>
+            <p>
+                <img src="/images/group1.png"/>
+            </p>
+                <table>
+                    <tr>
+                        <td> firstName </td>
+                        <td> lastName </td>
+                        <td> orderNumber_COUNT </td>
+                        <td> totalItems_SUM </td>
+                        <td> totalCost_AVG </td>
+                        <td> totalCost_MAX </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Smith </td>
+                        <td> 2 </td>
+                        <td> 35 </td>
+                        <td> 245 </td>
+                        <td> 340 </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> Johnson </td>
+                        <td> 2 </td>
+                        <td> 10 </td>
+                        <td> 220 </td>
+                        <td> 370 </td>
+                    </tr>
+
+                    <tr>
+                        <td> Alice </td>
+                        <td> Williams </td>
+                        <td> 1 </td>
+                        <td> 1 </td>
+                        <td> 170 </td>
+                        <td> 170 </td>
+                    </tr>
+                    <tr>
+                        <td> Mary </td>
+                        <td> Williams </td>
+                        <td> 1 </td>
+                        <td> 1 </td>
+                        <td> 15 </td>
+                        <td> 15 </td>
+                    </tr>
+                </table>
+        <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
+    </div>
+    <div>
+        <h3>Parameters</h3>
+        <label>Group by columns:</label> 
+        <div layout = "column">
+            <oi-select flex class = "md-primary md-default-theme"  oi-options="column.value for column in $root.colnames() track by column.id" multiple ng-model="function.colnames" ng-disabled="$root.readonlymode"></oi-select>
+            <br>
+        <label>Make aggregations on columns:</label> 
+            <md-button  class="md-raised" ng-click="addAggregation()" aria-label="Add column" ng-disabled="$root.readonlymode">Add aggregated column</md-button>
+<div layout="row"  ng-repeat="i in getSetLength(function.colnamesFunctionsSet.length)">
+    <div layout="row">
+         <md-button class="md-primary button-tight md-default-theme" ng-disabled="function.colnamesFunctionsSet.length === 2 || $root.readonlymode" ng-click="removeAggregation(i)" aria-label="Remove aggregation">
+            <i class="fa fa-trash fa-lg"></i>
+        </md-button>
+             <oi-select flex class = "md-primary md-default-theme" style= " top:20px" oi-options="column.value for column in $root.colnames() track by column.id" ng-model="function.colnamesFunctionsSet[i]" ng-disabled="$root.readonlymode"></oi-select>
+            
+           <md-select  flex class = "md-primary md-default-theme" style= "margin-left:20px; min-width:200px" aria-label="sort type" placeholder="{{ function.colnamesFunctionsSet[i+1]?function.colnamesFunctionsSet[i+1]:'Choose aggregation function'}}" ng-model="function.colnamesFunctionsSet[i+1]" ng-disabled="$root.readonlymode">
+               <md-option ng-repeat="val in aggrFunctions"  value = {{val}}>{{val}}</md-option>
+                 </md-select>
+        </div>
+    </div>
+</div>
+    <md-input-container flex>
+        <label>Comment</label>
+
+        <input ng-model="function.docstring" type="text" ng-readonly="$root.readonlymode">
+    </md-input-container>
+                
+</div>
+</div>

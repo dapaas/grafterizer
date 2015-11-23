@@ -1,0 +1,151 @@
+<div layout="column">
+    <div>
+        <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
+        <div class="api-doc-docstring" ng-show = "showUsage" layout="column">
+            
+            <p> Changes a row position inside a dataset. It is possible to shift row either to the specified index or to the end of the dataset. Other rows will be shifted appropriately. </p> 
+                <p> Example: 
+                 Given original dataset containing records about orders made by clients: </p>
+                <table>
+                    <tr>
+                        <td> firstName </td>
+                        <td> lastName </td>
+                        <td> orderNumber </td>
+                        <td> totalItems </td>
+                        <td> totalCost </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Smith </td>
+                        <td> 1111 </td>
+                        <td> 5 </td>
+                        <td> 150 </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> Johnson </td>
+                        <td> 857 </td>
+                        <td> 7 </td>
+                        <td> 70 </td>
+                    </tr>
+
+                    <tr>
+                        <td> Alice </td>
+                        <td> Smith </td>
+                        <td> 1112 </td>
+                        <td> 30 </td>
+                        <td> 340 </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Williams </td>
+                        <td> 505 </td>
+                        <td> 1 </td>
+                        <td> 170 </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> Johnson </td>
+                        <td> 858 </td>
+                        <td> 3 </td>
+                        <td> 370 </td>
+                    </tr>
+                    <tr>
+                        <td> Mary </td>
+                        <td> Williams </td>
+                        <td> 1543 </td>
+                        <td> 1 </td>
+                        <td> 15 </td>
+                    </tr>
+                </table>
+                <p> It is possible to shift a row number 1 to position 3: </p>
+            <p><img src="/images/shiftrow.png"></p>
+                <table>
+                    <tr>
+                        <td> firstName </td>
+                        <td> lastName </td>
+                        <td> orderNumber </td>
+                        <td> totalItems </td>
+                        <td> totalCost </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Smith </td>
+                        <td> 1111 </td>
+                        <td> 5 </td>
+                        <td> 150 </td>
+                    </tr>
+
+                    <tr>
+                        <td> Alice </td>
+                        <td> Smith </td>
+                        <td> 1112 </td>
+                        <td> 30 </td>
+                        <td> 340 </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Williams </td>
+                        <td> 505 </td>
+                        <td> 1 </td>
+                        <td> 170 </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> Johnson </td>
+                        <td> 857 </td>
+                        <td> 7 </td>
+                        <td> 70 </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> Johnson </td>
+                        <td> 858 </td>
+                        <td> 3 </td>
+                        <td> 370 </td>
+                    </tr>
+                    <tr>
+                        <td> Mary </td>
+                        <td> Williams </td>
+                        <td> 1543 </td>
+                        <td> 1 </td>
+                        <td> 15 </td>
+                    </tr>
+                </table>
+        <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
+    </div>
+    </div>
+<div>
+
+            <h3>Parameters</h3>
+
+    <md-input-container flex>
+        <label>Index from</label>
+            <input ng-model="function.indexFrom"  type="number" min="0" >
+    </md-input-container>
+
+  <div>
+    <md-radio-group ng-model="function.shiftrowmode" readonly="$root.readonlymode">
+      <md-radio-button value="position">Shift to index</md-radio-button>
+      <md-radio-button value="eods">Shift to the end of dataset</md-radio-button>
+    </md-radio-group>
+  </div>
+  <div ng-show = "function.shiftrowmode === 'position'">
+
+    <md-input-container flex>
+        <label>Index to</label>
+            <input ng-model="function.indexTo"   type="number" min="0" >
+    </md-input-container>
+  
+  </div>
+    <md-input-container flex>
+        <label>Comment</label>
+
+        <input ng-model="function.docstring" type="text"  ng-readonly="$root.readonlymode">
+    </md-input-container>
+</div>
+
+</div>
+<!--
+ng-hide="transformation.customFunctionDeclarations"
+-->

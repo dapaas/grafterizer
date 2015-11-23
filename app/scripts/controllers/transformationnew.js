@@ -32,12 +32,6 @@ angular.module('grafterizerApp')
           new transformationDataModel.CustomFunctionDeclaration('replace-varible-string',
         '(defn replace-varible-string [cell]   (-> cell  (clojure.string/replace (read-string "#\\".* #\\"") "number") (clojure.string/replace (read-string "#\\"[0-9]{4} \\"") "") ))',
         'SERVICE', ''),
-          new transformationDataModel.CustomFunctionDeclaration('add-filename-to-column',
-        '(defn add-filename-to-column [ds destination-column] (let [fname (:grafter.tabular/data-source (meta ds))] (add-column ds destination-column fname)))     ',
-        'SERVICE', ''),
-          new transformationDataModel.CustomFunctionDeclaration('remove-columns',
-        '(defn remove-columns [ds cols] (columns ds (remove (fn [item] (some (fn [a] (= item a)) cols )) (column-names ds)))) ',
-        'SERVICE', 'Given a dataset and collection of column names narrows dataset to all but specified columns'),
           new transformationDataModel.CustomFunctionDeclaration('organize-date',
         '(defn organize-date "Transform date dd/mm/yyyy ~> yyyy-mm-dd" [date] (when (seq date)  (let [[d m y] (clojure.string/split date  (read-string "#\\"/\\""))]  (apply str (interpose "-" [y m d])))))',
         'DATE FUNCTIONS', 'Transform date dd/mm/yyyy ~> yyyy-mm-dd'),
@@ -45,12 +39,6 @@ angular.module('grafterizerApp')
         '(defn double-literal [s] (if (nil? (re-matches #"[0-9.]+" s)) 0 (Double/parseDouble s)))', 'CONVERT DATATYPE', 'Coerce to double. Null and non-valid values are replaced with zero'),
           new transformationDataModel.CustomFunctionDeclaration('integer-literal',
         '(defn integer-literal [s] (if (nil? (re-matches #"[0-9.]+" s)) 0 (Integer/parseInt s)))', 'CONVERT DATATYPE', 'Coerce to integer. Null and non-valid values are replaced with zero'),
-          new transformationDataModel.CustomFunctionDeclaration('fill-when', '(defn fill-when [col] (grafter.sequences/fill-when col))', 'SERVICE',
-        'Takes a sequence of values and copies a value through the sequence depending on the supplied predicate function'
-      ),
-          new transformationDataModel.CustomFunctionDeclaration('sort-dataset', '(defn sort-dataset  [ds col] (-> (make-dataset (sort-by col (:rows ds)) (column-names ds)) (with-meta (meta ds))))', 'SERVICE',
-                         'Sorts a dataset by given column'
-                              ),
               new transformationDataModel.CustomFunctionDeclaration('transform-gender',
         '(def transform-gender {"f" (s "female") "m" (s "male")})', 'UTILITY',
         'Maps "f" to "female" and "m" to "male"'),
@@ -153,9 +141,166 @@ angular.module('grafterizerApp')
                                     new transformationDataModel.CustomFunctionDeclaration(
         '/', '', 'NUMBER', '')];
 
-    var allcustomfunctions = customfunctions.concat(predicatefunctions.concat(numericcustomfunctions));
-    $scope.clojure = '';
+    var servicefunctions = [
+          new transformationDataModel.CustomFunctionDeclaration('get-comparator', '(defn get-comparator [sorttype]'+
+            ' (let [f (cond'+
+                       '(= sorttype :ascalpha)       (fn [a b] (compare (str a) (str b))) '+
+                       '(= sorttype :descalpha)      (fn [a b] (compare (str b) (str a))) '+
+                       '(= sorttype :ascnum)         (fn [a b] (<  (Double/parseDouble (str a))  (Double/parseDouble (str b)))) '+
+                       '(= sorttype :descnum)        (fn [a b] (<  (Double/parseDouble (str b))  (Double/parseDouble (str a)))) '+
+                       '(= sorttype :asclen)         (fn [a b] (<  (count (str a))  (count (str b)))) '+
+                       '(= sorttype :desclen)        (fn [a b] (<  (count (str b))  (count (str a)))) '+
+                       '(= sorttype :ascdate)        (fn [a b] (compare (.parse (java.text.SimpleDateFormat. "dd.MM.yyyy") (str a)) '+
+                                                                       '(.parse (java.text.SimpleDateFormat. "dd.MM.yyyy") (str b)))) '+
+                       '(= sorttype :descdate)       (fn [a b] (compare (.parse (java.text.SimpleDateFormat. "dd.MM.yyyy") (str b)) '+
+                                                                       '(.parse (java.text.SimpleDateFormat. "dd.MM.yyyy") (str a)))) '+
+                       ':else '+
+                       ' (fn [a b] (compare a b)))]'+
+                'f ))'
+                       , 'SERVICE', 'Used by sort-dataset')
+          ,
+          new transformationDataModel.CustomFunctionDeclaration('sort-dataset', '(defn sort-dataset'+
+            ' [dataset colnames-sorttypes]'+
+             '(-> (make-dataset'+
+                     '(sort  (fn [a b] (loop [cs colnames-sorttypes] '+
+                                        '(let [current (first cs) '+
+                                              'f (get-comparator (val (first current))) '+
+                                              'col (key (first current))] '+
+                                              '(if  (or (= (count cs) 1) '+
+                                                       '(not= '+
+                                                           '(f (col a) (col b)) '+
+                                                           '(f (col b) (col a)))) '+
+                                                  '(f (col a) (col b)) '+
+                                                  '(recur (rest cs) ))))) '+
+                             '(:rows dataset)) '+
+                     ' (column-names dataset)) (with-meta (meta dataset))))', 'SERVICE', 'Sorts a dataset by given column(s) in given order')
+          ,
+          new transformationDataModel.CustomFunctionDeclaration('MIN', '(defn MIN [& args] (apply min (map (fn [arg] ( Double/parseDouble (str arg))) args)))', 'SERVICE',
+        'Aggregation function for use with group-rows'
+      ),
+          new transformationDataModel.CustomFunctionDeclaration('MAX', '(defn MAX [& args] (apply max (map (fn [arg] ( Double/parseDouble (str arg))) args)))', 'SERVICE',
+        'Aggregation function for use with group-rows'
+      ),
+          new transformationDataModel.CustomFunctionDeclaration('SUM', '(defn SUM [& args] (apply + (map (fn [arg] (Double/parseDouble (str arg))) args)))', 'SERVICE',
+        'Aggregation function for use with group-rows'
+      ),
+          new transformationDataModel.CustomFunctionDeclaration('COUNT', '(defn COUNT [& args] (count (into [] args)))', 'SERVICE',
+        'Aggregation function for use with group-rows'
+      ),
+          new transformationDataModel.CustomFunctionDeclaration('AVG', '(defn AVG [& args] (/ (apply SUM args) (apply COUNT args)))', 'SERVICE',
+        'Aggregation function for use with group-rows'
+      ),
+          new transformationDataModel.CustomFunctionDeclaration('group-rows', '(defn group-rows [dataset colnames colnames-functions]' +
+                     '(let [ds-rows (:rows dataset) '+
+                           'grouped-rows   (for [m (group-by (fn [k] (select-keys k colnames)) ds-rows)] '+
+                                            '(into {} (for [groupvar (key m)] '+
+                                                       '(assoc (into {} (for [keyval colnames-functions] '+
+                                                                   '(let [newcolname  (keyword (str (name (key (first keyval))) "_" (first (re-find (read-string "#\\"(?<=\\\\\\\\$)(.*?)(?=\\\\\\\\@)\\"") (str (val (first keyval)))))  ))]'+
+                                                                   '(if (and (re-find (read-string "#\\"COUNT+\\"") (str (val (first keyval))) ) '+
+                                                                           ' (= (count  (map (fn [k] (hash-map newcolname (get [k] (key (first keyval))))) (val m))) 1)) '+
+                                                                       ' (hash-map newcolname 1) '+
+                                                                           ' (apply merge-with  (val (first keyval)) '+
+                                                                               '(map (fn [k] (hash-map newcolname (get k (key (first keyval))))) (val m))))))) '+
+                                                           ' (key groupvar) (val groupvar))))) ' +
+                           'new-colnames (concat colnames (for [keyval colnames-functions] (keyword (str (name (key (first keyval))) "_" (first (re-find (read-string "#\\"(?<=\\\\\\\\$)(.*?)(?=\\\\\\\\@)\\"") (str (val (first keyval)))))  ))))]'+
+                           '(-> (make-dataset grouped-rows new-colnames)(with-meta (meta dataset)))))'
+                     
+                     , 'SERVICE',
+        'Groups rows in a dataset'
+      ),
 
+          new transformationDataModel.CustomFunctionDeclaration('split-column', 
+'(defn split-column [dataset colname separator]' +         
+'   (let [ col-pos (.indexOf (column-names dataset) colname) ' +
+          '[colon & columnname] (str colname) ' +
+          'new-rows   (->> dataset ' +
+                         ':rows ' +
+                         '(map (fn [row] ' +
+                                '(let [value-in-row (get row colname) ' +
+                                      'new-col-vals (clojure.string/split value-in-row separator) ' +
+                                      'index-last (- (count new-col-vals) 1)] ' +
+                                '(loop [i 0 rowmap row] ' +
+                                   '(if (> i index-last) ' +
+                                         'rowmap ' +
+                                         '(recur (inc i) ' +
+                                                '(assoc rowmap (keyword (str (apply str columnname) "_splitted_" (str i)))  (get new-col-vals i))))))))) ' +
+          'new-columns   (set (apply concat (->> dataset ' +
+                                               ':rows ' +
+                                               '(map (fn [row] ' +
+                                                      '(let [value-in-row (get row colname) ' +
+                                                            'new-col-vals (clojure.string/split value-in-row separator) ' +
+                                                            'index-last (- (count new-col-vals) 1)] ' +
+                                                      '(loop [i 0 newcols #{}] ' +
+                                                        '(if (> i index-last) ' +
+                                                              'newcols ' +
+                                                             '(recur (inc i)(conj newcols (keyword (str (apply str columnname) "_splitted_" (str i))) ))))))))))] ' +
+   '( -> (make-dataset new-rows ' +
+                      '(concat (subvec (column-names dataset) 0 col-pos) (sort new-columns)(subvec (column-names dataset) (+ col-pos 1)))) ' +
+       ' (with-meta (meta dataset)))))', 'SERVICE',
+        'Splits a column based on the specified separator'
+      ),
+          new transformationDataModel.CustomFunctionDeclaration('fill-when', '(defn fill-when [col] (grafter.sequences/fill-when col))', 'SERVICE',
+        'Takes a sequence of values and copies a value through the sequence depending on the supplied predicate function'
+      ),
+          new transformationDataModel.CustomFunctionDeclaration('add-filename-to-column',
+        '(defn add-filename-to-column [ds destination-column] (let [fname (:grafter.tabular/data-source (meta ds))] (add-column ds destination-column fname)))     ',
+        'SERVICE', ''),
+          new transformationDataModel.CustomFunctionDeclaration('shift-column',
+        '(defn shift-column  ([dataset column] (let [data (:rows dataset) header (column-names dataset) colname (if (keyword? column) column (get (column-names dataset) column))]  (-> (make-dataset data (conj (into [] (remove #{colname} header )) colname))  (with-meta (meta dataset))))) ([dataset column position-to]  (let [data (:rows dataset)  header (column-names dataset)   colname (if (keyword? column) column (get (column-names dataset) column))  position-from (.indexOf header colname)  last-pos (- (count header) 1)]  (-> (make-dataset data (into []   (cond (>= position-to last-pos)(shift-column colname)                (< position-from position-to)  (concat (subvec header 0 position-from)  (subvec header (+ position-from 1) (+ position-to 1))   [colname]  (subvec header (+ position-to 1)))                         (>= position-from last-pos) (concat (subvec header 0 position-to) [colname] (subvec header  position-to last-pos))                                    :else ( concat (subvec header 0 position-to) [colname]  (subvec header position-to position-from)  (subvec header (+ position-from 1)))  )  )                           )  (with-meta (meta dataset))))) ) ', 'SERVICE', 'Shift column'),
+          new transformationDataModel.CustomFunctionDeclaration('merge-columns',
+        '(defn merge-columns   ([dataset columns separator] (let [pos (.indexOf (column-names dataset) (nth columns 0))  [colon & colname] (str (nth columns 0))   tempname (keyword (str (apply str colname) "_merged_temp"))]    (-> (derive-column dataset tempname columns (fn [& strings] (clojure.string/join separator strings))) (shift-column tempname pos)  (remove-columns columns) (rename-columns {tempname (keyword (str (apply str colname)))}))  ))  ([dataset columns separator newname] (let [pos (.indexOf (column-names dataset) (nth columns 0))]  (-> (derive-column dataset newname columns (fn [& strings] (clojure.string/join separator strings)))  (shift-column newname pos)   (remove-columns columns))    ))  )', 'SERVICE', 'Merges several columns in one'),
+
+          new transformationDataModel.CustomFunctionDeclaration('remove-columns',
+        '(defn remove-columns  ([dataset cols] (columns dataset (remove (fn [item] (some (fn [a] (= item a)) cols)) (column-names dataset)))) ([dataset indexFrom indexTo] (cond (= indexTo (count (column-names dataset)))   (columns dataset (range 0 indexFrom))  :else (columns dataset (concat     (range 0 indexFrom) (range (+ indexTo 1) (count (column-names dataset))))))))', 'SERVICE', 'Removes columns from a dataset'),
+          new transformationDataModel.CustomFunctionDeclaration('add-row',
+        '(defn add-row  ( [dataset [& values]] (-> (make-dataset (:rows (incanter.core/conj-rows dataset values)) (column-names dataset))(with-meta (meta dataset)))) ( [dataset position [& values]] ( if (or (< position 0) (>= position (count (:rows dataset)))) (add-row dataset [values])  (-> (make-dataset (:rows (incanter.core/conj-rows (take-rows dataset position ) values (rows dataset (range position (count (:rows dataset)))) )) (column-names dataset)) (with-meta (meta dataset))  ))) )', 'SERVICE', 'Adds new row to a dataset'),
+          new transformationDataModel.CustomFunctionDeclaration('remove-duplicates',
+        '(defn remove-duplicates'+
+          '([dataset] (-> (make-dataset (distinct (:rows dataset)) (column-names dataset)) (with-meta (meta dataset))))'+
+          '([dataset colnames]'+
+              '(let [ ds-rows (:rows dataset)'+
+                     'grouped-rows   (for [m (group-by (fn [k] (select-keys k colnames)) ds-rows)]'    +
+                                     '(into {} (for [groupvar (key m)]'+
+                                               '(assoc (apply merge-with (fn [& args] (first (into [] args)))'+
+                                                                        '(map (fn [k] (dissoc k (key groupvar))) (val m)))'        +
+                                               '(key groupvar) (val groupvar)))))]'+
+              ' (-> (make-dataset grouped-rows (column-names dataset)) (with-meta (meta dataset)))))'+
+          '([dataset colnames separator]'+
+              '(let [ ds-rows (:rows dataset)'+
+                     'cols-to-merge (remove (fn [i] (some (fn [k] (= i k)) colnames)) (column-names dataset))'+
+                     'grouped-rows   (for [m (group-by (fn [k] (select-keys k colnames)) ds-rows)]'    +
+                                     '(into {} (for [groupvar (key m)]'+
+                                     '(assoc (into {} (for [merge-col cols-to-merge]'+
+                                                     ' (apply merge-with (fn [& args] (clojure.string/join separator (distinct (into [] args))))'+
+                                                                        '(map (fn [k] (hash-map  merge-col (get k merge-col))) (val m)))))'+
+                                             '(key groupvar) (val groupvar))))) ]'+
+              ' (-> (make-dataset grouped-rows (column-names dataset)) (with-meta (meta dataset))))))', 
+          'SERVICE', 'Removes duplicates from a dataset'),
+          new transformationDataModel.CustomFunctionDeclaration('shift-row',
+        '(defn shift-row'+
+            '( [dataset position-from]' +
+              '( -> (make-dataset (:rows (incanter.core/conj-rows (take-rows dataset position-from)'+ 
+                                                                 '(rows dataset (range (+ position-from 1) (count (:rows dataset))))'+
+                                                                 '(rows dataset [position-from])))'+
+                                 '(column-names dataset))'+
+                   '(with-meta (meta dataset))))'+
+            '( [dataset position-from position-to]' +
+              ' (let [f (+ position-from 1)'+
+                     't (+ position-to 1)'+
+                     'eods (count (:rows dataset)) ]'+
+                 '(-> (make-dataset (cond (< position-from position-to) (:rows (incanter.core/conj-rows (take-rows dataset position-from)'+
+                                                                                                       '(rows dataset (range f t))'+
+                                                                                                       '(rows dataset [position-from])'+   
+                                                                                                       '(rows dataset (range t eods))))'+
+                                         ':else (:rows (incanter.core/conj-rows (take-rows dataset position-to)'+
+                                                                               '(rows dataset [position-from])'+
+                                                                               '(rows dataset (range position-to position-from))'+
+                                                                               '(rows dataset (range f eods)))))'+
+                                   '(column-names dataset))'+
+                      '(with-meta (meta dataset))))))', 'SERVICE', 'Shifts row in a dataset')];
+    var allcustomfunctions = customfunctions.concat(predicatefunctions.concat(numericcustomfunctions));
+    allcustomfunctions = servicefunctions.concat(allcustomfunctions);
+    $scope.clojure = '';
     //Initial functions: Make dataset with first row from header and rename columns as keywords to allow referring to them
     var j;
     for (j = 0; j < customfunctions.length; ++j)
