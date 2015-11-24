@@ -17,12 +17,8 @@
     </md-input-container>
 
     <label>Columns to derive from</label>
-    <!--md-chips ng-model="function.colsToDeriveFrom" readonly="$root.readonlymode">
-        <md-chip-template>
-            <strong>{{$chip}}</strong>
-        </md-chip-template>
-    </md-chips-->
-        <oi-select oi-options="column.value for column in $root.colnames() track by column.id" ng-model="function.colsToDeriveFrom" multiple ng-disabled="$root.readonlymode"></oi-select>
+        <oi-select ng-show="$root.colnames()" oi-options="column.value for column in $root.colnames() track by column.id" ng-model="function.colsToDeriveFrom" multiple ng-disabled="$root.readonlymode"></oi-select>
+        <oi-select ng-show="!$root.colnames()" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="function.colsToDeriveFrom" multiple ng-disabled="$root.readonlymode"></oi-select>
     <br>
     <div layout="row">
         

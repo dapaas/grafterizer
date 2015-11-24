@@ -17,7 +17,8 @@
     </md-switch>
     <label>Columns to filter</label>
 
-        <oi-select oi-options="column.value for column in $root.colnames() track by column.id" multiple ng-model="function.colsToFilter" ng-disabled="$root.readonlymode"></oi-select>
+        <oi-select ng-show="$root.colnames" oi-options="column.value for column in $root.colnames() track by column.id" multiple ng-model="function.colsToFilter" ng-disabled="$root.readonlymode"></oi-select>
+        <oi-select ng-show="!$root.colnames" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" multiple ng-model="function.colsToFilter" ng-disabled="$root.readonlymode"></oi-select>
         <label> Filter condition: </label>
   <div>
     <md-radio-group ng-model="function.grepmode" readonly="$root.readonlymode">

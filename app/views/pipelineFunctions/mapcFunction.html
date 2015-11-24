@@ -16,11 +16,9 @@
             <i class="fa fa-trash fa-lg"></i>
         </md-button>
         <div layout="column">
-            <!--md-input-container-->
                 <label>Column</label>
-        <oi-select oi-options="column.value for column in $root.colnames() track by column.id" ng-model="keyFunctionPair.key" ng-disabled="$root.readonlymode"></oi-select>
-                <!--input ng-model="keyFunctionPair.key" type="text" required ng-readonly="$root.readonlymode"-->
-            <!--/md-input-container-->
+        <oi-select ng-show = "$root.colnames()" oi-options="column.value for column in $root.colnames() track by column.id" ng-model="keyFunctionPair.key" ng-disabled="$root.readonlymode"></oi-select>
+        <oi-select ng-show = "!$root.colnames()" oi-options="column.value for column in []" ng-model="keyFunctionPair.key" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-disabled="$root.readonlymode"></oi-select>
         </div>
         <div layout="column">
             <md-input-container>

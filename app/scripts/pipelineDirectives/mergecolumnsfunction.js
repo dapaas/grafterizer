@@ -18,6 +18,13 @@ angular.module('grafterizerApp')
           scope.function.docstring = null;
         }
 
+var colCtr = 0;
+scope.addColumn = function(query) {
+    return { 
+        id: colCtr++,
+        value: query
+    };
+};
         scope.$parent.generateCurrFunction = function() {
           // TODO fix selected function bug
 

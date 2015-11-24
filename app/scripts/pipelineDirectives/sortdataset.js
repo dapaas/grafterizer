@@ -23,6 +23,13 @@ angular.module('grafterizerApp')
           scope.function = newFunction;
         }
       
+var colCtr = 0;
+scope.addColumn = function(query) {
+    return { 
+        id: colCtr++,
+        value: query
+    };
+};
 scope.sortTypes = ['Alphabetical','Numerical','By length','Date'];
         scope.$parent.generateCurrFunction = function() {
           return new transformationDataModel.SortDatasetFunction(scope.function.colnamesSorttypesMap,scope.function.docstring);

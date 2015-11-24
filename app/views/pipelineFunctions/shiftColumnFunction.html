@@ -122,7 +122,8 @@
 
     <md-input-container flex>
         <label>Column name</label>
-             <oi-select flex class = "md-primary md-default-theme"  oi-options="column.value for column in $root.colnames() track by column.id" ng-model="function.colFrom" ng-disabled="$root.readonlymode"></oi-select>
+             <oi-select ng-show="$root.colnames()" flex class = "md-primary md-default-theme"  oi-options="column.value for column in $root.colnames() track by column.id" ng-model="function.colFrom" ng-disabled="$root.readonlymode"></oi-select>
+             <oi-select ng-show="!$root.colnames()" flex class = "md-primary md-default-theme"  oi-options="column.value for column in []" ng-model="function.colFrom" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-disabled="$root.readonlymode"></oi-select>
     </md-input-container>
 
   <div>

@@ -136,8 +136,9 @@
             <!--md-input-container-->
             <!--label>Priority:{{$index}}</label>
                 <label>Column</label-->
-             <oi-select flex class = "md-primary md-default-theme" style= " top:20px" oi-options="column.value for column in $root.colnames() track by column.id" ng-model="nametype.colname" ng-disabled="$root.readonlymode"></oi-select>
+             <oi-select ng-show="$root.colnames()" flex class = "md-primary md-default-theme" style= " top:20px" oi-options="column.value for column in $root.colnames() track by column.id" ng-model="nametype.colname" ng-disabled="$root.readonlymode"></oi-select>
             
+             <oi-select ng-show="!$root.colnames()" flex class = "md-primary md-default-theme" style= " top:20px" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="nametype.colname" ng-disabled="$root.readonlymode"></oi-select>
            <md-select  flex class = "md-primary md-default-theme" style= "margin-left:20px; min-width:200px" aria-label="sort type" placeholder="{{nametype.sortype?nametype.sorttype:'Choose sorting type'}}" ng-model="nametype.sorttype" ng-disabled="$root.readonlymode">
                <md-option ng-repeat="val in sortTypes"  value = {{val}}>{{val}}</md-option>
                  </md-select>

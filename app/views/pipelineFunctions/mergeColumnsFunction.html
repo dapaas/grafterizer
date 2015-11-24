@@ -119,7 +119,8 @@
             <strong>{{$chip}}</strong>
         </md-chip-template>
     </md-chips-->
-        <oi-select oi-options="column.value for column in $root.colnames() track by column.id" ng-model="function.colsToMerge" multiple ng-disabled="$root.readonlymode"></oi-select>
+        <oi-select ng-show="$root.colnames()" oi-options="column.value for column in $root.colnames() track by column.id" ng-model="function.colsToMerge" multiple ng-disabled="$root.readonlymode"></oi-select>
+        <oi-select ng-show="!$root.colnames()" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="function.colsToMerge" multiple ng-disabled="$root.readonlymode"></oi-select>
     <md-input-container flex>
         <label>Separator</label>
         <input ng-trim = "false" ng-model="function.separator" type="text" required ng-readonly="$root.readonlymode">

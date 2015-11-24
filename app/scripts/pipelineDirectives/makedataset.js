@@ -27,6 +27,13 @@ angular.module('grafterizerApp')
             scope.function.docstring);
         };
 
+var colCtr = 0;
+scope.addColumn = function(query) {
+    return { 
+        id: colCtr++,
+        value: query
+    };
+};
         if (scope.function.useLazy) {
           scope.makedatasetmode = 'fetch';
         } else if (scope.function.moveFirstRowToHeader) {

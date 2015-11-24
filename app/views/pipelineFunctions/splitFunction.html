@@ -108,10 +108,9 @@
         </div>
         <div>
         <h3>Parameters</h3>
-  <!--md-input-container flex-->
         <label>Column name</label>
-        <oi-select oi-options="column.value for column in $root.colnames() track by column.value" ng-model="function.colName" ng-disabled="$root.readonlymode"></oi-select>
-        <!--input ng-model="function.colName" type="text" required ng-readonly="$root.readonlymode">
+        <oi-select ng-show="$root.colnames" oi-options="column.value for column in $root.colnames() track by column.value" ng-model="function.colName" ng-disabled="$root.readonlymode"></oi-select>
+        <oi-select ng-show="!$root.colnames" oi-options="column.value for column in []" ng-model="function.colName" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-disabled="$root.readonlymode"></oi-select>
     </md-input-container-->
   <md-input-container flex>
         <label>Separator</label>

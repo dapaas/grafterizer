@@ -19,6 +19,13 @@ angular.module('grafterizerApp')
           scope.function.docstring = null;
         }
 
+var colCtr = 0;
+scope.addColumn = function(query) {
+    return { 
+        id: colCtr++,
+        value: query
+    };
+};
         scope.$parent.generateCurrFunction = function() {
           return new transformationDataModel.SplitFunction(
             scope.function.colName, scope.function.separator, scope.function.docstring

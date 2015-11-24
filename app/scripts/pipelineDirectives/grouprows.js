@@ -28,6 +28,14 @@ angular.module('grafterizerApp')
           return b;
         };
 scope.aggrFunctions = ['MIN','MAX','SUM','COUNT','AVG'];
+// fn to create new colname items if not in preview mode
+var colCtr = 0;
+scope.addColumn = function(query) {
+    return { 
+        id: colCtr++,
+        value: query
+    };
+};
         scope.$parent.generateCurrFunction = function() {
           return new transformationDataModel.GroupRowsFunction(scope.function.colnames, scope.function.colnamesFunctionsSet, scope.function.docstring);
         };

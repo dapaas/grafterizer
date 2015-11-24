@@ -19,7 +19,8 @@
             <strong>{{$chip}}</strong>
         </md-chip-template>
     </md-chips-->
-        <oi-select oi-options="column.value for column in $root.colnames() track by column.id" ng-model="function.columnsArray" multiple></oi-select>
+        <oi-select ng-show = "$root.colnames()" oi-options="column.value for column in $root.colnames() track by column.id" ng-model="function.columnsArray" multiple></oi-select>
+        <oi-select ng-show = "!$root.colnames()" oi-options="column.value for column in []" ng-model="function.columnsArray" multiple oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}"></oi-select>
                 
     <md-input-container flex>
         <label>Comment</label>

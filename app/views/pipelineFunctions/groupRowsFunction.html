@@ -119,7 +119,8 @@
         <h3>Parameters</h3>
         <label>Group by columns:</label> 
         <div layout = "column">
-            <oi-select flex class = "md-primary md-default-theme"  oi-options="column.value for column in $root.colnames() track by column.id" multiple ng-model="function.colnames" ng-disabled="$root.readonlymode"></oi-select>
+            <oi-select ng-show = "$root.colnames()" flex class = "md-primary md-default-theme"  oi-options="column.value for column in $root.colnames() track by column.id" multiple ng-model="function.colnames" ng-disabled="$root.readonlymode"></oi-select>
+            <oi-select ng-show = "!$root.colnames()" oi-options="item.value for item in []" flex class = "md-primary md-default-theme" style= " top:20px"  oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" multiple ng-model="function.colnames" ng-disabled="$root.readonlymode"></oi-select>
             <br>
         <label>Make aggregations on columns:</label> 
             <md-button  class="md-raised" ng-click="addAggregation()" aria-label="Add column" ng-disabled="$root.readonlymode">Add aggregated column</md-button>
@@ -128,9 +129,10 @@
          <md-button class="md-primary button-tight md-default-theme" ng-disabled="function.colnamesFunctionsSet.length === 2 || $root.readonlymode" ng-click="removeAggregation(i)" aria-label="Remove aggregation">
             <i class="fa fa-trash fa-lg"></i>
         </md-button>
-             <oi-select flex class = "md-primary md-default-theme" style= " top:20px" oi-options="column.value for column in $root.colnames() track by column.id" ng-model="function.colnamesFunctionsSet[i]" ng-disabled="$root.readonlymode"></oi-select>
+        <oi-select ng-show= "$root.colnames"  flex class = "md-primary md-default-theme" style= " top:20px" oi-options="column.value for column in $root.colnames() track by column.id" oi-select-options="{newItem: true}" ng-model="function.colnamesFunctionsSet[i]" ng-disabled="$root.readonlymode"></oi-select>
+        <oi-select ng-show = "!$root.colnames()" oi-options="item.value for item in []" flex class = "md-primary md-default-theme" style= " top:20px"  oi-select-options="{newItem: true, newItemModel: {id:0, value: $query}}" ng-model="function.colnamesFunctionsSet[i]" ng-disabled="$root.readonlymode"></oi-select>
             
-           <md-select  flex class = "md-primary md-default-theme" style= "margin-left:20px; min-width:200px" aria-label="sort type" placeholder="{{ function.colnamesFunctionsSet[i+1]?function.colnamesFunctionsSet[i+1]:'Choose aggregation function'}}" ng-model="function.colnamesFunctionsSet[i+1]" ng-disabled="$root.readonlymode">
+           <md-select  flex class = "md-primary md-default-theme" style= "margin-left:20px; min-width:250px" aria-label="sort type" placeholder="{{ function.colnamesFunctionsSet[i+1]?function.colnamesFunctionsSet[i+1]:'Choose aggregation function'}}" ng-model="function.colnamesFunctionsSet[i+1]" ng-disabled="$root.readonlymode">
                <md-option ng-repeat="val in aggrFunctions"  value = {{val}}>{{val}}</md-option>
                  </md-select>
         </div>
