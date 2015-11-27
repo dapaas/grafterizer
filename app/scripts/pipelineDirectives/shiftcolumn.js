@@ -24,6 +24,7 @@ angular.module('grafterizerApp')
           scope.function = newFunction;
         }
 
+        scope.colnames = (typeof scope.$parent.$root.colnames === 'undefined')? [] : scope.$parent.$root.colnames();
 var colCtr = 0;
 scope.addColumn = function(query) {
     return { 

@@ -14,11 +14,14 @@ angular.module('grafterizerApp')
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
         if (!scope.function) {
+            console.log(scope.$parent.transformation.customFunctionDeclarations);
+
           scope.function = new transformationDataModel.DeriveColumnFunction(
             '', [], [null], [null], null);
           scope.function.docstring = null;
         }
 
+  scope.colnames = (typeof scope.$parent.$root.colnames === 'undefined') ? [] : scope.$parent.$root.colnames();
 var colCtr = 0;
 scope.addColumn = function(query) {
     return { 

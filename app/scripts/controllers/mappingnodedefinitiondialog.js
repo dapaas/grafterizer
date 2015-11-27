@@ -106,7 +106,14 @@ angular.module('grafterizerApp')
 
     return false;
   };
-
+  $scope.colnames = (typeof $rootScope.colnames === 'undefined') ? [] : $rootScope.colnames();
+var colCtr = 0;
+$scope.addColumn = function(query) {
+    return { 
+        id: colCtr++,
+        value: query
+    };
+};
   $scope.changeType = function() {
     switch ($scope.dialogState.selectedTab) {
       case 0:
@@ -114,7 +121,7 @@ angular.module('grafterizerApp')
           if ($scope.nodeCurrentState.__type !== 'ColumnURI') {
             $scope.nodeCurrentState = new transformationDataModel.ColumnURI(
               $scope.nodeCurrentState.prefix ? $scope.nodeCurrentState.prefix : '',
-              $scope.nodeCurrentState.column ? $scope.nodeCurrentState.column : '',
+              $scope.nodeCurrentState.column ? $scope.nodeCurrentState.column.value : '',
               $scope.nodeCurrentStateSubElements ? $scope.nodeCurrentStateSubElements : []
             );
           }
@@ -133,7 +140,7 @@ angular.module('grafterizerApp')
         if ($scope.dialogState.mappingType === 'dataset-col') {
           if ($scope.nodeCurrentState.__type !== 'ColumnLiteral') {
             $scope.nodeCurrentState = new transformationDataModel.ColumnLiteral(
-              $scope.nodeCurrentState.literalValue ? $scope.nodeCurrentState.literalValue : ''
+              $scope.nodeCurrentState.literalValue.value ? $scope.nodeCurrentState.literalValue.value : ''
             );
           }
         } else {

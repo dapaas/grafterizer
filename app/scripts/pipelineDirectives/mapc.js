@@ -12,14 +12,19 @@ angular.module('grafterizerApp')
       templateUrl: 'views/pipelineFunctions/mapcFunction.html',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
-        if (!scope.function) {
+            if (!scope.function) {
           var keyfuncpair = new transformationDataModel.KeyFunctionPair(
-            '', scope.$parent.transformation.customFunctionDeclarations[0]);
-
+            '', scope.$parent.transformation.findPrefixerOrCustomFunctionByName('string-literal'),[]);
           scope.function = new transformationDataModel.MapcFunction([keyfuncpair], null);
           scope.function.docstring = null;
         }
-        
+            else
+            {
+            for (var i=0; i< scope.function.keyFunctionPairs.length; ++i) {
+                var currFunc = scope.function.keyFunctionPairs[i].func;
+                if (!currFunc.hasOwnProperty('name')) scope.function.keyFunctionPairs[i].func = scope.$parent.transformation.findPrefixerOrCustomFunctionByName(currFunc);
+            
+            }}
         // TODO fix this when Javascript adds better support for OOP: this is a "hack" to ensure that the object received is of the proper type; Needs to be done due to the way Javascript objects/classes work
         if (!(scope.function instanceof transformationDataModel.MapcFunction)) {
           var newFunction = new transformationDataModel.MapcFunction([], '');
@@ -27,6 +32,7 @@ angular.module('grafterizerApp')
           scope.function = newFunction;
         }
 
+        scope.colnames = (typeof scope.$parent.$root.colnames === 'undefined')? [] : scope.$parent.$root.colnames();
 var colCtr = 0;
 scope.addColumn = function(query) {
     return { 
@@ -40,7 +46,7 @@ scope.addColumn = function(query) {
 
         scope.addKeyFunctionPair = function() {
           var newKeyFunctionPair = new transformationDataModel.KeyFunctionPair(
-            '', /* scope.$parent.transformation.customFunctionDeclarations[0].name*/ 'string-literal');
+            '', scope.$parent.transformation.findPrefixerOrCustomFunctionByName('string-literal'),[]);
           this.function.keyFunctionPairs.push(newKeyFunctionPair);
         };
 

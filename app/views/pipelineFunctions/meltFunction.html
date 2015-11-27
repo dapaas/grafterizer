@@ -14,13 +14,8 @@
         <div>
         <h3>Parameters</h3>
         <label>Specify column names</label>
-    <!--md-chips ng-model="function.columnsArray" readonly="$root.readonlymode" >
-        <md-chip-template>
-            <strong>{{$chip}}</strong>
-        </md-chip-template>
-    </md-chips-->
-        <oi-select ng-show = "$root.colnames()" oi-options="column.value for column in $root.colnames() track by column.id" ng-model="function.columnsArray" multiple></oi-select>
-        <oi-select ng-show = "!$root.colnames()" oi-options="column.value for column in []" ng-model="function.columnsArray" multiple oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}"></oi-select>
+        <oi-select ng-show = "colnames.length !== 0" oi-options="column.value for column in colnames track by column.id" ng-model="function.columnsArray" multiple></oi-select>
+        <oi-select ng-show = "colnames.length === 0" oi-options="column.value for column in []" ng-model="function.columnsArray" multiple oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}"></oi-select>
                 
     <md-input-container flex>
         <label>Comment</label>

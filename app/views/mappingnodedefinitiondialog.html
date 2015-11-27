@@ -24,9 +24,13 @@
               <label>Select node prefix</label>
               <input ng-model="nodeCurrentState.prefix" type="text">
             </md-input-container>
-            <md-input-container flex ng-if="dialogState.mappingType=='dataset-col'">
+            <md-input-container flex ng-if="dialogState.mappingType=='dataset-col' && colnames.length !== 0">
               <label>Select column</label>
-              <input ng-model="nodeCurrentState.column" type="text">
+        <oi-select oi-options="column.value for column in colnames track by column.id" ng-model="nodeCurrentState.column" ng-disabled="$root.readonlymode"></oi-select>
+            </md-input-container>
+            <md-input-container flex ng-if="dialogState.mappingType=='dataset-col' && colnames.length === 0">
+        <oi-select ng-show="!$root.colnames()" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="nodeCurrentState.column" ng-disabled="$root.readonlymode"></oi-select>
+              <!--input ng-model="nodeCurrentState.column" type="text"-->
             </md-input-container>
             <div class="modal-dialog animate-switch-container" ng-switch on="selection" ng-if="dialogState.mappingType=='free-defined'">
               <div class="modal-content animate-switch" ng-switch-default>
@@ -81,9 +85,13 @@
               <label>Literal value</label>
               <input ng-model="nodeCurrentState.literalValue" type="text">
             </md-input-container>
-            <md-input-container flex ng-if="dialogState.mappingType=='dataset-col'">
+            <md-input-container flex ng-if="dialogState.mappingType=='dataset-col' && colnames.length !== 0 ">
               <label>Select column</label>
-              <input ng-model="nodeCurrentState.literalValue" type="text">
+              <!--input ng-model="nodeCurrentState.literalValue" type="text"-->
+        <oi-select  oi-options="column.value for column in colnames track by column.id" ng-model="nodeCurrentState.literalValue" ng-disabled="$root.readonlymode"></oi-select>
+            </md-input-container>
+            <md-input-container flex ng-if="dialogState.mappingType=='dataset-col' && colnames.length === 0">
+        <oi-select  oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="nodeCurrentState.literalValue" ng-disabled="$root.readonlymode"></oi-select>
             </md-input-container>
           </div>
         </md-tab-body>

@@ -42,6 +42,18 @@ angular.module('grafterizerApp')
   CustomFunctionDeclaration.revive = function(data) {
     return new CustomFunctionDeclaration(data.name, data.clojureCode, data.group, data.docstring);
   };
+  
+  CustomFunctionDeclaration.prototype.getParams = function() {
+    var params = [];
+    if (!this.clojureCode) return params;
+    var d = this.clojureCode.match(/\[(.*?)\]/g); 
+    if (d) {
+        d[0]=d[0].replace(/^\[|\]$/g, '');
+        params = d[0].split(" ");
+        params.splice(0,1);
+    }
+    return params;
+  };
   this.CustomFunctionDeclaration = CustomFunctionDeclaration;
 
   var DropRowsFunction = function(indexFrom, indexTo, take, docstring) {
@@ -398,7 +410,6 @@ angular.module('grafterizerApp')
     else
        this.separator = separator;
     this.__type = 'MergeColumnsFunction';
-    console.log(colsToMerge);
     if (!docstring && colsToMerge[0]) {
       this.docstring = 'Merge columns ';
       for (var i = 0; i < colsToMerge.length; ++i) {
@@ -660,18 +671,23 @@ angular.module('grafterizerApp')
   };
   this.RenameColumnsFunction = RenameColumnsFunction;
 
-  var KeyFunctionPair = function(key, funcName) {
+  var KeyFunctionPair = function(key, funcName, funcParams) {
     this.key = key;
     this.func = funcName;
+    this.funcParams = funcParams;
     this.__type = 'KeyFunctionPair';
   };
   KeyFunctionPair.revive = function(data) {
-    var key;
+    var key, params;
       if (!data.key.hasOwnProperty('id'))
           key = {id:0,value:data.key};
       else 
           key = data.key;
-      return new KeyFunctionPair(key, data.func);
+      if (!data.hasOwnProperty('funcParams'))
+          params = [];
+      else
+          params = data.funcParams;
+      return new KeyFunctionPair(key, data.func, params);
   };
   this.KeyFunctionPair = KeyFunctionPair;
 
@@ -778,15 +794,27 @@ angular.module('grafterizerApp')
     var ackeyFunctionPairsClj = new jsedn.Map([]);
     for (i = 0; i < this.keyFunctionPairs.length; ++i) {
       //TODO: Group functions by type
-      if (this.keyFunctionPairs[i].func === 'fill-when')
+      if (this.keyFunctionPairs[i].func.name === 'fill-when')
         ackeyFunctionPairsClj.set(
           new jsedn.kw(':' + this.keyFunctionPairs[i].key.value),
-          new jsedn.sym(this.keyFunctionPairs[i].func)
+          new jsedn.sym(this.keyFunctionPairs[i].func.name)
         );
       else
+          if (this.keyFunctionPairs[i].funcParams.length > 0) {
+              var funcWithParams = [new jsedn.sym(this.keyFunctionPairs[i].func.name), new jsedn.sym('arg')];
+              funcWithParams = funcWithParams.concat(this.keyFunctionPairs[i].funcParams);
+              var mapcFunc = new jsedn.List([new jsedn.sym('fn [arg]'),
+                      new jsedn.List(funcWithParams)]);
         mkeyFunctionPairsClj.set(
           new jsedn.kw(':' + this.keyFunctionPairs[i].key.value),
-          new jsedn.sym(this.keyFunctionPairs[i].func)
+          mapcFunc);
+        
+          }
+          else
+
+        mkeyFunctionPairsClj.set(
+          new jsedn.kw(':' + this.keyFunctionPairs[i].key.value),
+          new jsedn.sym(this.keyFunctionPairs[i].func.name)
         );
     }
 
@@ -1407,7 +1435,13 @@ angular.module('grafterizerApp')
   };
   ColumnURI.prototype = Object.create(URINode.prototype);
   ColumnURI.revive = function(data) {
-    return new ColumnURI(data.prefix, data.column, data.subElements);
+    var colname;
+    if (data.column.hasOwnProperty("id")) colname = data.column;
+    else colname = {
+        id:0, 
+        value:data.column
+    };
+      return new ColumnURI(data.prefix, colname, data.subElements);
   };
   this.ColumnURI = ColumnURI;
 
@@ -1461,7 +1495,13 @@ angular.module('grafterizerApp')
   };
   ColumnLiteral.prototype = Object.create(RDFElement.prototype);
   ColumnLiteral.revive = function(data) {
-    return new ColumnLiteral(data.literalValue, data.subElements);
+      var colname;
+      if (data.literalValue.hasOwnProperty("id")) colname = data.literalValue;
+      else colname = {
+          id:0,
+          value: data.literalValue
+      };
+    return new ColumnLiteral(colname, data.subElements);
   };
   this.ColumnLiteral = ColumnLiteral;
 
@@ -1678,6 +1718,9 @@ angular.module('grafterizerApp')
     }
     return false;
   };
+  Transformation.prototype.getCustomFunctionDeclarations = function() {
+      return this.customFunctionDeclarations;
+  };
   Transformation.prototype.findPrefixerOrCustomFunctionByName = function(name) {
     var i;
     for (i = 0; i < this.prefixers.length; ++i) {
@@ -1701,11 +1744,11 @@ angular.module('grafterizerApp')
       for (var i = 0; i < this.graphs[j].graphRoots.length; ++i) {
         rootNode = this.graphs[j].graphRoots[i];
         if (rootNode instanceof ColumnURI)
-          if (requestedColumnKeys.indexOf(rootNode.column) === -1)
-            requestedColumnKeys.push(rootNode.column);
+          if (requestedColumnKeys.indexOf(rootNode.column.value) === -1)
+            requestedColumnKeys.push(rootNode.column.value);
         if (rootNode instanceof ColumnLiteral)
-          if (requestedColumnKeys.indexOf(rootNode.literalValue) === -1)
-            requestedColumnKeys.push(rootNode.literalValue);
+          if (requestedColumnKeys.indexOf(rootNode.literalValue.value) === -1)
+            requestedColumnKeys.push(rootNode.literalValue.value);
         requestedColumnKeys = getKeysFromSubs(rootNode, requestedColumnKeys);
       }
 
@@ -1764,11 +1807,11 @@ angular.module('grafterizerApp')
   var getKeysFromSubs = function(rootNode, subColKeys) {
     for (var i = 0; i < rootNode.subElements.length; ++i) {
       if (rootNode.subElements[i] instanceof ColumnURI)
-        if (subColKeys.indexOf(rootNode.subElements[i].column) === -1)
-          subColKeys.push(rootNode.subElements[i].column);
+        if (subColKeys.indexOf(rootNode.subElements[i].column.value) === -1)
+          subColKeys.push(rootNode.subElements[i].column.value);
       if (rootNode.subElements[i] instanceof ColumnLiteral)
-        if (subColKeys.indexOf(rootNode.subElements[i].literalValue) === -1)
-          subColKeys.push(rootNode.subElements[i].literalValue);
+        if (subColKeys.indexOf(rootNode.subElements[i].literalValue.value) === -1)
+          subColKeys.push(rootNode.subElements[i].literalValue.value);
       getKeysFromSubs(rootNode.subElements[i], subColKeys);
     }
 

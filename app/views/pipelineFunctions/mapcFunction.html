@@ -15,18 +15,22 @@
         <md-button class="md-primary button-tight md-default-theme" ng-disabled="function.keyFunctionPairs.length === 1 || $root.readonlymode" ng-click="removeKeyFunctionPair(keyFunctionPair)" aria-label="Remove column mapping">
             <i class="fa fa-trash fa-lg"></i>
         </md-button>
-        <div layout="column">
+        <div layout="column" flex style = "min-width:200px">
                 <label>Column</label>
-        <oi-select ng-show = "$root.colnames()" oi-options="column.value for column in $root.colnames() track by column.id" ng-model="keyFunctionPair.key" ng-disabled="$root.readonlymode"></oi-select>
-        <oi-select ng-show = "!$root.colnames()" oi-options="column.value for column in []" ng-model="keyFunctionPair.key" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-disabled="$root.readonlymode"></oi-select>
+        <oi-select ng-show = "colnames.length !== 0" oi-options="column.value for column in colnames track by column.id" ng-model="keyFunctionPair.key" ng-disabled="$root.readonlymode"></oi-select>
+        <oi-select ng-show = "colnames.length === 0" oi-options="column.value for column in []" ng-model="keyFunctionPair.key" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-disabled="$root.readonlymode"></oi-select>
         </div>
-        <div layout="column">
-            <md-input-container>
-                <md-select placeholder="Choose a function..." ng-model="keyFunctionPair.func" ng-disabled="$root.readonlymode">
-                    <function-list> </function-list>
-                </md-select>
-            </md-input-container>
-        </div>
+                          <div layout="column" flex style="margin-left:20px; min-width:200px">
+                <label>Function</label>
+        <oi-select oi-options="customFunction.name group by customFunction.group for customFunction in  transformation.customFunctionDeclarations track by customFunction.$$hashKey" title="customFunction.docstring"   ng-model="keyFunctionPair.func" ng-disabled="$root.readonlymode"></oi-select>
+    </div>
+    <div layout = "row" ng-repeat = "param in keyFunctionPair.func.getParams()" >
+        <md-input-container>
+        <label>{{param}}</label>
+        <input ng-model = "keyFunctionPair.funcParams[$index]">
+        </md-input-container> 
+    
+    </div>
     </div>
 
 </div>

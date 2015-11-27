@@ -109,8 +109,8 @@
         <div>
         <h3>Parameters</h3>
         <label>Column name</label>
-        <oi-select ng-show="$root.colnames" oi-options="column.value for column in $root.colnames() track by column.value" ng-model="function.colName" ng-disabled="$root.readonlymode"></oi-select>
-        <oi-select ng-show="!$root.colnames" oi-options="column.value for column in []" ng-model="function.colName" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-disabled="$root.readonlymode"></oi-select>
+        <oi-select ng-show="colnames.length !== 0" oi-options="column.value for column in colnames track by column.value" ng-model="function.colName" ng-disabled="$root.readonlymode"></oi-select>
+        <oi-select ng-show="colnames.length === 0" oi-options="column.value for column in []" ng-model="function.colName" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-disabled="$root.readonlymode"></oi-select>
     </md-input-container-->
   <md-input-container flex>
         <label>Separator</label>

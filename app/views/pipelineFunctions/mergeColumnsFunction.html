@@ -114,13 +114,8 @@
             <h3>Parameters</h3>
 
     <label>Columns to merge</label>
-    <!--md-chips ng-model="function.colsToDeriveFrom" readonly="$root.readonlymode">
-        <md-chip-template>
-            <strong>{{$chip}}</strong>
-        </md-chip-template>
-    </md-chips-->
-        <oi-select ng-show="$root.colnames()" oi-options="column.value for column in $root.colnames() track by column.id" ng-model="function.colsToMerge" multiple ng-disabled="$root.readonlymode"></oi-select>
-        <oi-select ng-show="!$root.colnames()" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="function.colsToMerge" multiple ng-disabled="$root.readonlymode"></oi-select>
+        <oi-select ng-show="colnames.length !== 0" oi-options="column.value for column in colnames track by column.id" ng-model="function.colsToMerge" multiple ng-disabled="$root.readonlymode"></oi-select>
+        <oi-select ng-show="colnames.length === 0" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="function.colsToMerge" multiple ng-disabled="$root.readonlymode"></oi-select>
     <md-input-container flex>
         <label>Separator</label>
         <input ng-trim = "false" ng-model="function.separator" type="text" required ng-readonly="$root.readonlymode">

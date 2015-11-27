@@ -223,14 +223,15 @@
     </md-radio-group>
   </div>
   <div ng-show="function.mode !== 'full'" >
-    <md-input-container flex>
+    <md-input-container ng-show="colnames.length !== 0" flex>
         <label>Column names</label>
-        <!--input ng-model="function.colName" type="text" required ng-readonly="$root.readonlymode"-->
-        <oi-select ng-show="$root.colnames()" oi-options="column.value for column in $root.colnames() track by column.id" ng-model="function.colnames" multiple  ng-disabled="$root.readonlymode"></oi-select>
+        <oi-select oi-options="column.value for column in colnames track by column.id" ng-model="function.colnames" multiple  ng-disabled="$root.readonlymode"></oi-select>
 
-        <oi-select ng-show="!$root.colnames()" oi-options="column.value for column in []" ng-model="function.colnames" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" multiple  ng-disabled="$root.readonlymode"></oi-select>
     </md-input-container>
+    <md-input-container ng-show="colnames.length === 0" flex>
+        <oi-select  oi-options="column.value for column in []" ng-model="function.colnames" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" multiple  ng-disabled="$root.readonlymode"></oi-select>
 
+    </md-input-container>
     <div ng-show="function.mode === 'merge'">
         
             <md-input-container>

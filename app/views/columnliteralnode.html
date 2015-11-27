@@ -10,11 +10,11 @@
               <i class="fa fa-font fa-stack-1x fa-inverse"></i>
             </div>
             <div class="rdf-mapping-node-text rdf-mapping-column-name-text">
-              {{node.literalValue}}
+              {{node.literalValue.value}}
             </div>
           </div>
           <md-tooltip>
-            {{'(Column literal) ' + node.literalValue}}
+            {{'(Column literal) ' + node.literalValue.value}}
           </md-tooltip>
         </md-button>
       </md-fab-trigger>

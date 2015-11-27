@@ -39,6 +39,20 @@ angular.module('grafterizerApp')
         '(defn double-literal [s] (if (nil? (re-matches #"[0-9.]+" s)) 0 (Double/parseDouble s)))', 'CONVERT DATATYPE', 'Coerce to double. Null and non-valid values are replaced with zero'),
           new transformationDataModel.CustomFunctionDeclaration('integer-literal',
         '(defn integer-literal [s] (if (nil? (re-matches #"[0-9.]+" s)) 0 (Integer/parseInt s)))', 'CONVERT DATATYPE', 'Coerce to integer. Null and non-valid values are replaced with zero'),
+          new transformationDataModel.CustomFunctionDeclaration('convert-to-integer-literal',
+        '(defn convert-to-integer-literal [n on-empty on-error]' +
+                  '(letfn [(str->int [x] (unchecked-int (Double/parseDouble (str x))))' +
+                          '(clean-commas [x] (clojure.string/replace (str x) #"," ""))]' +
+                          '(cond (or (nil? n) (empty? (clean-commas n))) (str->int on-empty)' +
+                                '(nil? (re-matches #"[0-9.]+" (clean-commas n))) (str->int on-error)' +
+                                ':else (str->int (clean-commas n) ) )))', 'CONVERT DATATYPE', 'Convert to integer, commas are ignored, values for null and empty values are defined by user'),
+          new transformationDataModel.CustomFunctionDeclaration('convert-to-double-literal',
+        '(defn convert-to-double-literal [n on-empty on-error]' +
+                  '(letfn [(str->dbl [x] (Double/parseDouble (str x)))' +
+                          '(clean-commas [x] (clojure.string/replace (str x) #"," ""))]' +
+                          '(cond (or (nil? n) (empty? (clean-commas n))) (str->dbl on-empty)' +
+                                '(nil? (re-matches #"[0-9.]+" (clean-commas n))) (str->dbl on-error)' +
+                                ':else (str->dbl (clean-commas n) ) )))', 'CONVERT DATATYPE', 'Convert to double, commas are ignored, values for null and empty values are defined by user'),
               new transformationDataModel.CustomFunctionDeclaration('transform-gender',
         '(def transform-gender {"f" (s "female") "m" (s "male")})', 'UTILITY',
         'Maps "f" to "female" and "m" to "male"'),
@@ -46,6 +60,8 @@ angular.module('grafterizerApp')
         '(defn stringToNumeric    [x] (if (= "" x) nil  (if (.contains x ".") (Double/parseDouble x)(Integer/parseInt x))))',
         'CONVERT DATATYPE', 'Convert string to numeric'),
           new transformationDataModel.CustomFunctionDeclaration('string-literal', '(def string-literal s)',
+        'CONVERT DATATYPE', 'Coerce to string'),
+          new transformationDataModel.CustomFunctionDeclaration('string-literal-with-lang', '(defn string-literal-with-lang [str lang] (s str lang))',
         'CONVERT DATATYPE', 'Coerce to string'),
           new transformationDataModel.CustomFunctionDeclaration('boolean', '', 'CONVERT DATATYPE', 'Coerce to boolean'),
           new transformationDataModel.CustomFunctionDeclaration('count', '', 'COLLECTION',
@@ -247,9 +263,9 @@ angular.module('grafterizerApp')
         'SERVICE', ''),
           new transformationDataModel.CustomFunctionDeclaration('shift-column',
         '(defn shift-column  ([dataset column] (let [data (:rows dataset) header (column-names dataset) colname (if (keyword? column) column (get (column-names dataset) column))]  (-> (make-dataset data (conj (into [] (remove #{colname} header )) colname))  (with-meta (meta dataset))))) ([dataset column position-to]  (let [data (:rows dataset)  header (column-names dataset)   colname (if (keyword? column) column (get (column-names dataset) column))  position-from (.indexOf header colname)  last-pos (- (count header) 1)]  (-> (make-dataset data (into []   (cond (>= position-to last-pos)(shift-column colname)                (< position-from position-to)  (concat (subvec header 0 position-from)  (subvec header (+ position-from 1) (+ position-to 1))   [colname]  (subvec header (+ position-to 1)))                         (>= position-from last-pos) (concat (subvec header 0 position-to) [colname] (subvec header  position-to last-pos))                                    :else ( concat (subvec header 0 position-to) [colname]  (subvec header position-to position-from)  (subvec header (+ position-from 1)))  )  )                           )  (with-meta (meta dataset))))) ) ', 'SERVICE', 'Shift column'),
-          new transformationDataModel.CustomFunctionDeclaration('merge-columns',
+         /* new transformationDataModel.CustomFunctionDeclaration('merge-columns',
         '(defn merge-columns   ([dataset columns separator] (let [pos (.indexOf (column-names dataset) (nth columns 0))  [colon & colname] (str (nth columns 0))   tempname (keyword (str (apply str colname) "_merged_temp"))]    (-> (derive-column dataset tempname columns (fn [& strings] (clojure.string/join separator strings))) (shift-column tempname pos)  (remove-columns columns) (rename-columns {tempname (keyword (str (apply str colname)))}))  ))  ([dataset columns separator newname] (let [pos (.indexOf (column-names dataset) (nth columns 0))]  (-> (derive-column dataset newname columns (fn [& strings] (clojure.string/join separator strings)))  (shift-column newname pos)   (remove-columns columns))    ))  )', 'SERVICE', 'Merges several columns in one'),
-
+*/
           new transformationDataModel.CustomFunctionDeclaration('remove-columns',
         '(defn remove-columns  ([dataset cols] (columns dataset (remove (fn [item] (some (fn [a] (= item a)) cols)) (column-names dataset)))) ([dataset indexFrom indexTo] (cond (= indexTo (count (column-names dataset)))   (columns dataset (range 0 indexFrom))  :else (columns dataset (concat     (range 0 indexFrom) (range (+ indexTo 1) (count (column-names dataset))))))))', 'SERVICE', 'Removes columns from a dataset'),
           new transformationDataModel.CustomFunctionDeclaration('add-row',

@@ -325,12 +325,12 @@ angular.module('grafterizerApp')
     }
 
     if (node instanceof transformationDataModel.ColumnLiteral) {
-      if (node.literalValue.trim() === '') {
+      if (node.literalValue.value.trim() === '') {
         alertInterface('Empty column literal mapping found!');
       }
 
       // return the value as symbol
-      return new jsedn.sym(node.literalValue);
+      return new jsedn.sym(node.literalValue.value);
     }
 
     if (node instanceof transformationDataModel.ConstantLiteral) {
@@ -496,7 +496,7 @@ angular.module('grafterizerApp')
   function constructColumnURINodeJsEdn(colURINode, containingGraph) {
     // graph URI as prefix, add nothing
     var nodePrefix = colURINode.prefix;
-    var nodeValue = colURINode.column;
+    var nodeValue = colURINode.column.value;
     if (nodePrefix === null || nodePrefix === undefined) {
       // base graph URI
       // ((prefixer "graphURI") nodeValue)

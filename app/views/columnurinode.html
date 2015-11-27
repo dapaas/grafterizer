@@ -13,12 +13,12 @@
             <div class="rdf-mapping-node-text">
               <div class="rdf-mapping-prefix-text">{{node.prefix ? '(' + node.prefix + ')' : 'no prefix'}}</div>
               <div class="rdf-mapping-node-text rdf-mapping-column-name-text">
-                {{node.column}}
+                {{node.column.value}}
               </div>
             </div>
           </div>
           <md-tooltip>
-            {{node.prefix ? '(Column URI) ' + node.prefix + ':' + node.column : '(Column URI) ' + node.column}}
+            {{node.prefix ? '(Column URI) ' + node.prefix + ':' + node.column.value : '(Column URI) ' + node.column.value}}
           </md-tooltip>
         </md-button>
       </md-fab-trigger>
