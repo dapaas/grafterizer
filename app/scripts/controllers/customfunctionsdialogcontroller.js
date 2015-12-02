@@ -134,6 +134,7 @@ angular.module('grafterizerApp')
       '*': true,
       '/': true,
       'empty?': true,
+      'not-empty?': true,
       'every?': true,
       'false?': true,
       'rational?': true,
