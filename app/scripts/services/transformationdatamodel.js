@@ -192,8 +192,7 @@ angular.module('grafterizerApp')
         default:
           newColMap.set(
             new jsedn.kw(':' + this.columnsArray[i].colName),
-            new jsedn.kw(':' + this.columnsArray[i].colName),
-            '' + this.columnsArray[i].colValue
+            this.columnsArray[i].colValue
           );
           break;
       }
