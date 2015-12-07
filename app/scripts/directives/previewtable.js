@@ -128,7 +128,7 @@ angular.module('grafterizerApp')
 
         scope.gridOptions.columnDefs =
           _.map(data[':column-names'], function(f) {
-          if(f === null || f === undefined) {
+          if (f === null || f === undefined) {
             f = 'EMPTY COLUMN HEADER';
             $mdToast.show(
               $mdToast.simple()
