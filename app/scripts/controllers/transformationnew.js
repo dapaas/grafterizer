@@ -123,8 +123,10 @@ angular.module('grafterizerApp')
 
     });
 
-    var predicatefunctions = [new transformationDataModel.CustomFunctionDeclaration(
-        'empty?', '', 'PREDICATE', 'Returns true if given collection has no items'), new transformationDataModel.CustomFunctionDeclaration(
+    var predicatefunctions = [
+      new transformationDataModel.CustomFunctionDeclaration('empty?', '', 'PREDICATE', 'Returns true if given collection has no items'),
+      new transformationDataModel.CustomFunctionDeclaration('not-empty?', '', 'PREDICATE', 'Returns true if given collection has at least 1 item'),
+      new transformationDataModel.CustomFunctionDeclaration(
         'every?', '', 'PREDICATE',
         'Returns true if first argument predicate is logical true for every x in collection, else false'), new transformationDataModel
       .CustomFunctionDeclaration(

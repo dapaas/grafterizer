@@ -1088,13 +1088,12 @@ angular.module('grafterizerApp')
     var i;
     var colNamesClj = new jsedn.Vector([]);
     // var moveFirst = this.moveFirstRowToHeader?" move-first-row-to-header":"";
-    if (this.useLazy === false) {
+    if (!this.useLazy) {
       if (this.columnsArray.length > 0) {
         // (make-dataset [columns])
         for (i = 0; i < this.columnsArray.length; ++i) {
           colNamesClj.val.push(new jsedn.kw(':' + this.columnsArray[i].value));
         }
-
         return new jsedn.List([jsedn.sym('make-dataset'), colNamesClj]);
       } else {
         if (this.moveFirstRowToHeader) {
