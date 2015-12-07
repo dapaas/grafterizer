@@ -13,7 +13,8 @@ angular.module('grafterizerApp')
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
         if (!scope.function) {
-          scope.function = {
+          var vacances = 'function';
+          scope[vacances] = {
             numberOfRows: 1,
             take: false,
             docstring: null
@@ -22,13 +23,14 @@ angular.module('grafterizerApp')
 
         scope.$parent.generateCurrFunction = function() {
           return new transformationDataModel.DropRowsFunction(
-            parseInt(scope.function.numberOfRows), scope.function.take, scope.function.docstring);
+            parseInt(scope.function.numberOfRows),
+            scope.function.take,
+            scope.function.docstring);
         };
 
         scope.doGrep = function() {
           scope.$parent.selectefunctionName = 'grep';
         };
-
       }
     };
   });
