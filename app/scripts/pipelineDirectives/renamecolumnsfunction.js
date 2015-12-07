@@ -18,14 +18,15 @@ angular.module('grafterizerApp')
           scope.function.docstring = null;
         }
 
-        scope.colnames = (typeof scope.$parent.$root.colnames === 'undefined')? [] : scope.$parent.$root.colnames();
-var colCtr = 0;
-scope.addColumn = function(query) {
-    return { 
-        id: colCtr++,
-        value: query
-    };
-};
+        scope.colnames = (typeof scope.$parent.$root.colnames === 'undefined') ? [] : scope.$parent.$root.colnames();
+        var colCtr = 0;
+        scope.addColumn = function(query) {
+          return {
+            id: colCtr++,
+            value: query
+          };
+        };
+
         scope.$parent.generateCurrFunction = function() {
           var functArray = [];
           var newrenfunc;

@@ -150,7 +150,7 @@ angular.module('grafterizerApp')
         if (nbEmptyColumnsFound > 0) {
           $mdToast.show(
             $mdToast.simple()
-            .content('Warning: ' + nbEmptyColumnsFound + ' column header'
+            .content('Warning: ' + nbEmptyColumnsFound + ' column header' +
               (nbEmptyColumnsFound > 1 ? 's' : '') +
               ' are empty. This may cause unexpected errors - please correct your transformation! ')
             .position('bottom right')

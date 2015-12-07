@@ -27,14 +27,15 @@ angular.module('grafterizerApp')
             scope.function.docstring);
         };
 
-  scope.colnames = (typeof scope.$parent.$root.colnames === 'undefined') ? [] : scope.$parent.$root.colnames();
-var colCtr = 0;
-scope.addColumn = function(query) {
-    return { 
-        id: colCtr++,
-        value: query
-    };
-};
+        scope.colnames = (typeof scope.$parent.$root.colnames === 'undefined') ? [] : scope.$parent.$root.colnames();
+        var colCtr = 0;
+        scope.addColumn = function(query) {
+          return {
+            id: colCtr++,
+            value: query
+          };
+        };
+
         if (scope.function.useLazy) {
           scope.makedatasetmode = 'fetch';
         } else if (scope.function.moveFirstRowToHeader) {

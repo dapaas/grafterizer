@@ -18,17 +18,17 @@ angular.module('grafterizerApp')
           scope.function.docstring = null;
         }
 
-  scope.colnames = (typeof scope.$parent.$root.colnames === 'undefined') ? [] : scope.$parent.$root.colnames();
-var colCtr = 0;
-scope.addColumn = function(query) {
-    return { 
-        id: colCtr++,
-        value: query
-    };
-};
+        scope.colnames = (typeof scope.$parent.$root.colnames === 'undefined') ? [] : scope.$parent.$root.colnames();
+        var colCtr = 0;
+        scope.addColumn = function(query) {
+            return {
+                id: colCtr++,
+                value: query
+            };
+        };
+
         scope.$parent.generateCurrFunction = function() {
- 
-return new transformationDataModel.ColumnsFunction(scope.function.columnsArray,
+          return new transformationDataModel.ColumnsFunction(scope.function.columnsArray,
             scope.function.indexFrom,
             scope.function.indexTo,
             scope.function.take,
