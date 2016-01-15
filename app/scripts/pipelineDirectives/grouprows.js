@@ -24,7 +24,7 @@ angular.module('grafterizerApp')
       
         scope.getSetLength = function(num) {
           var b = [];
-          for (var i = 0; i <num; i += 2) b.push(i);
+          for (var i = 0; i < num; i += 2) b.push(i);
           return b;
         };
 scope.aggrFunctions = ['MIN','MAX','SUM','COUNT','AVG','MERGE'];
@@ -41,11 +41,10 @@ scope.addColumn = function(query) {
           return new transformationDataModel.GroupRowsFunction(scope.function.colnames, scope.function.colnamesFunctionsSet, scope.function.separatorSet, scope.function.docstring);
         };
         scope.addAggregation = function() {
-            scope.function.colnamesFunctionsSet.push(null,null);
-
-      };
+            scope.function.colnamesFunctionsSet.push(null, null);
+        };
         scope.removeAggregation = function(index) {
-            this.function.colnamesFunctionsSet.splice(index,2);
+            this.function.colnamesFunctionsSet.splice(index, 2);
         };
       }
     };

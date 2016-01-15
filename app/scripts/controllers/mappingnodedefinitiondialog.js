@@ -109,7 +109,7 @@ angular.module('grafterizerApp')
   $scope.colnames = (typeof $rootScope.colnames === 'undefined') ? [] : $rootScope.colnames();
 var colCtr = 0;
 $scope.addColumn = function(query) {
-    return { 
+    return {
         id: colCtr++,
         value: query
     };

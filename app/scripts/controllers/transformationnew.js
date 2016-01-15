@@ -99,9 +99,9 @@ angular.module('grafterizerApp')
           new transformationDataModel.CustomFunctionDeclaration('upper-case',
         '', 'STRING', 'Converts string to all upper-case'),
           new transformationDataModel.CustomFunctionDeclaration('reverse', '', 'STRING', 'Returns given string with its characters reversed'),
-          new transformationDataModel.CustomFunctionDeclaration('string-as-keyword', '(defn string-as-keyword [s] ( when (seq s) (->   (str s) clojure.string/trim   (clojure.string/replace "(" "-") (clojure.string/replace ")" "") (clojure.string/replace " " "_") (clojure.string/replace "," "-") (clojure.string/replace "." "") (clojure.string/replace "/" "-") (clojure.string/replace "---" "-") (clojure.string/replace "--" "-") (clojure.string/replace ":" "") (clojure.string/replace "\\"" "") )))','STRING','Removes blanks and special symbols from a string thus making it possible to use it as a keyword'),
-          new transformationDataModel.CustomFunctionDeclaration('remove-blanks', '(defn remove-blanks [s]  (when (seq s)  (clojure.string/replace s " " "")))','STRING','Removes blanks in a string'),
-          new transformationDataModel.CustomFunctionDeclaration('titleize', '(defn titleize [st] (when (seq st) (let [a (clojure.string/split st (read-string "#\\" \\"")) c (map clojure.string/capitalize a)]  (->> c (interpose " ") (apply str) trim))))','STRING','Capitalizes each word in a string'),
+          new transformationDataModel.CustomFunctionDeclaration('string-as-keyword', '(defn string-as-keyword [s] ( when (seq s) (->   (str s) clojure.string/trim   (clojure.string/replace "(" "-") (clojure.string/replace ")" "") (clojure.string/replace " " "_") (clojure.string/replace "," "-") (clojure.string/replace "." "") (clojure.string/replace "/" "-") (clojure.string/replace "---" "-") (clojure.string/replace "--" "-") (clojure.string/replace ":" "") (clojure.string/replace "\\"" "") )))', 'STRING', 'Removes blanks and special symbols from a string thus making it possible to use it as a keyword'),
+          new transformationDataModel.CustomFunctionDeclaration('remove-blanks', '(defn remove-blanks [s]  (when (seq s)  (clojure.string/replace s " " "")))', 'STRING', 'Removes blanks in a string'),
+          new transformationDataModel.CustomFunctionDeclaration('titleize', '(defn titleize [st] (when (seq st) (let [a (clojure.string/split st (read-string "#\\" \\"")) c (map clojure.string/capitalize a)]  (->> c (interpose " ") (apply str) trim))))', 'STRING', 'Capitalizes each word in a string'),
           new transformationDataModel.CustomFunctionDeclaration('trim', '', 'STRING', 'Removes whitespace from both ends of string'),
           new transformationDataModel.CustomFunctionDeclaration('trim-newline',
         '', 'STRING', 'Removes all trailing newline \n or return \r characters from string'),
@@ -123,8 +123,10 @@ angular.module('grafterizerApp')
 
     });
 
-    var predicatefunctions = [new transformationDataModel.CustomFunctionDeclaration(
-        'empty?', '', 'PREDICATE', 'Returns true if given collection has no items'), new transformationDataModel.CustomFunctionDeclaration(
+    var predicatefunctions = [
+      new transformationDataModel.CustomFunctionDeclaration('empty?', '', 'PREDICATE', 'Returns true if given collection has no items'),
+      new transformationDataModel.CustomFunctionDeclaration('not-empty?', '', 'PREDICATE', 'Returns true if given collection has at least 1 item'),
+      new transformationDataModel.CustomFunctionDeclaration(
         'every?', '', 'PREDICATE',
         'Returns true if first argument predicate is logical true for every x in collection, else false'), new transformationDataModel
       .CustomFunctionDeclaration(
@@ -158,39 +160,36 @@ angular.module('grafterizerApp')
         '/', '', 'NUMBER', '')];
 
     var servicefunctions = [
-          new transformationDataModel.CustomFunctionDeclaration('get-comparator', '(defn get-comparator [sorttype]'+
-            ' (let [f (cond'+
-                       '(= sorttype :ascalpha)       (fn [a b] (compare (str a) (str b))) '+
-                       '(= sorttype :descalpha)      (fn [a b] (compare (str b) (str a))) '+
-                       '(= sorttype :ascnum)         (fn [a b] (<  (Double/parseDouble (str a))  (Double/parseDouble (str b)))) '+
-                       '(= sorttype :descnum)        (fn [a b] (<  (Double/parseDouble (str b))  (Double/parseDouble (str a)))) '+
-                       '(= sorttype :asclen)         (fn [a b] (<  (count (str a))  (count (str b)))) '+
-                       '(= sorttype :desclen)        (fn [a b] (<  (count (str b))  (count (str a)))) '+
-                       '(= sorttype :ascdate)        (fn [a b] (compare (.parse (java.text.SimpleDateFormat. "dd.MM.yyyy") (str a)) '+
-                                                                       '(.parse (java.text.SimpleDateFormat. "dd.MM.yyyy") (str b)))) '+
-                       '(= sorttype :descdate)       (fn [a b] (compare (.parse (java.text.SimpleDateFormat. "dd.MM.yyyy") (str b)) '+
-                                                                       '(.parse (java.text.SimpleDateFormat. "dd.MM.yyyy") (str a)))) '+
-                       ':else '+
-                       ' (fn [a b] (compare a b)))]'+
-                'f ))'
-                       , 'SERVICE', 'Used by sort-dataset')
-          ,
-          new transformationDataModel.CustomFunctionDeclaration('sort-dataset', '(defn sort-dataset'+
-            ' [dataset colnames-sorttypes]'+
-             '(-> (make-dataset'+
-                     '(sort  (fn [a b] (loop [cs colnames-sorttypes] '+
-                                        '(let [current (first cs) '+
-                                              'f (get-comparator (val (first current))) '+
-                                              'col (key (first current))] '+
-                                              '(if  (or (= (count cs) 1) '+
-                                                       '(not= '+
-                                                           '(f (col a) (col b)) '+
-                                                           '(f (col b) (col a)))) '+
-                                                  '(f (col a) (col b)) '+
-                                                  '(recur (rest cs) ))))) '+
-                             '(:rows dataset)) '+
-                     ' (column-names dataset)) (with-meta (meta dataset))))', 'SERVICE', 'Sorts a dataset by given column(s) in given order')
-          ,
+          new transformationDataModel.CustomFunctionDeclaration('get-comparator', '(defn get-comparator [sorttype]' +
+            ' (let [f (cond' +
+                       '(= sorttype :ascalpha)       (fn [a b] (compare (str a) (str b))) ' +
+                       '(= sorttype :descalpha)      (fn [a b] (compare (str b) (str a))) ' +
+                       '(= sorttype :ascnum)         (fn [a b] (<  (Double/parseDouble (str a))  (Double/parseDouble (str b)))) ' +
+                       '(= sorttype :descnum)        (fn [a b] (<  (Double/parseDouble (str b))  (Double/parseDouble (str a)))) ' +
+                       '(= sorttype :asclen)         (fn [a b] (<  (count (str a))  (count (str b)))) ' +
+                       '(= sorttype :desclen)        (fn [a b] (<  (count (str b))  (count (str a)))) ' +
+                       '(= sorttype :ascdate)        (fn [a b] (compare (.parse (java.text.SimpleDateFormat. "dd.MM.yyyy") (str a)) ' +
+                                                                       '(.parse (java.text.SimpleDateFormat. "dd.MM.yyyy") (str b)))) ' +
+                       '(= sorttype :descdate)       (fn [a b] (compare (.parse (java.text.SimpleDateFormat. "dd.MM.yyyy") (str b)) ' +
+                                                                       '(.parse (java.text.SimpleDateFormat. "dd.MM.yyyy") (str a)))) ' +
+                       ':else ' +
+                       ' (fn [a b] (compare a b)))]' +
+                'f ))', 'SERVICE', 'Used by sort-dataset'),
+          new transformationDataModel.CustomFunctionDeclaration('sort-dataset', '(defn sort-dataset' +
+            ' [dataset colnames-sorttypes]' +
+             '(-> (make-dataset' +
+                     '(sort  (fn [a b] (loop [cs colnames-sorttypes] ' +
+                                        '(let [current (first cs) ' +
+                                              'f (get-comparator (val (first current))) ' +
+                                              'col (key (first current))] ' +
+                                              '(if  (or (= (count cs) 1) ' +
+                                                       '(not= ' +
+                                                           '(f (col a) (col b)) ' +
+                                                           '(f (col b) (col a)))) ' +
+                                                  '(f (col a) (col b)) ' +
+                                                  '(recur (rest cs) ))))) ' +
+                             '(:rows dataset)) ' +
+                     ' (column-names dataset)) (with-meta (meta dataset))))', 'SERVICE', 'Sorts a dataset by given column(s) in given order'),
           new transformationDataModel.CustomFunctionDeclaration('MIN', '(defn MIN [& args] (apply min (map (fn [arg] ( Double/parseDouble (str arg))) args)))', 'SERVICE',
         'Aggregation function for use with group-rows'
       ),
@@ -239,8 +238,8 @@ angular.module('grafterizerApp')
         'Groups rows in a dataset'
       ),
 
-          new transformationDataModel.CustomFunctionDeclaration('split-column', 
-'(defn split-column [dataset colname separator]' +         
+          new transformationDataModel.CustomFunctionDeclaration('split-column',
+'(defn split-column [dataset colname separator]' +
 '   (let [ col-pos (.indexOf (column-names dataset) colname) ' +
           '[colon & columnname] (str colname) ' +
           'new-rows   (->> dataset ' +
@@ -285,26 +284,26 @@ angular.module('grafterizerApp')
           new transformationDataModel.CustomFunctionDeclaration('add-row',
         '(defn add-row  ( [dataset [& values]] (-> (make-dataset (:rows (incanter.core/conj-rows dataset values)) (column-names dataset))(with-meta (meta dataset)))) ( [dataset position [& values]] ( if (or (< position 0) (>= position (count (:rows dataset)))) (add-row dataset [values])  (-> (make-dataset (:rows (incanter.core/conj-rows (take-rows dataset position ) values (rows dataset (range position (count (:rows dataset)))) )) (column-names dataset)) (with-meta (meta dataset))  ))) )', 'SERVICE', 'Adds new row to a dataset'),
           new transformationDataModel.CustomFunctionDeclaration('remove-duplicates',
-        '(defn remove-duplicates'+
-          '([dataset] (-> (make-dataset (distinct (:rows dataset)) (column-names dataset)) (with-meta (meta dataset))))'+
-          '([dataset colnames]'+
-              '(let [ ds-rows (:rows dataset)'+
+        '(defn remove-duplicates' +
+          '([dataset] (-> (make-dataset (distinct (:rows dataset)) (column-names dataset)) (with-meta (meta dataset))))' +
+          '([dataset colnames]' +
+              '(let [ ds-rows (:rows dataset)' +
                      'grouped-rows   (for [m (group-by (fn [k] (select-keys k colnames)) ds-rows)]'    +
-                                     '(into {} (for [groupvar (key m)]'+
-                                               '(assoc (apply merge-with (fn [& args] (first (into [] args)))'+
+                                     '(into {} (for [groupvar (key m)]' +
+                                               '(assoc (apply merge-with (fn [& args] (first (into [] args)))' +
                                                                         '(map (fn [k] (dissoc k (key groupvar))) (val m)))'        +
                                                '(key groupvar) (val groupvar)))))]'+
               ' (-> (make-dataset grouped-rows (column-names dataset)) (with-meta (meta dataset)))))'+
           ')', 
           'SERVICE', 'Removes duplicates from a dataset'),
           new transformationDataModel.CustomFunctionDeclaration('shift-row',
-        '(defn shift-row'+
+        '(defn shift-row' +
             '( [dataset position-from]' +
-              '( -> (make-dataset (:rows (incanter.core/conj-rows (take-rows dataset position-from)'+ 
-                                                                 '(rows dataset (range (+ position-from 1) (count (:rows dataset))))'+
-                                                                 '(rows dataset [position-from])))'+
-                                 '(column-names dataset))'+
-                   '(with-meta (meta dataset))))'+
+              '( -> (make-dataset (:rows (incanter.core/conj-rows (take-rows dataset position-from)' +
+                                                                 '(rows dataset (range (+ position-from 1) (count (:rows dataset))))' +
+                                                                 '(rows dataset [position-from])))' +
+                                 '(column-names dataset))' +
+                   '(with-meta (meta dataset))))' +
             '( [dataset position-from position-to]' +
               ' (let [f (+ position-from 1)'+
                      't (+ position-to 1)'+

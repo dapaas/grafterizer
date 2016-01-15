@@ -38,8 +38,7 @@ scope.addColumn = function(query) {
     };
 };
         scope.$parent.generateCurrFunction = function() {
- 
-return new transformationDataModel.ColumnsFunction(scope.function.columnsArray,
+          return new transformationDataModel.ColumnsFunction(scope.function.columnsArray,
             scope.function.indexFrom,
             scope.function.indexTo,
             scope.function.take,

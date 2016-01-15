@@ -26,10 +26,10 @@
             </md-input-container>
             <md-input-container flex ng-if="dialogState.mappingType=='dataset-col' && colnames.length !== 0">
               <label>Select column</label>
-        <oi-select oi-options="column.value for column in colnames track by column.id" ng-model="nodeCurrentState.column" ng-disabled="$root.readonlymode"></oi-select>
+              <oi-select oi-options="column.value for column in colnames track by column.id" ng-model="nodeCurrentState.column" ng-disabled="$root.readonlymode"></oi-select>
             </md-input-container>
             <md-input-container flex ng-if="dialogState.mappingType=='dataset-col' && colnames.length === 0">
-        <oi-select ng-show="!$root.colnames()" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="nodeCurrentState.column" ng-disabled="$root.readonlymode"></oi-select>
+              <oi-select ng-show="!$root.colnames()" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="nodeCurrentState.column" ng-disabled="$root.readonlymode"></oi-select>
               <!--input ng-model="nodeCurrentState.column" type="text"-->
             </md-input-container>
             <div class="modal-dialog animate-switch-container" ng-switch on="selection" ng-if="dialogState.mappingType=='free-defined'">
@@ -45,7 +45,7 @@
                       </div>
                     </md-input-container>
                     <md-button aria-label='search' class="md-icon-button fa fa-search" ng-click="search(propertyValue.value)"></md-button>
-                    </div>
+                  </div>
                 </form>
                 <h5 align="center" ng-show="showSearchEmptyResult">No matched result</h5>
                 <div ng-show="showSearchResult" >
@@ -88,10 +88,10 @@
             <md-input-container flex ng-if="dialogState.mappingType=='dataset-col' && colnames.length !== 0 ">
               <label>Select column</label>
               <!--input ng-model="nodeCurrentState.literalValue" type="text"-->
-        <oi-select  oi-options="column.value for column in colnames track by column.id" ng-model="nodeCurrentState.literalValue" ng-disabled="$root.readonlymode"></oi-select>
+              <oi-select  oi-options="column.value for column in colnames track by column.id" ng-model="nodeCurrentState.literalValue" ng-disabled="$root.readonlymode"></oi-select>
             </md-input-container>
             <md-input-container flex ng-if="dialogState.mappingType=='dataset-col' && colnames.length === 0">
-        <oi-select  oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="nodeCurrentState.literalValue" ng-disabled="$root.readonlymode"></oi-select>
+              <oi-select  oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="nodeCurrentState.literalValue" ng-disabled="$root.readonlymode"></oi-select>
             </md-input-container>
           </div>
         </md-tab-body>
