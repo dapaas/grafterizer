@@ -120,12 +120,12 @@
 
             <h3>Parameters</h3>
 
-    <md-input-container fng-show="colnames.length !== 0" lex>
+    <md-input-container ng-show="colnames.length !== 0" lex>
         <label>Column name</label>
              <oi-select flex class = "md-primary md-default-theme"  oi-options="column.value for column in colnames track by column.id" ng-model="function.colFrom" ng-disabled="$root.readonlymode"></oi-select>
     </md-input-container>
-    <md-input-container fng-show="colnames.length === 0" lex>
-             <oi-select ng-show="!$root.colnames()" flex class = "md-primary md-default-theme"  oi-options="column.value for column in []" ng-model="function.colFrom" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-disabled="$root.readonlymode"></oi-select>
+    <md-input-container ng-show="colnames.length === 0" lex>
+             <oi-select  flex class = "md-primary md-default-theme"  oi-options="column.value for column in []" ng-model="function.colFrom" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-disabled="$root.readonlymode"></oi-select>
     </md-input-container>
 
   <div>

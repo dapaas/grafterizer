@@ -8,7 +8,7 @@
  * Service in the grafterizerApp.
  */
 angular.module('grafterizerApp')
-  .service('generateClojure', function(transformationDataModel) {
+  .service('generateClojure', function(transformationDataModel,$rootScope) {
   /***************************************************************************
      * Main Grafter/Clojure generation variables and functions.
      ****************************************************************************/
@@ -220,6 +220,8 @@ angular.module('grafterizerApp')
 
   /* Constructs and returns the data transformation pipeline. */
   function constructPipeline() {
+//      console.log($rootScope.CSVdelim);
+ //     var separator = $rootScope.CSVdelim?$rootScope.CSVdelim:'\\,';
     var readDatasetFunct = new jsedn.List([
       new jsedn.sym('read-dataset'),
       new jsedn.sym('data-file')
@@ -235,7 +237,7 @@ angular.module('grafterizerApp')
       new jsedn.List([jsedn.sym('->'), readDatasetFunct])]);
 
     pipelineFunctions.map(function(arg) {
-      pipeline.val[4].val.push(arg);
+    pipeline.val[4].val.push(arg);
     });
 
     //(read-dataset data-file :format :csv)

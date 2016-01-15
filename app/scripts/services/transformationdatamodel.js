@@ -43,17 +43,6 @@ angular.module('grafterizerApp')
     return new CustomFunctionDeclaration(data.name, data.clojureCode, data.group, data.docstring);
   };
   
-  CustomFunctionDeclaration.prototype.getParams = function() {
-    var params = [];
-    if (!this.clojureCode) return params;
-    var d = this.clojureCode.match(/\[(.*?)\]/g); 
-    if (d) {
-        d[0]=d[0].replace(/^\[|\]$/g, '');
-        params = d[0].split(" ");
-        params.splice(0,1);
-    }
-    return params;
-  };
   this.CustomFunctionDeclaration = CustomFunctionDeclaration;
 
   var DropRowsFunction = function(indexFrom, indexTo, take, docstring) {
@@ -82,6 +71,8 @@ angular.module('grafterizerApp')
   };
   DropRowsFunction.prototype = Object.create(GenericFunction.prototype);
   DropRowsFunction.prototype.generateClojure = function() {
+      if (this.take === false && this.indexFrom === 0) 
+          return new jsedn.List([jsedn.sym('drop-rows'),this.indexTo]);
       var values = [jsedn.sym('rows')];
       if (this.take) values.push(new jsedn.List([jsedn.sym('range'),
                                                  this.indexFrom, 
@@ -173,7 +164,6 @@ angular.module('grafterizerApp')
   };
   AddColumnsFunction.prototype = Object.create(GenericFunction.prototype);
   AddColumnsFunction.prototype.generateClojure = function() {
-      console.log(this);
     var i;
     var newRownumMap = new jsedn.Map([]);
     var newColMap = new jsedn.Map([]);
@@ -420,7 +410,7 @@ angular.module('grafterizerApp')
     }
   };
   MergeColumnsFunction.revive = function(data) {
-    return new MergeColumnsFunction(data,colsToMerge, data.separator, data.newColName,
+    return new MergeColumnsFunction(data.colsToMerge, data.separator, data.newColName,
                                     data.docstring);
   };
   MergeColumnsFunction.prototype = Object.create(GenericFunction.prototype);
@@ -439,13 +429,51 @@ angular.module('grafterizerApp')
     else return new jsedn.List([new jsedn.sym('merge-columns'),colsToMerge, new jsedn.sym('"'+this.separator+'"'), this.newColName ? new jsedn.kw(':'+this.newColName) : null ]);*/
   };
   this.MergeColumnsFunction = MergeColumnsFunction;
-  var DeriveColumnFunction = function(newColName, colsToDeriveFrom, functionsToDeriveWith, paramsToFunctions, docstring) {
+  
+  var FunctionWithArgs = function(funct, functParams) {
+    this.funct = funct;
+    this.functParams = functParams;
+    this.__type = 'FunctionWithArgs';
+  };
+  FunctionWithArgs.prototype.getParams = function() {
+    var params = [];
+    if (!this.funct) return params;
+    if (!this.funct.hasOwnProperty('clojureCode')) return params;
+    if (!this.funct.clojureCode) return params;
+    var d = this.funct.clojureCode.match(/\[(.*?)\]/g); 
+    if (d) {
+        d[0]=d[0].replace(/^\[|\]$/g, '');
+        params = d[0].split(" ");
+        params.splice(0,1);
+    }
+    return params;
+  };
+  
+  FunctionWithArgs.revive = function(data) {
+      return new FunctionWithArgs(data.funct, data.functParams);
+  };
+  this.FunctionWithArgs = FunctionWithArgs;
+
+  
+  var DeriveColumnFunction = function(newColName, colsToDeriveFrom, functionsToDeriveWith,  docstring) {
     GenericFunction.call(this);
     this.newColName = newColName;
     this.colsToDeriveFrom = colsToDeriveFrom;
     this.name = 'derive-column';
     this.displayName = 'derive-column';
-    this.paramsToFunctions = paramsToFunctions;
+    var i;
+    var funct_args;
+    if (functionsToDeriveWith !== null) {
+        for (i=0; i<functionsToDeriveWith.length; ++i) {
+            funct_args = functionsToDeriveWith[i];
+            if (funct_args !== null) {
+                if (!funct_args instanceof FunctionWithArgs) {
+                    functionsToDeriveWith[i] = new FunctionWithArgs(funct_args);
+                }
+            }
+        }
+    }
+  /*  this.paramsToFunctions = paramsToFunctions;
     var deriveFunc;
     var i;
 
@@ -464,7 +492,7 @@ angular.module('grafterizerApp')
         }
       }
     }
-
+*/
     this.functionsToDeriveWith = functionsToDeriveWith;
     this.__type = 'DeriveColumnFunction';
     if (!docstring) {
@@ -485,7 +513,28 @@ angular.module('grafterizerApp')
           }
       }
       else columnsArray = data.colsToDeriveFrom;
-    return new DeriveColumnFunction(data.newColName, columnsArray, data.functionsToDeriveWith, data.paramsToFunctions,
+      var functionsArray = [];
+      
+      for (var i = 0; i < data.functionsToDeriveWith.length; ++i) {
+          if (data.functionsToDeriveWith[i] instanceof FunctionWithArgs === false){
+              var newFunct;
+              if (data.functionsToDeriveWith[i].__type === 'FunctionWithArgs') {
+               
+                  newFunct = FunctionWithArgs.revive(data.functionsToDeriveWith[i]);
+              functionsArray.push(newFunct);
+              }
+              else {
+                  newFunct = {name:data.functionsToDeriveWith[i].name,
+                                id:0,
+                                group:(data.functionsToDeriveWith[i].hasOwnProperty('group')?data.functionsToDeriveWith[i].group:'PREFIXERS')};
+               
+//               var newFunct = new FunctionWithArgs({funct:data.functionsToDeriveWith[i],functParams:[]});
+              functionsArray.push(new FunctionWithArgs(newFunct,[]));
+              }
+          }
+          else functionsArray.push(data.functionsToDeriveWith[i]);
+      }
+    return new DeriveColumnFunction(data.newColName, columnsArray, functionsArray, data.paramsToFunctions,
                                     data.docstring);
   };
   DeriveColumnFunction.prototype = Object.create(GenericFunction.prototype);
@@ -494,7 +543,6 @@ angular.module('grafterizerApp')
     var flag = false;
     var deriveFunc;
     var i;
-
     for (i = 0; i < this.colsToDeriveFrom.length; ++i) {
       colsToDeriveFromClj.val.push(new jsedn.kw(':' + this.colsToDeriveFrom[i].value));
       flag = true;
@@ -503,9 +551,27 @@ angular.module('grafterizerApp')
     var values = [jsedn.sym('derive-column'),
                   this.newColName ? new jsedn.kw(':' + this.newColName) : new jsedn.kw(':unnamed'),
                   colsToDeriveFromClj];
+    var deriveFuncts = [];
+    for (i = 0; i< this.functionsToDeriveWith.length; ++i)
+    { if (this.functionsToDeriveWith[i].functParams.length === 0)
+        deriveFuncts.push(new jsedn.sym(this.functionsToDeriveWith[i].funct.name));
+        else {
+            functWithParams = [new jsedn.sym(this.functionsToDeriveWith[i].funct.name), new jsedn.sym('arg')];
+            functWithParams = functWithParams.concat(this.functionsToDeriveWith[i].functParams);
+            deriveFuncts.push(new jsedn.List([new jsedn.sym('fn [arg]'),
+                        new jsedn.List(functWithParams)]));
+        }
+    }
+    if (deriveFuncts.length === 1) {
+    values.push(deriveFuncts[0]);
+    }
+    else {
+      var compFuncts = ['comp'];
+      compFuncts = compFuncts.concat(deriveFuncts);
+      values.push(new jsedn.List(compFuncts));
+    }
 
-    if (this.functionsToDeriveWith.length === 1) {
-      if (this.paramsToFunctions[0]) values.push(new jsedn.List([jsedn.sym(this.functionsToDeriveWith[0].name),
+     /*   if (this.paramsToFunctions[0]) values.push(new jsedn.List([jsedn.sym(this.functionsToDeriveWith[0].name),
                                                                  '' + this.paramsToFunctions[0]]));
       else
         values.push(jsedn.sym(this.functionsToDeriveWith[0].name));
@@ -520,17 +586,18 @@ angular.module('grafterizerApp')
 
       values.push(new jsedn.List([jsedn.sym(comp)]));
     }
-
+*/
     return new jsedn.List(values);
   };
   this.DeriveColumnFunction = DeriveColumnFunction;
 
-  var GroupRowsFunction = function(colnames, colnamesFunctionsSet, docstring) {
+  var GroupRowsFunction = function(colnames, colnamesFunctionsSet, separatorSet, docstring) {
     GenericFunction.call(this);
     this.name = 'group-rows';
     this.displayName = 'group-rows';
     this.colnames = colnames;
     this.colnamesFunctionsSet = colnamesFunctionsSet;
+    this.separatorSet = separatorSet;
     this.__type = 'GroupRowsFunction';
     if (!docstring) {
       this.docstring = 'Group rows by column(s): ';
@@ -544,7 +611,7 @@ angular.module('grafterizerApp')
     }
   };
   GroupRowsFunction.revive = function(data) {
-    return new GroupRowsFunction(data.colnames, data.colnamesFunctionsSet, data.docstring);
+    return new GroupRowsFunction(data.colnames, data.colnamesFunctionsSet, data.separatorSet, data.docstring);
   };
   GroupRowsFunction.prototype = Object.create(GenericFunction.prototype);
   GroupRowsFunction.prototype.generateClojure = function() {
@@ -556,7 +623,7 @@ angular.module('grafterizerApp')
     for (var i=0;i< this.colnamesFunctionsSet.length; i+=2) {
         var colnameFunctionPair = new jsedn.Map([]);
         colnameFunctionPair.set(new jsedn.kw(':' + this.colnamesFunctionsSet[i].value),
-                                jsedn.sym(this.colnamesFunctionsSet[i+1]));
+                                (this.colnamesFunctionsSet[i+1] === "MERGE"?this.separatorSet[i]:jsedn.sym(this.colnamesFunctionsSet[i+1])));
         set.val.push(colnameFunctionPair);
     }
 
@@ -623,7 +690,6 @@ angular.module('grafterizerApp')
   };
   RenameColumnsFunction.revive = function(data) {
       var mappings = [];
-      console.log(data);
       if (data.mappings.length > 0)
         if  (data.mappings[0] && !data.mappings[0].hasOwnProperty('id')) {
         for (var i=0; i< data.mappings.length; ++i) {
@@ -655,7 +721,6 @@ angular.module('grafterizerApp')
       }
     } else {
       //rename with mapping
-        console.log(this.mappings);
       var mapPairs = new jsedn.Map([]);
       for (i = 0; i < this.mappings.length; i += 2)
         mapPairs.set(new jsedn.kw(':' + this.mappings[i].value),
@@ -678,8 +743,9 @@ angular.module('grafterizerApp')
     this.__type = 'KeyFunctionPair';
   };
   KeyFunctionPair.revive = function(data) {
-    var key, params;
-      if (!data.key.hasOwnProperty('id'))
+    var key;
+    var params = [];
+    if (!data.key.hasOwnProperty('id'))
           key = {id:0,value:data.key};
       else 
           key = data.key;
@@ -688,6 +754,18 @@ angular.module('grafterizerApp')
       else
           params = data.funcParams;
       return new KeyFunctionPair(key, data.func, params);
+  };
+  KeyFunctionPair.prototype.getParams = function() {
+    var params = [];
+    if (!this.func.hasOwnProperty('clojureCode')) return params;
+    if (!this.func.clojureCode) return params;
+    var d = this.func.clojureCode.match(/\[(.*?)\]/g); 
+    if (d) {
+        d[0]=d[0].replace(/^\[|\]$/g, '');
+        params = d[0].split(" ");
+        params.splice(0,1);
+    }
+    return params;
   };
   this.KeyFunctionPair = KeyFunctionPair;
 
@@ -784,7 +862,7 @@ angular.module('grafterizerApp')
     this.__type = 'MapcFunction';
   };
   MapcFunction.revive = function(data) {
-
+     
     return new MapcFunction(data.keyFunctionPairs, data.docstring);
   };
   MapcFunction.prototype = Object.create(GenericFunction.prototype);
@@ -984,7 +1062,7 @@ angular.module('grafterizerApp')
     };
 
   ShiftRowFunction.revive = function(data) {
-      return new ShiftRowFunction(data.indexFrom, data.indexTo, data.shfitrowmode, data.docstring);
+      return new ShiftRowFunction(data.indexFrom, data.indexTo, data.shiftrowmode, data.docstring);
   };
 
   ShiftRowFunction.prototype = Object.create(GenericFunction.prototype);
@@ -1009,7 +1087,7 @@ angular.module('grafterizerApp')
     };
 
   ShiftColumnFunction.revive = function(data) {
-      return new ShiftColumnFunction(data.colFrom, data.indexTo, data.shfitcolmode, data.docstring);
+      return new ShiftColumnFunction(data.colFrom, data.indexTo, data.shiftcolmode, data.docstring);
   };
 
   ShiftColumnFunction.prototype = Object.create(GenericFunction.prototype);
@@ -1047,9 +1125,9 @@ angular.module('grafterizerApp')
     
     values.push(colNamesClj);
     }
-    if (this.mode === 'merge')
+    /*if (this.mode === 'merge')
         values.push(this.separator);
-    
+    */
     return new jsedn.List(values);
   };
   this.RemoveDuplicatesFunction = RemoveDuplicatesFunction;
@@ -1087,16 +1165,7 @@ angular.module('grafterizerApp')
     //(make-dataset [:name :sex :age])
     var i;
     var colNamesClj = new jsedn.Vector([]);
-    // var moveFirst = this.moveFirstRowToHeader?" move-first-row-to-header":"";
-    if (this.useLazy === false) {
-      if (this.columnsArray.length > 0) {
-        // (make-dataset [columns])
-        for (i = 0; i < this.columnsArray.length; ++i) {
-          colNamesClj.val.push(new jsedn.kw(':' + this.columnsArray[i].value));
-        }
-
-        return new jsedn.List([jsedn.sym('make-dataset'), colNamesClj]);
-      } else {
+    if (this.useLazy !== true) {
         if (this.moveFirstRowToHeader) {
           return new jsedn.List([
             jsedn.sym('->'),
@@ -1109,11 +1178,26 @@ angular.module('grafterizerApp')
                            ])
           ]);
         }
-        else return new jsedn.List([jsedn.sym('make-dataset')]);
-      }
+        else {
+            if (this.columnsArray.length > 0) {
+                for (i = 0; i < this.columnsArray.length; ++i) {
+                    colNamesClj.val.push(new jsedn.kw(':' + this.columnsArray[i].value));
+                }
+
+                return new jsedn.List([jsedn.sym('make-dataset'), colNamesClj]);
+            } 
+            
+            else return new jsedn.List([jsedn.sym('make-dataset')]);
+        }
     } else {
       // make dataset with lazy naming
-      return new jsedn.List([jsedn.sym('make-dataset'), new jsedn.List([jsedn.sym('range'), this.numberOfColumns])]);
+      return new jsedn.List([jsedn.sym('make-dataset'), 
+                             new jsedn.List([jsedn.sym('into []'), 
+                                             new jsedn.List([jsedn.sym('map'),
+                                                             jsedn.sym('keyword'),
+                                                             new jsedn.List([jsedn.sym('take'),
+                                                                             this.numberOfColumns,
+                                                                             new jsedn.List([jsedn.sym('grafter.sequences/alphabetical-column-names')])])])])]);
     }
   };
   this.MakeDatasetFunction = MakeDatasetFunction;
@@ -1154,7 +1238,6 @@ angular.module('grafterizerApp')
           }
       }
       else columnsArray = data.columnsArray;
-      console.log(data);
       var indexFrom,indexTo;
       if ( data.hasOwnProperty('numberOfColumns')) {
           indexFrom = 0;
@@ -1179,13 +1262,24 @@ angular.module('grafterizerApp')
       return new jsedn.List([jsedn.sym((this.take ? 'columns' : 'remove-columns')), colNamesClj]);
     } else {
       return this.take? new jsedn.List([jsedn.sym('columns'),
-                                        new jsedn.List([jsedn.sym('range'), this.indexFrom, this.indexTo])]) : 
+                                        new jsedn.List([jsedn.sym('range'), this.indexFrom, this.indexTo+1])]) : 
                         new jsedn.List([jsedn.sym('remove-columns'),
                                         this.indexFrom, this.indexTo]);
     }
 
   };
   this.ColumnsFunction = ColumnsFunction;
+
+  var ChangeColtype = function(columnName, datatype) {
+      this.name = 'changeColtype';
+      this.displayName = 'change-type';
+      GenericFunction.call(this);
+      this.columnName = columnName;
+      this.datatype = datatype;
+      this.docstring = 'Change datatype of column ' + columnName + ' to ' + datatype;
+  }
+ this.ChangeColtype = ChangeColtype;
+
 
   var MeltFunction = function(columnsArray, docstring) {
     // array of column names
@@ -1662,7 +1756,37 @@ angular.module('grafterizerApp')
 
   };
   Transformation.revive = function(data) {
-    return new Transformation(data.customFunctionDeclarations, data.prefixers, data.pipelines, data.graphs, data.rdfVocabs);
+    var pipelines = [];
+    for (var a = 0; a< data.pipelines.length; ++a) {
+        var currPipeline = data.pipelines[a];
+        var functions = [];
+        for (var i = 0; i< data.pipelines[a].functions.length; ++i) {
+            var currFunct = data.pipelines[a].functions[i];
+            if (currFunct.__type === 'MapcFunction') {
+                for (var j = 0; j < currFunct.keyFunctionPairs.length; ++j) {
+                    if (!currFunct.keyFunctionPairs[j].func.hasOwnProperty('name')) {
+                        for (var k = 0; k < data.customFunctionDeclarations.length; ++k) { 
+                            if (data.customFunctionDeclarations[k].name === currFunct.keyFunctionPairs[j].func) currFunct.keyFunctionPairs[j].func = {
+                                name:data.customFunctionDeclarations[k].name,
+                                group:data.customFunctionDeclarations[k].group,
+                                id:0};
+                        }
+                        for (var k = 0; k < data.prefixers.length; ++k) { 
+                            if (data.prefixers[k].name === currFunct.keyFunctionPairs[j].func) currFunct.keyFunctionPairs[j].func = {name:data.prefixers[k].name,
+                                group:'PREFIXERS',
+                                    id:0};
+                        }
+                    }
+                }
+                functions.push(currFunct);
+            }
+            else
+            functions.push(currFunct);
+    }
+        currPipeline.functions = functions;
+        pipelines.push(currPipeline);
+    }
+    return new Transformation(data.customFunctionDeclarations, data.prefixers, pipelines, data.graphs, data.rdfVocabs);
   };
   Transformation.prototype.addGraphAfter = function(graph, graphToAdd) {
 
@@ -1770,7 +1894,7 @@ angular.module('grafterizerApp')
 
         if (currentFunction instanceof AddColumnsFunction) {
           for (k = 0; k < currentFunction.columnsArray.length; ++k)
-            availableColumnKeys.push(currentFunction.columnsArray[k].colName.value);
+            availableColumnKeys.push(currentFunction.columnsArray[k].colName);
         }
 
         if (currentFunction instanceof MeltFunction) {

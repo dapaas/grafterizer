@@ -2,14 +2,12 @@
     <div>
         <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
             <div class="api-doc-docstring" ng-show = "showUsage" layout="column">
-            <p> Removes duplicates from a dataset. There are three possible ways to deduplicate a dataset: </p>
+            <p> Removes duplicates from a dataset. There are two possible ways to deduplicate a dataset: </p>
             <ol>
                 <li> Remove full duplicates
                 <p> Looks for records containing the same values across all columns and leaves only one instance from each set of such rows, other rows(duplicates) will be removed from a dataset </p>
                 <li> Remove duplicates on column(set of columns) and leave only the first value
                 <p> Looks for records having the same values in the specified field(s) and leaves only the first encountered row in this sequence. It is recommended that the dataset is sorted in appropriate order before this way of dataset deduplication is used</p>
-                <li> Remove duplicates on column(set of columns) and merge all values
-                <p> Looks for records having the same values in the specified field(s) and creates only one record for each group of duplicates by merging all distinct not empty values together using specified separator </p>
             </ol>
 
                 <p> Example: </p>
@@ -169,48 +167,6 @@
                         <td> 278-32-169 </td>
                     </tr>
                 </table>
-            <p> To create dataset with one row for each person containing information about all order dates, address (or addresses if there were several different) and phone number(or numbers) it is possible to use the third way of dataset deduplication. Result looks as follows: </p>
-
-            <p>
-                <img src="/images/removeduplicates3.png"/>
-            </p>
-                <table>
-                    <tr>
-                        <td> firstName </td>
-                        <td> lastName </td>
-                        <td> orderDate </td>
-                        <td> address </td>
-                        <td> phoneNumber </td>
-                    </tr>
-                    <tr>
-                        <td> Alice </td>
-                        <td> Smith </td>
-                        <td> 10.11.2015; 20.11.2015 </td>
-                        <td> New York, Harrison Street, 507; New York, Harrison Street, 29, H0512 </td>
-                        <td> 263-86-335 </td>
-                    </tr>
-                    <tr>
-                        <td> Bob </td>
-                        <td> Johnson </td>
-                        <td> 13.11.2015; 26.11.2015 </td>
-                        <td> Richmond, Main Street, 17 </td>
-                        <td> 227-11-594; 482-16-177 </td>
-                    </tr>
-                    <tr>
-                        <td> Alice </td>
-                        <td> Williams </td>
-                        <td> 25.11.2015 </td>
-                        <td> New York, East 52nd Street, 55 </td>
-                        <td> 493-78-145 </td>
-                    </tr>
-                    <tr>
-                        <td> Mary </td>
-                        <td> Williams </td>
-                        <td> 29.11.2015 </td>
-                        <td> Florida, Orange, Orlando, East Winter Park Road, 1842 </td>
-                        <td> 278-32-169 </td>
-                    </tr>
-                </table>
         <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
             </div>
     <div>
@@ -219,26 +175,26 @@
     <md-radio-group ng-model="function.mode" readonly="$root.readonlymode">
       <md-radio-button value="full">Remove full duplicates</md-radio-button>
       <md-radio-button value="colnames">Remove duplicates on column (set of columns) and leave only the first value</md-radio-button>
-      <md-radio-button value="merge">Remove duplicates on column (set of columns) and merge all values</md-radio-button>
+      <!--md-radio-button value="merge">Remove duplicates on column (set of columns) and merge all values</md-radio-button-->
     </md-radio-group>
   </div>
   <div ng-show="function.mode !== 'full'" >
     <md-input-container ng-show="colnames.length !== 0" flex>
         <label>Column names</label>
-        <oi-select oi-options="column.value for column in colnames track by column.id" ng-model="function.colnames" multiple  ng-disabled="$root.readonlymode"></oi-select>
+        <oi-select oi-options="column.value for column in colnames track by column.id" ng-model="function.colNames" multiple  ng-disabled="$root.readonlymode"></oi-select>
 
     </md-input-container>
     <md-input-container ng-show="colnames.length === 0" flex>
-        <oi-select  oi-options="column.value for column in []" ng-model="function.colnames" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" multiple  ng-disabled="$root.readonlymode"></oi-select>
+        <oi-select  oi-options="column.value for column in []" ng-model="function.colNames" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" multiple  ng-disabled="$root.readonlymode"></oi-select>
 
     </md-input-container>
-    <div ng-show="function.mode === 'merge'">
+    <!--div ng-show="function.mode === 'merge'">
         
             <md-input-container>
             <label>Separator </label>
                 <input ng-model="function.separator" ng-trim="false" type="text" ng-readonly="$root.readonlymode">
             </md-input-container>
-</div>    
+</div-->    
 </div>    
 
 <md-input-container flex>

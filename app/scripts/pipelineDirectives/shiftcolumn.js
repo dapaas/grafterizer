@@ -26,12 +26,8 @@ angular.module('grafterizerApp')
 
         scope.colnames = (typeof scope.$parent.$root.colnames === 'undefined')? [] : scope.$parent.$root.colnames();
 var colCtr = 0;
-scope.addColumn = function(query) {
-    return { 
-        id: colCtr++,
-        value: query
-    };
-};
+
+
         scope.$parent.generateCurrFunction = function() {
           return new transformationDataModel.ShiftColumnFunction(scope.function.colFrom, scope.function.indexTo, scope.function.shiftcolmode, scope.function.docstring);
         };

@@ -35,10 +35,10 @@ scope.addColumn = function(query) {
         value: query
     };
 };
-        if (scope.function.useLazy) {
-          scope.makedatasetmode = 'fetch';
-        } else if (scope.function.moveFirstRowToHeader) {
+        if (scope.function.moveFirstRowToHeader) {
           scope.makedatasetmode = 'header';
+        } else if (scope.function.useLazy) {
+          scope.makedatasetmode = 'fetch';
         } else {
           scope.makedatasetmode = 'specify';
         }

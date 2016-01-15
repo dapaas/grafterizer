@@ -7,7 +7,7 @@
  * # previewTable
  */
 angular.module('grafterizerApp')
-  .directive('previewTable', function($q,$rootScope) {
+  .directive('previewTable', function($q,$rootScope,transformationDataModel, $mdDialog) {
 
     var paginationSize = 100;
 
@@ -29,6 +29,8 @@ angular.module('grafterizerApp')
           showHeader: !attrs.hasOwnProperty('hideHeaders'),
           exporterMenuCsv: true,
           exporterMenuPdf: false,
+          converterDelimiter: true,
+          delimiter: '\\,',
           enableGridMenu: true,
           enableMinHeightCheck: false,
           infiniteScrollUp: false,
@@ -136,14 +138,31 @@ angular.module('grafterizerApp')
                 displayName: colNameString,
                 width: width,
                 minWidth: minWidth,
-                cellTooltip: true
+                cellTooltip: true,
+               /* menuItems: [          
+                    {
+                      title: 'Assign data type',
+                      action: function() {
+                          var newScope = scope.$new(false,scope);
+                          newScope.transformation = $rootScope.transformation;
+                          newScope.colName = colNameString;
+                          $mdDialog.show({
+                              templateUrl :'views/pipelineFunctions/assignDatatypeDialog.html',
+                              controller: 'AssignDatatypeControllerCtrl',
+                              scope: newScope,
+                              clickOutsideToClose: true
+                          }).then(function(newFunct) {
+                          });
+                          
+
+                      }
+                    }]*/
               };
             });
 
           if (scope.gridApi) {
             scope.gridApi.infiniteScroll.dataLoaded(false, rows.length >= paginationSize);
           }
-
 $rootScope.colnames = function() {
     var i;
     var namesArray = [];

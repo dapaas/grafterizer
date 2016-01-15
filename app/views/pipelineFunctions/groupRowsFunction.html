@@ -10,6 +10,7 @@
                     <li> SUM -- find summation of values in group
                     <li> AVG -- find average value in group
                     <li> COUNT -- find number of non-empty values in group
+                    <li> MERGE -- merge together all distinct values in group separated by user-specified separator
                 </ul>
 
                 <p> Example: 
@@ -135,6 +136,12 @@
            <md-select  flex class = "md-primary md-default-theme" style= "margin-left:20px; min-width:250px" aria-label="sort type" placeholder="{{ function.colnamesFunctionsSet[i+1]?function.colnamesFunctionsSet[i+1]:'Choose aggregation function'}}" ng-model="function.colnamesFunctionsSet[i+1]" ng-disabled="$root.readonlymode">
                <md-option ng-repeat="val in aggrFunctions"  value = {{val}}>{{val}}</md-option>
                  </md-select>
+    <md-input-container flex ng-show="function.colnamesFunctionsSet[i+1] === 'MERGE'">
+        <label>Separator</label>
+
+        <input ng-model="function.separatorSet[i]" ng-trim="false" type="text" ng-readonly="$root.readonlymode">
+    </md-input-container>
+                 
         </div>
     </div>
 </div>

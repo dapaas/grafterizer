@@ -85,8 +85,8 @@
     </div>
   <div>
     <md-radio-group ng-model="columnsmode" readonly="$root.readonlymode">
-      <md-radio-button value="names">Specify column names</md-radio-button>
-      <md-radio-button value="indices">Specify range of column indices</md-radio-button>
+      <md-radio-button value="names" >Specify column names</md-radio-button>
+      <md-radio-button value="indices" >Specify range of column indices</md-radio-button>
     </md-radio-group>
   </div>
   <br>
@@ -94,8 +94,8 @@
     </div>
   <div ng-show = "columnsmode === 'names'">
         <label>Specify column names</label>
-        <oi-select ng-show="colnames.length !== 0" oi-options="column.value for column in colnames track by column.id" ng-model="function.columnsarray" multiple></oi-select>
-        <oi-select ng-show="colnames.length === 0" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="function.columnsarray" multiple></oi-select>
+        <oi-select ng-show="colnames.length !== 0" oi-options="column.value for column in colnames track by column.id" ng-model="function.columnsArray" multiple></oi-select>
+        <oi-select ng-show="colnames.length === 0" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="function.columnsArray" multiple></oi-select>
     </div>
     <div ng-show = "columnsmode === 'indices'"> 
         <div layout = "row">

@@ -39,7 +39,7 @@ angular.module('grafterizerApp')
         '(defn double-literal [s] (if (nil? (re-matches #"[0-9.]+" s)) 0 (Double/parseDouble s)))', 'CONVERT DATATYPE', 'Coerce to double. Null and non-valid values are replaced with zero'),
           new transformationDataModel.CustomFunctionDeclaration('integer-literal',
         '(defn integer-literal [s] (if (nil? (re-matches #"[0-9.]+" s)) 0 (Integer/parseInt s)))', 'CONVERT DATATYPE', 'Coerce to integer. Null and non-valid values are replaced with zero'),
-          new transformationDataModel.CustomFunctionDeclaration('convert-to-integer-literal',
+/*          new transformationDataModel.CustomFunctionDeclaration('convert-to-integer-literal',
         '(defn convert-to-integer-literal [n on-empty on-error]' +
                   '(letfn [(str->int [x] (unchecked-int (Double/parseDouble (str x))))' +
                           '(clean-commas [x] (clojure.string/replace (str x) #"," ""))]' +
@@ -53,7 +53,7 @@ angular.module('grafterizerApp')
                           '(cond (or (nil? n) (empty? (clean-commas n))) (str->dbl on-empty)' +
                                 '(nil? (re-matches #"[0-9.]+" (clean-commas n))) (str->dbl on-error)' +
                                 ':else (str->dbl (clean-commas n) ) )))', 'CONVERT DATATYPE', 'Convert to double, commas are ignored, values for null and empty values are defined by user'),
-              new transformationDataModel.CustomFunctionDeclaration('transform-gender',
+  */            new transformationDataModel.CustomFunctionDeclaration('transform-gender',
         '(def transform-gender {"f" (s "female") "m" (s "male")})', 'UTILITY',
         'Maps "f" to "female" and "m" to "male"'),
           new transformationDataModel.CustomFunctionDeclaration('stringToNumeric',
@@ -211,14 +211,28 @@ angular.module('grafterizerApp')
                            'grouped-rows   (for [m (group-by (fn [k] (select-keys k colnames)) ds-rows)] '+
                                             '(into {} (for [groupvar (key m)] '+
                                                        '(assoc (into {} (for [keyval colnames-functions] '+
-                                                                   '(let [newcolname  (keyword (str (name (key (first keyval))) "_" (first (re-find (read-string "#\\"(?<=\\\\\\\\$)(.*?)(?=\\\\\\\\@)\\"") (str (val (first keyval)))))  ))]'+
+                                                                   '(let [newcolname  (keyword (str (name (key (first keyval))) "_" ( case (str (first (re-find (read-string "#\\"(?<=\\\\\\\\$)(.*?)(?=\\\\\\\\@)\\"") (str (val (first keyval)))))) ' +
+                                                                                 '("MAX" "MIN" "SUM" "AVG" "COUNT") ' +
+                                                                              '(first (re-find (read-string "#\\"(?<=\\\\\\\\$)(.*?)(?=\\\\\\\\@)\\"") (str (val (first keyval))))) ' +
+                                                                             '"MERGED") ' + 
+                                                                                 ' ))]'+
                                                                    '(if (and (re-find (read-string "#\\"COUNT+\\"") (str (val (first keyval))) ) '+
                                                                            ' (= (count  (map (fn [k] (hash-map newcolname (get [k] (key (first keyval))))) (val m))) 1)) '+
                                                                        ' (hash-map newcolname 1) '+
-                                                                           ' (apply merge-with  (val (first keyval)) '+
-                                                                               '(map (fn [k] (hash-map newcolname (get k (key (first keyval))))) (val m))))))) '+
+                                                                       ' (case  (str (first (re-find (read-string "#\\"(?<=\\\\\\\\$)(.*?)(?=\\\\\\\\@)\\"") (str (val (first keyval)))))) ' + 
+                                                                       ' ("MAX" "MIN" "SUM" "AVG" "COUNT" ) ' +   
+                                                                       ' (apply merge-with  (val (first keyval)) '+
+                                                                               '(map (fn [k] (hash-map newcolname (get k (key (first keyval))))) (val m)))'+
+                                                                       ' (apply merge-with  (fn [& args] (clojure.string/join (str (val (first keyval))) (distinct (into [] args)))) '+
+                                                                               '(map (fn [k] (hash-map newcolname (get k (key (first keyval))))) (val m)))'+
+                                                                       
+                                                                       '))))) '+
                                                            ' (key groupvar) (val groupvar))))) ' +
-                           'new-colnames (concat colnames (for [keyval colnames-functions] (keyword (str (name (key (first keyval))) "_" (first (re-find (read-string "#\\"(?<=\\\\\\\\$)(.*?)(?=\\\\\\\\@)\\"") (str (val (first keyval)))))  ))))]'+
+                           'new-colnames (concat colnames (for [keyval colnames-functions] (keyword (str (name (key (first keyval))) "_" (case (first (re-find (read-string "#\\"(?<=\\\\\\\\$)(.*?)(?=\\\\\\\\@)\\"") (str (val (first keyval))))) ' +
+                                                   '("MAX" "MIN" "SUM" "AVG" "COUNT") '+
+                                                   '(first (re-find (read-string "#\\"(?<=\\\\\\\\$)(.*?)(?=\\\\\\\\@)\\"") (str (val (first keyval))))) '+
+                                                  '"MERGED") ' + 
+                                                   '))))]'+
                            '(-> (make-dataset grouped-rows new-colnames)(with-meta (meta dataset)))))'
                      
                      , 'SERVICE',
@@ -281,16 +295,7 @@ angular.module('grafterizerApp')
                                                                         '(map (fn [k] (dissoc k (key groupvar))) (val m)))'        +
                                                '(key groupvar) (val groupvar)))))]'+
               ' (-> (make-dataset grouped-rows (column-names dataset)) (with-meta (meta dataset)))))'+
-          '([dataset colnames separator]'+
-              '(let [ ds-rows (:rows dataset)'+
-                     'cols-to-merge (remove (fn [i] (some (fn [k] (= i k)) colnames)) (column-names dataset))'+
-                     'grouped-rows   (for [m (group-by (fn [k] (select-keys k colnames)) ds-rows)]'    +
-                                     '(into {} (for [groupvar (key m)]'+
-                                     '(assoc (into {} (for [merge-col cols-to-merge]'+
-                                                     ' (apply merge-with (fn [& args] (clojure.string/join separator (distinct (into [] args))))'+
-                                                                        '(map (fn [k] (hash-map  merge-col (get k merge-col))) (val m)))))'+
-                                             '(key groupvar) (val groupvar))))) ]'+
-              ' (-> (make-dataset grouped-rows (column-names dataset)) (with-meta (meta dataset))))))', 
+          ')', 
           'SERVICE', 'Removes duplicates from a dataset'),
           new transformationDataModel.CustomFunctionDeclaration('shift-row',
         '(defn shift-row'+
@@ -313,7 +318,48 @@ angular.module('grafterizerApp')
                                                                                '(rows dataset (range position-to position-from))'+
                                                                                '(rows dataset (range f eods)))))'+
                                    '(column-names dataset))'+
-                      '(with-meta (meta dataset))))))', 'SERVICE', 'Shifts row in a dataset')];
+                      '(with-meta (meta dataset))))))', 'SERVICE', 'Shifts row in a dataset')/*,
+        new transformationDataModel.CustomFunctionDeclaration('true-value',
+                '(defn true-value? [x]  (if (or (= (clojure.string/trim (clojure.string/lower-case (str x))) "true") (and (re-matches #"[0-9.]+" (str x)) (not= (str x) "0"))) true false))','SERVICE', 'Used by convert-literal'),
+        new transformationDataModel.CustomFunctionDeclaration('parce-date-eu','(defn parse-date-eu [d] (clj-time.format/parse (clj-time.format/formatter (clj-time.core/default-time-zone) "dd/MM/yyyy"   "dd-MM-yyyy" "dd.MM.yyyy" ) d))',
+                'SERVICE', 'Used by convert-literal'),
+        new transformationDataModel.CustomFunctionDeclaration('parce-date-us','(defn parse-date-us [d] (clj-time.format/parse (clj-time.format/formatter (clj-time.core/default-time-zone) "MM/dd/yyyy"   "MM-dd-yyyy" "MM.dd.yyyy" "yyyy-MM-dd" "yyyy.MM.dd" "yyyy/MM/dd") d))',
+                'SERVICE', 'Used by convert-literal'),
+        new transformationDataModel.CustomFunctionDeclaration('date-validator','(defn date-validator [d] ( if (re-matches #"(?:(?:31(\\\\\\\\/|-|\\\\\\\\.)(?:0?[13578]|1[02]))\\\\\\\\1|(?:(?:29|30)(\\\\\\\\/|-|\\\\\\\\.)(?:0?[1,3-9]|1[0-2])\\\\\\\\2))(?:(?:1[6-9]|[2-9]\\\\\\\\d)?\\\\\\\\d{2})$|^(?:29(\\\\\\\\/|-|\\\\\\\\.)0?2\\\\\\\\3(?:(?:(?:1[6-9]|[2-9]\\\\\\\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\\\\\\\\d|2[0-8])(\\\\\\\\/|-|\\\\\\\\.)(?:(?:0?[1-9])|(?:1[0-2]))\\\\\\\\4(?:(?:1[6-9]|[2-9]\\\\\\\\d)?\\\\\\\\d{2})$" d) "eu" ' +
+' (if (re-matches #"(?:(?:(?:0?[13578]|1[02])(\\\\\\\\/|-|\\\\\\\\.)31)\\\\\\\\1|(?:(?:0?[1,3-9]|1[0-2])(\\\\\\\\/|-|\\\\\\\\.)(?:29|30)\\\\\\\\2))(?:(?:1[6-9]|[2-9]\\\\\\\\d)?\\\\\\\\d{2})$|^(?:0?2(\\\\\\\\/|-|\\\\\\\\.)29\\\\\\\\3(?:(?:(?:1[6-9]|[2-9]\\\\\\\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:(?:0?[1-9])|(?:1[0-2]))(\\\\\\\\/|-|\\\\\\\\.)(?:0?[1-9]|1\\\\\\\\d|2[0-8])\\\\\\\\4(?:(?:1[6-9]|[2-9]\\\\\\\\d)?\\\\\\\\d{2})$" d) "us" ' +
+' (if (re-matches #"(19|20)\\\\\\\\d\\\\\\\\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$" d) "us" nil))))',
+                'SERVICE', 'Used by convert-literal'),
+        new transformationDataModel.CustomFunctionDeclaration('convert-literal',
+                '(defn convert-literal' +
+                '[x dtype  &{:keys [on-empty on-error] :or {on-error false on-empty 0}}] ' +
+                ' (let [f (case dtype ' +
+                               '"byte" (fn [a](byte a)) ' +
+                               '"short" (fn [a](short a)) ' +
+                               '"double" (fn [a](double a)) ' +
+                               '"decimal" (fn [a](bigdec a)) ' +
+                               '"integer" (fn [a](int a)) ' +
+                               '"long" (fn [a](long a)) ' +
+                               '"float" (fn [a](float a)) ' +
+                               'nil) ' +
+                         //'default-date (parse-date-eu "31.12.2099") ' +
+                         'arg (str x)] ' +
+                         '(case dtype ' +
+                               '("byte" "short" "double" "decimal" "integer" "long") (cond   (or (nil? x) (empty? arg)) (f on-empty) ' +
+                                                                                            '(and (number? on-error) (nil? (re-matches #"[0-9.]+" arg))) (f on-error) ' +
+                                                                                            ':else (f (Double/parseDouble (apply str (re-seq #"[\\\\\\\\d.]+" arg))))) ' +
+                               '"boolean" (if (or (nil? x) (empty? (str x))) (true-value? on-empty) (true-value? arg)) ' +
+                              /* '"date" (if (or (nil? x) (empty? (str x))) (if (date-validator (str on-empty)) (convert-literal on-empty "date") default-date) ' +
+                                                                          '(case (date-validator arg) ' +
+                                                                                '"eu" (parse-date-eu arg) ' +
+                                                                                '"us" (parse-date-us arg) ' +
+                                                                                '(if (date-validator (str on-error)) (convert-literal on-error "date") default-date) )) ' +
+                               '(s x)))) ', 'CONVERT DATATYPE', 'Coerce argument to specified datatype') 
+                                           */
+
+
+                    
+                    
+                    ];
     var allcustomfunctions = customfunctions.concat(predicatefunctions.concat(numericcustomfunctions));
     allcustomfunctions = servicefunctions.concat(allcustomfunctions);
     $scope.clojure = '';

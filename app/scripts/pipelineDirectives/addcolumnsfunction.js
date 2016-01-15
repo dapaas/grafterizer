@@ -25,7 +25,6 @@ angular.module('grafterizerApp')
 
         scope.newColumnValues = ['Dataset filename', 'Current date', 'Row number', 'custom expression'];
         scope.$parent.generateCurrFunction = function() {
-            console.log(scope.function.columnsArray);
           return new transformationDataModel.AddColumnsFunction(
             scope.function.columnsArray, scope.function.docstring);
         };

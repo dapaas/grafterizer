@@ -20,17 +20,22 @@
         <oi-select ng-show="colnames.length !== 0" oi-options="column.value for column in colnames track by column.id" ng-model="function.colsToDeriveFrom" multiple ng-disabled="$root.readonlymode"></oi-select>
         <oi-select ng-show="colnames.length === 0" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="function.colsToDeriveFrom" multiple ng-disabled="$root.readonlymode"></oi-select>
     <br>
-    <div layout="row">
+    <div layout="column">
         
     <label>Function to derive with</label>
-    <!--input ng-model="searchFunction" type="text"> 
-        <md-button class="md-primary button-tight md-default-theme" ng-disabled="!searchFunction"  aria-label="Search function">
-            <i class="fa fa-search fa-lg"></i>
-        </md-button-->
+        <div ng-repeat="deriveFunction in function.functionsToDeriveWith" >
+        <!--oi-select oi-options="customFunction.name group by customFunction.group for customFunction in  transformation.customFunctionDeclarations track by customFunction.$$hashKey" title="customFunction.docstring"   ng-model="deriveFunction.funct" ng-disabled="$root.readonlymode"></oi-select-->
+        <oi-select oi-options="customFunction.name group by customFunction.group for customFunction in  getCustomFunctionsAndPrefixers() track by customFunction.id" title="customFunction.docstring"   ng-model="deriveFunction.funct" ng-disabled="$root.readonlymode"></oi-select>
+    <div layout = "row" ng-repeat = "param in deriveFunction.getParams() track by $index" >
+        <md-input-container>
+        <label>{{param}}</label>
+        <input ng-model = "deriveFunction.functParams[$index]">
+        </md-input-container> 
+    
+    </div>
+    </div>
 </div>
-
-
-<div   ng-repeat="deriveFunction in function.functionsToDeriveWith track by $index ">
+<!--div   ng-repeat="deriveFunction in function.functionsToDeriveWith track by $index ">
     <div >
         <md-button class="md-primary button-tight md-default-theme" ng-disabled="function.functionsToDeriveWith.length === 1 || $root.readonlymode" ng-click="removeDeriveFunction($index)" aria-label="Remove function">
             <i class="fa fa-trash fa-lg"></i>
@@ -53,7 +58,7 @@
     </div>
 
 
-</div>
+</div-->
         <md-button class="md-raised" ng-click="addDeriveFunction()" aria-label="Compose with function" ng-disabled="$root.readonlymode">Compose with </md-button>
     <md-input-container flex>
         <label>Comment</label>
