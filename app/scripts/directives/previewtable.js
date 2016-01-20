@@ -85,7 +85,7 @@ angular.module('grafterizerApp')
         var rawWidths = {};
 
         _.each(data[':column-names'], function(f) {
-          if (f) {
+          if (f && (typeof f.length !== 'undefined')) {
             // the header size is 3 times more important
             widths[f] = f.length * 3;
           }
@@ -128,12 +128,31 @@ angular.module('grafterizerApp')
         }
 
         var nbEmptyColumnsFound = 0;
+        var columnNamesSet = {};
+
         scope.gridOptions.columnDefs =
           _.map(data[':column-names'], function(f) {
             if (f === null || f === undefined) {
               f = 'EMPTY COLUMN HEADER';
               ++nbEmptyColumnsFound;
             }
+
+          var preventMultipleWarning = false;
+          while (columnNamesSet.hasOwnProperty(f)) {
+            if (!preventMultipleWarning && f !== 'EMPTY COLUMN HEADER') {
+              $mdToast.show(
+                $mdToast.simple()
+                .content('Warning: one or more column headers are identical. That may cause unexpected errors.')
+                .position('bottom right')
+                .hideDelay(6000)
+              );
+              preventMultipleWarning = true;
+            }
+            f = f + Math.floor(Math.random() * 10000);
+          }
+
+          columnNamesSet[f] = true;
+
             var w = widths[f];
             var width = w === largest || isNaN(w) ? '*' : Math.floor(w * 100) + '%';
             var minWidth = isNaN(rawWidths[f]) ? 200 : Math.min(80 + rawWidths[f] * 8, 200);
