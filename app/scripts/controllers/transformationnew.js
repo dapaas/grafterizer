@@ -306,21 +306,21 @@ angular.module('grafterizerApp')
                       '(with-meta (meta dataset))))))', 'SERVICE', 'Shifts row in a dataset'),
         new transformationDataModel.CustomFunctionDeclaration(
             'is-numeric',
-            '(defn is-numeric [x] (not (nil? (re-matches #"[0-9.]+" (str x)))))',
+            '(defn is-numeric [x] (not (nil? (re-matches #"[0-9.-]+" (str x)))))',
             'SERVICE', 'Used by convert-literal'),
         new transformationDataModel.CustomFunctionDeclaration('true-value',
-                '(defn true-value? [x]  (if (or (= (clojure.string/trim (clojure.string/lower-case (str x))) "true") (and (re-matches #"[0-9.]+" (str x)) (not= (str x) "0"))) true false))','SERVICE', 'Used by convert-literal'),
-        /*new transformationDataModel.CustomFunctionDeclaration('check-datatype',
+                '(defn true-value? [x]  (if (or (= (clojure.string/trim (clojure.string/lower-case (str x))) "false")  (and (re-matches #"[0-9.]+" (str x)) (= (str x) "0")) ) false true))','SERVICE', 'Used by convert-literal'),
+        new transformationDataModel.CustomFunctionDeclaration('check-datatype',
                 '(defn check-datatype [dtype a]  (case dtype ' +
                                      '"byte"  (and  (is-numeric a) (< (Double/parseDouble (str a)) 128) (> (Double/parseDouble (str a)) -129)) ' +
                                      '"short" (and  (is-numeric a) (< (Double/parseDouble (str a)) 32768) (> (Double/parseDouble (str a)) -32769)) ' +
                                      '"double" (is-numeric a) ' +
                                      '"decimal" (is-numeric a) ' +
-                                     '"integer" (and (not (nil? (re-matches #"[0-9]+" (str a)))) (< (Integer/parseInt (str a)) (Integer/parseInt "9223372036854775808")) (> (Integer/parseInt (str a)) (Integer/parseInt "9223372036854775809"))) ' +
-                                     '"long" (and (not (nil? (re-matches #"[0-9]+" (str a)))) (< (Double/parseDouble (str a)) (Integer/parseInt "9223372036854775808")) (> (Double/parseDouble (str a)) (Integer/parseInt "9223372036854775809"))) ' +
+                                     '"integer" (and (not (nil? (re-matches #"[0-9-]+" (str a)))) (< (Long/parseLong (str a)) (Long/parseLong "2147483648")) (> (Long/parseLong (str a)) (Long/parseLong "-2147483649"))) ' +
+                                     '"long" (and (not (nil? (re-matches #"[0-9-]+" (str a)))) (< (Double/parseDouble (str a)) (Long/parseLong "9223372036854775808")) (> (Long/parseLong (str a)) (Long/parseLong "-9223372036854775809"))) ' +
                                      '"float" (is-numeric a) ' +
                                      'nil))' ,
-                'SERVICE', 'Used by convert-literal'),*/
+                'SERVICE', 'Used by convert-literal'),
         new transformationDataModel.CustomFunctionDeclaration('parce-date-eu','(defn parse-date-eu [d] (.toDate (clj-time.format/parse (clj-time.format/formatter (clj-time.core/default-time-zone) "dd/MM/yyyy"   "dd-MM-yyyy" "dd.MM.yyyy" ) d)))',
                 'SERVICE', 'Used by convert-literal'),
         new transformationDataModel.CustomFunctionDeclaration('parce-date-us','(defn parse-date-us [d] (.toDate (clj-time.format/parse (clj-time.format/formatter (clj-time.core/default-time-zone) "MM/dd/yyyy"   "MM-dd-yyyy" "MM.dd.yyyy" "yyyy-MM-dd" "yyyy.MM.dd" "yyyy/MM/dd") d)))',
@@ -329,10 +329,10 @@ angular.module('grafterizerApp')
 ' (if (re-matches #"(?:(?:(?:0?[13578]|1[02])(\\\\\\\\/|-|\\\\\\\\.)31)\\\\\\\\1|(?:(?:0?[1,3-9]|1[0-2])(\\\\\\\\/|-|\\\\\\\\.)(?:29|30)\\\\\\\\2))(?:(?:1[6-9]|[2-9]\\\\\\\\d)?\\\\\\\\d{2})$|^(?:0?2(\\\\\\\\/|-|\\\\\\\\.)29\\\\\\\\3(?:(?:(?:1[6-9]|[2-9]\\\\\\\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:(?:0?[1-9])|(?:1[0-2]))(\\\\\\\\/|-|\\\\\\\\.)(?:0?[1-9]|1\\\\\\\\d|2[0-8])\\\\\\\\4(?:(?:1[6-9]|[2-9]\\\\\\\\d)?\\\\\\\\d{2})$" d) "us" ' +
 ' (if (re-matches #"(19|20)\\\\\\\\d\\\\\\\\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$" d) "us" nil))))',
                 'SERVICE', 'Used by convert-literal'),
-      new transformationDataModel.CustomFunctionDeclaration('convert-literal',
-                '(defn convert-literal' +
-                '[x dtype  &{:keys [on-empty on-error lang-tag] :or {on-error false on-empty 0 lang-tag nil}}] ' +
-                ' (let [f (case dtype ' +
+        new transformationDataModel.CustomFunctionDeclaration(
+        'convert-numeric-literal',
+        '(defn convert-numeric-literal [arg dtype on-empty on-error] ' +
+            '(let[f (case dtype ' +
                                '"byte" (fn [a](byte a)) ' +
                                '"short" (fn [a](short a)) ' +
                                '"double" (fn [a](double a)) ' +
@@ -341,13 +341,26 @@ angular.module('grafterizerApp')
                                '"long" (fn [a](long a)) ' +
                                '"float" (fn [a](float a)) ' +
                                'nil) ' +
-                         'default-date (parse-date-eu "31.12.2099") ' +
-                         'arg (str x) ' +
-                         'on-empty-s (if (= on-empty 0) "Unknown" on-empty)] ' +
-                         '(case dtype ' +
-                               '("byte" "float" "short" "double" "decimal" "integer" "long") (cond (or (nil? x) (empty? arg))  (if (nil? (re-matches #"[0-9.]+" (str on-empty))) 0 (f (Double/parseDouble (str on-empty))))' +
+                '] '+
+              '(cond (empty? arg) (if (not (check-datatype dtype on-empty)) (f 0) (f (Double/parseDouble (str on-empty))))'+
+            '(not (check-datatype dtype arg)) (if (not (check-datatype dtype on-error)) (f 0) (f (Double/parseDouble (str on-error))))' +
+            '(not (check-datatype dtype arg)) (if (not (check-datatype dtype on-error)) (f 0) (f (Double/parseDouble (str on-error))))' +
+             ':else (f (Double/parseDouble arg))))) ',
+            'SERVICE','Used by convert-literal'),
+            
+      new transformationDataModel.CustomFunctionDeclaration('convert-literal',
+                '(defn convert-literal' +
+                '[x dtype  &{:keys [on-empty on-error lang-tag] :or {on-error false on-empty 0 lang-tag nil}}] ' +
+                ' (let [ default-date (parse-date-eu "31.12.2099") ' +
+                        'arg (str x) ' +
+                        'on-empty-s (if (= on-empty 0) "Unknown" on-empty)] ' +
+                        '(case dtype ' +
+                             '("byte" "float" "short" "double" "decimal" "integer" "long") '+
+                                                            '(convert-numeric-literal arg dtype on-empty on-error)' +
+                                                          /*  '(not (check-datatype dtype arg)) (f (Double/parseDouble (str on-error)))' +*/
+                                                            /*'(cond (or (nil? x) (empty? arg))  (if (nil? (re-matches #"[0-9.]+" (str on-empty))) 0 (f (Double/parseDouble (str on-empty))))' +
                                                                                             '(nil? (re-matches #"[0-9.]+" arg)) (if (nil? (re-matches #"[0-9.]+" (str on-error))) 0 (f (Double/parseDouble on-error))) ' +
-                                                                                            ':else (f (Double/parseDouble arg))) ' +
+                                                                                            ':else (f (Double/parseDouble arg))) ' +*/
                                '"boolean" (if (or (nil? x) (empty? (str x))) (true-value? on-empty) (true-value? arg)) ' +
                                '"date" (if (or (nil? x) (empty? (str x))) (if (date-validator (str on-empty)) (convert-literal on-empty "date") default-date) ' +
                                                                           '(case (date-validator arg) ' +

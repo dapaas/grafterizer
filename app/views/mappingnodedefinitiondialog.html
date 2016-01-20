@@ -98,7 +98,7 @@
                 <div layout="row" ng-if="columnLiteralHasDatatype">
                     <label style="min-width:150px; padding-top:10px;">Data type </label>
                     <oi-select oi-options="datatype.name for datatype in availableDatatypes track by datatype.id" ng-model="nodeCurrentState.datatype" ng-disabled="$root.readonlymode"></oi-select>
-                    <md-input-container ng-if="nodeCurrentState.datatype.name!== 'string' && nodeCurrentState.datatype.name!=='custom'" style="top:-20px; margin-left:20px;" flex>
+                    <md-input-container ng-if="nodeCurrentState.datatype.name!== 'string' && nodeCurrentState.datatype.name!=='custom' && nodeCurrentState.datatype.name!=='boolean'" style="top:-20px; margin-left:20px;" flex>
                         <label>Value on-error</label>
                         <input  ng-trim = "false" ng-model="nodeCurrentState.onError" type="text" ng-readonly="$root.readonlymode">
                     </md-input-container>
@@ -136,19 +136,9 @@
                             <td> -32768…+32767 (16 bit) </td>
                         </tr>
                         <tr>
-                            <td> Double </td>
-                            <td> xsd:double </td>
-                            <td> 64-bit floating point numbers </td>
-                        </tr>
-                        <tr>
                             <td> Integer </td>
                             <td> xsd:int </td>
                             <td> -2147483648…+2147483647 (32 bit) </td>
-                        </tr>
-                        <tr>
-                            <td> Decimal </td>
-                            <td> xsd:decimal </td>
-                            <td> Arbitrary-precision decimal numbers </td>
                         </tr>
                         <tr>
                             <td> Long </td>
@@ -156,10 +146,20 @@
                             <td> -9223372036854775808…+9223372036854775807 (64 bit) </td>
                         </tr>
                         <tr>
+                            <td> Decimal </td>
+                            <td> xsd:decimal </td>
+                            <td> Arbitrary-precision decimal numbers </td>
+                        </tr>
+                        <tr>
                             <td> Float </td>
                             <td> xsd:float </td>
                             <td> 32-bit floating point numbers </td>
                         </tr>
+                        <tr>
+                            <td> Double </td>
+                            <td> xsd:double </td>
+                            <td> 64-bit floating point numbers </td>
+                        </tr>               
                         <tr>
                             <td> Boolean </td>
                             <td> xsd:boolean </td>
@@ -186,12 +186,12 @@
                         <li>  
                             <p>on-empty -- specifies value, that should be used to replace empty(nil) arguments. </p>
                             <p>By default function replaces all empty values with 0 for all numeric types, "false" for </p>
-                            <p>data type boolean and "31.12.2099" for dates.</p> 
+                            <p>data type boolean and "31.12.2099" for dates, "Unknown" for strings</p> 
                         </li>
                     </ul>
                     <p> It is possible to construct language-tagged string literals by filling in an input field labeled "Language tag". </p>
                     <p> To assign a datatype not mentioned on the list of available datatypes for conversion it is possible to use "custom" datatype option. In this case, the URI that defines a datatype should be specified in the input field labeled "Data type URI"</p>
-                    <p> When converting to literals of data type "date", dates are validated and date format is recognized automatically. Different rows in a datatype may have different date formats. Recognized date formats(priority is defined by this order): </p>
+                    <p> When converting to literals of data type "date", dates are validated and date format is recognized automatically. Different rows in a dataset may have different date formats. Recognized date formats(priority is defined by this order): </p>
                     <ol>
                     <li>"dd.MM.yyyy"</li>
                     <li>"dd/MM/yyyy"</li>
@@ -216,7 +216,7 @@
                     <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
                 </div>
               </div>
-                
+               </div> 
             <!--md-input-container flex ng-if="dialogState.mappingType=='dataset-col' && colnames.length !== 0 ">
               <label>Select column</label>
               <oi-select  oi-options="column.value for column in colnames track by column.id" ng-model="nodeCurrentState.literalValue" ng-disabled="$root.readonlymode"></oi-select>

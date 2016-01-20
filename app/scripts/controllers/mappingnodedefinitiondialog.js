@@ -117,28 +117,28 @@ angular.module('grafterizerApp')
         "id":1,
         "name":"short"
     },
-
     {
         "id":2,
-        "name":"double"
+        "name":"integer"
     },
     {
         "id":3,
-        "name":"decimal"
-    },
-    {
-        "id":4,
-        "name":"integer"
-    },
-
-    {
-        "id":5,
         "name":"long"
     },
     {
-        "id":6,
+        "id":4,
+        "name":"decimal"
+    },
+  
+    {
+        "id":5,
         "name":"float"
     },
+    {
+        "id":6,
+        "name":"double"
+    },
+   
     {
         "id":7,
         "name":"boolean"
