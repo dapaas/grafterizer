@@ -33,7 +33,7 @@ angular.module('grafterizerApp')
     $scope.propertyValue = {
       value: $scope.nodeCurrentState.__type === 'ConstantURI' ? $scope.nodeCurrentState.prefix + ':' + $scope.nodeCurrentState.constant : ''
     };
-
+    if ($scope.nodeCurrentState.__type === 'ColumnLiteral') $scope.columnLiteralHasDatatype = $scope.nodeCurrentState.datatype.name === 'unspecified' ? false : true;
     // serialise the node state object to the proper RDF element type
     $scope.nodeCurrentState = transformationDataModel.getGraphElement($scope.nodeCurrentState);
 
@@ -107,6 +107,56 @@ angular.module('grafterizerApp')
     return false;
   };
   $scope.colnames = (typeof $rootScope.colnames === 'undefined') ? [] : $rootScope.colnames();
+  
+    $scope.availableDatatypes = [
+    {
+        "id":0,
+        "name":"byte"
+    },
+    {
+        "id":1,
+        "name":"short"
+    },
+
+    {
+        "id":2,
+        "name":"double"
+    },
+    {
+        "id":3,
+        "name":"decimal"
+    },
+    {
+        "id":4,
+        "name":"integer"
+    },
+
+    {
+        "id":5,
+        "name":"long"
+    },
+    {
+        "id":6,
+        "name":"float"
+    },
+    {
+        "id":7,
+        "name":"boolean"
+    },
+
+    {
+        "id":8,
+        "name":"date"
+    },
+    {
+        "id":9,
+        "name":"string"
+    },
+    {
+        "id":10,
+        "name":"custom"
+    }
+    ];
 var colCtr = 0;
 $scope.addColumn = function(query) {
     return {
@@ -139,9 +189,17 @@ $scope.addColumn = function(query) {
       case 1:
         if ($scope.dialogState.mappingType === 'dataset-col') {
           if ($scope.nodeCurrentState.__type !== 'ColumnLiteral') {
-            $scope.nodeCurrentState = new transformationDataModel.ColumnLiteral(
+            /*$scope.nodeCurrentState = new transformationDataModel.ColumnLiteral(
               $scope.nodeCurrentState.literalValue.value ? $scope.nodeCurrentState.literalValue.value : ''
-            );
+            );*/
+              
+
+              $scope.nodeCurrentState = new transformationDataModel.ColumnLiteral(      ($scope.nodeCurrentState.literalValue.value ? $scope.nodeCurrentState.literalValue.value : ''),
+              ($scope.columnLiteralHasDatatype ? $scope.nodeCurrentState.datatype : 'unspecified'),
+              $scope.nodeCurrentState.onEmpty,
+              $scope.nodeCurrentState.onError,
+              ($scope.nodeCurrentState.langTag ? $scope.nodeCurrentState.langTag : ''),
+              ($scope.nodeCurrentState.datatypeURI ? $scope.nodeCurrentState.datatypeURI : ''));
           }
         } else {
           if ($scope.nodeCurrentState.__type !== 'ConstantLiteral') {

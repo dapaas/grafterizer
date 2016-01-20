@@ -29,77 +29,63 @@ angular.module('grafterizerApp')
     };
 
     var customfunctions = [
-          new transformationDataModel.CustomFunctionDeclaration('replace-varible-string',
-        '(defn replace-varible-string [cell]   (-> cell  (clojure.string/replace (read-string "#\\".* #\\"") "number") (clojure.string/replace (read-string "#\\"[0-9]{4} \\"") "") ))',
-        'SERVICE', ''),
-          new transformationDataModel.CustomFunctionDeclaration('organize-date',
-        '(defn organize-date "Transform date dd/mm/yyyy ~> yyyy-mm-dd" [date] (when (seq date)  (let [[d m y] (clojure.string/split date  (read-string "#\\"/\\""))]  (apply str (interpose "-" [y m d])))))',
-        'DATE FUNCTIONS', 'Transform date dd/mm/yyyy ~> yyyy-mm-dd'),
-          new transformationDataModel.CustomFunctionDeclaration('double-literal',
-        '(defn double-literal [s] (if (nil? (re-matches #"[0-9.]+" s)) 0 (Double/parseDouble s)))', 'CONVERT DATATYPE', 'Coerce to double. Null and non-valid values are replaced with zero'),
-          new transformationDataModel.CustomFunctionDeclaration('integer-literal',
-        '(defn integer-literal [s] (if (nil? (re-matches #"[0-9.]+" s)) 0 (Integer/parseInt s)))', 'CONVERT DATATYPE', 'Coerce to integer. Null and non-valid values are replaced with zero'),
-/*          new transformationDataModel.CustomFunctionDeclaration('convert-to-integer-literal',
-        '(defn convert-to-integer-literal [n on-empty on-error]' +
-                  '(letfn [(str->int [x] (unchecked-int (Double/parseDouble (str x))))' +
-                          '(clean-commas [x] (clojure.string/replace (str x) #"," ""))]' +
-                          '(cond (or (nil? n) (empty? (clean-commas n))) (str->int on-empty)' +
-                                '(nil? (re-matches #"[0-9.]+" (clean-commas n))) (str->int on-error)' +
-                                ':else (str->int (clean-commas n) ) )))', 'CONVERT DATATYPE', 'Convert to integer, commas are ignored, values for null and empty values are defined by user'),
-          new transformationDataModel.CustomFunctionDeclaration('convert-to-double-literal',
-        '(defn convert-to-double-literal [n on-empty on-error]' +
-                  '(letfn [(str->dbl [x] (Double/parseDouble (str x)))' +
-                          '(clean-commas [x] (clojure.string/replace (str x) #"," ""))]' +
-                          '(cond (or (nil? n) (empty? (clean-commas n))) (str->dbl on-empty)' +
-                                '(nil? (re-matches #"[0-9.]+" (clean-commas n))) (str->dbl on-error)' +
-                                ':else (str->dbl (clean-commas n) ) )))', 'CONVERT DATATYPE', 'Convert to double, commas are ignored, values for null and empty values are defined by user'),
-  */            new transformationDataModel.CustomFunctionDeclaration('transform-gender',
-        '(def transform-gender {"f" (s "female") "m" (s "male")})', 'UTILITY',
-        'Maps "f" to "female" and "m" to "male"'),
-          new transformationDataModel.CustomFunctionDeclaration('stringToNumeric',
-        '(defn stringToNumeric    [x] (if (= "" x) nil  (if (.contains x ".") (Double/parseDouble x)(Integer/parseInt x))))',
-        'CONVERT DATATYPE', 'Convert string to numeric'),
-          new transformationDataModel.CustomFunctionDeclaration('string-literal', '(def string-literal s)',
-        'CONVERT DATATYPE', 'Coerce to string'),
-          new transformationDataModel.CustomFunctionDeclaration('string-literal-with-lang', '(defn string-literal-with-lang [str lang] (s str lang))',
-        'CONVERT DATATYPE', 'Coerce to string'),
-          new transformationDataModel.CustomFunctionDeclaration('boolean', '', 'CONVERT DATATYPE', 'Coerce to boolean'),
-          new transformationDataModel.CustomFunctionDeclaration('count', '', 'COLLECTION',
-        'Returns the number of items in the collection'),
-          new transformationDataModel.CustomFunctionDeclaration('cast', '', 'CONVERT DATATYPE',
-        ' Throws a ClassCastException if x is not a c, else returns x'),
-          new transformationDataModel.CustomFunctionDeclaration('capitalize',
-        '', 'STRING', 'Converts first character of the string to upper-case, all other characters to lower-case.'),
-          new transformationDataModel.CustomFunctionDeclaration('dec', '', 'NUMBER',
-        'Returns a number one less than num'),
-          new transformationDataModel.CustomFunctionDeclaration('double', '', 'CONVERT DATATYPE', 'Coerce to double'),
-          new transformationDataModel.CustomFunctionDeclaration('first', '', 'COLLECTION',
-        'Returns the first item in the collection'),
-          new transformationDataModel.CustomFunctionDeclaration('float', '', 'CONVERT DATATYPE', 'Coerce to float'),
-          new transformationDataModel.CustomFunctionDeclaration('inc', '', 'NUMBER',
-        'Returns a number one greater than num'),
-          new transformationDataModel.CustomFunctionDeclaration('keyword', '', 'CONVERT DATATYPE',
-        'Returns a Keyword with the given namespace and name. '),
-          new transformationDataModel.CustomFunctionDeclaration('last', '', 'COLLECTION',
-        'Return the last item in the collection'),
-          new transformationDataModel.CustomFunctionDeclaration('long', '', 'CONVERT DATATYPE', 'Coerce to long'),
-          new transformationDataModel.CustomFunctionDeclaration('name', '', 'CONVERT DATATYPE',
-        'Returns the name String of a string, symbol or keyword'),
-          new transformationDataModel.CustomFunctionDeclaration('second', '', 'COLLECTION',
-        'Returns the second item in the collection'),
-          new transformationDataModel.CustomFunctionDeclaration('short', '', 'CONVERT DATATYPE', 'Coerce to short'),
-          new transformationDataModel.CustomFunctionDeclaration('join',
-        '(defn join [& strings] (clojure.string/join " " strings))', 'STRING',
-        'Returns a string of all elements in the collection separated by space.'),
-          new transformationDataModel.CustomFunctionDeclaration('join-with',
-        '(defn join-with [sep] ( fn [& strings] (clojure.string/join sep strings)))', 'STRING',
-        'Returns a string of all elements in the collection separated by custom separator.'),
-          new transformationDataModel.CustomFunctionDeclaration('lower-case',
-        '', 'STRING', 'Converts string to all lower-case'),
-          new transformationDataModel.CustomFunctionDeclaration('upper-case',
-        '', 'STRING', 'Converts string to all upper-case'),
-          new transformationDataModel.CustomFunctionDeclaration('reverse', '', 'STRING', 'Returns given string with its characters reversed'),
-          new transformationDataModel.CustomFunctionDeclaration('string-as-keyword', '(defn string-as-keyword [s] ( when (seq s) (->   (str s) clojure.string/trim   (clojure.string/replace "(" "-") (clojure.string/replace ")" "") (clojure.string/replace " " "_") (clojure.string/replace "," "-") (clojure.string/replace "." "") (clojure.string/replace "/" "-") (clojure.string/replace "---" "-") (clojure.string/replace "--" "-") (clojure.string/replace ":" "") (clojure.string/replace "\\"" "") )))', 'STRING', 'Removes blanks and special symbols from a string thus making it possible to use it as a keyword'),
+        new transformationDataModel.CustomFunctionDeclaration(
+                    'replace-varible-string',
+                    '(defn replace-varible-string [cell]   (-> cell  (clojure.string/replace (read-string "#\\".* #\\"") "number") (clojure.string/replace (read-string "#\\"[0-9]{4} \\"") "") ))',
+                    'SERVICE', ''),
+        new transformationDataModel.CustomFunctionDeclaration(
+                    'organize-date',
+                    '(defn organize-date "Transform date dd/mm/yyyy ~> yyyy-mm-dd" [date] (when (seq date)  (let [[d m y] (clojure.string/split date  (read-string "#\\"/\\""))]  (apply str (interpose "-" [y m d])))))',
+                    'DATE FUNCTIONS', 'Transform date dd/mm/yyyy ~> yyyy-mm-dd'),
+        new transformationDataModel.CustomFunctionDeclaration(
+                    'double-literal',
+                    '(defn double-literal [s] (if (nil? (re-matches #"[0-9.]+" s)) 0 (Double/parseDouble s)))', 
+                    'CONVERT DATATYPE', 'Coerce to double. Null and non-valid values are replaced with zero'),
+        new transformationDataModel.CustomFunctionDeclaration(
+                    'integer-literal',
+                    '(defn integer-literal [s] (if (nil? (re-matches #"[0-9.]+" s)) 0 (Integer/parseInt s)))', 
+                    'CONVERT DATATYPE', 'Coerce to integer. Null and non-valid values are replaced with zero'),
+        new transformationDataModel.CustomFunctionDeclaration(
+                    'transform-gender',
+                    '(def transform-gender {"f" (s "female") "m" (s "male")})', 'UTILITY',
+                    'Maps "f" to "female" and "m" to "male"'),
+        new transformationDataModel.CustomFunctionDeclaration(
+                    'stringToNumeric',
+                    '(defn stringToNumeric    [x] (if (= "" x) nil  (if (.contains x ".") (Double/parseDouble x)(Integer/parseInt x))))',
+                    'CONVERT DATATYPE', 'Convert string to numeric'),
+        new transformationDataModel.CustomFunctionDeclaration(
+                    'string-literal', 
+                    '(def string-literal s)',
+                    'CONVERT DATATYPE', 'Coerce to string'),
+        new transformationDataModel.CustomFunctionDeclaration('boolean', '', 'CONVERT DATATYPE', 'Coerce to boolean'),
+        new transformationDataModel.CustomFunctionDeclaration('count', '', 'COLLECTION', 'Returns the number of items in the collection'),
+        new transformationDataModel.CustomFunctionDeclaration('cast', '', 'CONVERT DATATYPE', ' Throws a ClassCastException if x is not a c, else returns x'),
+        new transformationDataModel.CustomFunctionDeclaration('capitalize', '', 'STRING', 'Converts first character of the string to upper-case, all other characters to lower-case.'),
+        new transformationDataModel.CustomFunctionDeclaration('dec', '', 'NUMBER', 'Returns a number one less than num'),
+        new transformationDataModel.CustomFunctionDeclaration('double', '', 'CONVERT DATATYPE', 'Coerce to double'),
+        new transformationDataModel.CustomFunctionDeclaration('first', '', 'COLLECTION', 'Returns the first item in the collection'),
+        new transformationDataModel.CustomFunctionDeclaration('float', '', 'CONVERT DATATYPE', 'Coerce to float'),
+        new transformationDataModel.CustomFunctionDeclaration('inc', '', 'NUMBER', 'Returns a number one greater than num'),
+        new transformationDataModel.CustomFunctionDeclaration('keyword', '', 'CONVERT DATATYPE', 'Returns a Keyword with the given namespace and name. '),
+        new transformationDataModel.CustomFunctionDeclaration('last', '', 'COLLECTION', 'Return the last item in the collection'),
+        new transformationDataModel.CustomFunctionDeclaration('long', '', 'CONVERT DATATYPE', 'Coerce to long'),
+        new transformationDataModel.CustomFunctionDeclaration('name', '', 'CONVERT DATATYPE', 'Returns the name String of a string, symbol or keyword'),
+        new transformationDataModel.CustomFunctionDeclaration('second', '', 'COLLECTION', 'Returns the second item in the collection'),
+        new transformationDataModel.CustomFunctionDeclaration('short', '', 'CONVERT DATATYPE', 'Coerce to short'),
+        new transformationDataModel.CustomFunctionDeclaration(
+                    'join',        
+                    '(defn join [& strings] (clojure.string/join " " strings))', 
+                    'STRING', 'Returns a string of all elements in the collection separated by space.'),
+        new transformationDataModel.CustomFunctionDeclaration(
+                    'join-with',
+                    '(defn join-with [sep] ( fn [& strings] (clojure.string/join sep strings)))', 
+                    'STRING', 'Returns a string of all elements in the collection separated by custom separator.'),
+        new transformationDataModel.CustomFunctionDeclaration('lower-case', '', 'STRING', 'Converts string to all lower-case'),
+        new transformationDataModel.CustomFunctionDeclaration('upper-case', '', 'STRING', 'Converts string to all upper-case'),
+        new transformationDataModel.CustomFunctionDeclaration('reverse', '', 'STRING', 'Returns given string with its characters reversed'),
+        new transformationDataModel.CustomFunctionDeclaration(
+                    'string-as-keyword', 
+                    '(defn string-as-keyword [s] ( when (seq s) (->   (str s) clojure.string/trim   (clojure.string/replace "(" "-") (clojure.string/replace ")" "") (clojure.string/replace " " "_") (clojure.string/replace "," "-") (clojure.string/replace "." "") (clojure.string/replace "/" "-") (clojure.string/replace "---" "-") (clojure.string/replace "--" "-") (clojure.string/replace ":" "") (clojure.string/replace "\\"" "") )))', 'STRING', 'Removes blanks and special symbols from a string thus making it possible to use it as a keyword'),
           new transformationDataModel.CustomFunctionDeclaration('remove-blanks', '(defn remove-blanks [s]  (when (seq s)  (clojure.string/replace s " " "")))', 'STRING', 'Removes blanks in a string'),
           new transformationDataModel.CustomFunctionDeclaration('titleize', '(defn titleize [st] (when (seq st) (let [a (clojure.string/split st (read-string "#\\" \\"")) c (map clojure.string/capitalize a)]  (->> c (interpose " ") (apply str) trim))))', 'STRING', 'Capitalizes each word in a string'),
           new transformationDataModel.CustomFunctionDeclaration('trim', '', 'STRING', 'Removes whitespace from both ends of string'),
@@ -317,20 +303,35 @@ angular.module('grafterizerApp')
                                                                                '(rows dataset (range position-to position-from))'+
                                                                                '(rows dataset (range f eods)))))'+
                                    '(column-names dataset))'+
-                      '(with-meta (meta dataset))))))', 'SERVICE', 'Shifts row in a dataset')/*,
+                      '(with-meta (meta dataset))))))', 'SERVICE', 'Shifts row in a dataset'),
+        new transformationDataModel.CustomFunctionDeclaration(
+            'is-numeric',
+            '(defn is-numeric [x] (not (nil? (re-matches #"[0-9.]+" (str x)))))',
+            'SERVICE', 'Used by convert-literal'),
         new transformationDataModel.CustomFunctionDeclaration('true-value',
                 '(defn true-value? [x]  (if (or (= (clojure.string/trim (clojure.string/lower-case (str x))) "true") (and (re-matches #"[0-9.]+" (str x)) (not= (str x) "0"))) true false))','SERVICE', 'Used by convert-literal'),
-        new transformationDataModel.CustomFunctionDeclaration('parce-date-eu','(defn parse-date-eu [d] (clj-time.format/parse (clj-time.format/formatter (clj-time.core/default-time-zone) "dd/MM/yyyy"   "dd-MM-yyyy" "dd.MM.yyyy" ) d))',
+        /*new transformationDataModel.CustomFunctionDeclaration('check-datatype',
+                '(defn check-datatype [dtype a]  (case dtype ' +
+                                     '"byte"  (and  (is-numeric a) (< (Double/parseDouble (str a)) 128) (> (Double/parseDouble (str a)) -129)) ' +
+                                     '"short" (and  (is-numeric a) (< (Double/parseDouble (str a)) 32768) (> (Double/parseDouble (str a)) -32769)) ' +
+                                     '"double" (is-numeric a) ' +
+                                     '"decimal" (is-numeric a) ' +
+                                     '"integer" (and (not (nil? (re-matches #"[0-9]+" (str a)))) (< (Integer/parseInt (str a)) (Integer/parseInt "9223372036854775808")) (> (Integer/parseInt (str a)) (Integer/parseInt "9223372036854775809"))) ' +
+                                     '"long" (and (not (nil? (re-matches #"[0-9]+" (str a)))) (< (Double/parseDouble (str a)) (Integer/parseInt "9223372036854775808")) (> (Double/parseDouble (str a)) (Integer/parseInt "9223372036854775809"))) ' +
+                                     '"float" (is-numeric a) ' +
+                                     'nil))' ,
+                'SERVICE', 'Used by convert-literal'),*/
+        new transformationDataModel.CustomFunctionDeclaration('parce-date-eu','(defn parse-date-eu [d] (.toDate (clj-time.format/parse (clj-time.format/formatter (clj-time.core/default-time-zone) "dd/MM/yyyy"   "dd-MM-yyyy" "dd.MM.yyyy" ) d)))',
                 'SERVICE', 'Used by convert-literal'),
-        new transformationDataModel.CustomFunctionDeclaration('parce-date-us','(defn parse-date-us [d] (clj-time.format/parse (clj-time.format/formatter (clj-time.core/default-time-zone) "MM/dd/yyyy"   "MM-dd-yyyy" "MM.dd.yyyy" "yyyy-MM-dd" "yyyy.MM.dd" "yyyy/MM/dd") d))',
+        new transformationDataModel.CustomFunctionDeclaration('parce-date-us','(defn parse-date-us [d] (.toDate (clj-time.format/parse (clj-time.format/formatter (clj-time.core/default-time-zone) "MM/dd/yyyy"   "MM-dd-yyyy" "MM.dd.yyyy" "yyyy-MM-dd" "yyyy.MM.dd" "yyyy/MM/dd") d)))',
                 'SERVICE', 'Used by convert-literal'),
         new transformationDataModel.CustomFunctionDeclaration('date-validator','(defn date-validator [d] ( if (re-matches #"(?:(?:31(\\\\\\\\/|-|\\\\\\\\.)(?:0?[13578]|1[02]))\\\\\\\\1|(?:(?:29|30)(\\\\\\\\/|-|\\\\\\\\.)(?:0?[1,3-9]|1[0-2])\\\\\\\\2))(?:(?:1[6-9]|[2-9]\\\\\\\\d)?\\\\\\\\d{2})$|^(?:29(\\\\\\\\/|-|\\\\\\\\.)0?2\\\\\\\\3(?:(?:(?:1[6-9]|[2-9]\\\\\\\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\\\\\\\\d|2[0-8])(\\\\\\\\/|-|\\\\\\\\.)(?:(?:0?[1-9])|(?:1[0-2]))\\\\\\\\4(?:(?:1[6-9]|[2-9]\\\\\\\\d)?\\\\\\\\d{2})$" d) "eu" ' +
 ' (if (re-matches #"(?:(?:(?:0?[13578]|1[02])(\\\\\\\\/|-|\\\\\\\\.)31)\\\\\\\\1|(?:(?:0?[1,3-9]|1[0-2])(\\\\\\\\/|-|\\\\\\\\.)(?:29|30)\\\\\\\\2))(?:(?:1[6-9]|[2-9]\\\\\\\\d)?\\\\\\\\d{2})$|^(?:0?2(\\\\\\\\/|-|\\\\\\\\.)29\\\\\\\\3(?:(?:(?:1[6-9]|[2-9]\\\\\\\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:(?:0?[1-9])|(?:1[0-2]))(\\\\\\\\/|-|\\\\\\\\.)(?:0?[1-9]|1\\\\\\\\d|2[0-8])\\\\\\\\4(?:(?:1[6-9]|[2-9]\\\\\\\\d)?\\\\\\\\d{2})$" d) "us" ' +
 ' (if (re-matches #"(19|20)\\\\\\\\d\\\\\\\\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$" d) "us" nil))))',
                 'SERVICE', 'Used by convert-literal'),
-        new transformationDataModel.CustomFunctionDeclaration('convert-literal',
+      new transformationDataModel.CustomFunctionDeclaration('convert-literal',
                 '(defn convert-literal' +
-                '[x dtype  &{:keys [on-empty on-error] :or {on-error false on-empty 0}}] ' +
+                '[x dtype  &{:keys [on-empty on-error lang-tag] :or {on-error false on-empty 0 lang-tag nil}}] ' +
                 ' (let [f (case dtype ' +
                                '"byte" (fn [a](byte a)) ' +
                                '"short" (fn [a](short a)) ' +
@@ -340,20 +341,21 @@ angular.module('grafterizerApp')
                                '"long" (fn [a](long a)) ' +
                                '"float" (fn [a](float a)) ' +
                                'nil) ' +
-                         //'default-date (parse-date-eu "31.12.2099") ' +
-                         'arg (str x)] ' +
+                         'default-date (parse-date-eu "31.12.2099") ' +
+                         'arg (str x) ' +
+                         'on-empty-s (if (= on-empty 0) "Unknown" on-empty)] ' +
                          '(case dtype ' +
-                               '("byte" "short" "double" "decimal" "integer" "long") (cond   (or (nil? x) (empty? arg)) (f on-empty) ' +
-                                                                                            '(and (number? on-error) (nil? (re-matches #"[0-9.]+" arg))) (f on-error) ' +
-                                                                                            ':else (f (Double/parseDouble (apply str (re-seq #"[\\\\\\\\d.]+" arg))))) ' +
+                               '("byte" "float" "short" "double" "decimal" "integer" "long") (cond (or (nil? x) (empty? arg))  (if (nil? (re-matches #"[0-9.]+" (str on-empty))) 0 (f (Double/parseDouble (str on-empty))))' +
+                                                                                            '(nil? (re-matches #"[0-9.]+" arg)) (if (nil? (re-matches #"[0-9.]+" (str on-error))) 0 (f (Double/parseDouble on-error))) ' +
+                                                                                            ':else (f (Double/parseDouble arg))) ' +
                                '"boolean" (if (or (nil? x) (empty? (str x))) (true-value? on-empty) (true-value? arg)) ' +
-                              /* '"date" (if (or (nil? x) (empty? (str x))) (if (date-validator (str on-empty)) (convert-literal on-empty "date") default-date) ' +
+                               '"date" (if (or (nil? x) (empty? (str x))) (if (date-validator (str on-empty)) (convert-literal on-empty "date") default-date) ' +
                                                                           '(case (date-validator arg) ' +
                                                                                 '"eu" (parse-date-eu arg) ' +
                                                                                 '"us" (parse-date-us arg) ' +
                                                                                 '(if (date-validator (str on-error)) (convert-literal on-error "date") default-date) )) ' +
-                               '(s x)))) ', 'CONVERT DATATYPE', 'Coerce argument to specified datatype') 
-                                           */
+                               ' (if (or (nil? x) (empty? (str x))) (if (nil? lang-tag) (s (str on-empty-s)) (s (str on-empty-s) lang-tag) ) (if (nil? lang-tag) (s x) (s x lang-tag)))))) ', 'CONVERT DATATYPE', 'Coerce argument to specified datatype') 
+                                           
 
 
                     

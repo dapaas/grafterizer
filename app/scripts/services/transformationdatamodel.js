@@ -1585,7 +1585,38 @@ angular.module('grafterizerApp')
   };
   this.Property = Property;
 
-  var ColumnLiteral = function(literalText) {
+  var ColumnLiteral = function(literalText,datatype,onEmpty,onError,langTag,datatypeURI) {
+    RDFElement.call(this, []);
+    this.literalValue = literalText;
+    this.datatype = datatype;
+    this.onEmpty = onEmpty;
+    this.onError = onError;
+    this.langTag = langTag;
+    this.datatypeURI = datatypeURI;
+    this.__type = 'ColumnLiteral';
+  };
+  ColumnLiteral.prototype = Object.create(RDFElement.prototype);
+  ColumnLiteral.revive = function(data) {
+      var colname;
+      if (data.literalValue.hasOwnProperty('id')) colname = data.literalValue;
+      else colname = {
+          id:0,
+          value: data.literalValue
+      };
+      var datatype = data.hasOwnProperty('datatype') ? data.datatype : 
+      {
+          name:'unspecified',
+          id:0
+      };
+      var onEmpty = data.hasOwnProperty('onEmpty') ? data.onEmpty : null;
+      var onError = data.hasOwnProperty('onError') ? data.onError : null;
+      var langTag = data.hasOwnProperty('langTag') ? data.langTag : null;
+      var datatypeURI = data.hasOwnProperty('datatypeURI') ? data.datatypeURI : null;
+    return new ColumnLiteral(colname, datatype, onEmpty, onError, langTag, datatypeURI, data.subElements);
+  };
+  this.ColumnLiteral = ColumnLiteral;
+  
+  /*var ColumnLiteral = function(literalText) {
     RDFElement.call(this, []);
     this.literalValue = literalText;
     this.__type = 'ColumnLiteral';
@@ -1601,7 +1632,7 @@ angular.module('grafterizerApp')
     return new ColumnLiteral(colname, data.subElements);
   };
   this.ColumnLiteral = ColumnLiteral;
-
+*/
   var ConstantLiteral = function(literalText) {
     RDFElement.call(this, []);
     this.literalValue = literalText;
