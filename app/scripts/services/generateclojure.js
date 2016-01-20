@@ -8,7 +8,7 @@
  * Service in the grafterizerApp.
  */
 angular.module('grafterizerApp')
-  .service('generateClojure', function(transformationDataModel,$rootScope) {
+  .service('generateClojure', function (transformationDataModel, $rootScope) {
   /***************************************************************************
      * Main Grafter/Clojure generation variables and functions.
      ****************************************************************************/
@@ -332,7 +332,52 @@ angular.module('grafterizerApp')
       }
 
       // return the value as symbol
-      return new jsedn.sym(node.literalValue.value);
+      var value;
+       if (node.datatype.name === 'unspecified') {
+          value = new jsedn.sym(node.literalValue.value);
+       }
+       else {
+           switch (node.datatype.name) {
+               case 'string':
+
+                   var convertLiteralValues = [jsedn.sym("convert-literal"), jsedn.sym(node.literalValue.value), "string"];
+                   if (node.onEmpty) {
+                       convertLiteralValues.push(jsedn.kw(":on-empty"));
+                       convertLiteralValues.push(node.onEmpty);
+                   }
+                   if (node.langTag) {
+                       convertLiteralValues.push(jsedn.kw(":lang-tag"));
+                       convertLiteralValues.push(node.langTag);
+                   }
+                   value = new jsedn.List(convertLiteralValues);
+                   break;
+               case 'custom':
+                   if (node.datatypeURI.trim() === '') {
+                       alertInterface('Unspecified URI for custom data type!');
+                   }
+                   else {
+                       value = new jsedn.List([jsedn.sym("s"), 
+                                               jsedn.sym(node.literalValue.value), 
+                                               new jsedn.List([jsedn.sym("URIImpl."), node.datatypeURI])]);
+                   }
+                   break;
+               default:
+                   var convertLiteralValues = [jsedn.sym("convert-literal"),jsedn.sym(node.literalValue.value), node.datatype.name];
+                   
+                   if (node.onEmpty) {
+                       convertLiteralValues.push(jsedn.kw(":on-empty"));
+                       convertLiteralValues.push(node.onEmpty);
+                   }
+                   if (node.onError) {
+                       convertLiteralValues.push(jsedn.kw(":on-error"));
+                       convertLiteralValues.push(node.onError);
+                   }
+                   value = new jsedn.List(convertLiteralValues);
+                   break;
+
+           }
+       }
+       return value;
     }
 
     if (node instanceof transformationDataModel.ConstantLiteral) {
