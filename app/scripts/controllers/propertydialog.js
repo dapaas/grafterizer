@@ -19,11 +19,39 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
   $mdToast) {
 
   var connection = leObject.serveraddress;
-
+  $scope.propertyCondition = false;
   $scope.propertyValue = {
-    value: ''
+    value: '',
+    condition: ''
   };
-
+  $scope.colnames = (typeof $rootScope.colnames === 'undefined') ? [] : $rootScope.colnames();
+    $scope.conditionOperators = [
+    {
+        "id":0,
+        "name":"Not empty"
+    },
+    {
+        "id":1,
+        "name":"Equals (=)"
+    },
+    {
+        "id":2,
+        "name":"Greater than (>)"
+    },
+    {
+        "id":3,
+        "name":"Less than (<)"
+    },
+    {
+        "id":4,
+        "name":"Contains text"
+    },
+  
+    {
+        "id":5,
+        "name":"Custom code"
+    }
+    ];
   $scope.showSearchDialog = true;
   $scope.showProgress = false;
 
@@ -66,7 +94,7 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
     return false;
   };
   if (!$scope.property) {
-    $scope.property = new transformationDataModel.Property('', '', []);
+    $scope.property = new transformationDataModel.Property('', '', '', []);
   } else {
     if ($scope.property.prefix) {
       // we have a prefix - display prefix:property-name
@@ -81,9 +109,15 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
         $scope.propertyValue.value = ':' + $scope.property.propertyName;
       }
     }
+      
+      if ($scope.property.hasOwnProperty('propertyCondition') && $scope.property.propertyCondition !== '' && $scope.property.propertyCondition !== undefined) {
+          $scope.propertyCondition = true;
+          $scope.propertyValue.condition = $scope.property.propertyCondition; 
+      }
   }
   $scope.addProperty = function() {
-
+      //TODO: add some elementary validation here
+      $scope.property.propertyCondition = $scope.propertyValue.condition;
     if ($scope.isProbablyUri($scope.propertyValue.value)) {
       // probably an outright URI - we put the whole URI in there
       $scope.property.prefix = '';

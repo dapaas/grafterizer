@@ -1542,10 +1542,11 @@ angular.module('grafterizerApp')
   };
   this.ColumnURI = ColumnURI;
 
-  var Property = function(prefix, propertyName, subElements) {
+  var Property = function(prefix, propertyName, propertyCondition, subElements) {
     RDFElement.call(this, subElements);
     this.prefix = prefix;
     this.propertyName = propertyName;
+    this.propertyCondition = propertyCondition;
     this.__type = 'Property';
   };
   Property.prototype = Object.create(RDFElement.prototype);
@@ -1581,7 +1582,7 @@ angular.module('grafterizerApp')
     return childIndex;
   };
   Property.revive = function(data) {
-    return new Property(data.prefix, data.propertyName, data.subElements);
+    return new Property(data.prefix, data.propertyName, data.propertyCondition ,data.subElements);
   };
   this.Property = Property;
 

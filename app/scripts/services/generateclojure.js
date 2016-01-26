@@ -253,8 +253,8 @@ angular.module('grafterizerApp')
     var currentGraph = null;
 
     var colKeysClj = new jsedn.Vector([]);
-
     var columnKeysFromPipeline = transformation.getColumnKeysFromPipeline();
+      
     for (i = 0; i < columnKeysFromPipeline.length; ++i) {
       colKeysClj.val.push(new jsedn.sym(columnKeysFromPipeline[i]));
     }
@@ -283,9 +283,20 @@ angular.module('grafterizerApp')
 
       // construct a vector for each of the roots and add it to the graph jsedn
       for (j = 0; j < currentGraph.graphRoots.length; ++j) {
+         
         currentRootJsEdn = constructNodeVectorEdn(currentGraph.graphRoots[j], currentGraph);
         if (currentRootJsEdn) {
-          currentGraphJsEdn.val.push(currentRootJsEdn);
+          if (currentRootJsEdn.constructor === Array) {
+              for (var i = 0; i< currentRootJsEdn.length; ++i) {
+                
+                  currentGraphJsEdn.val.push(currentRootJsEdn[i]);
+              }
+          }
+            else {
+                currentGraphJsEdn.val.push(currentRootJsEdn);
+            }
+              
+          
         }
       }
 
@@ -300,12 +311,15 @@ angular.module('grafterizerApp')
     var i;
     var k;
     var allSubElementsVector;
+    var nonCondSubElementsVector;
     var subElementEdn;
     if (!node) {
       return;
     }
     node = transformationDataModel.getGraphElement(node);
-    if (node instanceof transformationDataModel.Property) {
+     
+    if (node instanceof transformationDataModel.Property /*&& (node.propertyCondition === undefined || node.propertyCondition === '')*/) {
+       
       if (node.subElements.length === 0) {
         //        alertInterface('Error found in RDF mapping for the sub-elements node ' + node.propertyName + '!');
         // not a big deal - just not valid provided mapping
@@ -316,7 +330,6 @@ angular.module('grafterizerApp')
       var propertyValue = node.subElements[0];
       var propertyJsEdn = constructPropertyJsEdn(node);
       var nodeVectorJsEdn = constructNodeVectorEdn(propertyValue, containingGraph);
-
       if (propertyJsEdn && nodeVectorJsEdn) {
         return new jsedn.Vector([propertyJsEdn, nodeVectorJsEdn]);
       } else {
@@ -334,7 +347,9 @@ angular.module('grafterizerApp')
       // return the value as symbol
       var value;
        if (node.datatype.name === 'unspecified') {
+           
           value = new jsedn.sym(node.literalValue.value);
+          
        }
        else {
            switch (node.datatype.name) {
@@ -413,6 +428,7 @@ angular.module('grafterizerApp')
     }
 
     if (node instanceof transformationDataModel.ColumnURI) {
+        var allSubElementsArray = [];
       if (node.subElements.length === 0) {
         // we terminate by this URI, return the column
         // TODO check in keywords array if this exists
@@ -420,16 +436,35 @@ angular.module('grafterizerApp')
 
       } else {
         // [node-uri-as-generated {sub-1's edn representation} {sub-2's edn representation} ... {sub-n's edn representation}]
-        allSubElementsVector = new jsedn.Vector([constructColumnURINodeJsEdn(node, containingGraph)]);
-
+        //allSubElementsVector = new jsedn.Vector([constructColumnURINodeJsEdn(node, containingGraph)]);
+        nonCondSubElementsVector = new jsedn.Vector([constructColumnURINodeJsEdn(node, containingGraph)]);
         for (k = 0; k < node.subElements.length; ++k) {
           subElementEdn = constructNodeVectorEdn(node.subElements[k]);
           if (subElementEdn) {
-            allSubElementsVector.val.push(subElementEdn);
+              
+             
+             if (node.subElements[k] instanceof transformationDataModel.Property && !(node.subElements[k].propertyCondition === undefined || node.subElements[k].propertyCondition === '')) {
+                
+              var condSubElementsVector = new jsedn.Vector([constructColumnURINodeJsEdn(node, containingGraph),subElementEdn]);
+                 /*add property as conditional, push it in a vector of all return values, in caller -- parse this vector one by one*/
+              var condElems = node.subElements[k].propertyCondition.split(" ");
+              for (var a = 0; a< condElems.length; ++a)
+                  condElems[a] = new jsedn.sym(condElems[a]);
+              allSubElementsArray.push(new jsedn.List([jsedn.sym("if"),
+                                                         new jsedn.List(condElems),
+                                                         condSubElementsVector]));
+                
+             }
+             else {
+            //allSubElementsVector.val.push(subElementEdn);
+            nonCondSubElementsVector.val.push(subElementEdn);
+             }
           }
         }
-
-        return allSubElementsVector;
+          allSubElementsArray.push(nonCondSubElementsVector);
+          
+          return allSubElementsArray;
+        //return allSubElementsVector;
       }
     }
 

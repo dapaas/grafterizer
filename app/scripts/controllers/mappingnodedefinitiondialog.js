@@ -33,7 +33,7 @@ angular.module('grafterizerApp')
     $scope.propertyValue = {
       value: $scope.nodeCurrentState.__type === 'ConstantURI' ? $scope.nodeCurrentState.prefix + ':' + $scope.nodeCurrentState.constant : ''
     };
-    if ($scope.nodeCurrentState.__type === 'ColumnLiteral') $scope.columnLiteralHasDatatype = $scope.nodeCurrentState.datatype.name === 'unspecified' ? false : true;
+    if ($scope.nodeCurrentState.__type === 'ColumnLiteral') $scope.columnLiteralHasDatatype = $scope.nodeCurrentState.datatype.name === 'unspecified'||$scope.nodeCurrentState.datatype.name === undefined ? false : true;
     // serialise the node state object to the proper RDF element type
     $scope.nodeCurrentState = transformationDataModel.getGraphElement($scope.nodeCurrentState);
 
@@ -195,11 +195,12 @@ $scope.addColumn = function(query) {
               
 
               $scope.nodeCurrentState = new transformationDataModel.ColumnLiteral(      ($scope.nodeCurrentState.literalValue.value ? $scope.nodeCurrentState.literalValue.value : ''),
-              ($scope.columnLiteralHasDatatype ? $scope.nodeCurrentState.datatype : 'unspecified'),
+              ($scope.columnLiteralHasDatatype ? $scope.nodeCurrentState.datatype : {name: 'unspecified', value: 0}),
               $scope.nodeCurrentState.onEmpty,
               $scope.nodeCurrentState.onError,
               ($scope.nodeCurrentState.langTag ? $scope.nodeCurrentState.langTag : ''),
               ($scope.nodeCurrentState.datatypeURI ? $scope.nodeCurrentState.datatypeURI : ''));
+             
           }
         } else {
           if ($scope.nodeCurrentState.__type !== 'ConstantLiteral') {
@@ -226,6 +227,7 @@ $scope.addColumn = function(query) {
   };
 
   $scope.addNode = function() {
+      
     if ($scope.nodeCurrentState.__type === 'ConstantURI') {
       if ($scope.isProbablyUri($scope.propertyValue.value)) {
         // probably an outright URI - we put the whole URI in there
