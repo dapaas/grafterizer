@@ -17,7 +17,7 @@
     </md-input-container>
 
     <label>Columns to derive from</label>
-        <oi-select ng-show="colnames.length !== 0" oi-options="column.value for column in colnames track by column.id" ng-model="function.colsToDeriveFrom" multiple ng-disabled="$root.readonlymode"></oi-select>
+        <oi-select ng-show="colnames.length !== 0" oi-options="column.value for column in colnames track by column.id" ng-model="function.colsToDeriveFrom" multiple ng-disabled="$root.readonlymode" ></oi-select>
         <oi-select ng-show="colnames.length === 0" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="function.colsToDeriveFrom" multiple ng-disabled="$root.readonlymode"></oi-select>
     <br>
     <div layout="column">
@@ -26,7 +26,7 @@
         <div ng-repeat="deriveFunction in function.functionsToDeriveWith" >
         <!--oi-select oi-options="customFunction.name group by customFunction.group for customFunction in  transformation.customFunctionDeclarations track by customFunction.$$hashKey" title="customFunction.docstring"   ng-model="deriveFunction.funct" ng-disabled="$root.readonlymode"></oi-select-->
         <oi-select oi-options="customFunction.name group by customFunction.group for customFunction in  getCustomFunctionsAndPrefixers() track by customFunction.id" title="customFunction.docstring"   ng-model="deriveFunction.funct" ng-disabled="$root.readonlymode"></oi-select>
-    <div layout = "row" ng-repeat = "param in deriveFunction.getParams() track by $index" >
+    <div layout = "row" ng-repeat = "param in reduceFunctionParams(deriveFunction.getParams()) track by $index" >
         <md-input-container>
         <label>{{param}}</label>
         <input ng-model = "deriveFunction.functParams[$index]">

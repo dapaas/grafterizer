@@ -335,10 +335,15 @@ angular.module('grafterizerApp')
       case ('text'):
         if (this.ignoreCase) {
           regexParsed = '#\"(?i).*' + this.filterText + '.*\"';
-          if (!this.take)
-              values.push(new jsedn.List([jsedn.sym('comp'), jsedn.sym('not'), new jsedn.List([jsedn.sym('fn [cell] (re-find (read-string ' + regexParsed + ' ) (str cell))')])]));
-          else
+           
+          if (!this.take) {
+              values.push(new jsedn.List([jsedn.sym('comp'), jsedn.sym('not'), new jsedn.List([jsedn.sym('fn [cell]'),
+                                                                                               new jsedn.List([jsedn.sym('re-find'), new jsedn.List([jsedn.sym('read-string'), regexParsed]), jsedn.sym('(str cell)')])])]));
+         
+          }
+          else {
               values.push(new jsedn.List([jsedn.sym('read-string'), regexParsed]));
+          }
         } else {
           if (!this.take)
               values.push(new jsedn.List([jsedn.sym('comp'), jsedn.sym('not'), new jsedn.List([jsedn.sym('fn [^String cell] (.contains (str cell) \"' + this.filterText + '\")')])]));
@@ -1526,19 +1531,25 @@ angular.module('grafterizerApp')
   this.ConstantURI = ConstantURI;
 
   var ColumnURI = function(prefix, columnName, subElements) {
-    URINode.call(this, prefix, subElements);
+    URINode.call(this, prefix.value, subElements);
     this.column = columnName;
     this.__type = 'ColumnURI';
   };
   ColumnURI.prototype = Object.create(URINode.prototype);
   ColumnURI.revive = function(data) {
-    var colname;
+     
+    var colname, prefix;
     if (data.column.hasOwnProperty('id')) colname = data.column;
     else colname = {
         id:0,
         value:data.column
     };
-      return new ColumnURI(data.prefix, colname, data.subElements);
+    if (data.prefix.hasOwnProperty('id')) prefix = data.prefix;
+    else prefix = {
+        id:0,
+        value:data.prefix
+    };
+      return new ColumnURI(prefix, colname, data.subElements);
   };
   this.ColumnURI = ColumnURI;
 

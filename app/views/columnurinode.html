@@ -11,7 +11,7 @@
               <i class="fa fa-columns fa-stack-1x fa-inverse"></i>
             </div>
             <div class="rdf-mapping-node-text">
-              <div class="rdf-mapping-prefix-text">{{node.prefix ? '(' + node.prefix + ')' : 'no prefix'}}</div>
+              <div class="rdf-mapping-prefix-text">{{node.prefix ? '(' + (node.prefix.hasOwnProperty('id') ? node.prefix.value : node.prefix) + ')' : 'no prefix'}}</div>
               <div class="rdf-mapping-node-text rdf-mapping-column-name-text">
                 {{node.column.value}}
               </div>

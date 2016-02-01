@@ -22,13 +22,15 @@
             </md-select>
             <md-input-container flex ng-if="dialogState.mappingType=='dataset-col'">
               <label>Select node prefix</label>
-              <input ng-model="nodeCurrentState.prefix" type="text">
+              <!--input ng-model="nodeCurrentState.prefix" type="text"-->
+                <oi-select oi-options="prefix.value for prefix in prefixes() track by prefix.id" oi-select-options="{newItem: true, newItemFn: 'addPref($query)'}" ng-model="nodeCurrentState.prefix" ng-disabled="$root.readonlymode"></oi-select>
             </md-input-container>
+              
             <md-input-container flex ng-if="dialogState.mappingType=='dataset-col' && colnames.length !== 0">
               <label>Select column</label>
               <oi-select oi-options="column.value for column in colnames track by column.id" ng-model="nodeCurrentState.column" ng-disabled="$root.readonlymode"></oi-select>
             </md-input-container>
-            <md-input-container flex ng-if="dialogState.mappingType=='dataset-col' && colnames.length === 0">
+            <md-input-container flex ng-if="dialogState.mappingType=='dataset-col' && colnames.length === 0 ">
               <oi-select ng-show="!$root.colnames()" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="nodeCurrentState.column" ng-disabled="$root.readonlymode"></oi-select>
               <!--input ng-model="nodeCurrentState.column" type="text"-->
             </md-input-container>

@@ -30,13 +30,17 @@ angular.module('grafterizerApp')
   }
 
   if ($scope.nodeCurrentState) {
+    
     $scope.propertyValue = {
       value: $scope.nodeCurrentState.__type === 'ConstantURI' ? $scope.nodeCurrentState.prefix + ':' + $scope.nodeCurrentState.constant : ''
     };
+      if ($scope.nodeCurrentState.__type === 'ConstantURI') 
+          $scope.nodeCurrentState.prefix = $scope.nodeCurrentState.prefix.hasOwnProperty('id') ? $scope.nodeCurrentState.prefix : {id:0, value: $scope.nodeCurrentState.prefix};
+
     if ($scope.nodeCurrentState.__type === 'ColumnLiteral') $scope.columnLiteralHasDatatype = $scope.nodeCurrentState.datatype.name === 'unspecified'||$scope.nodeCurrentState.datatype.name === undefined ? false : true;
     // serialise the node state object to the proper RDF element type
     $scope.nodeCurrentState = transformationDataModel.getGraphElement($scope.nodeCurrentState);
-
+ if ($scope.nodeCurrentState.__type === 'ColumnURI')   $scope.nodeCurrentState.prefix = {id:0, value:  $scope.nodeCurrentState.prefix};
     // put dialog in the proper state
     switch ($scope.nodeCurrentState.__type) {
       case 'ConstantURI':
@@ -45,6 +49,7 @@ angular.module('grafterizerApp')
         $scope.dialogState.mappingType = $scope.nodeCurrentState.__type ===
           'ConstantURI' ? 'free-defined' : 'dataset-col';
         $scope.nodeCurrentStateSubElements = $scope.nodeCurrentState.subElements ? $scope.nodeCurrentState.subElements : [];
+           
         break;
       case 'ColumnLiteral':
       case 'ConstantLiteral':
@@ -60,6 +65,10 @@ angular.module('grafterizerApp')
     $scope.propertyValue = {
       value: ''
     };
+       /*$scope.prefixValue = {
+           id:0,
+      value: ''
+    };*/
     $scope.nodeCurrentState = {};
   }
 
@@ -107,6 +116,12 @@ angular.module('grafterizerApp')
     return false;
   };
   $scope.colnames = (typeof $rootScope.colnames === 'undefined') ? [] : $rootScope.colnames();
+  $scope.prefixes = function() {
+      var allPrefixes = [];
+      for (var i=0; i<$rootScope.transformation.rdfVocabs.length; ++i)
+          allPrefixes.push({id:i, value:$rootScope.transformation.rdfVocabs[i].name});
+      return allPrefixes;
+  }
   
     $scope.availableDatatypes = [
     {
@@ -164,16 +179,26 @@ $scope.addColumn = function(query) {
         value: query
     };
 };
+    
+var prefCtr = 0;
+$scope.addPref = function(query) {
+    return {
+        id: prefCtr++,
+        value: query
+    };
+};
   $scope.changeType = function() {
+    
     switch ($scope.dialogState.selectedTab) {
       case 0:
         if ($scope.dialogState.mappingType === 'dataset-col') {
           if ($scope.nodeCurrentState.__type !== 'ColumnURI') {
             $scope.nodeCurrentState = new transformationDataModel.ColumnURI(
-              $scope.nodeCurrentState.prefix ? $scope.nodeCurrentState.prefix : '',
-              $scope.nodeCurrentState.column ? $scope.nodeCurrentState.column.value : '',
+              $scope.nodeCurrentState.prefix ? $scope.nodeCurrentState.prefix : {id:0,value:''},
+              $scope.nodeCurrentState.column ? $scope.nodeCurrentState.column : '',
               $scope.nodeCurrentStateSubElements ? $scope.nodeCurrentStateSubElements : []
             );
+
           }
         } else {
           if ($scope.nodeCurrentState.__type !== 'ConstantURI') {
@@ -194,7 +219,8 @@ $scope.addColumn = function(query) {
             );*/
               
 
-              $scope.nodeCurrentState = new transformationDataModel.ColumnLiteral(      ($scope.nodeCurrentState.literalValue.value ? $scope.nodeCurrentState.literalValue.value : ''),
+              $scope.nodeCurrentState = new transformationDataModel.ColumnLiteral(      
+              ($scope.nodeCurrentState.literalValue && $scope.nodeCurrentState.literalValue.value ? $scope.nodeCurrentState.literalValue.value : ''),
               ($scope.columnLiteralHasDatatype ? $scope.nodeCurrentState.datatype : {name: 'unspecified', value: 0}),
               $scope.nodeCurrentState.onEmpty,
               $scope.nodeCurrentState.onError,
@@ -249,7 +275,9 @@ $scope.addColumn = function(query) {
         }
       }
     } else if ($scope.nodeCurrentState.__type === 'ColumnURI') {
+        // $scope.nodeCurrentState.prefix = $scope.prefixValue;
       $scope.nodeCurrentState.subElements = $scope.nodeCurrentStateSubElements ? $scope.nodeCurrentStateSubElements : [];
+  
     }
 
     /*else if ($scope.nodeCurrentState.__type === 'ConstantLiteral') {

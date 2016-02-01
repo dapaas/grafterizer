@@ -61,13 +61,13 @@
             <div>
                 <md-input-container >
                 <label>Text </label>
-                <input ng-change="(functionCodeOptions.replaceMap[i+1]?changeSample('replace'))" ng-model="functionCodeOptions.replaceMap[i]" type="text">
+                <input ng-trim="false" ng-change="(functionCodeOptions.replaceMap[i+1]?changeSample('replace'))" ng-model="functionCodeOptions.replaceMap[i]" type="text">
                 </md-input-container>
             </div>
             <div>
                 <md-input-container >
                 <label>Replace with </label>
-                <input ng-change="changeSample('replace')" ng-model="functionCodeOptions.replaceMap[i+1]" type="text" >
+                <input ng-trim="false" ng-change="changeSample('replace')" ng-model="functionCodeOptions.replaceMap[i+1]" type="text" >
                 </md-input-container>
             </div>
             

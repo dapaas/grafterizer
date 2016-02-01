@@ -577,7 +577,7 @@ angular.module('grafterizerApp')
 
   function constructColumnURINodeJsEdn(colURINode, containingGraph) {
     // graph URI as prefix, add nothing
-    var nodePrefix = colURINode.prefix;
+    var nodePrefix = colURINode.prefix.hasOwnProperty('id') ? colURINode.prefix.value : colURINode.prefix;
     var nodeValue = colURINode.column.value;
     if (nodePrefix === null || nodePrefix === undefined) {
       // base graph URI
@@ -656,7 +656,7 @@ angular.module('grafterizerApp')
 
   function tempCheckExistingClassorPropertiesInGraft(prefix, name) {
     var items = [
-      'owl:Ontology', 'owl:Class',
+      'owl:Ontology', 'owl:Class', 
       'foaf:Person', 'foaf:age', 'foaf:depiction', 'foaf:gender', 'foaf:homepage', 'foaf:interest', 'foaf:knows',
       'foaf:name', 'foaf:nick',
       'sdmx-measure:obsValue',
@@ -777,20 +777,24 @@ angular.module('grafterizerApp')
     var i;
 
     //define vocabulary
-    if (element.prefix !== '' && element.prefix !== undefined) {
-      if (!isPrefixExist(element.prefix)) {
-        if (tempCheckExistingVocabInGraft(element.prefix)) {
-          var namespace = getNamespaceofPrefix(element.prefix);
+      var elementPrefix =  element.__type === 'ColumnURI' ? element.prefix.value : element.prefix;
+      
+    if (elementPrefix !== '' && elementPrefix !== undefined) {
+       
+      if (!isPrefixExist(elementPrefix)) {
+        if (tempCheckExistingVocabInGraft(elementPrefix)) {
+          var namespace = getNamespaceofPrefix(elementPrefix);
           var existsInGUI = false;
           for (i = 0; i < prefixersInGUI.length; ++i) {
-            if (prefixersInGUI[i].name === element.prefix) existsInGUI = true;
+            if (prefixersInGUI[i].name === elementPrefix) existsInGUI = true;
           }
 
           if (namespace !== '' && namespace !== undefined) {
-            str += ('(def ' + element.prefix + ' (prefixer ' + '"' + namespace + '"' + ')) ');
+              
+            str += ('(def ' + elementPrefix + ' (prefixer ' + '"' + namespace + '"' + ')) ');
             str += '\n';
           } else if (!existsInGUI) {
-            str += ('(def ' + element.prefix + ' (prefixer ' + '"' + containingGraph.graphURI + '"' + '))');
+            str += ('(def '  + elementPrefix +  ' (prefixer ' + '"' + containingGraph.graphURI + '"' + '))');
             str += '\n';
           }
         }
