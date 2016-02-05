@@ -465,9 +465,9 @@ angular.module('grafterizerApp')
               var regexParsed;
               for (var a = 0; a < node.subElements[k].propertyCondition.length; ++a)
                   {
-                      
+                   
                       var cond = node.subElements[k].propertyCondition[a];
-                       
+                       console.log(cond); 
                       var operator,parsedCond;
                       
                       switch (cond.operator.id)
@@ -496,7 +496,8 @@ angular.module('grafterizerApp')
                                                                                 new jsedn.List([jsedn.sym('re-find'),
                                                                                                 new jsedn.List([jsedn.sym('read-string'), regexParsed]), jsedn.sym(cond.column.value)])])]);
                                   break;
-                              case 6:
+                              default:
+                                  
                                   var condElems = cond.operand.split(" ");
                                   for (var j = 0; j < condElems.length; ++j)
                                       condElems[j] = new jsedn.sym(condElems[j]);
