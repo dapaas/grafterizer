@@ -287,7 +287,7 @@ angular.module('grafterizerApp')
         currentRootJsEdn = constructNodeVectorEdn(currentGraph.graphRoots[j], currentGraph);
         if (currentRootJsEdn) {
           if (currentRootJsEdn.constructor === Array) {
-              for (var i = 0; i< currentRootJsEdn.length; ++i) {
+              for (var i = 0; i < currentRootJsEdn.length; ++i) {
                 
                   currentGraphJsEdn.val.push(currentRootJsEdn[i]);
               }
@@ -340,6 +340,7 @@ angular.module('grafterizerApp')
     }
 
     if (node instanceof transformationDataModel.ColumnLiteral) {
+       
       if (node.literalValue.value.trim() === '') {
         alertInterface('Empty column literal mapping found!');
       }
@@ -352,6 +353,7 @@ angular.module('grafterizerApp')
           
        }
        else {
+           
            switch (node.datatype.name) {
                case 'string':
 
@@ -392,6 +394,7 @@ angular.module('grafterizerApp')
 
            }
        }
+         
        return value;
     }
 
@@ -443,16 +446,86 @@ angular.module('grafterizerApp')
           if (subElementEdn) {
               
              
-             if (node.subElements[k] instanceof transformationDataModel.Property && !(node.subElements[k].propertyCondition === undefined || node.subElements[k].propertyCondition === '')) {
+             /*if (node.subElements[k] instanceof transformationDataModel.Property && !(node.subElements[k].propertyCondition === undefined || node.subElements[k].propertyCondition === '')) {
                 
               var condSubElementsVector = new jsedn.Vector([constructColumnURINodeJsEdn(node, containingGraph),subElementEdn]);
                  /*add property as conditional, push it in a vector of all return values, in caller -- parse this vector one by one*/
-              var condElems = node.subElements[k].propertyCondition.split(" ");
+             /* var condElems = node.subElements[k].propertyCondition.split(" ");
               for (var a = 0; a< condElems.length; ++a)
                   condElems[a] = new jsedn.sym(condElems[a]);
               allSubElementsArray.push(new jsedn.List([jsedn.sym("if"),
                                                          new jsedn.List(condElems),
                                                          condSubElementsVector]));
+                
+             }*/
+                  if (node.subElements[k] instanceof transformationDataModel.Property && node.subElements[k].propertyCondition.length > 0) {
+              
+              var condSubElementsVector = new jsedn.Vector([constructColumnURINodeJsEdn(node, containingGraph),subElementEdn]);
+              var parsedConditions = [];
+              var regexParsed;
+              for (var a = 0; a < node.subElements[k].propertyCondition.length; ++a)
+                  {
+                      
+                      var cond = node.subElements[k].propertyCondition[a];
+                       
+                      var operator,parsedCond;
+                      
+                      switch (cond.operator.id)
+                          {
+                              case 0:
+                                  
+                                  parsedCond = new jsedn.List([jsedn.sym('not-empty?'), jsedn.sym(cond.column.value)]);
+                                 
+                                  break;
+                              case 1:
+                                  operator = '=';
+                                  break;
+                              case 2:
+                                  operator = 'not=';
+                                  break;
+                              case 3:
+                                  operator = '>';
+                                  break;
+                              case 4:
+                                  operator = '<';
+                                  break;   
+                              case 5:
+                                  regexParsed = '#\"(?i).*' + cond.operand + '.*\"';
+                                  parsedCond = new jsedn.List([jsedn.sym('not'),
+                                                               new jsedn.List([jsedn.sym('nil?'),
+                                                                                new jsedn.List([jsedn.sym('re-find'),
+                                                                                                new jsedn.List([jsedn.sym('read-string'), regexParsed]), jsedn.sym(cond.column.value)])])]);
+                                  break;
+                              case 6:
+                                  var condElems = cond.operand.split(" ");
+                                  for (var j = 0; j < condElems.length; ++j)
+                                      condElems[j] = new jsedn.sym(condElems[j]);
+                                  parsedCond = new jsedn.List(condElems);
+                                  break;
+                                  
+                                  
+                          }
+                     
+                      if (parsedCond !== undefined) {
+                           
+                          parsedConditions.push(parsedCond);
+                      }
+                      else {
+                          if (isNaN(cond.operand)) {
+                            parsedConditions.push(new jsedn.List([jsedn.sym(operator), jsedn.sym(cond.column.value), cond.operand]));
+                          }
+                          else {
+                              parsedConditions.push(new jsedn.List([jsedn.sym(operator), jsedn.sym(cond.column.value), Number(cond.operand)]));
+                          }
+                      }
+                  }
+  //                    console.log(parsedConditions.length);
+                      if (parsedConditions.length === 1) {
+                          allSubElementsArray.push(new jsedn.List([jsedn.sym("if"),                                                                                                                parsedConditions[0],                                                         condSubElementsVector]));
+                      }
+                      else {
+                           allSubElementsArray.push(new jsedn.List([jsedn.sym("if"),                                                                                                                parsedConditions[0],                                                         condSubElementsVector])); /*!!!!!!!!!*/
+                      }
                 
              }
              else {

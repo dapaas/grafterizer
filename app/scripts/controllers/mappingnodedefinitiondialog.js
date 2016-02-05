@@ -21,7 +21,7 @@ angular.module('grafterizerApp')
   var connection = leObject.serveraddress;
   $scope.dialogState = {};
   $scope.dialogState.selectedTab = 0;
-
+$scope.columnLiteralHasDatatype = false;
   $scope.disableBlankNodeOption = false;
   if ($scope.parentNode) {
     if ($scope.parentNode instanceof transformationDataModel.Graph) {
@@ -35,9 +35,9 @@ angular.module('grafterizerApp')
       value: $scope.nodeCurrentState.__type === 'ConstantURI' ? $scope.nodeCurrentState.prefix + ':' + $scope.nodeCurrentState.constant : ''
     };
       if ($scope.nodeCurrentState.__type === 'ConstantURI') 
-          $scope.nodeCurrentState.prefix = $scope.nodeCurrentState.prefix.hasOwnProperty('id') ? $scope.nodeCurrentState.prefix : {id:0, value: $scope.nodeCurrentState.prefix};
+          $scope.nodeCurrentState.prefix = ($scope.nodeCurrentState.prefix.hasOwnProperty('id') ? $scope.nodeCurrentState.prefix : {id:0, value: $scope.nodeCurrentState.prefix});
 
-    if ($scope.nodeCurrentState.__type === 'ColumnLiteral') $scope.columnLiteralHasDatatype = $scope.nodeCurrentState.datatype.name === 'unspecified'||$scope.nodeCurrentState.datatype.name === undefined ? false : true;
+    if ($scope.nodeCurrentState.__type === 'ColumnLiteral') $scope.columnLiteralHasDatatype = ($scope.nodeCurrentState.datatype.name === 'unspecified' || $scope.nodeCurrentState.datatype.name === undefined) ? false : true;
     // serialise the node state object to the proper RDF element type
     $scope.nodeCurrentState = transformationDataModel.getGraphElement($scope.nodeCurrentState);
  if ($scope.nodeCurrentState.__type === 'ColumnURI')   $scope.nodeCurrentState.prefix = {id:0, value:  $scope.nodeCurrentState.prefix};
@@ -118,58 +118,59 @@ angular.module('grafterizerApp')
   $scope.colnames = (typeof $rootScope.colnames === 'undefined') ? [] : $rootScope.colnames();
   $scope.prefixes = function() {
       var allPrefixes = [];
-      for (var i=0; i<$rootScope.transformation.rdfVocabs.length; ++i)
-          allPrefixes.push({id:i, value:$rootScope.transformation.rdfVocabs[i].name});
+      for (var i = 0; i < $rootScope.transformation.rdfVocabs.length; ++i)
+          allPrefixes.push({id: i, 
+                            value: $rootScope.transformation.rdfVocabs[i].name});
       return allPrefixes;
   }
   
     $scope.availableDatatypes = [
     {
-        "id":0,
-        "name":"byte"
+        id:0,
+        name:'byte'
     },
     {
-        "id":1,
-        "name":"short"
+        id:1,
+        name:'short'
     },
     {
-        "id":2,
-        "name":"integer"
+        id:2,
+        name:'integer'
     },
     {
-        "id":3,
-        "name":"long"
+        id:3,
+        name:'long'
     },
     {
-        "id":4,
-        "name":"decimal"
+        id:4,
+        name:'decimal'
     },
   
     {
-        "id":5,
-        "name":"float"
+        id:5,
+        name:'float'
     },
     {
-        "id":6,
-        "name":"double"
+        id:6,
+        name:'double'
     },
    
     {
-        "id":7,
-        "name":"boolean"
+        id:7,
+        name:'boolean'
     },
 
     {
-        "id":8,
-        "name":"date"
+        id:8,
+        name:'date'
     },
     {
-        "id":9,
-        "name":"string"
+        id:9,
+        name:'string'
     },
     {
-        "id":10,
-        "name":"custom"
+        id:10,
+        name:'custom'
     }
     ];
 var colCtr = 0;
@@ -214,14 +215,9 @@ $scope.addPref = function(query) {
       case 1:
         if ($scope.dialogState.mappingType === 'dataset-col') {
           if ($scope.nodeCurrentState.__type !== 'ColumnLiteral') {
-            /*$scope.nodeCurrentState = new transformationDataModel.ColumnLiteral(
-              $scope.nodeCurrentState.literalValue.value ? $scope.nodeCurrentState.literalValue.value : ''
-            );*/
-              
-
               $scope.nodeCurrentState = new transformationDataModel.ColumnLiteral(      
               ($scope.nodeCurrentState.literalValue && $scope.nodeCurrentState.literalValue.value ? $scope.nodeCurrentState.literalValue.value : ''),
-              ($scope.columnLiteralHasDatatype ? $scope.nodeCurrentState.datatype : {name: 'unspecified', value: 0}),
+              ($scope.columnLiteralHasDatatype ? $scope.nodeCurrentState.datatype : {name: 'unspecified', id: 0}),
               $scope.nodeCurrentState.onEmpty,
               $scope.nodeCurrentState.onError,
               ($scope.nodeCurrentState.langTag ? $scope.nodeCurrentState.langTag : ''),
@@ -251,9 +247,17 @@ $scope.addPref = function(query) {
   $scope.closeDialog = function() {
     $mdDialog.cancel();
   };
-
-  $scope.addNode = function() {
+  $scope.onDatatypeChange = function(value) {
       
+            if (!value)  {
+                $scope.nodeCurrentState.datatype = {name: 'unspecified', id: 0};
+                $scope.columnLiteralHasDatatype = false;
+            }
+  } 
+        
+  $scope.addNode = function() {
+     
+       //if (!$scope.columnLiteralHasDatatype)   $scope.nodeCurrentState.datatype = {name: 'unspecified', value: 0};
     if ($scope.nodeCurrentState.__type === 'ConstantURI') {
       if ($scope.isProbablyUri($scope.propertyValue.value)) {
         // probably an outright URI - we put the whole URI in there
@@ -276,6 +280,7 @@ $scope.addPref = function(query) {
       }
     } else if ($scope.nodeCurrentState.__type === 'ColumnURI') {
         // $scope.nodeCurrentState.prefix = $scope.prefixValue;
+       
       $scope.nodeCurrentState.subElements = $scope.nodeCurrentStateSubElements ? $scope.nodeCurrentStateSubElements : [];
   
     }

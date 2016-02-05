@@ -137,7 +137,7 @@ angular.module('grafterizerApp')
         'zero?', '', 'PREDICATE', 'Returns true if argument is zero, else false')];
 
     var numericcustomfunctions = [new transformationDataModel.CustomFunctionDeclaration(
-        '+', '', 'NUMBER', ''),
+        ' +', '', 'NUMBER', ''),
                                     new transformationDataModel.CustomFunctionDeclaration(
         '-', '', 'NUMBER', ''),
                                     new transformationDataModel.CustomFunctionDeclaration(
@@ -192,32 +192,32 @@ angular.module('grafterizerApp')
         'Aggregation function for use with group-rows'
       ),
           new transformationDataModel.CustomFunctionDeclaration('group-rows', '(defn group-rows [dataset colnames colnames-functions]' +
-                     '(let [ds-rows (:rows dataset) '+
-                           'grouped-rows   (for [m (group-by (fn [k] (select-keys k colnames)) ds-rows)] '+
-                                            '(into {} (for [groupvar (key m)] '+
-                                                       '(assoc (into {} (for [keyval colnames-functions] '+
+                     '(let [ds-rows (:rows dataset) ' +
+                           'grouped-rows   (for [m (group-by (fn [k] (select-keys k colnames)) ds-rows)] ' +
+                                            '(into {} (for [groupvar (key m)] ' +
+                                                       '(assoc (into {} (for [keyval colnames-functions] ' +
                                                                    '(let [newcolname  (keyword (str (name (key (first keyval))) "_" ( case (str (first (re-find (read-string "#\\"(?<=\\\\\\\\$)(.*?)(?=\\\\\\\\@)\\"") (str (val (first keyval)))))) ' +
                                                                                  '("MAX" "MIN" "SUM" "AVG" "COUNT") ' +
                                                                               '(first (re-find (read-string "#\\"(?<=\\\\\\\\$)(.*?)(?=\\\\\\\\@)\\"") (str (val (first keyval))))) ' +
                                                                              '"MERGED") ' + 
-                                                                                 ' ))]'+
-                                                                   '(if (and (re-find (read-string "#\\"COUNT+\\"") (str (val (first keyval))) ) '+
-                                                                           ' (= (count  (map (fn [k] (hash-map newcolname (get [k] (key (first keyval))))) (val m))) 1)) '+
-                                                                       ' (hash-map newcolname 1) '+
+                                                                                 ' ))]' +
+                                                                   '(if (and (re-find (read-string "#\\"COUNT+\\"") (str (val (first keyval))) ) ' +
+                                                                           ' (= (count  (map (fn [k] (hash-map newcolname (get [k] (key (first keyval))))) (val m))) 1)) ' +
+                                                                       ' (hash-map newcolname 1) ' +
                                                                        ' (case  (str (first (re-find (read-string "#\\"(?<=\\\\\\\\$)(.*?)(?=\\\\\\\\@)\\"") (str (val (first keyval)))))) ' + 
                                                                        ' ("MAX" "MIN" "SUM" "AVG" "COUNT" ) ' +   
-                                                                       ' (apply merge-with  (val (first keyval)) '+
-                                                                               '(map (fn [k] (hash-map newcolname (get k (key (first keyval))))) (val m)))'+
-                                                                       ' (apply merge-with  (fn [& args] (clojure.string/join (str (val (first keyval))) (distinct (into [] args)))) '+
-                                                                               '(map (fn [k] (hash-map newcolname (get k (key (first keyval))))) (val m)))'+
+                                                                       ' (apply merge-with  (val (first keyval)) ' +
+                                                                               '(map (fn [k] (hash-map newcolname (get k (key (first keyval))))) (val m)))' +
+                                                                       ' (apply merge-with  (fn [& args] (clojure.string/join (str (val (first keyval))) (distinct (into [] args)))) ' +
+                                                                               '(map (fn [k] (hash-map newcolname (get k (key (first keyval))))) (val m)))' +
                                                                        
-                                                                       '))))) '+
+                                                                       '))))) ' +
                                                            ' (key groupvar) (val groupvar))))) ' +
                            'new-colnames (concat colnames (for [keyval colnames-functions] (keyword (str (name (key (first keyval))) "_" (case (first (re-find (read-string "#\\"(?<=\\\\\\\\$)(.*?)(?=\\\\\\\\@)\\"") (str (val (first keyval))))) ' +
-                                                   '("MAX" "MIN" "SUM" "AVG" "COUNT") '+
-                                                   '(first (re-find (read-string "#\\"(?<=\\\\\\\\$)(.*?)(?=\\\\\\\\@)\\"") (str (val (first keyval))))) '+
+                                                   '("MAX" "MIN" "SUM" "AVG" "COUNT") ' +
+                                                   '(first (re-find (read-string "#\\"(?<=\\\\\\\\$)(.*?)(?=\\\\\\\\@)\\"") (str (val (first keyval))))) ' +
                                                   '"MERGED") ' + 
-                                                   '))))]'+
+                                                   '))))]' +
                            '(-> (make-dataset grouped-rows new-colnames)(with-meta (meta dataset)))))'
                      
                      , 'SERVICE',
@@ -278,8 +278,8 @@ angular.module('grafterizerApp')
                                      '(into {} (for [groupvar (key m)]' +
                                                '(assoc (apply merge-with (fn [& args] (first (into [] args)))' +
                                                                         '(map (fn [k] (dissoc k (key groupvar))) (val m)))'        +
-                                               '(key groupvar) (val groupvar)))))]'+
-              ' (-> (make-dataset grouped-rows (column-names dataset)) (with-meta (meta dataset)))))'+
+                                               '(key groupvar) (val groupvar)))))]' +
+              ' (-> (make-dataset grouped-rows (column-names dataset)) (with-meta (meta dataset)))))' +
           ')', 
           'SERVICE', 'Removes duplicates from a dataset'),
           new transformationDataModel.CustomFunctionDeclaration('shift-row',
@@ -291,18 +291,18 @@ angular.module('grafterizerApp')
                                  '(column-names dataset))' +
                    '(with-meta (meta dataset))))' +
             '( [dataset position-from position-to]' +
-              ' (let [f (+ position-from 1)'+
-                     't (+ position-to 1)'+
-                     'eods (count (:rows dataset)) ]'+
-                 '(-> (make-dataset (cond (< position-from position-to) (:rows (incanter.core/conj-rows (take-rows dataset position-from)'+
-                                                                                                       '(rows dataset (range f t))'+
-                                                                                                       '(rows dataset [position-from])'+   
-                                                                                                       '(rows dataset (range t eods))))'+
-                                         ':else (:rows (incanter.core/conj-rows (take-rows dataset position-to)'+
-                                                                               '(rows dataset [position-from])'+
-                                                                               '(rows dataset (range position-to position-from))'+
-                                                                               '(rows dataset (range f eods)))))'+
-                                   '(column-names dataset))'+
+              ' (let [f (+ position-from 1)' +
+                     't (+ position-to 1)' +
+                     'eods (count (:rows dataset)) ]' +
+                 '(-> (make-dataset (cond (< position-from position-to) (:rows (incanter.core/conj-rows (take-rows dataset position-from)' +
+                                                                                                       '(rows dataset (range f t))' +
+                                                                                                       '(rows dataset [position-from])' +   
+                                                                                                       '(rows dataset (range t eods))))' +
+                                         ':else (:rows (incanter.core/conj-rows (take-rows dataset position-to)' +
+                                                                               '(rows dataset [position-from])' +
+                                                                               '(rows dataset (range position-to position-from))' +
+                                                                               '(rows dataset (range f eods)))))' +
+                                   '(column-names dataset))' +
                       '(with-meta (meta dataset))))))', 'SERVICE', 'Shifts row in a dataset'),
         new transformationDataModel.CustomFunctionDeclaration(
             'is-numeric',
@@ -341,8 +341,8 @@ angular.module('grafterizerApp')
                                '"long" (fn [a](long a)) ' +
                                '"float" (fn [a](float a)) ' +
                                'nil) ' +
-                '] '+
-              '(cond (empty? arg) (if (not (check-datatype dtype on-empty)) (f 0) (f (Double/parseDouble (str on-empty))))'+
+                '] ' +
+              '(cond (empty? arg) (if (not (check-datatype dtype on-empty)) (f 0) (f (Double/parseDouble (str on-empty))))' +
             '(not (check-datatype dtype arg)) (if (not (check-datatype dtype on-error)) (f 0) (f (Double/parseDouble (str on-error))))' +
             '(not (check-datatype dtype arg)) (if (not (check-datatype dtype on-error)) (f 0) (f (Double/parseDouble (str on-error))))' +
              ':else (f (Double/parseDouble arg))))) ',
@@ -355,7 +355,7 @@ angular.module('grafterizerApp')
                         'arg (str x) ' +
                         'on-empty-s (if (= on-empty 0) "Unknown" on-empty)] ' +
                         '(case dtype ' +
-                             '("byte" "float" "short" "double" "decimal" "integer" "long") '+
+                             '("byte" "float" "short" "double" "decimal" "integer" "long") ' +
                                                             '(convert-numeric-literal arg dtype on-empty on-error)' +
                                                           /*  '(not (check-datatype dtype arg)) (f (Double/parseDouble (str on-error)))' +*/
                                                             /*'(cond (or (nil? x) (empty? arg))  (if (nil? (re-matches #"[0-9.]+" (str on-empty))) 0 (f (Double/parseDouble (str on-empty))))' +

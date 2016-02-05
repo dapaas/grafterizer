@@ -2,12 +2,149 @@
     <div>
         <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
         <div class="api-doc-docstring" layout = "column" ng-show = "showUsage">
-            <p>
-                "Melts" dataset in a such way, that each row represents a unique combination of variables and values for given column array
-            </p>
-            <p>
-                <img src="/images/melt.png"/>
-            </p>
+            
+            <!--p>Reshapes a dataset. Two ways to reshape a dataset are available:</p>
+                <ol>
+                    <li-->
+                     <p> "Melt" operation performs this sequence of actions: </p>
+                         <ul>
+                         <li>Using set of pivot keys as observation identifier, extract observation names from column headers;</li>
+                         <li>take corresponding measurement value for each observation;</li>
+                         <li>restructure a dataset in a such way that each observation for given unique combination of pivot keys is stored in a separate row. Each row gets a column named "Variable" that holds observation name and column named "Value" that holds measurement value. </li>   
+                         </ul>
+                     
+                        <p> <b>Example: </b>
+                 Given original dataset containing some measurement values: </p>
+                         <table class="api-doc-docstring">
+                             <tr>
+                                 <td>Date</td>
+                                 <td>Time</td>
+                                 <td>Temperature</td>
+                                 <td>Humidity</td>
+                             </tr>
+                             <tr>
+                                 <td>15.07.2015</td>
+                                 <td>12:00</td>
+                                 <td>18</td>
+                                 <td>68.9</td>
+                             </tr>
+                             <tr>
+                                 <td>15.07.2015</td>
+                                 <td>13:00</td>
+                                 <td>19</td>
+                                 <td>68.2</td>
+                             </tr>
+                        </table>
+                        
+                         <p>It is possible to "melt" dataset by setting observation date and time as pivot keys:</p>
+                         <table class="api-doc-docstring">
+                             <tr>
+                                 <td>Date</td>
+                                 <td>Time</td>
+                                 <td>Variable</td>
+                                 <td>Value</td>
+                             </tr>
+                             <tr>
+                                 <td>15.07.2015</td>
+                                 <td>12:00</td>
+                                 <td>Temperature</td>
+                                 <td>18</td>
+                             </tr>
+                             <tr>
+                                 <td>15.07.2015</td>
+                                 <td>12:00</td>
+                                 <td>Humiditye</td>
+                                 <td>68.9</td>
+                             </tr>
+                             <tr>
+                                 <td>15.07.2015</td>
+                                 <td>13:00</td>
+                                 <td>Temperature</td>
+                                 <td>19</td>
+                             </tr>
+                             <tr>
+                                 <td>15.07.2015</td>
+                                 <td>13:00</td>
+                                 <td>Humiditye</td>
+                                 <td>68.2</td>
+                             </tr>
+                        </table>
+                    </li>
+                    <li>
+                    <!--p>"Cast" operation is reverse to melt. It forms column headers by identifying distinct observation variables and populates these columns by taking measurement values for each observation and performing specified aggregation on them. User therefore should specify column name that stores variables, and column name that stores values. Other columns will be treated as pivot keys </p> 
+                        <p> Set of available aggregations: </p>
+                <ul>
+                    <li> MIN -- take minimum value for each observation
+                    <li> MAX -- take maximum value for each observation
+                    <li> SUM -- take summation of values for each observation
+                    <li> AVG -- take average value for each observation
+                    <li> COUNT -- take number of non-empty values for each observation
+                    <li> MERGE -- merge together all distinct values for each observation separated by user-specified separator
+                </ul>
+
+                         <p> <b>Example: </b>
+                 Given original dataset: </p>
+                         <table class="api-doc-docstring">
+                             <tr>
+                                 <td>CompanyName</td>
+                                 <td>PositionName</td>
+                                 <td>TotalEmployed</td>
+                             </tr>
+                             <tr>
+                                 <td>Cisco</td>
+                                 <td>Jr.Software developer</td>
+                                 <td>22</td>
+                             </tr>
+                             <tr>
+                                 <td>Cisco</td>
+                                 <td>Sr.Software developer</td>
+                                 <td>10</td>
+                             </tr>
+                             <tr>
+                                 <td>Oracle corporation</td>
+                                 <td>Sr.Software developer</td>
+                                 <td>12</td>
+                             </tr>
+                             <tr>
+                                 <td>Cisco</td>
+                                 <td>Sr.Software developer</td>
+                                 <td>2</td>
+                             </tr>
+                              <tr>
+                                 <td>IBM</td>
+                                 <td>Jr.Software developer</td>
+                                 <td>8</td>
+                             </tr>
+                             <tr>
+                                 <td>IBM</td>
+                                 <td>Tester</td>
+                                 <td>18</td>
+                             </tr>
+                              <tr>
+                                 <td>IBM</td>
+                                 <td>Tester</td>
+                                 <td>7</td>
+                             </tr>
+                             <tr>
+                                 <td>Cisco</td>
+                                 <td>Tester</td>
+                                 <td>15</td>
+                             </tr>
+                             <tr>
+                                 <td>Oracle corporation</td>
+                                 <td>Tester</td>
+                                 <td>21</td>
+                             </tr>
+                             <tr>
+                                 <td>Oracle corporation</td>
+                                 <td>Intern</td>
+                                 <td>2</td>
+                             </tr>
+                    </li>
+                </ol-->
+               
+            
+           
             <a href="http://api.grafter.org/master/grafter.tabular.html#var-melt" target="_blank">view source</a>
         </div>
         </div>

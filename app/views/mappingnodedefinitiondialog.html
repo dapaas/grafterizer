@@ -34,6 +34,35 @@
               <oi-select ng-show="!$root.colnames()" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="nodeCurrentState.column" ng-disabled="$root.readonlymode"></oi-select>
               <!--input ng-model="nodeCurrentState.column" type="text"-->
             </md-input-container>
+              <!-- CONDITION -->   
+              <!--md-switch style=" min-width:200px; " ng-model="nodeCondition" aria-label="add conditional property" ng-disabled="$root.readonlymode">
+                    Specify condition
+                    </md-switch>
+            <div class="md-padding"  ng-if = "nodeCondition" ng-repeat = "nCondition in nodeConditions">
+   <md-radio-group ng-if="$index > 0" layout = "row" ng-model="nCondition.conj" readonly="$root.readonlymode">
+                    <md-radio-button value="specify">AND</md-radio-button>
+                    <md-radio-button value="header">OR</md-radio-button>
+                </md-radio-group>
+            <div layout="row" >
+                <div>
+                <label style="min-width:150px; padding-top:15px;">Column</label>
+                    
+                    <oi-select ng-if="colnames.length !== 0"  oi-options="column.value for column in colnames track by column.id" ng-model="nCondition.colname" ng-disabled="$root.readonlymode"></oi-select>
+                    <oi-select ng-if="colnames.length === 0" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="nCondition.column" ng-disabled="$root.readonlymode"></oi-select>
+                </div>
+                <div style="padding-left:20px">
+                    <label style="min-width:150px; padding-top:15px;">Operator</label>
+                    <oi-select oi-options="operator.name for operator in conditionOperators track by operator.id" ng-model="nCondition.operator"  ng-disabled="$root.readonlymode"></oi-select>
+                </div>
+                <div layout="column" style="padding-left:20px" ng-if="nCondition.operator.id!==0">
+                    <label>{{nCondition.operator.id === 6 ? "Custom code" : "Operand"}}</label>
+                    <input ng-model="nCondition.operand" type="text" >
+                </div>
+                </div>
+             
+            </div-->
+              <!-- CONDITION -->   
+              
             <div class="modal-dialog animate-switch-container" ng-switch on="selection" ng-if="dialogState.mappingType=='free-defined'">
               <div class="modal-content animate-switch" ng-switch-default>
                 <form name="graphsForm" >
@@ -93,7 +122,7 @@
                     <!--input ng-model="nodeCurrentState.literalValue" type="text"-->
                     <oi-select style="padding-top:10px" ng-if="colnames.length !== 0"  oi-options="column.value for column in colnames track by column.id" ng-model="nodeCurrentState.literalValue" ng-disabled="$root.readonlymode"></oi-select>
                     <oi-select style="padding-top:10px" ng-if="colnames.length === 0" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="nodeCurrentState.literalValue" ng-disabled="$root.readonlymode"></oi-select>
-                    <md-switch style=" min-width:200px; " ng-model="columnLiteralHasDatatype" aria-label="assign datatype to literal" ng-disabled="$root.readonlymode">
+                    <md-switch style=" min-width:200px; " ng-model="columnLiteralHasDatatype" aria-label="assign datatype to literal" ng-disabled="$root.readonlymode" ng-change="onDatatypeChange(columnLiteralHasDatatype)">
                     Assign datatype
                     </md-switch>
                 </div>

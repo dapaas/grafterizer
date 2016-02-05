@@ -551,6 +551,7 @@ angular.module('grafterizerApp')
     var colsToDeriveFromClj = new jsedn.Vector([]);
     var flag = false;
     var deriveFunc;
+    var  functWithParams = [];
     var i;
     for (i = 0; i < this.colsToDeriveFrom.length; ++i) {
       colsToDeriveFromClj.val.push(new jsedn.kw(':' + this.colsToDeriveFrom[i].value));
@@ -1519,20 +1520,28 @@ angular.module('grafterizerApp')
   };
   this.URINode = URINode;
 
-  var ConstantURI = function(prefix, constantURIText, subElements) {
+  var ConstantURI = function(prefix, constantURIText, /*nodeCondition,*/ subElements) {
     URINode.call(this, prefix, subElements);
     this.constant = constantURIText;
+    //this.nodeCondition = nodeCondition;
     this.__type = 'ConstantURI';
   };
   ConstantURI.prototype = Object.create(URINode.prototype);
   ConstantURI.revive = function(data) {
-    return new ConstantURI(data.prefix, data.constant, data.subElements);
+      /*var conditions = [];
+        if (data.nodeCondition.constructor === Array && data.nodeCondition.length > 0) {
+            for (var i = 0; i< data.nodeCondition.length; ++i) {
+                conditions.push(Condition.revive(data.nodeCondition[i]));
+            }
+        }*/
+    return new ConstantURI(data.prefix, data.constant, /*conditions,*/ data.subElements);
   };
   this.ConstantURI = ConstantURI;
 
-  var ColumnURI = function(prefix, columnName, subElements) {
+  var ColumnURI = function(prefix, columnName, /*nodeCondition,*/ subElements) {
     URINode.call(this, prefix.value, subElements);
     this.column = columnName;
+   // this.nodeCondition = nodeCondition;
     this.__type = 'ColumnURI';
   };
   ColumnURI.prototype = Object.create(URINode.prototype);
@@ -1549,9 +1558,31 @@ angular.module('grafterizerApp')
         id:0,
         value:data.prefix
     };
-      return new ColumnURI(prefix, colname, data.subElements);
+     /* var conditions = [];
+        if (data.nodeCondition.constructor === Array && data.nodeCondition.length > 0) {
+            for (var i = 0; i< data.nodeCondition.length; ++i) {
+                conditions.push(Condition.revive(data.nodeCondition[i]));
+            }
+        }*/
+      return new ColumnURI(prefix, colname, /*conditions,*/ data.subElements);
   };
   this.ColumnURI = ColumnURI;
+    
+    var Condition = function(column, operator, operand, conj) {
+    this.column = column;
+    this.operator = operator;
+    this.operand = operand;
+    this.conj = conj;   
+    this.__type = 'Condition';
+  };
+  
+  Condition.revive = function(data) {
+      return new Condition(data.column, data.operator, data.operand, data.conj);
+  };
+  this.Condition = Condition;
+
+    
+    
 
   var Property = function(prefix, propertyName, propertyCondition, subElements) {
     RDFElement.call(this, subElements);
@@ -1593,11 +1624,29 @@ angular.module('grafterizerApp')
     return childIndex;
   };
   Property.revive = function(data) {
-    return new Property(data.prefix, data.propertyName, data.propertyCondition ,data.subElements);
+      
+    var conditions = [];
+       if (data.hasOwnProperty('propertyCondition')) {
+        if (data.propertyCondition.constructor === Array && data.propertyCondition.length > 0) {
+            for (var i = 0; i< data.propertyCondition.length; ++i) {
+                conditions.push(Condition.revive(data.propertyCondition[i]));
+            }
+        }
+        else {
+
+        if (data.propertyCondition.length!==0 && data.propertyCondition !== "") {
+    
+            conditions.push(new Condition(null, {"id":6, "name":"Custom code"}, data.propertyCondition.toString(), null)); 
+        }
+        }
+  }
+      //else console.log("No prop condition");
+          
+    return new Property(data.prefix, data.propertyName, conditions ,data.subElements);
   };
   this.Property = Property;
 
-  var ColumnLiteral = function(literalText,datatype,onEmpty,onError,langTag,datatypeURI) {
+  var ColumnLiteral = function(literalText,datatype,onEmpty,onError,langTag,datatypeURI/*, nodeCondition*/) {
     RDFElement.call(this, []);
     this.literalValue = literalText;
     this.datatype = datatype;
@@ -1605,6 +1654,7 @@ angular.module('grafterizerApp')
     this.onError = onError;
     this.langTag = langTag;
     this.datatypeURI = datatypeURI;
+  //  this.nodeCondition = nodeCondition;
     this.__type = 'ColumnLiteral';
   };
   ColumnLiteral.prototype = Object.create(RDFElement.prototype);
@@ -1624,7 +1674,14 @@ angular.module('grafterizerApp')
       var onError = data.hasOwnProperty('onError') ? data.onError : null;
       var langTag = data.hasOwnProperty('langTag') ? data.langTag : null;
       var datatypeURI = data.hasOwnProperty('datatypeURI') ? data.datatypeURI : null;
-    return new ColumnLiteral(colname, datatype, onEmpty, onError, langTag, datatypeURI, data.subElements);
+     /* var conditions = [];
+        if (data.nodeCondition.constructor === Array && data.nodeCondition.length > 0) {
+            for (var i = 0; i< data.nodeCondition.length; ++i) {
+                conditions.push(Condition.revive(data.nodeCondition[i]));
+            }
+        }*/
+    return new ColumnLiteral(colname, datatype, onEmpty, onError, langTag, datatypeURI/* conditions*/);
+      
   };
   this.ColumnLiteral = ColumnLiteral;
   
@@ -1645,25 +1702,39 @@ angular.module('grafterizerApp')
   };
   this.ColumnLiteral = ColumnLiteral;
 */
-  var ConstantLiteral = function(literalText) {
+  var ConstantLiteral = function(literalText/*, nodeCondition*/) {
     RDFElement.call(this, []);
     this.literalValue = literalText;
+  //  this.nodeCondition = nodeCondition;
     this.__type = 'ConstantLiteral';
   };
   ConstantLiteral.prototype = Object.create(RDFElement.prototype);
   ConstantLiteral.revive = function(data) {
-    return new ConstantLiteral(data.literalValue, data.subElements);
+      /*var conditions = [];
+        if (data.nodeCondition.constructor === Array && data.nodeCondition.length > 0) {
+            for (var i = 0; i< data.nodeCondition.length; ++i) {
+                conditions.push(Condition.revive(data.nodeCondition[i]));
+            }
+        }*/
+    return new ConstantLiteral(data.literalValue/*, conditions*/);
   };
   this.ConstantLiteral = ConstantLiteral;
 
   // TODO add support for blank nodes
-  var BlankNode = function(subElements) {
+  var BlankNode = function(/*nodeCondition,*/ subElements) {
     RDFElement.call(this, subElements);
+   // this.nodeCondition = nodeCondition;
     this.__type = 'BlankNode';
   };
   BlankNode.prototype = Object.create(URINode.prototype);
   BlankNode.revive = function(data) {
-    return new BlankNode(data.subElements);
+     /* var conditions = [];
+        if (data.nodeCondition.constructor === Array && data.nodeCondition.length > 0) {
+            for (var i = 0; i< data.nodeCondition.length; ++i) {
+                conditions.push(Condition.revive(data.nodeCondition[i]));
+            }
+        }*/
+    return new BlankNode(/*conditions,*/ data.subElements);
   };
   this.BlankNode = BlankNode;
 
@@ -1908,6 +1979,7 @@ angular.module('grafterizerApp')
     return null;
   };
   Transformation.prototype.getColumnKeysFromGraphNodes = function() {
+   // console.log(this.graphs);
     var requestedColumnKeys = [];
     var rootNode;
     for (var j = 0; j < this.graphs.length; ++j)
@@ -1982,6 +2054,10 @@ angular.module('grafterizerApp')
       if (rootNode.subElements[i] instanceof ColumnLiteral)
         if (subColKeys.indexOf(rootNode.subElements[i].literalValue.value) === -1)
           subColKeys.push(rootNode.subElements[i].literalValue.value);
+      if (rootNode.subElements[i] instanceof Property)
+        for (var j = 0; j < rootNode.subElements[i].propertyCondition.length; ++j)
+          if (rootNode.subElements[i].propertyCondition[j].column && subColKeys.indexOf(rootNode.subElements[i].propertyCondition[j].column.value) === -1)
+            subColKeys.push(rootNode.subElements[i].propertyCondition[j].column.value);
       getKeysFromSubs(rootNode.subElements[i], subColKeys);
     }
 

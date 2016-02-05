@@ -14,53 +14,55 @@ angular.module('grafterizerApp')
 
     $scope.availableDatatypes = [
     {
-        "id":0,
-        "name":"byte"
+        id:0,
+        name:'byte'
     },
     {
-        "id":1,
-        "name":"short"
-    },
-
-    {
-        "id":2,
-        "name":"double"
-    },
-    {
-        "id":3,
-        "name":"decimal"
-    },
-    {
-        "id":4,
-        "name":"integer"
+        id:1,
+        name:'short'
     },
 
     {
-        "id":5,
-        "name":"long"
+        id:2,
+        name:'double'
     },
     {
-        "id":6,
-        "name":"float"
+        id:3,
+        name:'decimal'
     },
     {
-        "id":7,
-        "name":"boolean"
+        id:4,
+        name:'integer'
     },
 
     {
-        "id":8,
-        "name":"date"
+        id:5,
+        name:'long'
     },
     {
-        "id":9,
-        "name":"string"
+        id:6,
+        name:'float'
+    },
+    {
+        id:7,
+        name:'boolean'
+    },
+
+    {
+        id:8,
+        name:'date'
+    },
+    {
+        id:9,
+        name:'string'
     }
     ];
-    $scope.assignDatatype = function {
-    }
-    $scope.closeDialog = function {
-    }
+    $scope.assignDatatype = function() {
+        console.log('qqq');
+    };
+    $scope.closeDialog = function() {
+         console.log('qqq');
+    };
  /*   $scope.getMapLength = function(num) {
       var b = [];
       for (var i = 0; i <= num / 2; i += 2) b.push(i);

@@ -83,8 +83,9 @@ scope.addColumn = function(query) {
         };
 
         scope.reduceFunctionParams = function(params) {
-            for (var i=1; i<scope.function.colsToDeriveFrom.length; ++i)
-                params.splice(0,1);
+            for (var i = 1; i < scope.function.colsToDeriveFrom.length; ++i) {
+                params.splice(0, 1);
+            }
             return params;
         }
         scope.addDeriveFunction = function() {
