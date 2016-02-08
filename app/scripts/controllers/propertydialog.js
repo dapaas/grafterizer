@@ -68,6 +68,17 @@ $scope.addColumn = function(query) {
     };
 };
     
+      $scope.onConditionalChange = function(value) {
+      
+            if (!value)  {
+                $scope.propertyValue.condition = [{column: null,
+                                                   operator: {id:0, name: 'Not empty'},
+                                                   operand: '',
+                                                   conj: null}];
+                $scope.propertyCondition = false;
+            }
+  }; 
+    
   $scope.showSearchDialog = true;
   $scope.showProgress = false;
 
