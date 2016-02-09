@@ -21,8 +21,62 @@ angular.module('grafterizerApp')
   var connection = leObject.serveraddress;
   $scope.dialogState = {};
   $scope.dialogState.selectedTab = 0;
-$scope.columnLiteralHasDatatype = false;
+  $scope.columnLiteralHasDatatype = false;
+  $scope.nodeCondition = false;
   $scope.disableBlankNodeOption = false;
+    
+   $scope.colnames = (typeof $rootScope.colnames === 'undefined') ? [] : $rootScope.colnames();
+  $scope.prefixes = function() {
+      var allPrefixes = [];
+      for (var i = 0; i < $rootScope.transformation.rdfVocabs.length; ++i)
+          allPrefixes.push({id: i, 
+                            value: $rootScope.transformation.rdfVocabs[i].name});
+      return allPrefixes;
+  }
+ 
+     $scope.conditionOperators = [
+    {
+        id:0,
+        name:'Not empty'
+    },
+    {
+        id:1,
+        name:'Equals (=)'
+    },
+    {
+        id:2,
+        name:'Not equals (!=)'
+    },
+    {
+        id:3,
+        name:'Greater than (>)'
+    },
+    {
+        id:4,
+        name:'Less than (<)'
+    },
+    {
+        id:5,
+        name:'Contains text'
+    },
+  
+    {
+        id:6,
+        name:'Custom code'
+    }
+    ];
+    
+     $scope.onConditionalChange = function(value) {
+      
+            if (!value)  {
+                $scope.propertyValue.condition = [{column: null,
+                                                   operator: {id:0, name: 'Not empty'},
+                                                   operand: '',
+                                                   conj: null}];
+                $scope.nodeCondition = false;
+            }
+  }; 
+    
   if ($scope.parentNode) {
     if ($scope.parentNode instanceof transformationDataModel.Graph) {
       $scope.disableBlankNodeOption = true;
@@ -32,8 +86,26 @@ $scope.columnLiteralHasDatatype = false;
   if ($scope.nodeCurrentState) {
     
     $scope.propertyValue = {
-      value: $scope.nodeCurrentState.__type === 'ConstantURI' ? $scope.nodeCurrentState.prefix + ':' + $scope.nodeCurrentState.constant : ''
+      value: $scope.nodeCurrentState.__type === 'ConstantURI' ? $scope.nodeCurrentState.prefix + ':' + $scope.nodeCurrentState.constant : '',
+        condition: [{column: null,
+                 operator: {id:0, name: 'Not empty'},
+                 operand: '',
+                 conj: null}]
     };
+       if ($scope.nodeCurrentState.hasOwnProperty('nodeCondition')  && $scope.nodeCurrentState.nodeCondition.length !== 0) {
+          $scope.nodeCondition = true;
+                $scope.propertyValue.condition = [];
+          //$scope.propertyValue.condition = $scope.property.propertyCondition; 
+          for (var i = 0; i < $scope.nodeCurrentState.nodeCondition.length; ++i) {
+            
+            $scope.propertyValue.condition.push({column: $scope.nodeCurrentState.nodeCondition[i].column,
+                                                 operator: $scope.nodeCurrentState.nodeCondition[i].operator,
+                                                 operand: $scope.nodeCurrentState.nodeCondition[i].operand,
+                                                 conj: $scope.nodeCurrentState.nodeCondition[i].conj
+                                                });
+      }
+   
+  }
       if ($scope.nodeCurrentState.__type === 'ConstantURI') 
           $scope.nodeCurrentState.prefix = ($scope.nodeCurrentState.prefix.hasOwnProperty('id') ? $scope.nodeCurrentState.prefix : {id:0, value: $scope.nodeCurrentState.prefix});
 
@@ -63,7 +135,11 @@ $scope.columnLiteralHasDatatype = false;
     }
   } else {
     $scope.propertyValue = {
-      value: ''
+      value: '',
+      condition: [{column: null,
+                   operator: {id:0, name: 'Not empty'},
+                   operand: '',
+                   conj: null}]
     };
        /*$scope.prefixValue = {
            id:0,
@@ -115,14 +191,7 @@ $scope.columnLiteralHasDatatype = false;
 
     return false;
   };
-  $scope.colnames = (typeof $rootScope.colnames === 'undefined') ? [] : $rootScope.colnames();
-  $scope.prefixes = function() {
-      var allPrefixes = [];
-      for (var i = 0; i < $rootScope.transformation.rdfVocabs.length; ++i)
-          allPrefixes.push({id: i, 
-                            value: $rootScope.transformation.rdfVocabs[i].name});
-      return allPrefixes;
-  }
+ 
   
     $scope.availableDatatypes = [
     {
@@ -189,7 +258,7 @@ $scope.addPref = function(query) {
     };
 };
   $scope.changeType = function() {
-    
+
     switch ($scope.dialogState.selectedTab) {
       case 0:
         if ($scope.dialogState.mappingType === 'dataset-col') {
@@ -197,6 +266,7 @@ $scope.addPref = function(query) {
             $scope.nodeCurrentState = new transformationDataModel.ColumnURI(
               $scope.nodeCurrentState.prefix ? $scope.nodeCurrentState.prefix : {id:0,value:''},
               $scope.nodeCurrentState.column ? $scope.nodeCurrentState.column : '',
+              [],
               $scope.nodeCurrentStateSubElements ? $scope.nodeCurrentStateSubElements : []
             );
 
@@ -206,6 +276,7 @@ $scope.addPref = function(query) {
             $scope.nodeCurrentState = new transformationDataModel.ConstantURI(
               $scope.nodeCurrentState.prefix ? $scope.nodeCurrentState.prefix : '',
               $scope.nodeCurrentState.constant ? $scope.nodeCurrentState.constant : '',
+              [],
               $scope.nodeCurrentStateSubElements ? $scope.nodeCurrentStateSubElements : []
             );
           }
@@ -221,13 +292,15 @@ $scope.addPref = function(query) {
               $scope.nodeCurrentState.onEmpty,
               $scope.nodeCurrentState.onError,
               ($scope.nodeCurrentState.langTag ? $scope.nodeCurrentState.langTag : ''),
-              ($scope.nodeCurrentState.datatypeURI ? $scope.nodeCurrentState.datatypeURI : ''));
+              ($scope.nodeCurrentState.datatypeURI ? $scope.nodeCurrentState.datatypeURI : ''),
+              []);
              
           }
         } else {
           if ($scope.nodeCurrentState.__type !== 'ConstantLiteral') {
             $scope.nodeCurrentState = new transformationDataModel.ConstantLiteral(
-              $scope.nodeCurrentState.literalValue ? $scope.nodeCurrentState.literalValue : ''
+              $scope.nodeCurrentState.literalValue ? $scope.nodeCurrentState.literalValue : '',
+              []
             );
           }
         }
@@ -236,7 +309,8 @@ $scope.addPref = function(query) {
       case 2:
         if ($scope.nodeCurrentState.__type !== 'BlankNode') {
           $scope.nodeCurrentState = new transformationDataModel.BlankNode(
-            $scope.nodeCurrentState.subElements ? $scope.nodeCurrentState.subElements : []
+            $scope.nodeCurrentState.subElements ? $scope.nodeCurrentState.subElements : [],
+            []
           );
         }
 
@@ -256,7 +330,19 @@ $scope.addPref = function(query) {
   } 
         
   $scope.addNode = function() {
-     
+           
+      var conditions = [];
+      for (var i = 0; i < $scope.propertyValue.condition.length; ++i) {
+          if (!($scope.propertyValue.condition[i].column === null && $scope.propertyValue.condition[i].operator.id === 0)) {
+          
+              conditions.push(new transformationDataModel.Condition($scope.propertyValue.condition[i].column,
+                                                                    $scope.propertyValue.condition[i].operator,
+                                                                    $scope.propertyValue.condition[i].operand,
+                                                                    $scope.propertyValue.condition[i].conj));
+          }
+      }
+      $scope.nodeCurrentState.nodeCondition = conditions;
+      
        //if (!$scope.columnLiteralHasDatatype)   $scope.nodeCurrentState.datatype = {name: 'unspecified', value: 0};
     if ($scope.nodeCurrentState.__type === 'ConstantURI') {
       if ($scope.isProbablyUri($scope.propertyValue.value)) {

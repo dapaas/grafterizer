@@ -1520,28 +1520,30 @@ angular.module('grafterizerApp')
   };
   this.URINode = URINode;
 
-  var ConstantURI = function(prefix, constantURIText, /*nodeCondition,*/ subElements) {
+  var ConstantURI = function(prefix, constantURIText, nodeCondition, subElements) {
     URINode.call(this, prefix, subElements);
     this.constant = constantURIText;
-    //this.nodeCondition = nodeCondition;
+    this.nodeCondition = nodeCondition;
     this.__type = 'ConstantURI';
   };
   ConstantURI.prototype = Object.create(URINode.prototype);
   ConstantURI.revive = function(data) {
-      /*var conditions = [];
+      var conditions = [];
+      if (data.hasOwnProperty('nodeCondition')) {
         if (data.nodeCondition.constructor === Array && data.nodeCondition.length > 0) {
             for (var i = 0; i< data.nodeCondition.length; ++i) {
                 conditions.push(Condition.revive(data.nodeCondition[i]));
             }
-        }*/
-    return new ConstantURI(data.prefix, data.constant, /*conditions,*/ data.subElements);
+        }
+      }
+    return new ConstantURI(data.prefix, data.constant, conditions, data.subElements);
   };
   this.ConstantURI = ConstantURI;
 
-  var ColumnURI = function(prefix, columnName, /*nodeCondition,*/ subElements) {
+  var ColumnURI = function(prefix, columnName, nodeCondition, subElements) {
     URINode.call(this, prefix.value, subElements);
     this.column = columnName;
-   // this.nodeCondition = nodeCondition;
+    this.nodeCondition = nodeCondition;
     this.__type = 'ColumnURI';
   };
   ColumnURI.prototype = Object.create(URINode.prototype);
@@ -1558,13 +1560,15 @@ angular.module('grafterizerApp')
         id:0,
         value:data.prefix
     };
-     /* var conditions = [];
+      var conditions = [];
+       if (data.hasOwnProperty('nodeCondition')) {
         if (data.nodeCondition.constructor === Array && data.nodeCondition.length > 0) {
             for (var i = 0; i< data.nodeCondition.length; ++i) {
                 conditions.push(Condition.revive(data.nodeCondition[i]));
             }
-        }*/
-      return new ColumnURI(prefix, colname, /*conditions,*/ data.subElements);
+        }
+       }
+      return new ColumnURI(prefix, colname, conditions, data.subElements);
   };
   this.ColumnURI = ColumnURI;
     
@@ -1646,7 +1650,7 @@ angular.module('grafterizerApp')
   };
   this.Property = Property;
 
-  var ColumnLiteral = function(literalText,datatype,onEmpty,onError,langTag,datatypeURI/*, nodeCondition*/) {
+  var ColumnLiteral = function(literalText,datatype,onEmpty,onError,langTag,datatypeURI, nodeCondition) {
     RDFElement.call(this, []);
     this.literalValue = literalText;
     this.datatype = datatype;
@@ -1654,7 +1658,7 @@ angular.module('grafterizerApp')
     this.onError = onError;
     this.langTag = langTag;
     this.datatypeURI = datatypeURI;
-  //  this.nodeCondition = nodeCondition;
+    this.nodeCondition = nodeCondition;
     this.__type = 'ColumnLiteral';
   };
   ColumnLiteral.prototype = Object.create(RDFElement.prototype);
@@ -1674,13 +1678,15 @@ angular.module('grafterizerApp')
       var onError = data.hasOwnProperty('onError') ? data.onError : null;
       var langTag = data.hasOwnProperty('langTag') ? data.langTag : null;
       var datatypeURI = data.hasOwnProperty('datatypeURI') ? data.datatypeURI : null;
-     /* var conditions = [];
+      var conditions = [];
+       if (data.hasOwnProperty('nodeCondition')) {
         if (data.nodeCondition.constructor === Array && data.nodeCondition.length > 0) {
             for (var i = 0; i< data.nodeCondition.length; ++i) {
                 conditions.push(Condition.revive(data.nodeCondition[i]));
             }
-        }*/
-    return new ColumnLiteral(colname, datatype, onEmpty, onError, langTag, datatypeURI/* conditions*/);
+        }
+       }
+    return new ColumnLiteral(colname, datatype, onEmpty, onError, langTag, datatypeURI, conditions);
       
   };
   this.ColumnLiteral = ColumnLiteral;
@@ -1702,39 +1708,43 @@ angular.module('grafterizerApp')
   };
   this.ColumnLiteral = ColumnLiteral;
 */
-  var ConstantLiteral = function(literalText/*, nodeCondition*/) {
+  var ConstantLiteral = function(literalText, nodeCondition) {
     RDFElement.call(this, []);
     this.literalValue = literalText;
-  //  this.nodeCondition = nodeCondition;
+    this.nodeCondition = nodeCondition;
     this.__type = 'ConstantLiteral';
   };
   ConstantLiteral.prototype = Object.create(RDFElement.prototype);
   ConstantLiteral.revive = function(data) {
-      /*var conditions = [];
+      var conditions = [];
+       if (data.hasOwnProperty('nodeCondition')) {
         if (data.nodeCondition.constructor === Array && data.nodeCondition.length > 0) {
             for (var i = 0; i< data.nodeCondition.length; ++i) {
                 conditions.push(Condition.revive(data.nodeCondition[i]));
             }
-        }*/
-    return new ConstantLiteral(data.literalValue/*, conditions*/);
+        }
+       }
+    return new ConstantLiteral(data.literalValue, conditions);
   };
   this.ConstantLiteral = ConstantLiteral;
 
   // TODO add support for blank nodes
-  var BlankNode = function(/*nodeCondition,*/ subElements) {
+  var BlankNode = function(nodeCondition, subElements) {
     RDFElement.call(this, subElements);
-   // this.nodeCondition = nodeCondition;
+    this.nodeCondition = nodeCondition;
     this.__type = 'BlankNode';
   };
   BlankNode.prototype = Object.create(URINode.prototype);
   BlankNode.revive = function(data) {
-     /* var conditions = [];
+      var conditions = [];
+       if (data.hasOwnProperty('nodeCondition')) {
         if (data.nodeCondition.constructor === Array && data.nodeCondition.length > 0) {
             for (var i = 0; i< data.nodeCondition.length; ++i) {
                 conditions.push(Condition.revive(data.nodeCondition[i]));
             }
-        }*/
-    return new BlankNode(/*conditions,*/ data.subElements);
+        }
+       }    
+    return new BlankNode(conditions, data.subElements);
   };
   this.BlankNode = BlankNode;
 
@@ -1991,6 +2001,9 @@ angular.module('grafterizerApp')
         if (rootNode instanceof ColumnLiteral)
           if (requestedColumnKeys.indexOf(rootNode.literalValue.value) === -1)
             requestedColumnKeys.push(rootNode.literalValue.value);
+        for (var k = 0; k < rootNode.nodeCondition.length; ++k)
+          if (rootNode.nodeCondition[k].column && requestedColumnKeys.indexOf(rootNode.nodeCondition[k].column.value) === -1)
+            requestedColumnKeys.push(rootNode.nodeCondition[k].column.value);
         requestedColumnKeys = getKeysFromSubs(rootNode, requestedColumnKeys);
       }
 
@@ -2047,17 +2060,25 @@ angular.module('grafterizerApp')
 
   // TODO should this just be a prototype function of every RDFElement?
   var getKeysFromSubs = function(rootNode, subColKeys) {
+     
     for (var i = 0; i < rootNode.subElements.length; ++i) {
       if (rootNode.subElements[i] instanceof ColumnURI)
         if (subColKeys.indexOf(rootNode.subElements[i].column.value) === -1)
           subColKeys.push(rootNode.subElements[i].column.value);
-      if (rootNode.subElements[i] instanceof ColumnLiteral)
+      if (rootNode.subElements[i] instanceof ColumnLiteral) 
+          
         if (subColKeys.indexOf(rootNode.subElements[i].literalValue.value) === -1)
           subColKeys.push(rootNode.subElements[i].literalValue.value);
+      
       if (rootNode.subElements[i] instanceof Property)
         for (var j = 0; j < rootNode.subElements[i].propertyCondition.length; ++j)
           if (rootNode.subElements[i].propertyCondition[j].column && subColKeys.indexOf(rootNode.subElements[i].propertyCondition[j].column.value) === -1)
             subColKeys.push(rootNode.subElements[i].propertyCondition[j].column.value);
+      if (rootNode.subElements[i].__type !== "Property") {
+        for (var j = 0; j < rootNode.subElements[i].nodeCondition.length; ++j)
+          if (rootNode.subElements[i].nodeCondition[j].column && subColKeys.indexOf(rootNode.subElements[i].nodeCondition[j].column.value) === -1)
+            subColKeys.push(rootNode.subElements[i].nodeCondition[j].column.value);
+    }
       getKeysFromSubs(rootNode.subElements[i], subColKeys);
     }
 

@@ -245,6 +245,83 @@ angular.module('grafterizerApp')
     return pipeline;
   }
 
+    function parseConditions(condArray) {
+        var parsedConditions = [];
+             var regexParsed;
+             for (var a = 0; a < condArray.length; ++a)
+                  {
+                   
+                      var cond = condArray[a];
+                      var operator,parsedCond;
+                      
+                      switch (cond.operator.id)
+                          {
+                              case 0:
+                                  
+                                  parsedCond = new jsedn.List([jsedn.sym('not-empty?'), jsedn.sym(cond.column.value)]);
+                                 
+                                  break;
+                              case 1:
+                                  operator = '=';
+                                  break;
+                              case 2:
+                                  operator = 'not=';
+                                  break;
+                              case 3:
+                                  operator = '>';
+                                  break;
+                              case 4:
+                                  operator = '<';
+                                  break;   
+                              case 5:
+                                  regexParsed = '#\"(?i).*' + cond.operand + '.*\"';
+                                  parsedCond = new jsedn.List([jsedn.sym('not'),
+                                                               new jsedn.List([jsedn.sym('nil?'),
+                                                                                new jsedn.List([jsedn.sym('re-find'),
+                                                                                                new jsedn.List([jsedn.sym('read-string'), regexParsed]), jsedn.sym(cond.column.value)])])]);
+                                  break;
+                              default:
+                                  
+                                  var condElems = cond.operand.split(" ");
+                                  for (var j = 0; j < condElems.length; ++j)
+                                      condElems[j] = new jsedn.sym(condElems[j]);
+                                  parsedCond = new jsedn.List(condElems);
+                                  break;
+                                  
+                                  
+                          }
+                     
+                      if (parsedCond !== undefined) {
+                           
+                          parsedConditions.push(parsedCond);
+                      }
+                      else {
+                          if (isNaN(cond.operand)) {
+                            parsedConditions.push(new jsedn.List([jsedn.sym(operator), jsedn.sym(cond.column.value), cond.operand]));
+                          }
+                          else {
+                              parsedConditions.push(new jsedn.List([jsedn.sym(operator), jsedn.sym(cond.column.value), Number(cond.operand)]));
+                          }
+                      }
+                  }
+        return parsedConditions;
+        
+    }
+    function constructConditionalNodeVectorJsEdn(node, currentNodeJsEdn) {
+        var modifCurrentNodeJsEdn = currentNodeJsEdn;
+        if (node.nodeCondition.length > 0) {
+            var parsedConditions = parseConditions(node.nodeCondition);
+                      if (parsedConditions.length === 1) {
+                          modifCurrentNodeJsEdn = new jsedn.List([jsedn.sym("if"),                                                                                                                parsedConditions[0],                                                         currentNodeJsEdn]);
+                      }
+                      else {
+                           modifCurrentNodeJsEdn = new jsedn.List([jsedn.sym("if"),                                                                                                                parsedConditions[0],                                                         currentNodeJsEdn]); 
+                      }
+                
+             } 
+       
+        return modifCurrentNodeJsEdn;
+    }
   /* Constructs and returns the RDF creation function. */
   function constructRDFGraphFunction(transformation) {
     //var prefixersInGUI = transformation.prefixers;
@@ -285,19 +362,28 @@ angular.module('grafterizerApp')
       for (j = 0; j < currentGraph.graphRoots.length; ++j) {
          
         currentRootJsEdn = constructNodeVectorEdn(currentGraph.graphRoots[j], currentGraph);
+      
+            
+
         if (currentRootJsEdn) {
           if (currentRootJsEdn.constructor === Array) {
               for (var i = 0; i < currentRootJsEdn.length; ++i) {
                 
-                  currentGraphJsEdn.val.push(currentRootJsEdn[i]);
+                  currentGraphJsEdn.val.push(constructConditionalNodeVectorJsEdn(currentGraph.graphRoots[j],currentRootJsEdn[i]));
+                
               }
           }
             else {
-                currentGraphJsEdn.val.push(currentRootJsEdn);
+                currentGraphJsEdn.val.push(constructConditionalNodeVectorJsEdn(currentGraph.graphRoots[j],currentRootJsEdn));
+            
             }
               
           
         }
+         
+              
+          
+        
       }
 
       graphFunction.val.push(currentGraphJsEdn);
@@ -307,6 +393,7 @@ angular.module('grafterizerApp')
 
     return result;
   }
+    
   function constructNodeVectorEdn(node, containingGraph) {
     var i;
     var k;
@@ -444,90 +531,34 @@ angular.module('grafterizerApp')
         for (k = 0; k < node.subElements.length; ++k) {
           subElementEdn = constructNodeVectorEdn(node.subElements[k]);
           if (subElementEdn) {
-              
-             
-             /*if (node.subElements[k] instanceof transformationDataModel.Property && !(node.subElements[k].propertyCondition === undefined || node.subElements[k].propertyCondition === '')) {
-                
-              var condSubElementsVector = new jsedn.Vector([constructColumnURINodeJsEdn(node, containingGraph),subElementEdn]);
-                 /*add property as conditional, push it in a vector of all return values, in caller -- parse this vector one by one*/
-             /* var condElems = node.subElements[k].propertyCondition.split(" ");
-              for (var a = 0; a< condElems.length; ++a)
-                  condElems[a] = new jsedn.sym(condElems[a]);
-              allSubElementsArray.push(new jsedn.List([jsedn.sym("if"),
-                                                         new jsedn.List(condElems),
-                                                         condSubElementsVector]));
-                
-             }*/
-                  if (node.subElements[k] instanceof transformationDataModel.Property && node.subElements[k].propertyCondition.length > 0) {
-              
-              var condSubElementsVector = new jsedn.Vector([constructColumnURINodeJsEdn(node, containingGraph),subElementEdn]);
-              var parsedConditions = [];
-              var regexParsed;
-              for (var a = 0; a < node.subElements[k].propertyCondition.length; ++a)
-                  {
-                   
-                      var cond = node.subElements[k].propertyCondition[a];
-                       console.log(cond); 
-                      var operator,parsedCond;
-                      
-                      switch (cond.operator.id)
-                          {
-                              case 0:
-                                  
-                                  parsedCond = new jsedn.List([jsedn.sym('not-empty?'), jsedn.sym(cond.column.value)]);
-                                 
-                                  break;
-                              case 1:
-                                  operator = '=';
-                                  break;
-                              case 2:
-                                  operator = 'not=';
-                                  break;
-                              case 3:
-                                  operator = '>';
-                                  break;
-                              case 4:
-                                  operator = '<';
-                                  break;   
-                              case 5:
-                                  regexParsed = '#\"(?i).*' + cond.operand + '.*\"';
-                                  parsedCond = new jsedn.List([jsedn.sym('not'),
-                                                               new jsedn.List([jsedn.sym('nil?'),
-                                                                                new jsedn.List([jsedn.sym('re-find'),
-                                                                                                new jsedn.List([jsedn.sym('read-string'), regexParsed]), jsedn.sym(cond.column.value)])])]);
-                                  break;
-                              default:
-                                  
-                                  var condElems = cond.operand.split(" ");
-                                  for (var j = 0; j < condElems.length; ++j)
-                                      condElems[j] = new jsedn.sym(condElems[j]);
-                                  parsedCond = new jsedn.List(condElems);
-                                  break;
-                                  
-                                  
-                          }
+               if (node.subElements[k] instanceof transformationDataModel.Property) {
+                  var parsedConditions = [];                                                                
+                  if (node.subElements[k].propertyCondition.length > 0) {
+                      var condSubElementsVector = new jsedn.Vector([constructColumnURINodeJsEdn(node, containingGraph),subElementEdn]);
+                      parsedConditions = parseConditions(node.subElements[k].propertyCondition);
                      
-                      if (parsedCond !== undefined) {
-                           
-                          parsedConditions.push(parsedCond);
-                      }
-                      else {
-                          if (isNaN(cond.operand)) {
-                            parsedConditions.push(new jsedn.List([jsedn.sym(operator), jsedn.sym(cond.column.value), cond.operand]));
-                          }
-                          else {
-                              parsedConditions.push(new jsedn.List([jsedn.sym(operator), jsedn.sym(cond.column.value), Number(cond.operand)]));
-                          }
-                      }
-                  }
-  //                    console.log(parsedConditions.length);
                       if (parsedConditions.length === 1) {
-                          allSubElementsArray.push(new jsedn.List([jsedn.sym("if"),                                                                                                                parsedConditions[0],                                                         condSubElementsVector]));
+                          allSubElementsArray.push(new jsedn.List([jsedn.sym("if"),                                                                                                                parsedConditions[0],
+                                                                   condSubElementsVector]));
                       }
                       else {
-                           allSubElementsArray.push(new jsedn.List([jsedn.sym("if"),                                                                                                                parsedConditions[0],                                                         condSubElementsVector])); /*!!!!!!!!!*/
+                           allSubElementsArray.push(new jsedn.List([jsedn.sym("if"),                                                                                                               parsedConditions[0],                                                                                                           condSubElementsVector])); /*!!!!!!!!!*/
                       }
                 
+             }
+            else 
+              if (node.subElements[k].subElements[0].nodeCondition.length > 0) {
+              
+                var condSubElementsVector = new jsedn.Vector([constructColumnURINodeJsEdn(node, containingGraph),subElementEdn]);
+                parsedConditions = parseConditions(node.subElements[k].subElements[0].nodeCondition);
+                     
+  //                    console.log(parsedConditions.length);
+                if (parsedConditions.length === 1) {
+                    allSubElementsArray.push(new jsedn.List([jsedn.sym("if"),                                                                                                                parsedConditions[0],                                                                                                            condSubElementsVector]));
+                      }
+                else {
+                    allSubElementsArray.push(new jsedn.List([jsedn.sym("if"),                                                                                                                parsedConditions[0],                                                                                                            condSubElementsVector])); /*!!!!!!!!!*/
+                      }    
              }
              else {
             //allSubElementsVector.val.push(subElementEdn);
@@ -535,21 +566,25 @@ angular.module('grafterizerApp')
              }
           }
         }
+        }
           allSubElementsArray.push(nonCondSubElementsVector);
           
           return allSubElementsArray;
         //return allSubElementsVector;
       }
+        
     }
 
     if (node instanceof transformationDataModel.ConstantURI) {
+      var allSubElementsArray = [];
       if (node.subElements.length === 0) {
         // return the column - single-noded graph
         // TODO check in keywords array if this exists
         var nodeText = constructConstantURINodeJsEdn(node, containingGraph);
         return nodeText;
 
-      } else {
+      } 
+        /*else {
         // [node-uri-as-generated {sub-1's edn representation} {sub-2's edn representation} ... {sub-n's edn representation}]
         allSubElementsVector = new jsedn.Vector([constructConstantURINodeJsEdn(node, containingGraph)]);
         for (i = 0; i < node.subElements.length; ++i) {
@@ -562,6 +597,55 @@ angular.module('grafterizerApp')
         }
 
         return allSubElementsVector;
+      }*/
+        
+        else {
+        // [node-uri-as-generated {sub-1's edn representation} {sub-2's edn representation} ... {sub-n's edn representation}]
+        //allSubElementsVector = new jsedn.Vector([constructColumnURINodeJsEdn(node, containingGraph)]);
+        nonCondSubElementsVector = new jsedn.Vector([constructConstantURINodeJsEdn(node, containingGraph)]);
+        for (k = 0; k < node.subElements.length; ++k) {
+          subElementEdn = constructNodeVectorEdn(node.subElements[k]);
+          if (subElementEdn) {
+               if (node.subElements[k] instanceof transformationDataModel.Property) {
+                  var parsedConditions = [];                                                                
+                  if (node.subElements[k].propertyCondition.length > 0) {
+                      var condSubElementsVector = new jsedn.Vector([constructConstantURINodeJsEdn(node, containingGraph),subElementEdn]);
+                      parsedConditions = parseConditions(node.subElements[k].propertyCondition);
+                     
+                      if (parsedConditions.length === 1) {
+                          allSubElementsArray.push(new jsedn.List([jsedn.sym("if"),                                                                                                                parsedConditions[0],
+                                                                   condSubElementsVector]));
+                      }
+                      else {
+                           allSubElementsArray.push(new jsedn.List([jsedn.sym("if"),                                                                                                               parsedConditions[0],                                                                                                           condSubElementsVector])); /*!!!!!!!!!*/
+                      }
+                
+             }
+            else 
+              if (node.subElements[k].subElements[0].nodeCondition.length > 0) {
+              
+                var condSubElementsVector = new jsedn.Vector([constructConstantURINodeJsEdn(node, containingGraph),subElementEdn]);
+                parsedConditions = parseConditions(node.subElements[k].subElements[0].nodeCondition);
+                     
+  //                    console.log(parsedConditions.length);
+                if (parsedConditions.length === 1) {
+                    allSubElementsArray.push(new jsedn.List([jsedn.sym("if"),                                                                                                                parsedConditions[0],                                                                                                            condSubElementsVector]));
+                      }
+                else {
+                    allSubElementsArray.push(new jsedn.List([jsedn.sym("if"),                                                                                                                parsedConditions[0],                                                                                                            condSubElementsVector])); /*!!!!!!!!!*/
+                      }    
+             }
+             else {
+            //allSubElementsVector.val.push(subElementEdn);
+            nonCondSubElementsVector.val.push(subElementEdn);
+             }
+          }
+        }
+        }
+          allSubElementsArray.push(nonCondSubElementsVector);
+          
+          return allSubElementsArray;
+        //return allSubElementsVector;
       }
 
     }
@@ -652,6 +736,7 @@ angular.module('grafterizerApp')
   function constructColumnURINodeJsEdn(colURINode, containingGraph) {
     // graph URI as prefix, add nothing
     var nodePrefix = colURINode.prefix.hasOwnProperty('id') ? colURINode.prefix.value : colURINode.prefix;
+      
     var nodeValue = colURINode.column.value;
     if (nodePrefix === null || nodePrefix === undefined) {
       // base graph URI
@@ -785,6 +870,7 @@ angular.module('grafterizerApp')
   var graphPrefix = [];
 
   function isPrefixExist(prefix) {
+    
     for (var i = 0; i < graphPrefix.length; i++) {
       if (graphPrefix[i] === prefix) {
 
@@ -851,8 +937,7 @@ angular.module('grafterizerApp')
     var i;
 
     //define vocabulary
-      var elementPrefix =  element.__type === 'ColumnURI' ? element.prefix.value : element.prefix;
-      
+      var elementPrefix =   (element.prefix !== undefined && element.prefix.hasOwnProperty('id') ? element.prefix.value : element.prefix);
     if (elementPrefix !== '' && elementPrefix !== undefined) {
        
       if (!isPrefixExist(elementPrefix)) {
