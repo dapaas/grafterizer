@@ -48,7 +48,7 @@
             -->
             <md-button aria-label='search' class="md-icon-button fa fa-search" ng-click="search(propertyValue.value)"></md-button>
           </div>
-            <md-switch style=" min-width:200px; " ng-model="propertyCondition" aria-label="add conditional property" ng-disabled="$root.readonlymode">
+            <md-switch style=" min-width:200px; " ng-model="propertyCondition" aria-label="add conditional property" ng-disabled="$root.readonlymode" ng-change="onConditionalChange(propertyCondition)">
                     Specify condition
                     </md-switch>
             <div class="md-padding"  ng-if = "propertyCondition" ng-repeat = "propCondition in propertyValue.condition">

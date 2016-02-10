@@ -3,9 +3,9 @@
         <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
         <div class="api-doc-docstring" layout = "column" ng-show = "showUsage">
             
-            <!--p>Reshapes a dataset. Two ways to reshape a dataset are available:</p>
+            <p>Reshapes a dataset. Two ways to reshape a dataset are available:</p>
                 <ol>
-                    <li-->
+                    <li>
                      <p> "Melt" operation performs this sequence of actions: </p>
                          <ul>
                          <li>Using set of pivot keys as observation identifier, extract observation names from column headers;</li>
@@ -71,7 +71,7 @@
                         </table>
                     </li>
                     <li>
-                    <!--p>"Cast" operation is reverse to melt. It forms column headers by identifying distinct observation variables and populates these columns by taking measurement values for each observation and performing specified aggregation on them. User therefore should specify column name that stores variables, and column name that stores values. Other columns will be treated as pivot keys </p> 
+                    <p>"Cast" operation is reverse to melt. It forms column headers by identifying distinct observation variables and populates these columns by taking measurement values for each observation and performing specified aggregation on them. User therefore should specify column name that stores variables, and column name that stores values. Other columns will be treated as pivot keys </p> 
                         <p> Set of available aggregations: </p>
                 <ul>
                     <li> MIN -- take minimum value for each observation
@@ -140,8 +140,40 @@
                                  <td>Intern</td>
                                  <td>2</td>
                              </tr>
+                        </table>
+                        <p>It is possible to aggregate values as follows</p>
+                         <table class="api-doc-docstring">
+                             <tr>
+                                 <td>CompanyName</td>
+                                 <td>Tester</td>
+                                 <td>SrSoftware_developer</td>
+                                 <td>JrSoftware_developer</td>
+                                 <td>Intern</td>
+                             </tr>
+                              <tr>
+                                 <td>Cisco</td>
+                                 <td>15</td>
+                                 <td>12</td>
+                                 <td>22</td>
+                                 <td></td>
+                             </tr>
+                             <tr>
+                                 <td>Oracle corporation</td>
+                                 <td>21</td>
+                                 <td>12</td>
+                                 <td></td>
+                                 <td>2</td>
+                             </tr>
+                             <tr>
+                                 <td>IBM</td>
+                                 <td>25</td>
+                                 <td></td>
+                                 <td>8</td>
+                                 <td></td>
+                             </tr>
+                        </table>
                     </li>
-                </ol-->
+                </ol>
                
             
            
