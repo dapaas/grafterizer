@@ -12,6 +12,7 @@ angular.module('grafterizerApp')
     $scope,
     $stateParams,
     ontotextAPI,
+    dataGraftApi,
     uploadFile,
     $rootScope,
     $state,
@@ -30,14 +31,15 @@ angular.module('grafterizerApp')
     $rootScope.readonlymode = true;
 
     // setTimeout(function() {
-    ontotextAPI.transformation(id).success(function(data) {
+    //ontotextAPI.transformation(id).success(function(data) {
+    dataGraftApi.getTransformation("comeonnn").success(function(data) {
       $scope.loading = false;
       $rootScope.readonlymode = $state.is('transformations.readonly');
       $scope.document = data;
       $scope.document.title = data['dct:title'];
       $scope.document.description = data['dct:description'];
       $scope.document.keywords = data['dcat:keyword'];
-
+        
       if (!$scope.document.keywords ||
         typeof $scope.document.keywords.length === 'undefined') {
         $scope.document.keywords = [];

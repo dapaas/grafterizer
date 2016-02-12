@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('grafterizerApp')
-  .controller('TransformationsCtrl', function($scope, ontotextAPI, $state) {
+  .controller('TransformationsCtrl', function($scope, ontotextAPI, dataGraftApi, $state) {
 
     var showTransformations = function(data) {
       $scope.transformations = data['dcat:record'].reverse();

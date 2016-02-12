@@ -1,0 +1,1023 @@
+---
+swagger: '2.0'
+info:
+  version: "1.0.0"
+  title: DataGraft Reborn
+  description: |
+host: 127.0.0.1:3000
+schemes:
+  - http
+  - https
+securityDefinitions:
+  GitHub access code:
+    type: oauth2
+    scopes:
+      user: 'Grants read/write access to profile info only. Note that this scope includes user:email and user:follow.'
+      'user:email': Grants read access to a user’s email addresses.
+      'user:follow': Grants access to follow or unfollow other users.
+    flow: accessCode
+    authorizationUrl: 'https://github.com/login/oauth/authorize'
+    tokenUrl: 'https://github.com/login/oauth/access_token'
+  APIKey:
+    type: apiKey
+    in: header
+    name: X-user-token
+security:
+  - GitHub access code:
+      - user
+      - 'user:email'
+      - 'user:follow'
+  - APIKey: []
+
+paths:
+  /api_keys:
+    get:
+      description: Get all of a user's API keys
+      produces: 
+        - application/json
+      security: 
+        - APIKey: []
+      responses:
+        200:
+          description: Success in retrieving API keys
+    post:
+      description: Create new API key
+      produces: 
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: api_key
+          schema: 
+            $ref: '#/definitions/APIKey'
+          required: true
+          
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully created API key  
+          
+  /api_keys/{id}:
+    get:
+      description: Get the attributes of the API key
+      produces: 
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: ID of the API key to be deleted
+          required: true
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully obtained info about API key
+    patch:
+      description: Update an API key
+      produces: 
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: ID of the API key to be updated
+          required: true
+          type: string
+          
+        - in: body
+          name: api_key
+          schema: 
+            $ref: '#/definitions/APIKeyPatch'
+          required: true
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully updated API key
+    delete:
+      description: Update an API key
+      produces: 
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: ID of the API key to be deleted
+          required: true
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        204:
+          description: Successfully deleted API key
+    
+  
+  /{user}/catalogues:
+    get:
+      description: Obtain a list of all public catalogues for a user. If provided with an enabled API key for that user,   returns also the private catalogues.
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          required: true
+          in: path
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully retrieved list of catalogues
+    post:
+      description: Creates a new catalogue for the given user
+      produces:
+        - application/json
+      parameters: 
+        - name: user
+          required: true
+          description: ID of the user for whom to obtain the catalogue
+          in: path
+          type: string
+        - name: catalogue
+          in: body
+          schema:
+            $ref: '#/definitions/Catalogue'
+          required: true
+      security:
+        - APIKey: []
+      responses:
+        201:
+          description: Successfully created a catalogue
+          
+  /{user}/catalogues/{id}:
+    get:
+      description: Obtain the attributes of the catalogue
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: user
+          description: User that the catalogue belongs to
+          required: true
+          type: string
+        - in: path
+          name: id
+          description: ID (slug) of the catalogue to retrieve
+          required: true
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully obtained the catalogue
+    put:
+      description: Update a catalogue (replace the currently stored one with the one provided in this call)
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: user
+          description: User that the catalogue belongs to
+          required: true
+          type: string
+        - in: path
+          name: id
+          description: ID (slug) of the catalogue to replace
+          required: true
+          type: string
+        - in: body
+          name: catalogue
+          schema:
+            $ref: '#/definitions/Catalogue'
+          required: true
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully replaced the catalogue
+    patch:
+      description: Update a catalogue (only change the properties provided in the call)
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: user
+          description: User that the catalogue belongs to
+          required: true
+          type: string
+        - in: path
+          name: id
+          description: ID (slug) of the catalogue to change
+          required: true
+          type: string
+        - in: body
+          name: catalogue
+          schema: 
+            $ref: '#/definitions/Catalogue'
+          required: true
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully updated catalogue
+    delete:
+      description: Delete a catalogue
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: user
+          description: User that the catalogue belongs to*
+          required: true
+          type: string
+        - in: path
+          name: id
+          description: ID (slug) of the catalogue to delete
+          required: true
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        204:
+          description: Successfully deleted the catalogue
+          
+  /{user}/catalogues/{id}/star:
+    post:
+      description: Star the selected catalogue
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          description: ID of the user for who to star the catalogue
+          required: true
+          type: string
+        - name: id
+          in: path
+          description: ID (slug) of the catalogue to be stared
+          required: true
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully stared the caralogue
+          
+  /{user}/catalogue/{id}/unstar:
+    post:
+      description: Unstar the selected catalogue
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: user
+          description: ID of the user for who to unstar the catalogue
+          required: true
+          type: string
+        - in: path
+          name: id
+          description: ID (slug) of the catalogue to be unstared
+          required: true
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully unstared the catalogue
+          
+
+  /{user}/data_distributions: 
+    get:
+      description: Obtain a list of all public data distributions for a user. If provided with an enabled API key for that user, returns also the private data distributions.
+      produces: 
+        - application/json
+      parameters:
+        - name: user
+          required: true
+          in: path
+          type: string
+      security: 
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully retrieved list of data distributions
+    post:
+      description: TODO DUE TO SWAGGER BUG THIS NEEDS TO BE TESTED WITH THE AUTO-GENERATED CLIENTS! Create a new data distribution
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          required: true
+          in: path
+          type: string
+          
+        - in: formData
+          name: public
+          required: false
+          type: boolean
+          
+        - in: formData
+          name: name
+          required: false
+          type: string  
+          
+        - in: formData
+          name: code
+          required: false
+          type: string
+          
+        - in: formData
+          name: file
+          required: false
+          type: file
+      security: 
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully created data distribution
+          
+  /{user}/data_distributions/{id}:
+    get:
+      description: Obtain the attributes of a data distribution
+      produces: 
+        - application/json
+      parameters:
+      - in: path
+        name: user
+        description: User that the data distribution belongs to
+        required: true
+        type: string
+      
+      - in: path
+        name: id
+        description: ID (slug) of the data distribution to retrieve
+        required: true
+        type: string
+      security: 
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully obtained distribution
+    put:
+      description: TO BE IMPLEMENTED - USE PATCH! Update a data distribution (replace the currently stored one with the one provided in the call)
+      produces: 
+        - application/json
+      parameters:
+        - in: path
+          name: user
+          description: User that the data distribution belongs to
+          required: true
+          type: string
+      
+        - in: path
+          name: id
+          description: ID (slug) of the data distribution to change
+          required: true
+          type: string
+      
+        - in: formData
+          name: public
+          required: true
+          type: boolean
+          
+        - in: formData
+          name: name
+          required: true
+          type: string
+          allowEmptyValue: true
+          
+        - in: formData
+          name: code
+          required: true
+          type: string
+          allowEmptyValue: true
+          
+        - in: formData
+          name: file
+          required: true
+          type: file
+          allowEmptyValue: true
+      security: 
+        - APIKey: []
+      responses:
+        200:
+          description: OK
+    patch:
+      description: TODO DUE TO SWAGGER BUG THIS NEEDS TO BE TESTED WITH THE AUTO-GENERATED CLIENTS! Update a data distribution (only change the properties provided in the call)
+      parameters:
+        - in: path
+          name: user
+          description: Data distribution to change
+          required: true
+          type: string
+      
+        - in: path
+          name: id
+          description: ID (slug) of the data distribution to change
+          required: true
+          type: string
+          
+        - in: formData
+          name: public
+          required: true
+          type: boolean
+          
+        - in: formData
+          name: name
+          required: false
+          type: string
+          
+        - in: formData
+          name: code
+          required: false
+          type: string
+          
+        - in: formData
+          name: file
+          required: false
+          type: file
+      security: 
+        - APIKey: []
+      responses:
+        200:
+          description: OK
+    delete:
+      description: Delete a data distribution
+      produces: 
+        - application/json
+      parameters:
+      - in: path
+        name: user
+        description: User that the data distribution belongs to
+        required: true
+        type: string
+      
+      - in: path
+        name: id
+        description: ID (slug) of the data distribution to delete
+        required: true
+        type: string
+      security: 
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully deleted distribution
+          
+  /{user}/data_distributions/{id}/star:
+    post:
+      description: (NOT TESTED) Star the selected data distribution
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to star the data distribution
+          type: string
+        - name: id
+          in: path
+          required: true 
+          description: ID (slug) of the data distribution to be stared
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully gave the data distribution a star
+          
+  /{user}/data_distributions/{id}/unstar:
+    post:
+      description: (NOT TESTED) Unstar the selected data distribution
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to unstar the data distribution
+          type: string
+        - name: id
+          in: path
+          required: true 
+          description: ID (slug) of the data distribution to be unstared
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully unstared the data distribution        
+          
+          
+  /{user}/transformations:
+    get:
+      description: Obtain a list of all public transformations for a user. If provided with an enabled API key for that user, returns also the private transformations.
+      produces: 
+        - application/json
+      accept:
+        - application/json
+      parameters:
+        - name: user
+          required: true
+          description: ID of the user for whom to obtain the list
+          in: path
+          type: string
+      security: 
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully retrieved list of transformations
+    post:
+      description: Creates a new transformation for the given user.
+      produces: 
+        - application/json
+      parameters:
+        - name: user
+          required: true
+          description: ID of the user for whom to obtain the list
+          in: path
+          type: string
+          
+        - name: transformation
+          in: body
+          schema: 
+            $ref: '#/definitions/Transformation'
+          required: true
+      security: 
+        - APIKey: []
+      responses:
+        201:
+          description: Successfully created a transformation
+          
+  /{user}/transformations/{id}:
+    get:
+      description: Obtain the attributes of a transformation
+      produces: 
+        - application/json
+      parameters:
+      - in: path
+        name: user
+        description: User that the transformation belongs to
+        required: true
+        type: string
+      
+      - in: path
+        name: id
+        description: ID (slug) of the transformation to retrieve
+        required: true
+        type: string
+      security: 
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully obtained transformation
+    put:
+      description: TO BE IMPLEMENTED - USE PATCH! Update a transformation (replace the currently stored one with the one provided in the call)
+      produces: 
+        - application/json
+      parameters:
+        - in: path
+          name: user
+          description: User that the transformation belongs to
+          required: true
+          type: string
+      
+        - in: path
+          name: id
+          description: ID (slug) of the transformation to change
+          required: true
+          type: string
+      
+        - name: transformation
+          in: body
+          schema: 
+            $ref: '#/definitions/Transformation'
+          required: true
+      security: 
+        - APIKey: []
+      responses:
+        200:
+          description: OK
+    patch:
+      description: Update a transformation (only change the properties provided in the call)
+      produces: 
+        - application/json
+      parameters:
+        - in: path
+          name: user
+          description: User that the transformation belongs to
+          required: true
+          type: string
+      
+        - in: path
+          name: id
+          description: ID (slug) of the transformation to change
+          required: true
+          type: string
+      
+        - name: transformation
+          in: body
+          schema: 
+            $ref: '#/definitions/Transformation'
+          required: true
+      security: 
+        - APIKey: []
+      responses:
+        200:
+          description: OK
+    delete:
+      description: Delete a transformation
+      produces: 
+        - application/json
+      parameters:
+      - in: path
+        name: user
+        description: User that the transformation belongs to
+        required: true
+        type: string
+      
+      - in: path
+        name: id
+        description: ID (slug) of the transformation to delete
+        required: true
+        type: string
+      security: 
+        - APIKey: []
+      responses:
+        204:
+          description: Successfully deleted transformation
+          
+  /{user}/transformations/{id}/star:
+    post:
+      description: Star the selected transformation
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to star the transformation
+          type: string
+        - name: id
+          in: path
+          required: true 
+          description: ID (slug) of the transformation to be stared
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully gave the transformation a star
+          
+  /{user}/transformations/{id}/unstar:
+    post:
+      description: Unstar the selected transformation
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to unstar the transformation
+          type: string
+        - name: id
+          in: path
+          required: true 
+          description: ID (slug) of the transformation to be unstared
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully unstared the transformation
+  
+  
+  
+          
+  /{user}/queriable_data_stores:
+    get:
+      description: Obtain a list of all public queriable data for a user. If provided with an enabled API key for that user, returns also the private queriable data.¨
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          required: true
+          description: ID of the user for whom to obtain the queriable data
+          in: path
+          type: string
+      security:
+        - APIKey: []
+      responses:
+          200:
+            description: Successfully retrieved the list of queriable data.
+            
+    post:
+      description: Create a new queriable data to be stored
+      produces: 
+        - application/json
+      parameters:
+        - name: user
+          required: true
+          description: ID of the user for whom to obtain the quireable data
+          in: path
+          type: string
+        - name: queriable_data_store
+          in: body
+          schema:
+            $ref: '#/definitions/QueriableData'
+          required: true
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully created the queriable data
+          
+  /{user}/queriable_data_stores/{id}:
+    get:
+      description: Obtain the attributes of the given queriable data
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to obtain the queriable data
+          type: string
+        - name: id
+          in: path
+          required: true 
+          description: ID (slug) of the queriable data to retrieve
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully obtained queriable data
+    delete:
+      description: Delete a queriable data
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user who wants to delete the queriable data
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the queriable data to delete
+          type: string
+      security: 
+        - APIKey: []
+      responses:
+        204:
+          description: Successfully deleted the queriable data
+    put:
+      description: Update a queriable data (replace the currently stored one with the one provided in the call)
+      produces: 
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to obtain the queriable data
+          type: string
+        - name: id
+          in: path
+          required: true 
+          description: ID (slug) of the queriable data to retrieve
+          type: string
+        - name: queriable_data_store
+          in: body
+          schema:
+            $ref: '#/definitions/QueriableData'
+          required: true
+      security:
+        - APIKey: []
+      responses:  
+        200:
+          description: Successfully updated the queriable data
+    put:
+      description: Update a queriable data (replace the currently stored one with the one provided in the call)
+      produces: 
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to obtain the queriable data
+          type: string
+        - name: id
+          in: path
+          required: true 
+          description: ID (slug) of the queriable data to retrieve
+          type: string
+        - name: queriable_data_store
+          in: body
+          schema:
+            $ref: '#/definitions/QueriableData'
+          required: true
+      security:
+        - APIKey: []
+      responses:  
+        200:
+          description: Successfully updated the queriable data
+    patch:
+      description: Update a queriable data (only change the properties provided in the call)
+      produces: 
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to obtain the queriable data
+          type: string
+        - name: id
+          in: path
+          required: true 
+          description: ID (slug) of the queriable data to retrieve
+          type: string
+        - name: queriable_data_store
+          in: body
+          schema:
+            $ref: '#/definitions/QueriableData'
+          required: true
+      security:
+        - APIKey: []
+      responses:  
+        200:
+          description: Successfully updated the queriable data
+  
+  /{user}/queriable_data_stores/{id}/edit:
+    get:
+      description: NOT IMPLEMENTED?? Doesn't work... (Retrieve the code for the queriable data for edit)
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to edit the queriable data
+          type: string
+        - name: id
+          in: path
+          required: true 
+          description: ID (slug) of the queriable data to be edited
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully retrieved the queriable data
+  
+  /{user}/queriable_data_stores/{id}/star:
+    post:
+      description: Star the selected queriable data
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to star the queriable data
+          type: string
+        - name: id
+          in: path
+          required: true 
+          description: ID (slug) of the queriable data to be stared
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully gave the queriable data a star
+          
+  /{user}/queriable_data_stores/{id}/unstar:
+    post:
+      description: Unstar the selected queriable data
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to unstar the queriable data
+          type: string
+        - name: id
+          in: path
+          required: true 
+          description: ID (slug) of the queriable data to be unstared
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully unstared the queriable data
+
+  /{user}/queriable_data_stores/{id}/versions:
+    get:
+      description: INVALID! Is this implemented?? (Retrieve versions of the queriable data)
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to obtain the queriable data
+          type: string
+        - name: id
+          in: path
+          required: true 
+          description: ID (slug) of the queriable data to retrieve
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Information about the versions of the queried queriable data
+     
+      
+          
+  /explore:
+    get:
+      description: Get a list of all browsable public assets
+      produces:
+        - application/json
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Success in retrieving assets
+          
+  /quotas: 
+    get:
+      description: Get information on the current quota of an authenticated user
+      produces:
+        - application/json
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Success in retrieving quota information
+      
+definitions:
+  User:
+    required:
+    - email
+    properties:
+      username:
+        type: string
+      email:
+        type: string
+      organization:
+        type: string
+        description: Name of the organisation the user belongs to
+      place:
+        type: string
+        description: Address of the user
+  APIKey:
+    required:
+    - enabled
+    properties:
+      name: 
+        type: string
+      enabled:
+        type: boolean
+  APIKeyPatch:
+    properties:
+      name: 
+        type: string
+      enabled:
+        type: boolean
+  Transformation:
+    properties:
+      name: 
+        type: string
+      public:
+        type: boolean
+      code: 
+        type: string
+        description: JSON representation of a Grafterizer transformation
+  QueriableData:
+    properties:
+      public:
+        type: boolean
+      name: 
+        type: string
+      code:
+        type: string
+  Catalogue:
+    properties:
+      public:
+        type: boolean
+      name:
+        type: string
+        
