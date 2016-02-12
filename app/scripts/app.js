@@ -140,6 +140,18 @@ angular
           label: 'About'
         }
       })
+     .state('havahol', {
+        url: '/havahol',
+        views: {
+          main: {
+            templateUrl: 'views/havahol.html',
+              controller: 'UtilityFunctionsCtrl'
+          }
+        },
+        ncyBreadcrumb: {
+          label: 'havahol-title'
+        }
+      })
       .state('transformations', {
         url: '/transformations?showShared&search',
         views: {
