@@ -15,6 +15,21 @@ angular.module('grafterizerApp')
       'Karma'
     ];
     
-    $scope.username = dataGraftApi.apiKey;
+    var dummy1 = "Dummy no 1";
+    var dummy2 = "Dummy no 2";
+    
+    $scope.dummy = dummy1;
+    $scope.dummySwitch = true;
+    $scope.swapDummy = function(ds) {
+        if (ds) {
+            $scope.dummy = dummy1;
+        } else {
+            $scope.dummy = dummy2;
+        }
+    }
+    
+    $scope.apiKey = dataGraftApi.apiKey;
+    
+    
     
   });
