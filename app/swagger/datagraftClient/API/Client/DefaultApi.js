@@ -754,7 +754,7 @@ var API;
             };
             /**
              *
-             * Obtain a list of all public queriable data for a user. If provided with an enabled API key for that user, returns also the private queriable data.¨
+             * Obtain a list of all public queriable data for a user. If provided with an enabled API key for that user, returns also the private queriable data.
              * @param user ID of the user for whom to obtain the queriable data
              */
             DefaultApi.prototype.userQueriableDataStoresGet = function (user, extraHttpRequestParams) {
@@ -1278,6 +1278,76 @@ var API;
             };
             /**
              *
+             * Retrieve meta data for the chosen transformation
+             * @param user ID of the user for who to obtain the meta data for the transformation
+             * @param id ID (slug) of the transformation for which to retrieve the meta data
+             */
+            DefaultApi.prototype.userTransformationsIdMetadataGet = function (user, id, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/transformations/{id}/metadata'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userTransformationsIdMetadataGet');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userTransformationsIdMetadataGet');
+                }
+                var httpRequestParams = {
+                    method: 'GET',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Create meta data for the chosen transformation
+             * @param user ID of the user for who to create the meta data for the transformation
+             * @param id ID (slug) of the transformation for which to create the meta data
+             * @param metadata
+             */
+            DefaultApi.prototype.userTransformationsIdMetadataPost = function (user, id, metadata, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/transformations/{id}/metadata'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userTransformationsIdMetadataPost');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userTransformationsIdMetadataPost');
+                }
+                // verify required parameter 'metadata' is set
+                if (!metadata) {
+                    throw new Error('Missing required parameter metadata when calling userTransformationsIdMetadataPost');
+                }
+                var httpRequestParams = {
+                    method: 'POST',
+                    url: path,
+                    json: true,
+                    data: metadata,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
              * Star the selected transformation
              * @param user ID of the user for who to star the transformation
              * @param id ID (slug) of the transformation to be stared
@@ -1327,6 +1397,338 @@ var API;
                 // verify required parameter 'id' is set
                 if (!id) {
                     throw new Error('Missing required parameter id when calling userTransformationsIdUnstarPost');
+                }
+                var httpRequestParams = {
+                    method: 'POST',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Obtain a list of all public utility functions for a user. If provided with an enabled API key for that user, returns also the private utility functions.
+             * @param user ID of the user for whom to obtain the utility functions
+             */
+            DefaultApi.prototype.userUtilityFunctionsGet = function (user, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/utility_functions'
+                    .replace('{' + 'user' + '}', String(user));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userUtilityFunctionsGet');
+                }
+                var httpRequestParams = {
+                    method: 'GET',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Create a new utility function
+             * @param user ID of the user for whom to create the utility function
+             * @param utilityFunction
+             */
+            DefaultApi.prototype.userUtilityFunctionsPost = function (user, utilityFunction, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/utility_functions'
+                    .replace('{' + 'user' + '}', String(user));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userUtilityFunctionsPost');
+                }
+                // verify required parameter 'utilityFunction' is set
+                if (!utilityFunction) {
+                    throw new Error('Missing required parameter utilityFunction when calling userUtilityFunctionsPost');
+                }
+                var httpRequestParams = {
+                    method: 'POST',
+                    url: path,
+                    json: true,
+                    data: utilityFunction,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Obtain the attributes of the given utility function.
+             * @param user ID of the user for who to obtain the utility function
+             * @param id ID (slug) of the utility function to retrieve
+             */
+            DefaultApi.prototype.userUtilityFunctionsIdGet = function (user, id, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/utility_functions/{id}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userUtilityFunctionsIdGet');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userUtilityFunctionsIdGet');
+                }
+                var httpRequestParams = {
+                    method: 'GET',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Update a utility function by replacing the currently stored one with the one provided in this request
+             * @param user ID of the user for who to update the utility function
+             * @param id ID (slug) of the utility function to be updated
+             * @param utilityFunction
+             */
+            DefaultApi.prototype.userUtilityFunctionsIdPut = function (user, id, utilityFunction, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/utility_functions/{id}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userUtilityFunctionsIdPut');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userUtilityFunctionsIdPut');
+                }
+                // verify required parameter 'utilityFunction' is set
+                if (!utilityFunction) {
+                    throw new Error('Missing required parameter utilityFunction when calling userUtilityFunctionsIdPut');
+                }
+                var httpRequestParams = {
+                    method: 'PUT',
+                    url: path,
+                    json: true,
+                    data: utilityFunction,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Delete the given utility function
+             * @param user ID of the user for who to delete the utility function
+             * @param id ID (slug) of the utility function to delete
+             */
+            DefaultApi.prototype.userUtilityFunctionsIdDelete = function (user, id, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/utility_functions/{id}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userUtilityFunctionsIdDelete');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userUtilityFunctionsIdDelete');
+                }
+                var httpRequestParams = {
+                    method: 'DELETE',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Update a utility function by replacing only the parts provided in this request
+             * @param user ID of the user for who to update the utility function
+             * @param id ID (slug) of the utility function to be updated
+             * @param utilityFunction
+             */
+            DefaultApi.prototype.userUtilityFunctionsIdPatch = function (user, id, utilityFunction, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/utility_functions/{id}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userUtilityFunctionsIdPatch');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userUtilityFunctionsIdPatch');
+                }
+                // verify required parameter 'utilityFunction' is set
+                if (!utilityFunction) {
+                    throw new Error('Missing required parameter utilityFunction when calling userUtilityFunctionsIdPatch');
+                }
+                var httpRequestParams = {
+                    method: 'PATCH',
+                    url: path,
+                    json: true,
+                    data: utilityFunction,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Retrieve meta data for the chosen utility function
+             * @param user ID of the user for who to obtain the meta data for the utility function
+             * @param id ID (slug) of the utility function for which retrieve the meta data
+             */
+            DefaultApi.prototype.userUtilityFunctionsIdMetadataGet = function (user, id, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/utility_functions/{id}/metadata'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userUtilityFunctionsIdMetadataGet');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userUtilityFunctionsIdMetadataGet');
+                }
+                var httpRequestParams = {
+                    method: 'GET',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Create meta data for the given utility function
+             * @param user ID of the user for who to create the meta data for the utility function
+             * @param id ID (slug) of the utility function for which to create meta data
+             * @param metadata
+             */
+            DefaultApi.prototype.userUtilityFunctionsIdMetadataPost = function (user, id, metadata, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/utility_functions/{id}/metadata'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userUtilityFunctionsIdMetadataPost');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userUtilityFunctionsIdMetadataPost');
+                }
+                // verify required parameter 'metadata' is set
+                if (!metadata) {
+                    throw new Error('Missing required parameter metadata when calling userUtilityFunctionsIdMetadataPost');
+                }
+                var httpRequestParams = {
+                    method: 'POST',
+                    url: path,
+                    json: true,
+                    data: metadata,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Star the selected utility function
+             * @param user ID of the user for who to star the utility function
+             * @param id ID (slug) of the utility function to be stared
+             */
+            DefaultApi.prototype.userUtilityFunctionsIdStarPost = function (user, id, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/utility_functions/{id}/star'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userUtilityFunctionsIdStarPost');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userUtilityFunctionsIdStarPost');
+                }
+                var httpRequestParams = {
+                    method: 'POST',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Unstar the selected utility function
+             * @param user ID of the user for who to unstar the utility function
+             * @param id ID (slut) of the utility function to be unstared
+             */
+            DefaultApi.prototype.userUtilityFunctionsIdUnstarPost = function (user, id, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/utility_functions/{id}/unstar'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userUtilityFunctionsIdUnstarPost');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userUtilityFunctionsIdUnstarPost');
                 }
                 var httpRequestParams = {
                     method: 'POST',

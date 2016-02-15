@@ -29,7 +29,29 @@ angular.module('grafterizerApp')
     }
     
     $scope.apiKey = dataGraftApi.apiKey;
+
+    var metadata1 = '{"weather": "sunny", "smurning": "vr40", "good": "oyeah"}';
+    var metadata2 = '{"metadata": "yeah"}';
+    var metadata3 = '{"metadata": "yeah", "snow": "some"}';
+
+    var id = "1";
+    $scope.testText = "Currently nothing is tested";
     
+    $scope.testMetadata2 = function() {
+        dataGraftApi.transformationCreateMetadata(id, metadata2).success(function(data) {
+               $scope.testText = data.toString();
+        });
+    }
+    $scope.testMetadata1 = function() {
+        dataGraftApi.transformationCreateMetadata(id, metadata1).success(function(data) {
+               $scope.testText = data.toString();
+        });
+    }
+    $scope.testMetadata3 = function() {
+        dataGraftApi.transformationCreateMetadata(id, metadata3).success(function(data) {
+               $scope.testText = data.toString();
+        });
+    }
     
     
   });

@@ -890,7 +890,7 @@ namespace API.Client {
         }
         /**
          * 
-         * Obtain a list of all public queriable data for a user. If provided with an enabled API key for that user, returns also the private queriable data.¨
+         * Obtain a list of all public queriable data for a user. If provided with an enabled API key for that user, returns also the private queriable data.
          * @param user ID of the user for whom to obtain the queriable data
          */
         public userQueriableDataStoresGet (user: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
@@ -1494,6 +1494,86 @@ namespace API.Client {
         }
         /**
          * 
+         * Retrieve meta data for the chosen transformation
+         * @param user ID of the user for who to obtain the meta data for the transformation
+         * @param id ID (slug) of the transformation for which to retrieve the meta data
+         */
+        public userTransformationsIdMetadataGet (user: string, id: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/transformations/{id}/metadata'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userTransformationsIdMetadataGet');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userTransformationsIdMetadataGet');
+            }
+            let httpRequestParams: any = {
+                method: 'GET',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Create meta data for the chosen transformation
+         * @param user ID of the user for who to create the meta data for the transformation
+         * @param id ID (slug) of the transformation for which to create the meta data
+         * @param metadata 
+         */
+        public userTransformationsIdMetadataPost (user: string, id: string, metadata: MetaData, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/transformations/{id}/metadata'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userTransformationsIdMetadataPost');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userTransformationsIdMetadataPost');
+            }
+            // verify required parameter 'metadata' is set
+            if (!metadata) {
+                throw new Error('Missing required parameter metadata when calling userTransformationsIdMetadataPost');
+            }
+            let httpRequestParams: any = {
+                method: 'POST',
+                url: path,
+                json: true,
+                data: metadata,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
          * Star the selected transformation
          * @param user ID of the user for who to star the transformation
          * @param id ID (slug) of the transformation to be stared
@@ -1549,6 +1629,388 @@ namespace API.Client {
             // verify required parameter 'id' is set
             if (!id) {
                 throw new Error('Missing required parameter id when calling userTransformationsIdUnstarPost');
+            }
+            let httpRequestParams: any = {
+                method: 'POST',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Obtain a list of all public utility functions for a user. If provided with an enabled API key for that user, returns also the private utility functions.
+         * @param user ID of the user for whom to obtain the utility functions
+         */
+        public userUtilityFunctionsGet (user: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/utility_functions'
+                .replace('{' + 'user' + '}', String(user));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userUtilityFunctionsGet');
+            }
+            let httpRequestParams: any = {
+                method: 'GET',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Create a new utility function
+         * @param user ID of the user for whom to create the utility function
+         * @param utilityFunction 
+         */
+        public userUtilityFunctionsPost (user: string, utilityFunction: UtilityFunction, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/utility_functions'
+                .replace('{' + 'user' + '}', String(user));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userUtilityFunctionsPost');
+            }
+            // verify required parameter 'utilityFunction' is set
+            if (!utilityFunction) {
+                throw new Error('Missing required parameter utilityFunction when calling userUtilityFunctionsPost');
+            }
+            let httpRequestParams: any = {
+                method: 'POST',
+                url: path,
+                json: true,
+                data: utilityFunction,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Obtain the attributes of the given utility function.
+         * @param user ID of the user for who to obtain the utility function
+         * @param id ID (slug) of the utility function to retrieve
+         */
+        public userUtilityFunctionsIdGet (user: string, id: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/utility_functions/{id}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userUtilityFunctionsIdGet');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userUtilityFunctionsIdGet');
+            }
+            let httpRequestParams: any = {
+                method: 'GET',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Update a utility function by replacing the currently stored one with the one provided in this request
+         * @param user ID of the user for who to update the utility function
+         * @param id ID (slug) of the utility function to be updated
+         * @param utilityFunction 
+         */
+        public userUtilityFunctionsIdPut (user: string, id: string, utilityFunction: UtilityFunction, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/utility_functions/{id}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userUtilityFunctionsIdPut');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userUtilityFunctionsIdPut');
+            }
+            // verify required parameter 'utilityFunction' is set
+            if (!utilityFunction) {
+                throw new Error('Missing required parameter utilityFunction when calling userUtilityFunctionsIdPut');
+            }
+            let httpRequestParams: any = {
+                method: 'PUT',
+                url: path,
+                json: true,
+                data: utilityFunction,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Delete the given utility function
+         * @param user ID of the user for who to delete the utility function
+         * @param id ID (slug) of the utility function to delete
+         */
+        public userUtilityFunctionsIdDelete (user: string, id: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/utility_functions/{id}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userUtilityFunctionsIdDelete');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userUtilityFunctionsIdDelete');
+            }
+            let httpRequestParams: any = {
+                method: 'DELETE',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Update a utility function by replacing only the parts provided in this request
+         * @param user ID of the user for who to update the utility function
+         * @param id ID (slug) of the utility function to be updated
+         * @param utilityFunction 
+         */
+        public userUtilityFunctionsIdPatch (user: string, id: string, utilityFunction: UtilityFunction, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/utility_functions/{id}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userUtilityFunctionsIdPatch');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userUtilityFunctionsIdPatch');
+            }
+            // verify required parameter 'utilityFunction' is set
+            if (!utilityFunction) {
+                throw new Error('Missing required parameter utilityFunction when calling userUtilityFunctionsIdPatch');
+            }
+            let httpRequestParams: any = {
+                method: 'PATCH',
+                url: path,
+                json: true,
+                data: utilityFunction,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Retrieve meta data for the chosen utility function
+         * @param user ID of the user for who to obtain the meta data for the utility function
+         * @param id ID (slug) of the utility function for which retrieve the meta data
+         */
+        public userUtilityFunctionsIdMetadataGet (user: string, id: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/utility_functions/{id}/metadata'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userUtilityFunctionsIdMetadataGet');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userUtilityFunctionsIdMetadataGet');
+            }
+            let httpRequestParams: any = {
+                method: 'GET',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Create meta data for the given utility function
+         * @param user ID of the user for who to create the meta data for the utility function
+         * @param id ID (slug) of the utility function for which to create meta data
+         * @param metadata 
+         */
+        public userUtilityFunctionsIdMetadataPost (user: string, id: string, metadata: MetaData, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/utility_functions/{id}/metadata'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userUtilityFunctionsIdMetadataPost');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userUtilityFunctionsIdMetadataPost');
+            }
+            // verify required parameter 'metadata' is set
+            if (!metadata) {
+                throw new Error('Missing required parameter metadata when calling userUtilityFunctionsIdMetadataPost');
+            }
+            let httpRequestParams: any = {
+                method: 'POST',
+                url: path,
+                json: true,
+                data: metadata,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Star the selected utility function
+         * @param user ID of the user for who to star the utility function
+         * @param id ID (slug) of the utility function to be stared
+         */
+        public userUtilityFunctionsIdStarPost (user: string, id: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/utility_functions/{id}/star'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userUtilityFunctionsIdStarPost');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userUtilityFunctionsIdStarPost');
+            }
+            let httpRequestParams: any = {
+                method: 'POST',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Unstar the selected utility function
+         * @param user ID of the user for who to unstar the utility function
+         * @param id ID (slut) of the utility function to be unstared
+         */
+        public userUtilityFunctionsIdUnstarPost (user: string, id: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/utility_functions/{id}/unstar'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userUtilityFunctionsIdUnstarPost');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userUtilityFunctionsIdUnstarPost');
             }
             let httpRequestParams: any = {
                 method: 'POST',

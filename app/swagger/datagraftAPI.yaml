@@ -521,8 +521,6 @@ paths:
       description: Obtain a list of all public transformations for a user. If provided with an enabled API key for that user, returns also the private transformations.
       produces: 
         - application/json
-      accept:
-        - application/json
       parameters:
         - name: user
           required: true
@@ -653,7 +651,56 @@ paths:
       responses:
         204:
           description: Successfully deleted transformation
-          
+  
+  /{user}/transformations/{id}/metadata:
+    get:
+      description: Retrieve meta data for the chosen transformation
+      produces: 
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to obtain the meta data for the transformation
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the transformation for which to retrieve the meta data
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully retrieved the meta data for the transformation
+    post:
+      description: Create meta data for the chosen transformation
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to create the meta data for the transformation
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the transformation for which to create the meta data
+          type: string
+        - name: metadata
+          in: body
+          schema:
+            $ref: '#/definitions/MetaData'
+          required: true
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully created the meta data
+  
   /{user}/transformations/{id}/star:
     post:
       description: Star the selected transformation
@@ -675,7 +722,7 @@ paths:
       responses:
         200:
           description: Successfully gave the transformation a star
-          
+  
   /{user}/transformations/{id}/unstar:
     post:
       description: Unstar the selected transformation
@@ -703,7 +750,7 @@ paths:
           
   /{user}/queriable_data_stores:
     get:
-      description: Obtain a list of all public queriable data for a user. If provided with an enabled API key for that user, returns also the private queriable data.¨
+      description: Obtain a list of all public queriable data for a user. If provided with an enabled API key for that user, returns also the private queriable data.
       produces:
         - application/json
       parameters:
@@ -944,8 +991,229 @@ paths:
         200:
           description: Information about the versions of the queried queriable data
      
-      
+    
+  /{user}/utility_functions:
+    get:
+      description: Obtain a list of all public utility functions for a user. If provided with an enabled API key for that user, returns also the private utility functions.
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          required: true
+          description: ID of the user for whom to obtain the utility functions
+          in: path
+          type: string
+      security:
+        - APIKey: []
+      responses: 
+        200:
+          description: Successfully retrieved the list of utility functions
+    post:
+      description: Create a new utility function
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          required: true
+          description: ID of the user for whom to create the utility function
+          in: path
+          type: string
+        - name: utility_function
+          in: body
+          schema:
+            $ref: '#/definitions/UtilityFunction'
+          required: true
+      security:
+        - APIKey: []
+      responses:
+        201:
+          description: Successfully created the utility function
           
+  /{user}/utility_functions/{id}:
+    get:
+      description: Obtain the attributes of the given utility function.
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to obtain the utility function
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the utility function to retrieve
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully obtained the utility function
+    delete:
+      description: Delete the given utility function
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to delete the utility function
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the utility function to delete
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully deleted the utility function
+    put:
+      description: Update a utility function by replacing the currently stored one with the one provided in this request
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to update the utility function
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the utility function to be updated
+          type: string
+        - name: utility_function
+          in: body
+          schema:
+            $ref: '#/definitions/UtilityFunction'
+          required: true
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully updated the utility function
+    patch:
+      description: Update a utility function by replacing only the parts provided in this request
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to update the utility function
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the utility function to be updated
+          type: string
+        - name: utility_function
+          in: body
+          schema:
+            $ref: '#/definitions/UtilityFunction'
+          required: true
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully updated the utility function
+          
+  /{user}/utility_functions/{id}/metadata:
+    get:
+      description: Retrieve meta data for the chosen utility function
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to obtain the meta data for the utility function
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the utility function for which retrieve the meta data
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully retrieved metadata
+    post:
+      description: Create meta data for the given utility function
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to create the meta data for the utility function
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the utility function for which to create meta data
+          type: string
+        - name: metadata
+          in: body
+          schema:
+            $ref: '#/definitions/MetaData'
+          required: true
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully created metadata
+  
+  /{user}/utility_functions/{id}/star:
+    post:
+      description: Star the selected utility function
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to star the utility function
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the utility function to be stared
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully gave the utility function a star
+  
+  /{user}/utility_functions/{id}/unstar:
+    post:
+      description: Unstar the selected utility function
+      produces: 
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to unstar the utility function
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slut) of the utility function to be unstared
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully unstared the utility function
+  
+  
+  
   /explore:
     get:
       description: Get a list of all browsable public assets
@@ -1020,4 +1288,15 @@ definitions:
         type: boolean
       name:
         type: string
-        
+  UtilityFunction:
+    properties:
+      public:
+        type: boolean
+      name:
+        type: string
+      metadata:
+        type: string
+      configuration:
+        type: string
+  MetaData:
+    type: object  

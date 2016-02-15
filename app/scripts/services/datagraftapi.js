@@ -31,9 +31,13 @@ angular.module('grafterizerApp')
     }
     
     this.getTransformation = function(id) {
-        return dgApi.userTransformationsIdGet(this.username, id);   // /{user}/transformation/{id}     
+        return dgApi.userTransformationsIdGet(this.username, id);   // /{user}/transformation/{id}
     }
     
+    
+    this.transformationCreateMetadata = function(id, metadata) { 
+        return dgApi.userTransformationsIdMetadataPost(this.username, id, metadata);
+    }
     
     
   });
