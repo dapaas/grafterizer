@@ -462,7 +462,7 @@ angular.module('grafterizerApp')
                    else {
                        value = new jsedn.List([jsedn.sym("s"), 
                                                jsedn.sym(node.literalValue.value), 
-                                               new jsedn.List([jsedn.sym("URIImpl."), node.datatypeURI])]);
+                                               new jsedn.List([jsedn.sym("org.openrdf.model.impl.URIImpl."), node.datatypeURI])]);
                    }
                    break;
                default:
