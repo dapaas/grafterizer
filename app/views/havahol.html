@@ -6,15 +6,20 @@
 
     <p class="md-body-1">make code {{apiKey}}</p>
     
-    <br>
-    <md-switch ng-model="dummySwitch" ng-change="swapDummy(dummySwitch)">{{dummy}}</md-switch>
+    <div>
+        <md-switch ng-model="showPublicUtilityFunctions" ng-change="listUtilityFunctions()">
+            Show public
+        </md-switch>
+        <br>
+        {{utilityFunctions}}
+    </div>
     
     
     <br>
     <br>
-    <button ng-click="testMetadata1()">Wierd metadata</button>
-    <button ng-click="testMetadata2()">Simple metadata</button>
-    <button ng-click="testMetadata3()">Mixed metadata</button>
+    <button ng-click="testMetadata(0)">Wierd metadata</button>
+    <button ng-click="testMetadata(1)">Simple metadata</button>
+    <button ng-click="testMetadata(2)">Mixed metadata</button>
 
     <br>
     <div>{{testText}}</div>

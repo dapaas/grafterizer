@@ -15,43 +15,39 @@ angular.module('grafterizerApp')
       'Karma'
     ];
     
-    var dummy1 = "Dummy no 1";
-    var dummy2 = "Dummy no 2";
     
-    $scope.dummy = dummy1;
-    $scope.dummySwitch = true;
-    $scope.swapDummy = function(ds) {
-        if (ds) {
-            $scope.dummy = dummy1;
-        } else {
-            $scope.dummy = dummy2;
-        }
+    $scope.utilityFunctions = "";
+    $scope.showPublicUtilityFunctions = true;
+    
+    $scope.listUtilityFunctions = function() {
+        dataGraftApi.utilityFunctionsList($scope.showPublicUtilityFunctions).success(
+            function(data) {
+                $scope.utilityFunctions = JSON.stringify(data, null, '\n');
+            }
+        );
+        
     }
+    $scope.listUtilityFunctions();
+    
+    
+    
     
     $scope.apiKey = dataGraftApi.apiKey;
 
-    var metadata1 = '{"weather": "sunny", "smurning": "vr40", "good": "oyeah"}';
-    var metadata2 = '{"metadata": "yeah"}';
-    var metadata3 = '{"metadata": "yeah", "snow": "some"}';
 
+    
+    var metadata = ['{"weather": "sunny", "smurning": "vr40", "good": "oyeah"}',
+                    '{"metadata": "yeah"}',
+                    '{"metadata": "yeah", "snow": "some"}'];
     var id = "1";
     $scope.testText = "Currently nothing is tested";
     
-    $scope.testMetadata2 = function() {
-        dataGraftApi.transformationCreateMetadata(id, metadata2).success(function(data) {
-               $scope.testText = data.toString();
+    $scope.testMetadata = function(md) {
+        dataGraftApi.transformationCreateMetadata(id, metadata[md]).success(function(data) {
+               $scope.testText = JSON.stringify(data, null, 2);
         });
     }
-    $scope.testMetadata1 = function() {
-        dataGraftApi.transformationCreateMetadata(id, metadata1).success(function(data) {
-               $scope.testText = data.toString();
-        });
-    }
-    $scope.testMetadata3 = function() {
-        dataGraftApi.transformationCreateMetadata(id, metadata3).success(function(data) {
-               $scope.testText = data.toString();
-        });
-    }
+   
     
     
   });
