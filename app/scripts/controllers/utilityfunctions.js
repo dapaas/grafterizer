@@ -15,20 +15,57 @@ angular.module('grafterizerApp')
       'Karma'
     ];
     
-    
+    var utilityFunctionsObj = [];
     $scope.utilityFunctions = "";
     $scope.showPublicUtilityFunctions = true;
     
     $scope.listUtilityFunctions = function() {
-        dataGraftApi.utilityFunctionsList($scope.showPublicUtilityFunctions).success(
+        $scope.utilityFunctions = "hang on...";
+        // Should be:
+        //dataGraftApi.utilityFunctionsList(showPublicUtilityFunctions).success(
+        //    function(data) {
+        //        prettyfyUtilityFunctions(data)
+        //    });
+        // but this is the work around:
+        dataGraftApi.utilityFunctionsList(true).success(
             function(data) {
-                $scope.utilityFunctions = JSON.stringify(data, null, '\n');
+                if ($scope.showPublicUtilityFunctions) {
+                    pretifyUtilityFunctions(data);
+                } else {
+                    utilityFunctionsObj = [];
+                    
+                    for (var i in data) {
+                        dataGraftApi.utilityFunctionGet(data[i]["id"]).success( function(singleData) {
+                            console.log(JSON.stringify(singleData));
+                            if (singleData["public"] !== 'undefined' && singleData["public"]) {
+                                console.log("SingleData id = " + singleData["id"]);
+                                for (var j in data) {
+                                    if (singleData["id"] === data[j]["id"]) {
+                                        console.log("pushing data[" + j + "]");
+                                        utilityFunctionsObj.push(data[j]);
+                                        break;
+                                    }
+                                }
+                                pretifyUtilityFunctions(utilityFunctionsObj);
+                            }
+                        });
+                    }
+                    console.log(utilityFunctionsObj);
+                    pretifyUtilityFunctions(utilityFunctionsObj);
+                }
             }
         );
-        
     }
     $scope.listUtilityFunctions();
     
+    
+    var pretifyUtilityFunctions = function(ufList) {
+        var tmpString = "";
+        for ( var j in ufList) {
+            tmpString += JSON.stringify(ufList[j], null, 4 );
+        }
+        $scope.utilityFunctions = tmpString;
+    }
     
     
     

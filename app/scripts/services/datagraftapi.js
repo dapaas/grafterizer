@@ -39,5 +39,16 @@ angular.module('grafterizerApp')
         return dgApi.userTransformationsIdMetadataPost(this.username, id, metadata);
     }
     
+    this.utilityFunctionsList = function(showPublic) {
+        if (showPublic) {
+            return dgApi.userUtilityFunctionsGet(this.username);
+        } else {
+            // Insert dgApi.userUtilityFunctionsPublicGet when this exists.
+        }
+    }
+    
+    this.utilityFunctionGet = function(id) {
+        return dgApi.userUtilityFunctionsIdGet(this.username, id);
+    }
     
   });
