@@ -33,7 +33,7 @@ angular.module('grafterizerApp')
     $scope.ufListPrivate = [];
     $scope.ufListPublic = [];
     $scope.ufListToShow = [];
-    $scope.ufListPublicIndices = [];
+    var ufListPublicIndices = [];
     
     $scope.ufListAllStr = "hang on...";
     $scope.ufListPrivateStr = "hang on...";
@@ -55,10 +55,10 @@ angular.module('grafterizerApp')
             for (var i in data) {
                 if (data[i].public) {
                     $scope.ufListPublic.push(data[i]);
-                    $scope.ufListPublicIndices.push(true); 
+                    ufListPublicIndices.push(true); 
                 } else {
                     $scope.ufListPrivate.push(data[i]);
-                    $scope.ufListPublicIndices.push(false);
+                    ufListPublicIndices.push(false);
                 }
             }
             updateUfStrs();
@@ -72,8 +72,19 @@ angular.module('grafterizerApp')
     $scope.switchShowPublicText = "Public only";
     
     $scope.ufListUpdate = function() {
-        console.log("Not implemented: uf list update");
+        console.log("Updating utility function list");
         $scope.switchShowPublicText = $scope.switchShowPublic ? "Public only" : "Private only";
+        if ($scope.switchShowAll) {
+            $scope.ufListToShow = $scope.ufListAll;
+        } else {
+            $scope.ufListToShow = [];
+            for (var i in $scope.ufListAll) {
+                if (ufListPublicIndices[i] === $scope.switchShowPublic) {
+                    $scope.ufListToShow.push($scope.ufListAll[i]);
+                }
+            }
+        }
+        
     }
     
 
