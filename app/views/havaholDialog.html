@@ -42,6 +42,7 @@
                     <ui-codemirror ng-model="selectedUtilityFunction.configuration.clojure" ui-codemirror-opts="codemirrorOpts" ng-keydown="markAsChanged()"></ui-codemirror>
                 </div>
             <md-toolbar class="md-actions" layout="row" layout-align="right">
+                <md-switch ng-model="switchSelectedIsPublic" ng-hide="hideSwitchSelectedIsPublic" ng-change="markAsChanged()">Public utility function</md-switch>
                 <md-button ng-click="applyUtilityFunctionChanges()" aria-label="Apply custom function changes">Done</md-button>
                 <md-button ng-click="cancelUtilityFunctionChanges()"  aria-label="Cancel changes to custom functions">Cancel</md-button>
             </md-toolbar>
