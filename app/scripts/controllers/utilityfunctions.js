@@ -27,44 +27,54 @@ angular.module('grafterizerApp')
     $scope.log = function(a) {
         console.log(a);
     }
+
     
-    $scope.ufAllObj = [];
-    $scope.ufPrivateObj = [];
-    $scope.ufPublicObj = [];
-    $scope.ufShowObj = [];
+    $scope.ufListAll = [];
+    $scope.ufListPrivate = [];
+    $scope.ufListPublic = [];
+    $scope.ufListToShow = [];
+    $scope.ufListPublicIndices = [];
     
-    $scope.ufAllStr = "hang on...";
-    $scope.ufPrivateStr = "hang on...";
-    $scope.ufPublicStr = "hang on...";
+    $scope.ufListAllStr = "hang on...";
+    $scope.ufListPrivateStr = "hang on...";
+    $scope.ufListPublicStr = "hang on...";
     var updateUfStrs = function() {
-        $scope.ufAllStr = JSON.stringify($scope.ufAllObj, null, 4);
-        $scope.ufPrivateStr = JSON.stringify($scope.ufPrivateObj, null, 4);
-        $scope.ufPublicStr = JSON.stringify($scope.ufPublicObj, null, 4);
+        $scope.ufListAllStr =  JSON.stringify($scope.ufListAll, null, 4);
+        $scope.ufListPrivateStr = JSON.stringify($scope.ufListPrivate, null, 4);
+        $scope.ufListPublicStr = JSON.stringify($scope.ufListPublic, null, 4);
     }
     
     $scope.listUtilityFunctions = function() {
-        $scope.ufAllObj = [];
-        $scope.ufPrivateObj = [];
-        $scope.ufPublicObj = [];
+        $scope.ufListAll = [];
+        $scope.ufListPrivate = [];
+        $scope.ufListPublic = [];
+        updateUfStrs();
         dataGraftApi.utilityFunctionsList(true).success( function(data) {
-            $scope.ufAllObj = data;
+            $scope.ufListAll = data;
             updateUfStrs();
             for (var i in data) {
                 if (data[i].public) {
-                    $scope.ufPublicObj.push(data[i]);
+                    $scope.ufListPublic.push(data[i]);
+                    $scope.ufListPublicIndices.push(true); 
                 } else {
-                    $scope.ufPrivateObj.push(data[i]);
+                    $scope.ufListPrivate.push(data[i]);
+                    $scope.ufListPublicIndices.push(false);
                 }
             }
             updateUfStrs();
+            $scope.ufListToShow = $scope.ufListAll;
         });
     }
     
+
+    $scope.switchShowAll = true; 
+    $scope.switchShowPublic = true;
+    $scope.switchShowPublicText = "Public only";
     
-    
-    $scope.utilityFunctionsObj = [];
-    $scope.utilityFunctions = "";
-    $scope.showPublicUtilityFunctions = true;
+    $scope.ufListUpdate = function() {
+        console.log("Not implemented: uf list update");
+        $scope.switchShowPublicText = $scope.switchShowPublic ? "Public only" : "Private only";
+    }
     
 
     $scope.listUtilityFunctions();
@@ -145,7 +155,7 @@ angular.module('grafterizerApp')
                     '{"metadata": "yeah"}',
                     '{"metadata": "yeah", "snow": "some"}'];
     
-    $scope.utilityFunctionsObj = metadata;
+    //$scope.utilityFunctionsObj = metadata;
     var id = "1";
     $scope.testText = "Currently nothing is tested";
     
