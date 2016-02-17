@@ -2,6 +2,10 @@
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>Edit utility functions</h2> 
+            <span flex="" class="flex"></span>
+            <md-switch ng-model="showPublicUtilityFunctions" ng-change="listUtilityFunctions()">
+            Show public
+            </md-switch>
         </div>
     </md-toolbar>
     <md-dialog-content layout="row" class="sin-dark-background-fix">
@@ -30,7 +34,7 @@
         </div>
         <div flex layout="column">
                 <div class="code-mirror-container" flex style="font-size:1.1em;">
-                    <ui-codemirror ng-model="selectedUtilityFunction" ui-codemirror-opts="codemirrorOpts"></ui-codemirror>
+                    <ui-codemirror ng-model="selectedUtilityFunction" ui-codemirror-opts="codemirrorOpts" ng-keydown="markAsChanged()"></ui-codemirror>
                 </div>
             <md-toolbar class="md-actions" layout="row" layout-align="right">
                 <md-button ng-click="applyUtilityFunctionChanges()" aria-label="Apply custom function changes">Done</md-button>

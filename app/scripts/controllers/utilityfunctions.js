@@ -28,47 +28,45 @@ angular.module('grafterizerApp')
         console.log(a);
     }
     
+    $scope.ufAllObj = [];
+    $scope.ufPrivateObj = [];
+    $scope.ufPublicObj = [];
+    $scope.ufShowObj = [];
+    
+    $scope.ufAllStr = "hang on...";
+    $scope.ufPrivateStr = "hang on...";
+    $scope.ufPublicStr = "hang on...";
+    var updateUfStrs = function() {
+        $scope.ufAllStr = JSON.stringify($scope.ufAllObj, null, 4);
+        $scope.ufPrivateStr = JSON.stringify($scope.ufPrivateObj, null, 4);
+        $scope.ufPublicStr = JSON.stringify($scope.ufPublicObj, null, 4);
+    }
+    
+    $scope.listUtilityFunctions = function() {
+        $scope.ufAllObj = [];
+        $scope.ufPrivateObj = [];
+        $scope.ufPublicObj = [];
+        dataGraftApi.utilityFunctionsList(true).success( function(data) {
+            $scope.ufAllObj = data;
+            updateUfStrs();
+            for (var i in data) {
+                if (data[i].public) {
+                    $scope.ufPublicObj.push(data[i]);
+                } else {
+                    $scope.ufPrivateObj.push(data[i]);
+                }
+            }
+            updateUfStrs();
+        });
+    }
+    
+    
+    
     $scope.utilityFunctionsObj = [];
     $scope.utilityFunctions = "";
     $scope.showPublicUtilityFunctions = true;
     
-    $scope.listUtilityFunctions = function() {
-        $scope.utilityFunctions = "hang on...";
-        // Should be:
-        //dataGraftApi.utilityFunctionsList(showPublicUtilityFunctions).success(
-        //    function(data) {
-        //        prettyfyUtilityFunctions(data)
-        //    });
-        // but this is the work around:
-        dataGraftApi.utilityFunctionsList(true).success(
-            function(data) {
-                if ($scope.showPublicUtilityFunctions) {
-                    pretifyUtilityFunctions(data);
-                } else {
-                    $scope.utilityFunctionsObj = [];
-                    
-                    for (var i in data) {
-                        dataGraftApi.utilityFunctionGet(data[i]["id"]).success( function(singleData) {
-                            console.log(JSON.stringify(singleData));
-                            if (singleData["public"] !== 'undefined' && singleData["public"]) {
-                                console.log("SingleData id = " + singleData["id"]);
-                                for (var j in data) {
-                                    if (singleData["id"] === data[j]["id"]) {
-                                        console.log("pushing data[" + j + "]");
-                                        $scope.utilityFunctionsObj.push(data[j]);
-                                        break;
-                                    }
-                                }
-                                pretifyUtilityFunctions($scope.utilityFunctionsObj);
-                            }
-                        });
-                    }
-                    console.log($scope.utilityFunctionsObj);
-                    pretifyUtilityFunctions($scope.utilityFunctionsObj);
-                }
-            }
-        );
-    }
+
     $scope.listUtilityFunctions();
     
     $scope.selectedUtilityFunction = {};
@@ -101,15 +99,22 @@ angular.module('grafterizerApp')
         console.log("Not implemented: show clojure code for " + uf);
     }
     
-    
-    var pretifyUtilityFunctions = function(ufList) {
-        var tmpString = "";
-        for ( var j in ufList) {
-            tmpString += JSON.stringify(ufList[j], null, 4 );
-        }
-        $scope.utilityFunctions = tmpString;
+    $scope.markAsChanged = function() {
+        console.log("Not implemented: Mark as changed");
     }
     
+    var pretifyUtilityFunctions = function(ufList) {
+        $scope.utilityFunctions = JSON.stringify(ufList, null, 4);
+        //var tmpString = "";
+        //for ( var j in ufList) {
+        //    tmpString += JSON.stringify(ufList[j], null, 4 );
+        //}
+        //$scope.utilityFunctions = tmpString;
+    }
+    
+    
+    
+    // ------ Below this line should be in parent controller --------- //
     
     // This function should open the dialog box and set controller for it.
     // Let's try to use the same controller as we're already in :)
