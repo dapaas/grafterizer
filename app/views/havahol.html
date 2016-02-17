@@ -6,6 +6,13 @@
 
     <p class="md-body-1">make code {{apiKey}}</p>
     
+    
+    <div>
+        <md-button class="md-raised md-primary" ng-click="defineCustomFunctions()">
+            Utility Functions
+        </md-button>
+    </div>
+    
     <div>
         <md-switch ng-model="showPublicUtilityFunctions" ng-change="listUtilityFunctions()">
             Show public
@@ -15,11 +22,14 @@
     </div>
     
     
+    
+    
+    
     <br>
     <br>
-    <button ng-click="testMetadata(0)">Wierd metadata</button>
-    <button ng-click="testMetadata(1)">Simple metadata</button>
-    <button ng-click="testMetadata(2)">Mixed metadata</button>
+    <md-button class="md-raised md-primary" ng-click="testMetadata(0)">Wierd metadata</md-button>
+    <md-button class="md-raised md-primary" ng-click="testMetadata(1)">Simple metadata</md-button>
+    <md-button class="md-raised md-primary" ng-click="testMetadata(2)">Mixed metadata</md-button>
 
     <br>
     <div>{{testText}}</div>
