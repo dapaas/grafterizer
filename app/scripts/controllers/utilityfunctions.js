@@ -81,8 +81,18 @@ angular.module('grafterizerApp')
     
     $scope.selectedUtilityFunction = {};
     $scope.setSelectedUtilityFunction = function(uf) {
-        console.log("Selecting utility function: " + uf);
-        $scope.selectedUtilityFunction = uf;
+        console.log("Selecting utility function: " + uf.id);
+        dataGraftApi.utilityFunctionGet(uf.id).success( function(data) {
+            $scope.selectedUtilityFunction = data;
+            if ($scope.selectedUtilityFunction.configuration === null
+               || typeof $scope.selectedUtilityFunction.configuration === "undefined") {
+                $scope.selectedUtilityFunction.configuration = {};
+            }
+            if ($scope.selectedUtilityFunction.configuration.clojure === null 
+                || typeof $scope.selectedUtilityFunction.configuration.clojure === "undefined") {
+                $scope.selectedUtilityFunction.configuration.clojure = "";
+            }
+        });
     }
     
     $scope.deleteUtilityFunction = function(id) { 
