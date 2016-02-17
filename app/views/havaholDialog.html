@@ -16,7 +16,7 @@
     <md-dialog-content layout="row" class="sin-dark-background-fix">
         <div class="content-stuff utility-functions" layout="column" flex="33">
             <md-content class="sin-functions-list" layout="column" flex md-scroll-y>
-                <md-button ng-click="setSelectedUtilityFunction(function)" ng-repeat="function in ufListToShow">{{function.name}}
+                <md-button ng-click="setSelectedUtilityFunction(function)" ng-repeat="function in ufListToShow" ng-disabled="function.id == selectedUtilityFunction.id">{{function.name}}
                     <md-button class="button-tight" aria-label="Delete this function" ng-click="deleteUtilityFunction(function.id)">
                         <i class="fa fa-minus-circle"></i>
                         <md-tooltip>Delete this function</md-tooltip>

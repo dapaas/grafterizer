@@ -30,34 +30,30 @@ angular.module('grafterizerApp')
 
     
     $scope.ufListAll = [];
-    $scope.ufListPrivate = [];
-    $scope.ufListPublic = [];
     $scope.ufListToShow = [];
     var ufListPublicIndices = [];
+    $scope.selectedUtilityFunction = {};
+
     
     $scope.ufListAllStr = "hang on...";
     $scope.ufListPrivateStr = "hang on...";
     $scope.ufListPublicStr = "hang on...";
     var updateUfStrs = function() {
         $scope.ufListAllStr =  JSON.stringify($scope.ufListAll, null, 4);
-        $scope.ufListPrivateStr = JSON.stringify($scope.ufListPrivate, null, 4);
-        $scope.ufListPublicStr = JSON.stringify($scope.ufListPublic, null, 4);
+        $scope.ufListPrivateStr = stringifyUfList(false);
+        $scope.ufListPublicStr = stringifyUfList(true);
     }
     
     $scope.listUtilityFunctions = function() {
         $scope.ufListAll = [];
-        $scope.ufListPrivate = [];
-        $scope.ufListPublic = [];
         updateUfStrs();
         dataGraftApi.utilityFunctionsList(true).success( function(data) {
             $scope.ufListAll = data;
             updateUfStrs();
             for (var i in data) {
                 if (data[i].public) {
-                    $scope.ufListPublic.push(data[i]);
                     ufListPublicIndices.push(true); 
                 } else {
-                    $scope.ufListPrivate.push(data[i]);
                     ufListPublicIndices.push(false);
                 }
             }
@@ -66,12 +62,22 @@ angular.module('grafterizerApp')
         });
     }
     
+    var stringifyUfList = function(showPublic) {
+        var listToStringify = [];
+        for(var i in $scope.ufListAll) {
+            if (showPublic == ufListPublicIndices[i]) {
+                listToStringify.push($scope.ufListAll[i]);
+            }
+        }
+        return JSON.stringify(listToStringify, null, 4);
+    }
 
     $scope.switchShowAll = true; 
     $scope.switchShowPublic = true;
     $scope.switchShowPublicText = "Public only";
     
     $scope.ufListUpdate = function() {
+        $scope.selectedUtilityFunction = {};
         console.log("Updating utility function list");
         $scope.switchShowPublicText = $scope.switchShowPublic ? "Public only" : "Private only";
         if ($scope.switchShowAll) {
@@ -84,13 +90,10 @@ angular.module('grafterizerApp')
                 }
             }
         }
-        
     }
-    
 
     $scope.listUtilityFunctions();
     
-    $scope.selectedUtilityFunction = {};
     $scope.setSelectedUtilityFunction = function(uf) {
         console.log("Selecting utility function: " + uf.id);
         dataGraftApi.utilityFunctionGet(uf.id).success( function(data) {
