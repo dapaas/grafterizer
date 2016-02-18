@@ -17,7 +17,7 @@
         <div class="content-stuff utility-functions" layout="column" flex="33">
             <md-content class="sin-functions-list" layout="column" flex md-scroll-y>
                 <md-button ng-click="setSelectedUtilityFunction(function)" ng-repeat="function in ufListToShow" ng-disabled="function.id == selectedUtilityFunction.id">{{function.name}}
-                    <md-button class="button-tight" aria-label="Delete this function" ng-click="deleteUtilityFunction(function.id)">
+                    <md-button class="button-tight" aria-label="Delete this function" ng-click="deleteUtilityFunction(function.id)" ng-hide="function.id != selectedUtilityFunction.id">
                         <i class="fa fa-minus-circle"></i>
                         <md-tooltip>Delete this function</md-tooltip>
                     </md-button>
@@ -26,7 +26,7 @@
                         <md-tooltip>A function already exists with the same name</md-tooltip>
                     </span>
                     <span flex></span>
-                    <md-button class="button-tight" ng-click="markAsChanged()">
+                    <md-button class="button-tight" ng-disabled="function.id != selectedUtilityFunction.id" ng-click="changePublicity()">
                         <i class="material-icons">{{function.publicIcon}}</i>
                         <md-tooltip>{{function.publicText}}</md-tooltip>
                     </md-button>
@@ -48,8 +48,9 @@
                     <ui-codemirror ng-model="selectedUtilityFunction.configuration.clojure" ui-codemirror-opts="codemirrorOpts" ng-keydown="markAsChanged()"></ui-codemirror>
                 </div>
             <md-toolbar class="md-actions" layout="row" layout-align="right">
-                <md-switch ng-model="switchSelectedIsPublic" ng-hide="hideSwitchSelectedIsPublic" ng-change="markAsChanged()">Public utility function</md-switch>
-                <md-button ng-click="applyUtilityFunctionChanges()" aria-label="Apply custom function changes">Done</md-button>
+                <md-button aria-label="Store changes" ng-click="storeChanges()" ng-hide="!selectedUtilityFunction.changed">
+                    <i class="material-icons">save</i>
+                </md-button>
                 <md-button ng-click="cancelUtilityFunctionChanges()"  aria-label="Cancel changes to custom functions">Cancel</md-button>
             </md-toolbar>
         </div>

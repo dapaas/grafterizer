@@ -127,6 +127,7 @@ angular.module('grafterizerApp')
                     $scope.selectedUtilityFunction.configuration.clojure = "// Could not find clojure code...";
                 }
                 updateSwitchSelectedIsPublic();
+                $scope.selectedUtilityFunction.changed = false;
                 $scope.ufLoaded[uf.id] = $scope.selectedUtilityFunction;
             });
         } else {
@@ -134,8 +135,13 @@ angular.module('grafterizerApp')
         }
     }
     
-    $scope.deleteUtilityFunction = function(id) { 
-        console.log("Not implemented: Delete utility function with id " + id);
+    $scope.changePublicity = function() {
+        console.log("Not implemented: Change publicity");
+    }
+    
+    $scope.deleteUtilityFunction = function(id) {
+        //$scope.ufLoaded.id.clojure
+        console.log("Not implemented: Delete utility function with id " + id + "\n" + $scope.ufLoaded[id].configuration.clojure);
     }
     
     $scope.createNewUtilityFunction = function() {
@@ -151,15 +157,19 @@ angular.module('grafterizerApp')
     }
     
     $scope.cancelUtilityFunctionChanges = function() {
-        console.log("Not implemented: cancel utility function changes");
+        $mdDialog.cancel();
     }
     
     $scope.showClojureCode = function(uf) {
         console.log("Not implemented: show clojure code for " + uf);
     }
     
+    $scope.storeChanges = function() {
+        console.log("Not implemented: store changes");
+    }
+    
     $scope.markAsChanged = function() {
-        console.log("Not implemented: Mark as changed");
+        $scope.ufLoaded[$scope.selectedUtilityFunction.id].changed = true;
     }
     
     var pretifyUtilityFunctions = function(ufList) {
