@@ -25,8 +25,14 @@
                         <i class="fa fa-warning"></i>
                         <md-tooltip>A function already exists with the same name</md-tooltip>
                     </span>
+                    <span flex></span>
+                    <md-button class="button-tight" ng-click="markAsChanged()">
+                        <i class="material-icons">{{function.publicIcon}}</i>
+                        <md-tooltip>{{function.publicText}}</md-tooltip>
+                    </md-button>
                 </md-button>
                 <span flex></span>
+                
             </md-content>
             <md-toolbar class="md-actions" layout = "row" layout-align="left">
                 <md-button aria-label="Create new function" ng-click="createNewUtilityFunction()">

@@ -32,6 +32,8 @@ angular.module('grafterizerApp')
     $scope.ufListAll = [];
     $scope.ufListToShow = [];
     var ufListPublicIndices = [];
+    $scope.ufLoaded = {}; // A look up table - no need to iterate
+    $scope.ufChanged = {all: []};
     
     $scope.selectedUtilityFunction = {};
     $scope.hideSwitchSelectedIsPublic = true;
@@ -64,9 +66,13 @@ angular.module('grafterizerApp')
             updateUfStrs();
             for (var i in data) {
                 if (data[i].public) {
-                    ufListPublicIndices.push(true); 
+                    ufListPublicIndices.push(true);
+                    data[i].publicText = "Public";
+                    data[i].publicIcon = "people";
                 } else {
                     ufListPublicIndices.push(false);
+                    data[i].publicText = "Private";
+                    data[i].publicIcon = "person"
                 }
             }
             updateUfStrs();
@@ -99,25 +105,33 @@ angular.module('grafterizerApp')
         $scope.selectedUtilityFunction = {};
         $scope.hideSwitchSelectedIsPublic = true;
     }
+    var updateSwitchSelectedIsPublic = function() {
+        $scope.hideSwitchSelectedIsPublic = false;
+        $scope.switchSelectedIsPublic = $scope.false;
+        if ($scope.selectedUtilityFunction.public) {
+            $scope.switchSelectedIsPublic = true;
+        }
+    }
     
     $scope.setSelectedUtilityFunction = function(uf) {
         console.log("Selecting utility function: " + JSON.stringify(uf));
-        dataGraftApi.utilityFunctionGet(uf.id).success( function(data) {
-            $scope.selectedUtilityFunction = data;
-            if ($scope.selectedUtilityFunction.configuration === null
-               || typeof $scope.selectedUtilityFunction.configuration === "undefined") {
-                $scope.selectedUtilityFunction.configuration = {};
-            }
-            if ($scope.selectedUtilityFunction.configuration.clojure === null 
-                || typeof $scope.selectedUtilityFunction.configuration.clojure === "undefined") {
-                $scope.selectedUtilityFunction.configuration.clojure = "// Could not find clojure code...";
-            }
-            $scope.hideSwitchSelectedIsPublic = false;
-            $scope.switchSelectedIsPublic = $scope.false;
-            if ($scope.selectedUtilityFunction.public) {
-                $scope.switchSelectedIsPublic = true;
-            }
-        });
+        if (typeof $scope.ufLoaded[uf.id] === "undefined") {
+            dataGraftApi.utilityFunctionGet(uf.id).success( function(data) {
+                $scope.selectedUtilityFunction = data;
+                if ($scope.selectedUtilityFunction.configuration === null
+                   || typeof $scope.selectedUtilityFunction.configuration === "undefined") {
+                    $scope.selectedUtilityFunction.configuration = {};
+                }
+                if ($scope.selectedUtilityFunction.configuration.clojure === null 
+                    || typeof $scope.selectedUtilityFunction.configuration.clojure === "undefined") {
+                    $scope.selectedUtilityFunction.configuration.clojure = "// Could not find clojure code...";
+                }
+                updateSwitchSelectedIsPublic();
+                $scope.ufLoaded[uf.id] = $scope.selectedUtilityFunction;
+            });
+        } else {
+            $scope.selectedUtilityFunction = $scope.ufLoaded[uf.id];
+        }
     }
     
     $scope.deleteUtilityFunction = function(id) { 
