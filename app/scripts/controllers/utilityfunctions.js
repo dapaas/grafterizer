@@ -32,14 +32,16 @@ angular.module('grafterizerApp')
     $scope.ufListAll = [];
     $scope.ufListToShow = [];
     var ufListPublicIndices = [];
+    
+    // New table containing the clojure code as well
     $scope.ufLoaded = {}; // A look up table - no need to iterate
-    $scope.ufChanged = {all: []};
     
     $scope.selectedUtilityFunction = {};
     $scope.hideSwitchSelectedIsPublic = true;
     $scope.switchSelectedIsPublic = false;
 
     
+    // ---- Just for simple testing - start ----
     $scope.ufListAllStr = "hang on...";
     $scope.ufListPrivateStr = "hang on...";
     $scope.ufListPublicStr = "hang on...";
@@ -56,7 +58,9 @@ angular.module('grafterizerApp')
         $scope.ufListAllStr =  JSON.stringify($scope.ufListAll, null, 4);
         $scope.ufListPrivateStr = stringifyUfList(false);
         $scope.ufListPublicStr = stringifyUfList(true);
-    }
+    }    
+    // ---- Just for simple testing - end ----    
+    
     
     $scope.listUtilityFunctions = function() {
         $scope.ufListAll = [];
@@ -152,33 +156,16 @@ angular.module('grafterizerApp')
         console.log("Not implemneted: Create new text transformation");
     }
     
-    $scope.applyUtilityFunctionChanges = function() {
-        console.log("Not implemented: apply utility function changes");
-    }
-    
     $scope.cancelUtilityFunctionChanges = function() {
         $mdDialog.cancel();
     }
-    
-    $scope.showClojureCode = function(uf) {
-        console.log("Not implemented: show clojure code for " + uf);
-    }
-    
+
     $scope.storeChanges = function() {
         console.log("Not implemented: store changes");
     }
     
     $scope.markAsChanged = function() {
         $scope.ufLoaded[$scope.selectedUtilityFunction.id].changed = true;
-    }
-    
-    var pretifyUtilityFunctions = function(ufList) {
-        $scope.utilityFunctions = JSON.stringify(ufList, null, 4);
-        //var tmpString = "";
-        //for ( var j in ufList) {
-        //    tmpString += JSON.stringify(ufList[j], null, 4 );
-        //}
-        //$scope.utilityFunctions = tmpString;
     }
     
     
