@@ -35,7 +35,7 @@ angular.module('grafterizerApp')
         Should not be a list, but a dict:
             ufListAll[id] = utility function with that id.
         When loading a uf for the first time, overwriting similar fields.
-        Should also have fields for isLoaded, publicText, publicIcon etc.
+        Should also have fields for isLoaded, publicText, publicIcon, changed, showDeleteOptions etc.
         
         SelectedUF should then just be the id.
         
@@ -215,7 +215,14 @@ angular.module('grafterizerApp')
     }
 
     $scope.saveChanges = function() {
-        console.log("Not implemented: save changes");
+        var patchUF = {};
+        //patchUF.configuration = "{'clojure': '" + $scope.selectedUtilityFunction.configuration.clojure + "'}";
+        patchUF.configuration.clojure = $scope.selectedUtilityFunction.configuration.clojure;
+        dataGraftApi.utilityFunctionPatch($scope.selectedUtilityFunction.id, patchUF)
+            .success( function(data) {
+            $scope.selectedUtilityFunction.changed = false;
+            console.log("Response from save changes: " + JSON.stringify(data));
+        });
     }
     
     $scope.reloadUtilityFunction = function() {
