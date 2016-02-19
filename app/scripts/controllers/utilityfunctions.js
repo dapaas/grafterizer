@@ -144,8 +144,19 @@ angular.module('grafterizerApp')
     }
     
     $scope.deleteUtilityFunction = function(id) {
-        //$scope.ufLoaded.id.clojure
-        console.log("Not implemented: Delete utility function with id " + id + "\n" + $scope.ufLoaded[id].configuration.clojure);
+        //Need to remove uf from $scope.ufListAll, $scope.ufListToShow, ufListPublicIndices.
+        for (var i in $scope.ufListAll) {
+            if (id == $scope.ufListAll[i].id) {
+                $scope.ufListAll.splice(i, 1);
+                ufListPublicIndices.splice(i, 1);
+            }
+        }
+        $scope.ufListUpdate();
+        
+        console.log("'Deleting' utility function " + id);
+        
+        //dataGraftApi.utilityFunctionDelete(id);
+        //console.log("Not implemented: Delete utility function with id " + id + "\n" + $scope.ufLoaded[id].configuration.clojure);
     }
     
     $scope.createNewUtilityFunction = function() {

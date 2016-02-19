@@ -51,4 +51,8 @@ angular.module('grafterizerApp')
         return dgApi.userUtilityFunctionsIdGet(this.username, id);
     }
     
+    this.utilityFunctionDelete = function(id) {
+        return dgApi.userUtilityFunctionsIdDelete(this.username, id);
+    }
+    
   });
