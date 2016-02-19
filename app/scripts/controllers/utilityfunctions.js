@@ -119,8 +119,11 @@ angular.module('grafterizerApp')
     
     $scope.setSelectedUtilityFunction = function(uf) {
         console.log("Selecting utility function: " + JSON.stringify(uf));
-        if (typeof $scope.ufLoaded[uf.id] === "undefined") {
-            dataGraftApi.utilityFunctionGet(uf.id).success( function(data) {
+        setSelectedUtilityFunctionById(uf.id);
+    }
+    var setSelectedUtilityFunctionById = function(id) {
+        if (typeof $scope.ufLoaded[id] === "undefined") {
+            dataGraftApi.utilityFunctionGet(id).success( function(data) {
                 $scope.selectedUtilityFunction = data;
                 if ($scope.selectedUtilityFunction.configuration === null
                    || typeof $scope.selectedUtilityFunction.configuration === "undefined") {
@@ -133,10 +136,10 @@ angular.module('grafterizerApp')
                 updateSwitchSelectedIsPublic();
                 $scope.selectedUtilityFunction.changed = false;
                 $scope.selectedUtilityFunction.showDeleteOption = false;
-                $scope.ufLoaded[uf.id] = $scope.selectedUtilityFunction;
+                $scope.ufLoaded[id] = $scope.selectedUtilityFunction;
             });
         } else {
-            $scope.selectedUtilityFunction = $scope.ufLoaded[uf.id];
+            $scope.selectedUtilityFunction = $scope.ufLoaded[id];
         }
     }
     
@@ -163,7 +166,6 @@ angular.module('grafterizerApp')
 
         console.log("'Deleting' utility function " + id);
         dataGraftApi.utilityFunctionDelete(id);
-        
     }
     
     $scope.createNewUtilityFunction = function() {
@@ -183,7 +185,11 @@ angular.module('grafterizerApp')
     }
     
     $scope.reloadUtilityFunction = function() {
-        console.log("Not implemented: Reload utility function for " + $scope.selectedUtilityFunction.name);
+        
+        delete $scope.ufLoaded[$scope.selectedUtilityFunction.id];
+        setSelectedUtilityFunctionById($scope.selectedUtilityFunction.id);
+        
+        console.log("Resetting: " + $scope.selectedUtilityFunction.name);
     }
     
     $scope.markAsChanged = function() {
