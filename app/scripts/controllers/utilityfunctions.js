@@ -132,6 +132,7 @@ angular.module('grafterizerApp')
                 }
                 updateSwitchSelectedIsPublic();
                 $scope.selectedUtilityFunction.changed = false;
+                $scope.selectedUtilityFunction.showDeleteOption = false;
                 $scope.ufLoaded[uf.id] = $scope.selectedUtilityFunction;
             });
         } else {
@@ -143,6 +144,13 @@ angular.module('grafterizerApp')
         console.log("Not implemented: Change publicity");
     }
     
+    $scope.showDelete = function() {
+        $scope.selectedUtilityFunction.showDeleteOption = true;
+    }
+    $scope.abortDelete = function() {
+        $scope.selectedUtilityFunction.showDeleteOption = false;
+    }
+    
     $scope.deleteUtilityFunction = function(id) {
         //Need to remove uf from $scope.ufListAll, $scope.ufListToShow, ufListPublicIndices.
         for (var i in $scope.ufListAll) {
@@ -152,11 +160,10 @@ angular.module('grafterizerApp')
             }
         }
         $scope.ufListUpdate();
-        
+
         console.log("'Deleting' utility function " + id);
+        dataGraftApi.utilityFunctionDelete(id);
         
-        //dataGraftApi.utilityFunctionDelete(id);
-        //console.log("Not implemented: Delete utility function with id " + id + "\n" + $scope.ufLoaded[id].configuration.clojure);
     }
     
     $scope.createNewUtilityFunction = function() {
