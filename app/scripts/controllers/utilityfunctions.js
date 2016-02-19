@@ -29,6 +29,21 @@ angular.module('grafterizerApp')
     }
 
     
+    /* 
+        Large required refactoring:
+        ufListAll -> ufAll
+        Should not be a list, but a dict:
+            ufListAll[id] = utility function with that id.
+        When loading a uf for the first time, overwriting similar fields.
+        Should also have fields for isLoaded, publicText, publicIcon etc.
+        
+        SelectedUF should then just be the id.
+        
+        Need two lists with public ids and private ids.
+        
+        Should really have some unit tests before doing this refactoring... :P
+    */
+    
     $scope.ufListAll = [];
     $scope.ufListToShow = [];
     var ufListPublicIndices = [];
@@ -64,6 +79,7 @@ angular.module('grafterizerApp')
     
     $scope.listUtilityFunctions = function() {
         $scope.ufListAll = [];
+        ufListPublicIndices = [];
         updateUfStrs();
         dataGraftApi.utilityFunctionsList(true).success( function(data) {
             $scope.ufListAll = data;
@@ -144,7 +160,25 @@ angular.module('grafterizerApp')
     }
     
     $scope.changePublicity = function() {
-        console.log("Not implemented: Change publicity");
+        var patchUF = {};
+        patchUF.public = !$scope.selectedUtilityFunction.public;
+        dataGraftApi.utilityFunctionPatch($scope.selectedUtilityFunction.id, patchUF)
+            .success(function (data) {
+                console.log("changed publicity");
+                // Using the response data to update local variables
+                $scope.selectedUtilityFunction[id] = data;
+                for (var i in $scope.ufListAll) {
+                    if ($scope.ufListAll[i].id == data.id) {
+                        console.log("Response from patch publicity\n" + JSON.stringify(data[i]));
+                        $scope.ufListAll[i].public = data.public;
+                        $scope.ufListAll[i].publicText = data.public ? "Public" : "Private";
+                        $scope.ufListAll[i].publicIcon = data.public ? "people" : "person";
+                        ufListPublicIndices[i] = !ufListPublicIndices[i];
+                    }
+                }
+                $scope.reloadUtilityFunction();
+                $scope.ufListUpdate();
+        });
     }
     
     $scope.showDelete = function() {
