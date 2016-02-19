@@ -160,8 +160,12 @@ angular.module('grafterizerApp')
         $mdDialog.cancel();
     }
 
-    $scope.storeChanges = function() {
-        console.log("Not implemented: store changes");
+    $scope.saveChanges = function() {
+        console.log("Not implemented: save changes");
+    }
+    
+    $scope.reloadUtilityFunction = function() {
+        console.log("Not implemented: Reload utility function for " + $scope.selectedUtilityFunction.name);
     }
     
     $scope.markAsChanged = function() {

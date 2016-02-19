@@ -36,9 +36,11 @@
             </md-content>
             <md-toolbar class="md-actions" layout = "row" layout-align="left">
                 <md-button aria-label="Create new function" ng-click="createNewUtilityFunction()">
+                    <md-tooltip>New utility function</md-tooltip>
                     <i class="fa fa-plus"></i>
                 </md-button>
                 <md-button aria-label="Create new text transformation" ng-click="createNewTextTransformation()">
+                    <md-tooltip>New text transformation</md-tooltip>
                     <i class="fa fa-font"></i>
                 </md-button>
             </md-toolbar>
@@ -48,7 +50,12 @@
                     <ui-codemirror ng-model="selectedUtilityFunction.configuration.clojure" ui-codemirror-opts="codemirrorOpts" ng-keydown="markAsChanged()"></ui-codemirror>
                 </div>
             <md-toolbar class="md-actions" layout="row" layout-align="right">
-                <md-button aria-label="Store changes" ng-click="storeChanges()" ng-hide="!selectedUtilityFunction.changed">
+                <md-button aria-label="Discard changes" ng-click="reloadUtilityFunction()" ng-hide ="!selectedUtilityFunction.changed">
+                    <md-tooltip>Discard changes</md-tooltip>
+                    <i class="material-icons">clear</i>
+                </md-button>
+                <md-button aria-label="Save changes" ng-click="saveChanges()" ng-hide="!selectedUtilityFunction.changed">
+                    <md-tooltip>Save changes</md-tooltip>
                     <i class="material-icons">save</i>
                 </md-button>
                 <md-button ng-click="cancelUtilityFunctionChanges()"  aria-label="Cancel changes to custom functions">Cancel</md-button>
