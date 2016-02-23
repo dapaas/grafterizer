@@ -444,7 +444,7 @@ angular.module('grafterizerApp')
            switch (node.datatype.name) {
                case 'string':
 
-                   var convertLiteralValues = [jsedn.sym("convert-literal"), jsedn.sym(node.literalValue.value), "string"];
+                   var convertLiteralValues = [jsedn.sym("datatypes/convert-literal"), jsedn.sym(node.literalValue.value), "string"];
                    if (node.onEmpty) {
                        convertLiteralValues.push(jsedn.kw(":on-empty"));
                        convertLiteralValues.push(node.onEmpty);
@@ -466,7 +466,7 @@ angular.module('grafterizerApp')
                    }
                    break;
                default:
-                   var convertLiteralValues = [jsedn.sym("convert-literal"),jsedn.sym(node.literalValue.value), node.datatype.name];
+                   var convertLiteralValues = [jsedn.sym("datatypes/convert-literal"),jsedn.sym(node.literalValue.value), node.datatype.name];
                    
                    if (node.onEmpty) {
                        convertLiteralValues.push(jsedn.kw(":on-empty"));

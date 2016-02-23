@@ -86,7 +86,7 @@ angular
         'https://grafterizer.datagraft.net/cache');
       jarfterServiceProvider.setEndpoint('https://grafterizer.datagraft.net');
 
-      // PipeServiceProvider.setEndpoints('http://localhost:8080', 'http://localhost:8082');
+//       PipeServiceProvider.setEndpoints('http://localhost:8080', 'http://localhost:8082');
     } else {
       PipeServiceProvider.setEndpoints('/backend', '/cache');
       jarfterServiceProvider.setEndpoint('');
