@@ -2,6 +2,7 @@
     <div layout="column" flex="33" ng-if="!function">
         <md-content class="sin-functions-list" flex layout="column" md-scroll-y >
             <md-button flex ng-click="changeSelected(availableFunctions[0].name)" ng-disabled="availableFunctions[0].selected">Make Dataset</md-button>
+            <md-button flex ng-click="changeSelected(availableFunctions[6].name)" ng-disabled="availableFunctions[6].selected"> Fill Cells </md-button>
             <md-button flex ng-click="changeSelected(availableFunctions[5].name)" ng-disabled="availableFunctions[5].selected"> Group and Aggregate </md-button>
             <md-button flex ng-click="changeSelected(availableFunctions[4].name)" ng-disabled="availableFunctions[4].selected"> Remove Duplicates </md-button>
             <md-button flex ng-click="changeSelected(availableFunctions[2].name)" ng-disabled="availableFunctions[2].selected">Reshape Dataset</md-button>
@@ -47,6 +48,7 @@
         <shift-column-function transformation="transformation" ng-if="selectedFunctionName === 'shift-column'"></shift-column-function>
         <add-row-function transformation="transformation" ng-if="selectedFunctionName === 'add-row'"></add-row-function>
         <group-rows transformation="transformation" ng-if="selectedFunctionName === 'group-rows'"></group-rows>
+        <fill-cells transformation="transformation" ng-if="selectedFunctionName === 'fill-cells'"></fill-cells>
         <drop-rows-function transformation="transformation" ng-if="selectedFunctionName === 'drop-rows'"></drop-rows-function>
         <grep-function transformation="transformation" ng-if="selectedFunctionName === 'grep'"></grep-function>
         <make-dataset transformation="transformation" ng-if="selectedFunctionName === 'make-dataset'"></make-dataset>

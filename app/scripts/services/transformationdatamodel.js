@@ -644,6 +644,53 @@ angular.module('grafterizerApp')
 
   this.GroupRowsFunction = GroupRowsFunction;
 
+    
+    
+  var FillCellsFunction = function(value, valueX, valueY, b_row, b_col, e_row, e_col, docstring) {
+    GenericFunction.call(this);
+    this.name = 'fill-cells';
+    this.displayName = 'fill-cells';
+    this.value = value;
+    this.valueX = valueX;
+    this.valueY = valueY;
+    this.b_row = b_row;
+    this.b_col = b_col;
+    if (!e_row) this.e_row = b_row;
+      else this.e_row = e_row;
+    if (!e_row) this.e_col = b_col;
+      else this.e_col = e_col;
+    this.e_col = e_col;
+    this.__type = 'FillCellsFunction';
+    if (!docstring) {
+      this.docstring = 'Fill cells with value ';
+      if (value) this.docstring += ': ' + value;
+        else this.docstring += 'contained in the cell ' + this.valueX +', ' + this.valueY; 
+      
+    } else {
+      this.docstring = docstring;
+    }
+  };
+  FillCellsFunction.revive = function(data) {
+    return new FillCellsFunction(data.value, data.valueX, data.valueY, data.b_row, data.b_col, data.e_row, data.e_col, data.docstring);
+  };
+  FillCellsFunction.prototype = Object.create(GenericFunction.prototype);
+  FillCellsFunction.prototype.generateClojure = function() {
+    var value, area;
+    if (this.value) value = new jsedn.sym(value);
+      else
+          value = new jsedn.Map([new jsedn.kw(':row'), this.valueX, new jsedn.kw(':col'), this.valueY]);
+      area = new jsedn.Map([new jsedn.kw(':b_row'), this.b_row, 
+                            new jsedn.kw(':b_col'), this.b_col,
+                            new jsedn.kw(':e_row'), this.e_row,
+                            new jsedn.kw(':e_col'), this.e_col]);
+      
+    return new jsedn.List([jsedn.sym('new-tabular/fill-cells'), value, area]);
+  };
+
+  this.FillCellsFunction = FillCellsFunction;
+
+    
+    
   var RenameColumnsFunction = function(functionsToRenameWith, mappings, docstring) {
     GenericFunction.call(this);
     this.name = 'rename-columns';

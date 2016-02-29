@@ -58,6 +58,12 @@ angular.module('grafterizerApp')
             type: 'none'
           },
           {
+            displayName: 'Fill Cells',
+            name: 'fill-cells',
+            selected: false,
+            type: 'none'
+          },
+          {
             displayName: 'Add Columns',
             name: 'add-columns',
             selected: false,
