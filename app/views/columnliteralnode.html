@@ -5,16 +5,16 @@
       <md-fab-trigger>
         <md-button flex class="md-raised rdf-mapping-node-button" aria-label="{{node.literalValue}}" ng-click="editNode()" ng-disabled="$root.readonlymode">
           <div layout="row">
-            <div class="fa-stack">
+              <div class="fa-stack" >
               <i class="fa fa-circle fa-stack-2x rdf-mapping-icon-background-inset"></i>
               <i class="fa fa-font fa-stack-1x fa-inverse"></i>
             </div>
             <div class="rdf-mapping-node-text rdf-mapping-column-name-text">
-              {{node.literalValue}}
+              {{node.literalValue.value}}
             </div>
           </div>
           <md-tooltip>
-            {{'(Column literal) ' + node.literalValue}}
+            {{'(Column literal) ' + node.literalValue.value}}
           </md-tooltip>
         </md-button>
       </md-fab-trigger>

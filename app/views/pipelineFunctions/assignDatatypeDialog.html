@@ -1,0 +1,74 @@
+<md-toolbar>
+<div class = "md-toolbar-tools" style="width:470px">
+    <h2> Assign datatype to column </h2>
+</div>
+</md-toolbar>
+<div layout="column">
+    <div>
+        <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
+        <div class="api-doc-docstring" ng-show = "showUsage" layout="column">
+            <p> Converts given value to the specified datatype. Supported datatypes (with corresponding xsd types) :
+            </p>
+                <table>
+                    <tr>
+                        <td> Name of data type </td>
+                        <td> XSD datatype </td>
+                        <td> Value space </td>
+                    </tr>
+                    <tr>
+                        <td> Byte </td>
+                        <td> xsd:byte </td>
+                        <td> -128…+127 (8 bit) </td>
+                    </tr>
+                    <tr>
+                        <td> Short </td>
+                        <td> xsd:short </td>
+                        <td> -32768…+32767 (16 bit) </td>
+              
+                </table>
+            <p> Optional parameters :
+            </p>
+            <ul>
+                <li>  <p>on-error  -- specifies value, that should be used to replace non-valid arguments. </p>
+                <p> By default function replaces all non-valid values with 0 for all numeric types, </p>
+                <p> "false" for data type boolean and "31.12.2099" for dates </p> </li>
+                <li>  <p>on-empty -- specifies value, that should be used to replace empty(nil) arguments. </p>
+                <p>By default function replaces all empty values with 0 for all numeric types, "false" for </p>
+                <p>data type boolean and \"31.12.2099\" for dates</p> </li>
+            </ul>
+        <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
+
+    </div>
+    </div>
+<div>
+
+            <h3>Change column data type</h3>
+            <div layout = "row">
+    <label>Column</label>
+        <oi-select ng-show="colnames.length !== 0" oi-options="column.value for column in colnames track by column.id" ng-model="function.colsToMerge" multiple ng-disabled="$root.readonlymode"></oi-select>
+        <oi-select ng-show="colnames.length === 0" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="function.colsToMerge" multiple ng-disabled="$root.readonlymode"></oi-select>
+    <label>Type</label>
+        <oi-select oi-options="datatype.name for datatype in availableDatatypes track by datatype.id" ng-model="function.colsToMerge" multiple ng-disabled="$root.readonlymode"></oi-select>
+    </div>
+    <br>
+    <md-input-container flex>
+        <label>Value on-error</label>
+        <input ng-trim = "false" ng-model="function.onError" type="text" ng-readonly="$root.readonlymode">
+    </md-input-container>
+    <md-input-container flex>
+        <label>Value on-empty</label>
+        <input ng-trim = "false" ng-model="function.onEmpty" type="text"  ng-readonly="$root.readonlymode">
+    </md-input-container>
+
+
+</div>
+
+</div>
+ <md-toolbar class="md-actions" layout="row" layout-align="right">
+             <md-button  ng-show="!$root.readonlymode" ng-click="assignDatatype()" aria-label="Assign datatype">Assign datatype</md-button>
+                         <md-button  ng-click="closeDialog()" aria-label="Close">Close</md-button>
+                                 </md-toolbar>
+
+<!--
+ng-hide="transformation.customFunctionDeclarations"
+-->

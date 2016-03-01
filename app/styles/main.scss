@@ -291,6 +291,17 @@ md-tab-content .CodeMirror {
   height:auto;
 }
 
+table { 
+    border: 2px solid black;
+    border-collapse: collapse; 
+}
+
+td { 
+    border: 1px solid black; 
+}
+.numberinput {
+    max-width: 50px;
+}
 .pipeline-flow {
   position:relative;
   padding:24px 0;
@@ -631,6 +642,9 @@ graph-mapping div {
 }
 
 .api-doc-docstring {
+  font-size: 14px;
+}
+.doc-table {
   font-size: 12px;
 }
 
@@ -1000,3 +1014,4 @@ md-toolbar .md-button[type=submit] {
     padding-left: 30px;
   }
 }
+

@@ -36,7 +36,8 @@ angular
     'ui.grid.infiniteScroll',
     'ngMessages',
     'RecursionHelper',
-    'vAccordion'
+    'vAccordion',
+    'oi.select'
 ])
   .config(function(
     ontotextAPIProvider,

@@ -13,9 +13,10 @@ angular.module('grafterizerApp')
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
         if (!scope.function) {
-          var vacances = 'function';
-          scope[vacances] = {
-            numberOfRows: 1,
+          var functionIsAKeyword = 'function';
+          scope[functionIsAKeyword] = {
+            indexFrom: 0,
+            indexTo: 1,
             take: false,
             docstring: null
           };
@@ -23,7 +24,8 @@ angular.module('grafterizerApp')
 
         scope.$parent.generateCurrFunction = function() {
           return new transformationDataModel.DropRowsFunction(
-            parseInt(scope.function.numberOfRows),
+            parseInt(scope.function.indexFrom),
+            parseInt(scope.function.indexTo),
             scope.function.take,
             scope.function.docstring);
         };

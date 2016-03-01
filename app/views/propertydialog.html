@@ -48,6 +48,38 @@
             -->
             <md-button aria-label='search' class="md-icon-button fa fa-search" ng-click="search(propertyValue.value)"></md-button>
           </div>
+            <md-switch style=" min-width:200px; " ng-model="propertyCondition" aria-label="add conditional property" ng-disabled="$root.readonlymode" ng-change="onConditionalChange(propertyCondition)">
+                    Specify condition
+                    </md-switch>
+            <div class="md-padding"  ng-if = "propertyCondition" ng-repeat = "propCondition in propertyValue.condition">
+   <md-radio-group ng-if="$index > 0" layout = "row" ng-model="propCondition.conj" readonly="$root.readonlymode">
+                    <md-radio-button value="specify">AND</md-radio-button>
+                    <md-radio-button value="header">OR</md-radio-button>
+                </md-radio-group>
+            <div layout="row" >
+                <div>
+                <label style="min-width:150px; padding-top:15px;">Column</label>
+                    
+                    <oi-select ng-if="colnames.length !== 0"  oi-options="column.value for column in colnames track by column.id" ng-model="propCondition.column" ng-disabled="$root.readonlymode"></oi-select>
+                    <oi-select ng-if="colnames.length === 0" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="propCondition.column" ng-disabled="$root.readonlymode"></oi-select>
+                </div>
+                <div style="padding-left:20px">
+                    <label style="min-width:150px; padding-top:15px;">Operator</label>
+                    <oi-select oi-options="operator.name for operator in conditionOperators track by operator.id" ng-model="propCondition.operator"  ng-disabled="$root.readonlymode"></oi-select>
+                </div>
+                <div layout="column" style="padding-left:20px" ng-if="propCondition.operator.id!==0">
+                    <label>{{propCondition.operator.id === 6 ? "Custom code" : "Operand"}}</label>
+                    <input ng-model="propCondition.operand" type="text" >
+                </div>
+                </div>
+             
+            </div>
+            <!--md-input-container flex ng-if = "propertyCondition" class="md-padding">
+              <label>Condition (code)</label>
+              <input ng-model="propertyValue.condition" type="text" >
+            
+            </md-input-container-->
+            
         </form>
         <h5 align="center" ng-show="showSearchEmptyResult">No matched result</h5>
 				<div ng-show="showSearchResult" >

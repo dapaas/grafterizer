@@ -7,7 +7,7 @@
  * # meltFunction
  */
 angular.module('grafterizerApp')
-  .directive('meltFunction', function(transformationDataModel) {
+  .directive('meltFunction', function(transformationDataModel, $rootScope) {
     return {
       templateUrl: 'views/pipelineFunctions/meltFunction.html',
       restrict: 'E',
@@ -18,6 +18,14 @@ angular.module('grafterizerApp')
           scope.function.docstring = null;
         }
 
+        scope.colnames = (typeof scope.$parent.$root.colnames === 'undefined') ? [] : scope.$parent.$root.colnames();
+        var colCtr = 0;
+        scope.addColumn = function(query) {
+          return {
+            id: colCtr++,
+            value: query
+          };
+        };
         scope.$parent.generateCurrFunction = function() {
           return new transformationDataModel.MeltFunction(scope.function.columnsArray, scope.function.docstring);
         };

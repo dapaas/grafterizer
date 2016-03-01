@@ -18,6 +18,15 @@ angular.module('grafterizerApp')
           scope.function.docstring = null;
         }
 
+        scope.colnames = (typeof scope.$parent.$root.colnames === 'undefined') ? [] : scope.$parent.$root.colnames();
+        var colCtr = 0;
+        scope.addColumn = function(query) {
+          return {
+            id: colCtr++,
+            value: query
+          };
+        };
+
         scope.$parent.generateCurrFunction = function() {
           var functArray = [];
           var newrenfunc;
@@ -58,7 +67,7 @@ angular.module('grafterizerApp')
 
         scope.getMapLength = function(num) {
           var b = [];
-          for (var i = 0; i <= num / 2; i += 2) b.push(i);
+          for (var i = 0; i < num ; i += 2) b.push(i);
           return b;
         };
 

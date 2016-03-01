@@ -2,17 +2,150 @@
     <div>
         <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
             <div class="api-doc-docstring" ng-show = "showUsage" layout="column">
-            <p> Sorts dataset by given column in the ascending order. </p>
+                <p> Sorts a dataset by given column in given order. There are four types of sorting:</p>
+                <ul>
+                    <li> Alphabetical
+                    <li> Numerical
+                    <li> By length
+                    <li> Date
+                </ul>
+                It is possible to perform sorting in reverse order for each sorting type. Function supports sorting by multiple columns. The priority of "column - sorting type - order" triple in this case is determined by triple order -- from top to down
+                <p> <b>Example:</b> </p>
+                <p> Given original dataset containing records about orders made by clients: </p>
+                <table  class="doc-table">
+                    <tr>
+                        <td> firstName </td>
+                        <td> lastName </td>
+                        <td> orderDate </td>
+                        <td> address </td>
+                        <td> phoneNumber </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Smith </td>
+                        <td> 10.11.2015 </td>
+                        <td> New York, Harrison Street, 507 </td>
+                        <td> 263-86-335 </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> Johnson </td>
+                        <td> 13.11.2015 </td>
+                        <td> Richmond, Main Street, 17 </td>
+                        <td> 227-11-594 </td>
+                    </tr>
+
+                    <tr>
+                        <td> Alice </td>
+                        <td> Smith </td>
+                        <td> 20.11.2015 </td>
+                        <td> New York, Harrison Street, 29, H0512 </td>
+                        <td> 263-86-335 </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Williams </td>
+                        <td> 25.11.2015 </td>
+                        <td> New York, East 52nd Street, 55 </td>
+                        <td> 493-78-145 </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> Johnson </td>
+                        <td> 26.11.2015 </td>
+                        <td> Richmond, Main Street, 17 </td>
+                        <td> 482-16-177 </td>
+                    </tr>
+                    <tr>
+                        <td> Mary </td>
+                        <td> Williams </td>
+                        <td> 29.11.2015 </td>
+                        <td> Florida, Orange, Orlando, East Winter Park Road, 1842 </td>
+                        <td> 278-32-169 </td>
+                    </tr>
+                </table>
+
+                <p>                It is possible to sort records by last name in alphabeltical ascending order, for records having the same last name to sort them by first name in alphabetical ascending order and for records having the same last name and first name to sort them by order date in reverse order. This kind of sorting may be useful, for instance, prior to the calling "Remove Duplicates" function to leave only the records containing information about the last order person has made.
+                </p>
+            <p>
+                <img src="/images/sort.png"/>
+            </p>
+                <table  class="doc-table">
+                    <tr>
+                        <td> firstName </td>
+                        <td> lastName </td>
+                        <td> orderDate </td>
+                        <td> address </td>
+                        <td> phoneNumber </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> Johnson </td>
+                        <td> 26.11.2015 </td>
+                        <td> Richmond, Main Street, 17 </td>
+                        <td> 482-16-177 </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> Johnson </td>
+                        <td> 13.11.2015 </td>
+                        <td> Richmond, Main Street, 17 </td>
+                        <td> 227-11-594 </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Smith </td>
+                        <td> 20.11.2015 </td>
+                        <td> New York, Harrison Street, 29, H0512 </td>
+                        <td> 263-86-335 </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Smith </td>
+                        <td> 10.11.2015 </td>
+                        <td> New York, Harrison Street, 507 </td>
+                        <td> 263-86-335 </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Williams </td>
+                        <td> 25.11.2015 </td>
+                        <td> New York, East 52nd Street, 55 </td>
+                        <td> 493-78-145 </td>
+                    </tr>
+                    <tr>
+                        <td> Mary </td>
+                        <td> Williams </td>
+                        <td> 29.11.2015 </td>
+                        <td> Florida, Orange, Orlando, East Winter Park Road, 1842 </td>
+                        <td> 278-32-169 </td>
+                    </tr>
+                </table>
+
+        <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
     </div>
     <div>
         <h3>Parameters</h3>
-    <md-input-container flex>
-        <label>Column name</label>
-        <input ng-model="function.colName" type="text" required ng-readonly="$root.readonlymode">
+    
+<md-button class="md-raised" ng-click="addColnameSorttype()" aria-label="Add column" ng-disabled="$root.readonlymode">Add column</md-button>
+<div layout="row"  ng-repeat="nametype in function.colnamesSorttypesMap">
+    <div layout="row">
+         <md-button class="md-primary button-tight md-default-theme" ng-disabled="function.colnamesSorttypesMap.length === 1 || $root.readonlymode" ng-click="removeColnameSorttype(nametype)" aria-label="Remove column">
+            <i class="fa fa-trash fa-lg"></i>
+        </md-button>
+             <oi-select ng-show="colnames.length !== 0" flex class = "md-primary md-default-theme" style= " top:20px" oi-options="column.value for column in colnames track by column.id" ng-model="nametype.colname" ng-disabled="$root.readonlymode"></oi-select>
+            
+             <oi-select ng-show="colnames.length === 0" flex class = "md-primary md-default-theme" style= " top:20px" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="nametype.colname" ng-disabled="$root.readonlymode"></oi-select>
+           <md-select  flex class = "md-primary md-default-theme" style= "margin-left:20px; min-width:200px" aria-label="sort type" placeholder="{{nametype.sortype?nametype.sorttype:'Choose sorting type'}}" ng-model="nametype.sorttype" ng-disabled="$root.readonlymode">
+               <md-option ng-repeat="val in sortTypes"  value = {{val}}>{{val}}</md-option>
+                 </md-select>
+            <md-checkbox style="padding-top:15px; margin-left:20px"  ng-model="nametype.order" ng-disabled="$root.readonly.mode"> Reverse order
+            </md-checkbox>
+        </div>
+    </div>
 
-    </md-input-container>
-</md-whiteframe>
-</div>    <md-input-container flex>
+</div>
+    <md-input-container flex>
         <label>Comment</label>
 
         <input ng-model="function.docstring" type="text" ng-readonly="$root.readonlymode">

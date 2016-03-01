@@ -3,9 +3,109 @@
 
         <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
         <div class="api-doc-docstring" ng-show = "showUsage" layout = "column">
-            <p> Narrows dataset to specified rows. You may define number of rows to take, to drop or to filter dataset on specified condition. </p>
-            <p><img src="/images/rows.png"/></p>
-            <a href="http://api.grafter.org/master/grafter.tabular.html#var-drop-rows" target="_blank">view  source</a>
+            <p> Reduces number of rows in a given dataset. It is possible to specify rows to leave in a dataset or alternatively specify rows to remove from a dataset by specifying range of indices and choosing an appropriate option(drop/take).
+            </p>
+                <p> Example: </p>
+                <p> Given original dataset containing records about orders made by clients: </p>
+                <table>
+                    <tr>
+                        <td> firstName </td>
+                        <td> lastName </td>
+                        <td> orderDate </td>
+                        <td> address </td>
+                        <td> phoneNumber </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Smith </td>
+                        <td> 10.11.2015 </td>
+                        <td> New York, Harrison Street, 507 </td>
+                        <td> 263-86-335 </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> Johnson </td>
+                        <td> 13.11.2015 </td>
+                        <td> Richmond, Main Street, 17 </td>
+                        <td> 227-11-594 </td>
+                    </tr>
+
+                    <tr>
+                        <td> Bob </td>
+                        <td> J. </td>
+                        <td> 13.11.2015 </td>
+                        <td> -- </td>
+                        <td> -- </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> J. </td>
+                        <td> 13.11.2015 </td>
+                        <td> -- </td>
+                        <td> -- </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> J. </td>
+                        <td> 13.11.2015 </td>
+                        <td> -- </td>
+                        <td> -- </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Williams </td>
+                        <td> 25.11.2015 </td>
+                        <td> New York, East 52nd Street, 55 </td>
+                        <td> 493-78-145 </td>
+                    </tr>
+                    <tr>
+                        <td> Mary </td>
+                        <td> Williams </td>
+                        <td> 29.11.2015 </td>
+                        <td> Florida, Orange, Orlando, East Winter Park Road, 1842 </td>
+                        <td> 278-32-169 </td>
+                    </tr>
+                </table>
+                <p> It is possible to remove several rows from the dataset:</p>
+                
+            <p><img src="/images/drop-rows.png"/></p>
+                <table>
+                    <tr>
+                        <td> firstName </td>
+                        <td> lastName </td>
+                        <td> orderDate </td>
+                        <td> address </td>
+                        <td> phoneNumber </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Smith </td>
+                        <td> 10.11.2015 </td>
+                        <td> New York, Harrison Street, 507 </td>
+                        <td> 263-86-335 </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> Johnson </td>
+                        <td> 13.11.2015 </td>
+                        <td> Richmond, Main Street, 17 </td>
+                        <td> 227-11-594 </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Williams </td>
+                        <td> 25.11.2015 </td>
+                        <td> New York, East 52nd Street, 55 </td>
+                        <td> 493-78-145 </td>
+                    </tr>
+                    <tr>
+                        <td> Mary </td>
+                        <td> Williams </td>
+                        <td> 29.11.2015 </td>
+                        <td> Florida, Orange, Orlando, East Winter Park Road, 1842 </td>
+                        <td> 278-32-169 </td>
+                    </tr>
+                </table>
         </div>
         </div>
         <div>
@@ -17,10 +117,21 @@
     </md-switch>
 <!--md-button class="md-raised" ng-click="doGrep()" style="position:absolute; right:10px" aria-label="Grep">Filter Dataset</md-button-->
 </div>
-  <md-input-container flex>
+        <div layout = "row">
+    <md-input-container flex>
+        <label>Index from</label>
+            <input ng-model="function.indexFrom" type="number" min="0" >
+    </md-input-container>
+    <md-input-container flex>
+        <label>Index to</label>
+            <input ng-model="function.indexTo" type="number" min="0" >
+    </md-input-container>
+        </div>
+    </div>
+  <!--md-input-container flex>
         <label>Number of rows</label>
         <input ng-model="function.numberOfRows" type="number" min="1" required ng-readonly="$root.readonlymode">
-    </md-input-container>
+    </md-input-container-->
     <md-input-container flex>
         <label>Comment</label>
 

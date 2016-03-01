@@ -40,10 +40,9 @@
             <i class="fa fa-trash fa-lg"></i>
         </md-button>
         <div layout="column">
-            <md-input-container>
             <label>Column </label>
-                <input ng-model="function.mappings[i]" type="text" required ng-readonly="$root.readonlymode">
-            </md-input-container>
+        <oi-select ng-show="colnames.length !== 0" oi-options="column.value for column in colnames track by column.id" ng-model="function.mappings[i]" ng-disabled="$root.readonlymode"></oi-select>
+        <oi-select ng-show="colnames.length === 0" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="function.mappings[i]" ng-disabled="$root.readonlymode"></oi-select>
         </div>
         <div layout="column">
             <md-input-container>

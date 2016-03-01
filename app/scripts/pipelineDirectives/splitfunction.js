@@ -19,9 +19,17 @@ angular.module('grafterizerApp')
           scope.function.docstring = null;
         }
 
+        scope.colnames = (typeof scope.$parent.$root.colnames === 'undefined') ? [] : scope.$parent.$root.colnames();
+        var colCtr = 0;
+        scope.addColumn = function(query) {
+          return {
+            id: colCtr++,
+            value: query
+          };
+        };
         scope.$parent.generateCurrFunction = function() {
           return new transformationDataModel.SplitFunction(
-            scope.function.colName, scope.function.newColName, scope.function.separator, scope.function.docstring
+            scope.function.colName, scope.function.separator, scope.function.docstring
           );
         };
 

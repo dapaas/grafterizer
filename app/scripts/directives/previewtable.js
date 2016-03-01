@@ -7,14 +7,14 @@
  * # previewTable
  */
 angular.module('grafterizerApp')
-  .directive('previewTable', function($q, $mdToast) {
+.directive('previewTable', function($q, $mdToast, $rootScope) {
 
   var paginationSize = 100;
 
   return {
     template: '<div ui-grid="gridOptions" class="sin-grid md-whiteframe-z1"' +
-    ' ui-grid-auto-resize ui-grid-resize-columns ui-grid-exporter ui-grid-infinite-scroll' +
-    '><div class="watermark" ng-show="!gridOptions.data.length">\u2205</div></div>',
+      ' ui-grid-auto-resize ui-grid-resize-columns ui-grid-exporter ui-grid-infinite-scroll' +
+      '><div class="watermark" ng-show="!gridOptions.data.length">\u2205</div></div>',
     restrict: 'E',
     scope: {
       data: '=ngModel',
@@ -22,7 +22,7 @@ angular.module('grafterizerApp')
     },
     link: function postLink(scope, element, attrs) {
       scope.gridOptions = {
-        data:  null,
+        data:  null,
         columnDefs: [],
         headerRowHeight: 82,
         rowHeight: 38,
@@ -41,6 +41,7 @@ angular.module('grafterizerApp')
           }
 
         }
+
       };
 
       scope.getDataDown = function() {
@@ -126,19 +127,15 @@ angular.module('grafterizerApp')
           }
         }
 
+        var nbEmptyColumnsFound = 0;
         var columnNamesSet = {};
 
         scope.gridOptions.columnDefs =
           _.map(data[':column-names'], function(f) {
-          if (f === null || f === undefined) {
-            f = 'EMPTY COLUMN HEADER';
-            $mdToast.show(
-              $mdToast.simple()
-              .content('Warning: one or more column headers are empty. This may cause unexpected errors - please correct your transformation! ')
-              .position('bottom right')
-              .hideDelay(6000)
-            );
-          }
+            if (f === null || f === undefined) {
+              f = 'EMPTY COLUMN HEADER';
+              ++nbEmptyColumnsFound;
+            }
 
           var preventMultipleWarning = false;
           while (columnNamesSet.hasOwnProperty(f)) {
@@ -156,24 +153,46 @@ angular.module('grafterizerApp')
 
           columnNamesSet[f] = true;
 
-          var w = widths[f];
-          var width = w === largest || isNaN(w) ? '*' : Math.floor(w * 100) + '%';
-          var minWidth = isNaN(rawWidths[f]) ? 200 : Math.min(80 + rawWidths[f] * 8, 200);
+            var w = widths[f];
+            var width = w === largest || isNaN(w) ? '*' : Math.floor(w * 100) + '%';
+            var minWidth = isNaN(rawWidths[f]) ? 200 : Math.min(80 + rawWidths[f] * 8, 200);
+            var colNameString = f[0] === ':' ? f.substring(1) : f;
+            return {
+              name: '' + f,
+              displayName: colNameString,
+              width: width,
+              minWidth: minWidth,
+              cellTooltip: true
+            };
+          });
 
-          var colNameString = f[0] === ':' ? f.substring(1) : f;
-
-          return {
-            name: f.toString(),
-            displayName: colNameString,
-            width: width,
-            minWidth: minWidth,
-            cellTooltip: true
-          };
-        });
+        if (nbEmptyColumnsFound > 0) {
+          $mdToast.show(
+            $mdToast.simple()
+            .content('Warning: ' + nbEmptyColumnsFound + ' column header' +
+              (nbEmptyColumnsFound > 1 ? 's' : '') +
+              ' are empty. This may cause unexpected errors - please correct your transformation! ')
+            .position('bottom right')
+            .hideDelay(6000)
+          );
+        }
 
         if (scope.gridApi) {
           scope.gridApi.infiniteScroll.dataLoaded(false, rows.length >= paginationSize);
         }
+
+        $rootScope.colnames = function() {
+            var i;
+            var namesArray = [];
+            for (i = 0; i < scope.gridOptions.columnDefs.length; ++i) {
+                var colname = {
+                  id: i,
+                  value: scope.gridOptions.columnDefs[i].displayName
+                };
+                namesArray.push(colname);
+            }
+            return namesArray;
+        };
 
         scope.gridOptions.data = rows;
       });

@@ -40,8 +40,20 @@ angular.module('grafterizerApp')
             type: 'none'
           },
           {
-            displayName: 'Sort, Dataset',
+            displayName: 'Sort Dataset',
             name: 'sort-dataset',
+            selected: false,
+            type: 'none'
+          },
+          {
+            displayName: 'Remove Duplicates',
+            name: 'remove-duplicates',
+            selected: false,
+            type: 'none'
+          },
+          {
+            displayName: 'Group and Aggregate',
+            name: 'group-rows',
             selected: false,
             type: 'none'
           },
@@ -64,6 +76,12 @@ angular.module('grafterizerApp')
             type: 'column'
           },
           {
+            displayName: 'Merge Columns',
+            name: 'merge-columns',
+            selected: false,
+            type: 'column'
+          },
+          {
             displayName: 'Map Columns',
             name: 'mapc',
             selected: false,
@@ -76,10 +94,28 @@ angular.module('grafterizerApp')
             type: 'column'
           },
           {
+            displayName: 'Shift Column',
+            name: 'shift-column',
+            selected: false,
+            type: 'column'
+          },
+          {
             displayName: 'Split Column',
             name: 'split',
             selected: false,
             type: 'column'
+          },
+          {
+            displayName: 'Add Row',
+            name: 'add-row',
+            selected: false,
+            type: 'rows'
+          },
+          {
+            displayName: 'Shift Row',
+            name: 'shift-row',
+            selected: false,
+            type: 'rows'
           },
           {
             displayName: 'Take/Drop Rows',

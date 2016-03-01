@@ -1,0 +1,155 @@
+<div layout="column">
+    <div>
+        <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
+        <div class="api-doc-docstring" ng-show = "showUsage" layout="column">
+            <p> Changes a column position inside a dataset. It is possible to shift column either to the specified index or to the rightmost index. Other columns will be shifted appropriately. </p> 
+            
+                <p> <b>Example: </b>
+                 Given original dataset containing records about orders made by clients: </p>
+                <table class="api-doc-docstring">
+                    <tr>
+                        <td> firstName </td>
+                        <td> lastName </td>
+                        <td> orderNumber </td>
+                        <td> totalItems </td>
+                        <td> totalCost </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Smith </td>
+                        <td> 1111 </td>
+                        <td> 5 </td>
+                        <td> 150 </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> Johnson </td>
+                        <td> 857 </td>
+                        <td> 7 </td>
+                        <td> 70 </td>
+                    </tr>
+
+                    <tr>
+                        <td> Alice </td>
+                        <td> Smith </td>
+                        <td> 1112 </td>
+                        <td> 30 </td>
+                        <td> 340 </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Williams </td>
+                        <td> 505 </td>
+                        <td> 1 </td>
+                        <td> 170 </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> Johnson </td>
+                        <td> 858 </td>
+                        <td> 3 </td>
+                        <td> 370 </td>
+                    </tr>
+                    <tr>
+                        <td> Mary </td>
+                        <td> Williams </td>
+                        <td> 1543 </td>
+                        <td> 1 </td>
+                        <td> 15 </td>
+                    </tr>
+                </table>
+                <p> It is possible to make orderNumber the last column: </p>
+            <p>
+                <img src="/images/shiftcolumn.png"/>
+            </p>
+                <table class="api-doc-docstring">
+                    <tr>
+                        <td> firstName </td>
+                        <td> lastName </td>
+                        <td> totalItems </td>
+                        <td> totalCost </td>
+                        <td> orderNumber </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Smith </td>
+                        <td> 5 </td>
+                        <td> 150 </td>
+                        <td> 1111 </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> Johnson </td>
+                        <td> 7 </td>
+                        <td> 70 </td>
+                        <td> 857 </td>
+                    </tr>
+
+                    <tr>
+                        <td> Alice </td>
+                        <td> Smith </td>
+                        <td> 30 </td>
+                        <td> 340 </td>
+                        <td> 1112 </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Williams </td>
+                        <td> 1 </td>
+                        <td> 170 </td>
+                        <td> 505 </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> Johnson </td>
+                        <td> 3 </td>
+                        <td> 370 </td>
+                        <td> 858 </td>
+                    </tr>
+                    <tr>
+                        <td> Mary </td>
+                        <td> Williams </td>
+                        <td> 1 </td>
+                        <td> 15 </td>
+                        <td> 1543 </td>
+                    </tr>
+                </table>
+    </div>
+    </div>
+<div>
+
+            <h3>Parameters</h3>
+
+    <md-input-container ng-show="colnames.length !== 0" lex>
+        <label>Column name</label>
+             <oi-select flex class = "md-primary md-default-theme"  oi-options="column.value for column in colnames track by column.id" ng-model="function.colFrom" ng-disabled="$root.readonlymode"></oi-select>
+    </md-input-container>
+    <md-input-container ng-show="colnames.length === 0" lex>
+             <oi-select  flex class = "md-primary md-default-theme"  oi-options="column.value for column in []" ng-model="function.colFrom" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-disabled="$root.readonlymode"></oi-select>
+    </md-input-container>
+
+  <div>
+    <md-radio-group ng-model="function.shiftcolmode" readonly="$root.readonlymode">
+      <md-radio-button value="position">Shift to index</md-radio-button>
+      <md-radio-button value="eods">Shift to the rightmost position</md-radio-button>
+    </md-radio-group>
+  </div>
+  <div ng-show = "function.shiftcolmode === 'position'">
+
+    <md-input-container flex>
+        <label>Index to</label>
+            <input ng-model="function.indexTo"   type="number" min="0" >
+    </md-input-container>
+  
+  </div>
+    <md-input-container flex>
+        <label>Comment</label>
+
+        <input ng-model="function.docstring" type="text"  ng-readonly="$root.readonlymode">
+    </md-input-container>
+</div>
+
+</div>
+<!--
+ng-hide="transformation.customFunctionDeclarations"
+-->

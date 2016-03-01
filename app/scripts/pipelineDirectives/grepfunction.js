@@ -14,11 +14,19 @@ angular.module('grafterizerApp')
       link: function postLink(scope, element, attrs) {
         if (!scope.function) {
           var filtfunc = scope.$parent.transformation.customFunctionDeclarations[0];
-          scope.function = new transformationDataModel.GrepFunction(
-            [], [filtfunc], null, null, null, null);
+          scope.function = new transformationDataModel.GrepFunction(true,
+           'text', [], [filtfunc], null, null, null, null);
           scope.function.docstring = null;
         }
 
+        scope.colnames = (typeof scope.$parent.$root.colnames === 'undefined') ? [] : scope.$parent.$root.colnames();
+        var colCtr = 0;
+        scope.addColumn = function(query) {
+          return {
+              id: colCtr++,
+              value: query
+          };
+        };
         scope.$parent.generateCurrFunction = function() {
           // TODO fix selected function bug
           var functArray = [];
@@ -35,6 +43,8 @@ angular.module('grafterizerApp')
           }
 
           return new transformationDataModel.GrepFunction(
+            scope.function.take,
+            scope.function.grepmode,
             scope.function.colsToFilter,
             functArray,
             scope.function.filterText,

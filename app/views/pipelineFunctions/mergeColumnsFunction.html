@@ -1,0 +1,140 @@
+<div layout="column">
+    <div>
+        <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
+        <div class="api-doc-docstring" ng-show = "showUsage" layout="column">
+            <p> Merges several columns in one using specified separator. New column gets name specified by user and is placed at the index of a first column in a list of columns to merge. If "New column name" parameter is ignored, the created column will get the same name as the first column in a list of columns to merge.  </p>
+                <p> <b>Example:</b> </p>
+                <p> Given original dataset containing records about orders made by clients: </p>
+                <table class="doc-table">
+                    <tr>
+                        <td> firstName </td>
+                        <td> lastName </td>
+                        <td> orderDate </td>
+                        <td> address </td>
+                        <td> phoneNumber </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Smith </td>
+                        <td> 10.11.2015 </td>
+                        <td> New York, Harrison Street, 507 </td>
+                        <td> 263-86-335 </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> Johnson </td>
+                        <td> 13.11.2015 </td>
+                        <td> Richmond, Main Street, 17 </td>
+                        <td> 227-11-594 </td>
+                    </tr>
+
+                    <tr>
+                        <td> Alice </td>
+                        <td> Smith </td>
+                        <td> 20.11.2015 </td>
+                        <td> New York, Harrison Street, 29, H0512 </td>
+                        <td> 263-86-335 </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Williams </td>
+                        <td> 25.11.2015 </td>
+                        <td> New York, East 52nd Street, 55 </td>
+                        <td> 493-78-145 </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> Johnson </td>
+                        <td> 26.11.2015 </td>
+                        <td> Richmond, Main Street, 17 </td>
+                        <td> 482-16-177 </td>
+                    </tr>
+                    <tr>
+                        <td> Mary </td>
+                        <td> Williams </td>
+                        <td> 29.11.2015 </td>
+                        <td> Florida, Orange, Orlando, East Winter Park Road, 1842 </td>
+                        <td> 278-32-169 </td>
+                    </tr>
+                </table>
+                <p> It is possible to merge columns firstName and lastName in one column called fullName using space as a separator: </p>
+
+            <p>
+                <img src="/images/merge.png"/>
+            </p>
+                <table class="doc-table">
+                    <tr>
+                        <td> fullName </td>
+                        <td> orderDate </td>
+                        <td> address </td>
+                        <td> phoneNumber </td>
+                    </tr>
+                    <tr>
+                        <td> Alice Smith</td>
+                        <td> 10.11.2015 </td>
+                        <td> New York, Harrison Street, 507 </td>
+                        <td> 263-86-335 </td>
+                    </tr>
+                    <tr>
+                        <td> Bob Johnson</td>
+                        <td> 13.11.2015 </td>
+                        <td> Richmond, Main Street, 17 </td>
+                        <td> 227-11-594 </td>
+                    </tr>
+
+                    <tr>
+                        <td> Alice Smith </td>
+                        <td> 20.11.2015 </td>
+                        <td> New York, Harrison Street, 29, H0512 </td>
+                        <td> 263-86-335 </td>
+                    </tr>
+                    <tr>
+                        <td> Alice Williams</td>
+                        <td> 25.11.2015 </td>
+                        <td> New York, East 52nd Street, 55 </td>
+                        <td> 493-78-145 </td>
+                    </tr>
+                    <tr>
+                        <td> Bob Johnson</td>
+                        <td> 26.11.2015 </td>
+                        <td> Richmond, Main Street, 17 </td>
+                        <td> 482-16-177 </td>
+                    </tr>
+                    <tr>
+                        <td> Mary Williams</td>
+                        <td> 29.11.2015 </td>
+                        <td> Florida, Orange, Orlando, East Winter Park Road, 1842 </td>
+                        <td> 278-32-169 </td>
+                    </tr>
+                </table>
+    </div>
+    </div>
+<div>
+
+            <h3>Parameters</h3>
+
+    <label>Columns to merge</label>
+        <oi-select ng-show="colnames.length !== 0" oi-options="column.value for column in colnames track by column.id" ng-model="function.colsToMerge" multiple ng-disabled="$root.readonlymode"></oi-select>
+        <oi-select ng-show="colnames.length === 0" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="function.colsToMerge" multiple ng-disabled="$root.readonlymode"></oi-select>
+    <md-input-container flex>
+        <label>Separator</label>
+        <input ng-trim = "false" ng-model="function.separator" type="text" required ng-readonly="$root.readonlymode">
+    </md-input-container>
+    <br>
+    <md-input-container flex>
+        <label>Name of new column</label>
+        <input ng-model="function.newColName" type="text"  ng-readonly="$root.readonlymode">
+    </md-input-container>
+
+
+    <md-input-container flex>
+        <label>Comment</label>
+
+        <input ng-model="function.docstring" type="text"  ng-readonly="$root.readonlymode">
+    </md-input-container>
+</div>
+
+</div>
+<!--
+ng-hide="transformation.customFunctionDeclarations"
+-->
