@@ -148,8 +148,8 @@ angular.module('grafterizerApp')
                 .content('Warning: one or more column headers are identical. That may cause unexpected errors.')
                 .position('bottom right')
                 .hideDelay(6000)
+                preventMultipleWarning = true;
               );
-              preventMultipleWarning = true;
             }
             f = f + Math.floor(Math.random() * 10000);
           }

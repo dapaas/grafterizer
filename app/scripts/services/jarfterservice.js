@@ -20,7 +20,6 @@ angular.module('grafterizerApp')
 
   this.$get = function($http, generateClojure, $injector) {
     var api = {};
-    var rScope = $injector.get('$rootScope');
     
     api.getJarCreatorStandAloneEndpoint = function() {
       return endpoint + '/jarfter/webresources/jarCreatorStandAlone';
@@ -37,8 +36,8 @@ angular.module('grafterizerApp')
       
       // pipeline and graft
       clojure += generateClojure.fromTransformation(transformation);
-      if (rScope.transformation.graphs &&
-          rScope.transformation.graphs.length !== 0) {
+      if (transformation.graphs &&
+          transformation.graphs.length !== 0) {
         // if graft - execute the pipeline and then the graft
         clojure += '\r\n(defn import-data\r\n  [quads-seq destination]\r\n  (add (ses\/rdf-serializer destination) quads-seq)\r\n)\r\n\r\n(defn my-transformation [dataset output]\r\n\r\n  (import-data \r\n    (make-graph (my-pipe dataset))\r\n  output)\r\n)';
       } else {
