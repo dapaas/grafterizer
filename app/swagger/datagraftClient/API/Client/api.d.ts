@@ -6,5 +6,6 @@
 /// <reference path="Catalogue.ts" />
 /// <reference path="UtilityFunction.ts" />
 /// <reference path="MetaData.ts" />
+/// <reference path="Configuration.ts" />
 
 /// <reference path="DefaultApi.ts" />

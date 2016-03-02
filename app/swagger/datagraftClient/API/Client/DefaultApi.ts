@@ -1494,6 +1494,350 @@ namespace API.Client {
         }
         /**
          * 
+         * Retrieve configuration for the chosen transformation
+         * @param user ID of the user for who to obtain the configuration for the transformation
+         * @param id ID (slug) of the transformation for which to retrieve the configuration
+         */
+        public userTransformationsIdConfigurationGet (user: string, id: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/transformations/{id}/configuration'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userTransformationsIdConfigurationGet');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userTransformationsIdConfigurationGet');
+            }
+            let httpRequestParams: any = {
+                method: 'GET',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Update configuration for the chosen transformation
+         * @param user ID of the user for who to update the configuration for the transformation
+         * @param id ID (slug) of the transformation for which to update the configuration
+         * @param configuration 
+         */
+        public userTransformationsIdConfigurationPut (user: string, id: string, configuration: Configuration, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/transformations/{id}/configuration'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userTransformationsIdConfigurationPut');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userTransformationsIdConfigurationPut');
+            }
+            // verify required parameter 'configuration' is set
+            if (!configuration) {
+                throw new Error('Missing required parameter configuration when calling userTransformationsIdConfigurationPut');
+            }
+            let httpRequestParams: any = {
+                method: 'PUT',
+                url: path,
+                json: true,
+                data: configuration,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Create configuration for the chosen transformation
+         * @param user ID of the user for who to create the configuration for the transformation
+         * @param id ID (slug) of the transformation for which to create the configuration
+         * @param configuration 
+         */
+        public userTransformationsIdConfigurationPost (user: string, id: string, configuration: Configuration, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/transformations/{id}/configuration'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userTransformationsIdConfigurationPost');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userTransformationsIdConfigurationPost');
+            }
+            // verify required parameter 'configuration' is set
+            if (!configuration) {
+                throw new Error('Missing required parameter configuration when calling userTransformationsIdConfigurationPost');
+            }
+            let httpRequestParams: any = {
+                method: 'POST',
+                url: path,
+                json: true,
+                data: configuration,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Delete configuration for the chosen transformation
+         * @param user ID of the user for who to delete the configuration for the transformation
+         * @param id ID (slug) of the transformation for which to delete the configuration
+         */
+        public userTransformationsIdConfigurationDelete (user: string, id: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/transformations/{id}/configuration'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userTransformationsIdConfigurationDelete');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userTransformationsIdConfigurationDelete');
+            }
+            let httpRequestParams: any = {
+                method: 'DELETE',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Retrieve configuration according to the given key for the chosen transformation
+         * @param user ID of the user for who to obtain the configuration for the transformation
+         * @param id ID (slug) of the transformation for which to retrieve the configuration
+         * @param key The key of the configuration field to obtain
+         */
+        public userTransformationsIdConfigurationKeyGet (user: string, id: string, key: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/transformations/{id}/configuration/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userTransformationsIdConfigurationKeyGet');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userTransformationsIdConfigurationKeyGet');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userTransformationsIdConfigurationKeyGet');
+            }
+            let httpRequestParams: any = {
+                method: 'GET',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Update a configuration field for the chosen transformation
+         * @param user ID of the user for who to update the configuration for the transformation
+         * @param id ID (slug) of the transformation for which to update the configuration
+         * @param key The key of the configuration field to update
+         * @param configuration 
+         */
+        public userTransformationsIdConfigurationKeyPut (user: string, id: string, key: string, configuration: Configuration, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/transformations/{id}/configuration/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userTransformationsIdConfigurationKeyPut');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userTransformationsIdConfigurationKeyPut');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userTransformationsIdConfigurationKeyPut');
+            }
+            // verify required parameter 'configuration' is set
+            if (!configuration) {
+                throw new Error('Missing required parameter configuration when calling userTransformationsIdConfigurationKeyPut');
+            }
+            let httpRequestParams: any = {
+                method: 'PUT',
+                url: path,
+                json: true,
+                data: configuration,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Create a configuration field for the chosen transformation
+         * @param user ID of the user for who to create the configuration for the transformation
+         * @param id ID (slug) of the transformation for which to create the configuration
+         * @param key Key of the configuration to create
+         * @param configuration 
+         */
+        public userTransformationsIdConfigurationKeyPost (user: string, id: string, key: string, configuration: Configuration, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/transformations/{id}/configuration/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userTransformationsIdConfigurationKeyPost');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userTransformationsIdConfigurationKeyPost');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userTransformationsIdConfigurationKeyPost');
+            }
+            // verify required parameter 'configuration' is set
+            if (!configuration) {
+                throw new Error('Missing required parameter configuration when calling userTransformationsIdConfigurationKeyPost');
+            }
+            let httpRequestParams: any = {
+                method: 'POST',
+                url: path,
+                json: true,
+                data: configuration,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Delete a configuration field for the chosen transformation
+         * @param user ID of the user for who to delete the configuration for the transformation
+         * @param id ID (slug) of the transformation for which to delete the configuration
+         * @param key The key of the configuration field to delete
+         */
+        public userTransformationsIdConfigurationKeyDelete (user: string, id: string, key: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/transformations/{id}/configuration/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userTransformationsIdConfigurationKeyDelete');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userTransformationsIdConfigurationKeyDelete');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userTransformationsIdConfigurationKeyDelete');
+            }
+            let httpRequestParams: any = {
+                method: 'DELETE',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
          * Retrieve meta data for the chosen transformation
          * @param user ID of the user for who to obtain the meta data for the transformation
          * @param id ID (slug) of the transformation for which to retrieve the meta data
@@ -1517,6 +1861,49 @@ namespace API.Client {
                 method: 'GET',
                 url: path,
                 json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Update meta data for the chosen transformation
+         * @param user ID of the user for who to update the meta data for the transformation
+         * @param id ID (slug) of the transformation for which to update the meta data
+         * @param metadata 
+         */
+        public userTransformationsIdMetadataPut (user: string, id: string, metadata: MetaData, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/transformations/{id}/metadata'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userTransformationsIdMetadataPut');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userTransformationsIdMetadataPut');
+            }
+            // verify required parameter 'metadata' is set
+            if (!metadata) {
+                throw new Error('Missing required parameter metadata when calling userTransformationsIdMetadataPut');
+            }
+            let httpRequestParams: any = {
+                method: 'PUT',
+                url: path,
+                json: true,
+                data: metadata,
                 
                 
                 params: queryParameters,

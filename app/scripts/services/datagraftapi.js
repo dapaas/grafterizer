@@ -70,6 +70,39 @@ angular.module('grafterizerApp')
         return dgApi.userTransformationsIdMetadataKeyDelete(this.username, id, key);
     }
     
+    // ----- TRANSFORMATION CONFIGURATION ----------------
+    
+    this.transformationGetConfiguration = function(id) {
+        return dgApi.userTransformationsIdConfigurationGet(this.username, id);
+    }
+    
+    this.transformationCreateConfiguration = function(id, config) { 
+        return dgApi.userTransformationsIdConfigurationPost(this.username, id, config);
+    }
+    
+    this.transformationGetConfigurationByKey = function(id, key) {
+        return dgApi.userTransformationsIdConfigurationKeyGet(this.username, id, key);
+    }
+    
+    this.transformationUpdateConfigurationByKey = function(id, key, newValue) {
+        dgApi.defaultHeaders['Content-Type'] = 'text/plain';
+        var request = dgApi.userTransformationsIdConfigurationKeyPut(this.username, id, key, newValue);
+        delete dgApi.defaultHeaders['Content-Type'];
+        
+        return request;
+    }
+    
+    this.transformationCreateConfigurationByKey = function(id, key, value) {
+        dgApi.defaultHeaders['Content-Type'] = 'text/plain';
+        var request = dgApi.userTransformationsIdConfigurationKeyPost(this.username, id, key, value);
+        delete dgApi.defaultHeaders['Content-Type'];
+        
+        return request;
+    }
+    
+    this.transformationDeleteConfigurationByKey = function(id, key) {
+        return dgApi.userTransformationsIdConfigurationKeyDelete(this.username, id, key);
+    }
     
     // ----- UTILITY FUNCTIONS ---------------
     
@@ -92,5 +125,6 @@ angular.module('grafterizerApp')
     this.utilityFunctionPatch = function(id, patchedUtilityFunction) {
         return dgApi.userUtilityFunctionsIdPatch(this.username, id, patchedUtilityFunction);
     }
+    
     
   });

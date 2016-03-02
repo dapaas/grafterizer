@@ -46,9 +46,32 @@
         <label>Value</label>
         <input ng-model="metadataValue">
     </md-input-container>
-
+    
     <md-button class="md-raised md-primary" ng-click="createMetaData()">Create new metadata</md-button>
     <md-button class="md-raised md-primary" ng-click="updateMetaData()">Updata metadata</md-button>
     <md-button class="md-raised md-primary" ng-click="deleteMetaData()">Delete metadata</md-button>
+    
+    
+    
+    <br><br>
+    <md-button class="md-raised md-primary" ng-click="testConfiguration(0)">Wierd configuration</md-button>
+    <md-button class="md-raised md-primary" ng-click="testConfiguration(1)">Simple configuration</md-button>
+    <md-button class="md-raised md-primary" ng-click="testConfiguration(2)">Mixed configuration</md-button>
+    
+    <br>
+    <div>{{cftestText}}</div>
+    
+    <md-input-container class="md-block" flex-gt-sm>
+        <label>Key</label>
+        <input ng-model="configKey">
+    </md-input-container>
+    <md-input-container class="md-block" flex-gt-sm>
+        <label>Value</label>
+        <input ng-model="configValue">
+    </md-input-container>
+    
+    <md-button class="md-raised md-primary" ng-click="createConfig()">Create new config</md-button>
+    <md-button class="md-raised md-primary" ng-click="updateConfig()">Updata config</md-button>
+    <md-button class="md-raised md-primary" ng-click="deleteConfig()">Delete config</md-button>
     
 </md-content>

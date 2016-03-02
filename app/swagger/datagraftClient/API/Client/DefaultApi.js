@@ -1278,6 +1278,310 @@ var API;
             };
             /**
              *
+             * Retrieve configuration for the chosen transformation
+             * @param user ID of the user for who to obtain the configuration for the transformation
+             * @param id ID (slug) of the transformation for which to retrieve the configuration
+             */
+            DefaultApi.prototype.userTransformationsIdConfigurationGet = function (user, id, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/transformations/{id}/configuration'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userTransformationsIdConfigurationGet');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userTransformationsIdConfigurationGet');
+                }
+                var httpRequestParams = {
+                    method: 'GET',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Update configuration for the chosen transformation
+             * @param user ID of the user for who to update the configuration for the transformation
+             * @param id ID (slug) of the transformation for which to update the configuration
+             * @param configuration
+             */
+            DefaultApi.prototype.userTransformationsIdConfigurationPut = function (user, id, configuration, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/transformations/{id}/configuration'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userTransformationsIdConfigurationPut');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userTransformationsIdConfigurationPut');
+                }
+                // verify required parameter 'configuration' is set
+                if (!configuration) {
+                    throw new Error('Missing required parameter configuration when calling userTransformationsIdConfigurationPut');
+                }
+                var httpRequestParams = {
+                    method: 'PUT',
+                    url: path,
+                    json: true,
+                    data: configuration,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Create configuration for the chosen transformation
+             * @param user ID of the user for who to create the configuration for the transformation
+             * @param id ID (slug) of the transformation for which to create the configuration
+             * @param configuration
+             */
+            DefaultApi.prototype.userTransformationsIdConfigurationPost = function (user, id, configuration, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/transformations/{id}/configuration'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userTransformationsIdConfigurationPost');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userTransformationsIdConfigurationPost');
+                }
+                // verify required parameter 'configuration' is set
+                if (!configuration) {
+                    throw new Error('Missing required parameter configuration when calling userTransformationsIdConfigurationPost');
+                }
+                var httpRequestParams = {
+                    method: 'POST',
+                    url: path,
+                    json: true,
+                    data: configuration,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Delete configuration for the chosen transformation
+             * @param user ID of the user for who to delete the configuration for the transformation
+             * @param id ID (slug) of the transformation for which to delete the configuration
+             */
+            DefaultApi.prototype.userTransformationsIdConfigurationDelete = function (user, id, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/transformations/{id}/configuration'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userTransformationsIdConfigurationDelete');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userTransformationsIdConfigurationDelete');
+                }
+                var httpRequestParams = {
+                    method: 'DELETE',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Retrieve configuration according to the given key for the chosen transformation
+             * @param user ID of the user for who to obtain the configuration for the transformation
+             * @param id ID (slug) of the transformation for which to retrieve the configuration
+             * @param key The key of the configuration field to obtain
+             */
+            DefaultApi.prototype.userTransformationsIdConfigurationKeyGet = function (user, id, key, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/transformations/{id}/configuration/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userTransformationsIdConfigurationKeyGet');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userTransformationsIdConfigurationKeyGet');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userTransformationsIdConfigurationKeyGet');
+                }
+                var httpRequestParams = {
+                    method: 'GET',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Update a configuration field for the chosen transformation
+             * @param user ID of the user for who to update the configuration for the transformation
+             * @param id ID (slug) of the transformation for which to update the configuration
+             * @param key The key of the configuration field to update
+             * @param configuration
+             */
+            DefaultApi.prototype.userTransformationsIdConfigurationKeyPut = function (user, id, key, configuration, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/transformations/{id}/configuration/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userTransformationsIdConfigurationKeyPut');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userTransformationsIdConfigurationKeyPut');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userTransformationsIdConfigurationKeyPut');
+                }
+                // verify required parameter 'configuration' is set
+                if (!configuration) {
+                    throw new Error('Missing required parameter configuration when calling userTransformationsIdConfigurationKeyPut');
+                }
+                var httpRequestParams = {
+                    method: 'PUT',
+                    url: path,
+                    json: true,
+                    data: configuration,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Create a configuration field for the chosen transformation
+             * @param user ID of the user for who to create the configuration for the transformation
+             * @param id ID (slug) of the transformation for which to create the configuration
+             * @param key Key of the configuration to create
+             * @param configuration
+             */
+            DefaultApi.prototype.userTransformationsIdConfigurationKeyPost = function (user, id, key, configuration, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/transformations/{id}/configuration/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userTransformationsIdConfigurationKeyPost');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userTransformationsIdConfigurationKeyPost');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userTransformationsIdConfigurationKeyPost');
+                }
+                // verify required parameter 'configuration' is set
+                if (!configuration) {
+                    throw new Error('Missing required parameter configuration when calling userTransformationsIdConfigurationKeyPost');
+                }
+                var httpRequestParams = {
+                    method: 'POST',
+                    url: path,
+                    json: true,
+                    data: configuration,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Delete a configuration field for the chosen transformation
+             * @param user ID of the user for who to delete the configuration for the transformation
+             * @param id ID (slug) of the transformation for which to delete the configuration
+             * @param key The key of the configuration field to delete
+             */
+            DefaultApi.prototype.userTransformationsIdConfigurationKeyDelete = function (user, id, key, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/transformations/{id}/configuration/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userTransformationsIdConfigurationKeyDelete');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userTransformationsIdConfigurationKeyDelete');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userTransformationsIdConfigurationKeyDelete');
+                }
+                var httpRequestParams = {
+                    method: 'DELETE',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
              * Retrieve meta data for the chosen transformation
              * @param user ID of the user for who to obtain the meta data for the transformation
              * @param id ID (slug) of the transformation for which to retrieve the meta data
@@ -1300,6 +1604,44 @@ var API;
                     method: 'GET',
                     url: path,
                     json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Update meta data for the chosen transformation
+             * @param user ID of the user for who to update the meta data for the transformation
+             * @param id ID (slug) of the transformation for which to update the meta data
+             * @param metadata
+             */
+            DefaultApi.prototype.userTransformationsIdMetadataPut = function (user, id, metadata, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/transformations/{id}/metadata'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userTransformationsIdMetadataPut');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userTransformationsIdMetadataPut');
+                }
+                // verify required parameter 'metadata' is set
+                if (!metadata) {
+                    throw new Error('Missing required parameter metadata when calling userTransformationsIdMetadataPut');
+                }
+                var httpRequestParams = {
+                    method: 'PUT',
+                    url: path,
+                    json: true,
+                    data: metadata,
                     params: queryParameters,
                     headers: headerParams
                 };

@@ -311,4 +311,45 @@ angular.module('grafterizerApp')
         });
     }
    
+    // ---------- TESTING CONFIGURATION ---------
+    
+    var configuration = ['{"weather": "sunny", "smurning": "vr40", "good": "oyeah"}',
+                    '{"configuration": "yeah"}',
+                    '{"configuration": "yeah", "snow": "some"}'];
+    $scope.cftestText = "Currently nothing is tested";
+    $scope.getConfiguration = function() {
+        dataGraftApi.transformationGetConfiguration(id).success(function(data) {
+            $scope.cftestText = JSON.stringify(data, null, 2);
+        });
+    }
+    $scope.getConfiguration();
+    
+    $scope.testConfiguration = function(conf) {
+        dataGraftApi.transformationCreateConfiguration(id, configuration[conf]).success(function(data) {
+                console.log(JSON.stringify(data, null, 2));
+                $scope.getConfiguration();
+        });
+    }
+    
+    $scope.configKey;
+    $scope.configValue;
+    $scope.updateConfig = function() {
+        dataGraftApi.transformationUpdateConfigurationByKey(id, $scope.configKey, $scope.configValue).success(function(data) {
+            console.log(data);
+            $scope.getConfiguration();
+        });
+    }
+    $scope.createConfig = function() {
+        dataGraftApi.transformationCreateConfigurationByKey(id, $scope.configKey, $scope.configValue).success( function(data) {
+            console.log(data);
+            $scope.getConfiguration();
+        });
+    }
+    $scope.deleteConfig = function() {
+        dataGraftApi.transformationDeleteConfigurationByKey(id, $scope.configKey).success( function(data) {
+            console.log(data);
+            $scope.getConfiguration();
+        });
+    }
+    
 });
