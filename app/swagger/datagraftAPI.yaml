@@ -700,6 +700,26 @@ paths:
       responses:
         200:
           description: Successfully created the meta data        
+    delete:
+      description: Delete meta data for the chosen transformation
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to delete the meta data for the transformation
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the transformation for which to delete the meta data
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully deleted the meta dataa for the transformation
   
   /{user}/transformations/{id}/metadata/{key}:
     get:
@@ -733,6 +753,7 @@ paths:
         - application/json
       consumes:
         - application/json
+        - text/plain
       parameters:
         - name: user
           in: path
@@ -763,6 +784,9 @@ paths:
       description: Update a meta data field for the chosen transformation
       produces:
         - application/json
+      consumes:
+        - application/json
+        - text/plain
       parameters:
         - name: user
           in: path

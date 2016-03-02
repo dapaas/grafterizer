@@ -1574,6 +1574,43 @@ namespace API.Client {
         }
         /**
          * 
+         * Delete meta data for the chosen transformation
+         * @param user ID of the user for who to delete the meta data for the transformation
+         * @param id ID (slug) of the transformation for which to delete the meta data
+         */
+        public userTransformationsIdMetadataDelete (user: string, id: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/transformations/{id}/metadata'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userTransformationsIdMetadataDelete');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userTransformationsIdMetadataDelete');
+            }
+            let httpRequestParams: any = {
+                method: 'DELETE',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
          * Retrieve meta data according to the given key for the chosen transformation
          * @param user ID of the user for who to obtain the meta data for the transformation
          * @param id ID (slug) of the transformation for which to retrieve the meta data

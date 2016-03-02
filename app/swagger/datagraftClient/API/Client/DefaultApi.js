@@ -1348,6 +1348,38 @@ var API;
             };
             /**
              *
+             * Delete meta data for the chosen transformation
+             * @param user ID of the user for who to delete the meta data for the transformation
+             * @param id ID (slug) of the transformation for which to delete the meta data
+             */
+            DefaultApi.prototype.userTransformationsIdMetadataDelete = function (user, id, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/transformations/{id}/metadata'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userTransformationsIdMetadataDelete');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userTransformationsIdMetadataDelete');
+                }
+                var httpRequestParams = {
+                    method: 'DELETE',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
              * Retrieve meta data according to the given key for the chosen transformation
              * @param user ID of the user for who to obtain the meta data for the transformation
              * @param id ID (slug) of the transformation for which to retrieve the meta data

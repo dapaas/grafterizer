@@ -51,7 +51,11 @@ angular.module('grafterizerApp')
     }
     
     this.transformationUpdateMetadataByKey = function(id, key, newValue) {
-        return dgApi.userTransformationsIdMetadataKeyPut(this.username, id, key, newValue);
+        dgApi.defaultHeaders['Content-Type'] = 'text/plain';
+        var request = dgApi.userTransformationsIdMetadataKeyPut(this.username, id, key, newValue);
+        delete dgApi.defaultHeaders['Content-Type'];
+        
+        return request;
     }
     
     this.transformationCreateMetadataByKey = function(id, key, value) {
