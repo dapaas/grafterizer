@@ -679,6 +679,7 @@ paths:
         - application/json
       consumes:
         - application/json
+        - text/plain
       parameters:
         - name: user
           in: path
@@ -699,7 +700,35 @@ paths:
         - APIKey: []
       responses:
         200:
-          description: Successfully created the meta data        
+          description: Successfully created the meta data
+    post:
+      description: Update meta data for the chosen transformation
+      produces:
+        - application/json
+      consumes:
+        - application/json
+        - text/plain
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to update the meta data for the transformation
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the transformation for which to update the meta data
+          type: string
+        - name: metadata
+          in: body
+          schema:
+            $ref: '#/definitions/MetaData'
+          required: true
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully updated the meta data   
     delete:
       description: Delete meta data for the chosen transformation
       produces:
