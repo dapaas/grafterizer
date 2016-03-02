@@ -38,4 +38,17 @@
     <br>
     <div>{{testText}}</div>
     
+    <md-input-container class="md-block" flex-gt-sm>
+        <label>Key</label>
+        <input ng-model="metadataKey">
+    </md-input-container>
+    <md-input-container class="md-block" flex-gt-sm>
+        <label>Value</label>
+        <input ng-model="metadataValue">
+    </md-input-container>
+
+    <md-button class="md-raised md-primary" ng-click="createMetaData()">Create new metadata</md-button>
+    <md-button class="md-raised md-primary" ng-click="updateMetaData()">Updata metadata</md-button>
+    <md-button class="md-raised md-primary" ng-click="deleteMetaData()">Delete metadata</md-button>
+    
 </md-content>

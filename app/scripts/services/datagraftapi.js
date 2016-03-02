@@ -30,6 +30,8 @@ angular.module('grafterizerApp')
              });
     }
     
+    // ---------- TRANSFORMATIONS ----------------
+    
     this.getTransformation = function(id) {
         return dgApi.userTransformationsIdGet(this.username, id);   // /{user}/transformation/{id}
     }
@@ -38,6 +40,30 @@ angular.module('grafterizerApp')
     this.transformationCreateMetadata = function(id, metadata) { 
         return dgApi.userTransformationsIdMetadataPost(this.username, id, metadata);
     }
+    
+    this.transformationGetMetadata = function(id) {
+        return dgApi.userTransformationsIdMetadataGet(this.username, id);
+    }
+    
+    
+    this.transformationGetMetadataByKey = function(id, key) {
+        return dgApi.userTransformationsIdMetadataKeyGet(this.username, id, key);
+    }
+    
+    this.transformationUpdateMetadataByKey = function(id, key, newValue) {
+        return dgApi.userTransformationsIdMetadataKeyPut(this.username, id, key, newValue);
+    }
+    
+    this.transformationCreateMetadataByKey = function(id, key, value) {
+        return dgApi.userTransformationsIdMetadataKeyPost(this.username, id, key, value);
+    }
+    
+    this.transformationDeleteMetadataByKey = function(id, key) {
+        return dgApi.userTransformationsIdMetadataKeyDelete(this.username, id, key);
+    }
+    
+    
+    // ----- UTILITY FUNCTIONS ---------------
     
     this.utilityFunctionsList = function(showPublic) {
         if (showPublic) {

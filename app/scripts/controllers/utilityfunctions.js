@@ -70,9 +70,9 @@ angular.module('grafterizerApp')
         return JSON.stringify(listToStringify, null, 4);
     }
     var updateUfStrs = function() {
-        $scope.ufListAllStr =  JSON.stringify($scope.ufListAll, null, 4);
-        $scope.ufListPrivateStr = stringifyUfList(false);
-        $scope.ufListPublicStr = stringifyUfList(true);
+        //$scope.ufListAllStr =  JSON.stringify($scope.ufListAll, null, 4);
+        //$scope.ufListPrivateStr = stringifyUfList(false);
+        //$scope.ufListPublicStr = stringifyUfList(true);
     }    
     // ---- Just for simple testing - end ----    
     
@@ -265,21 +265,50 @@ angular.module('grafterizerApp')
     $scope.apiKey = dataGraftApi.apiKey;
 
 
+    // ---------- Testing transformations with metadata ---------
     
     var metadata = ['{"weather": "sunny", "smurning": "vr40", "good": "oyeah"}',
                     '{"metadata": "yeah"}',
                     '{"metadata": "yeah", "snow": "some"}'];
     
     //$scope.utilityFunctionsObj = metadata;
-    var id = "1";
+    var id = "testah";
     $scope.testText = "Currently nothing is tested";
+    $scope.getMetaData = function() {
+        dataGraftApi.transformationGetMetadata(id).success(function(data) {
+            $scope.testText = JSON.stringify(data, null, 2);
+        });
+    }
+    $scope.getMetaData();
     
     $scope.testMetadata = function(md) {
         dataGraftApi.transformationCreateMetadata(id, metadata[md]).success(function(data) {
-               $scope.testText = JSON.stringify(data, null, 2);
+                $scope.testText = JSON.stringify(data, null, 2);
+                dataGraftApi.transformationGetMetadata(id).success(function(data) {
+                    $scope.testText = JSON.stringify(data, null, 2);
+                });
+        });
+    }
+    
+    $scope.metadataKey;
+    $scope.metadataValue;
+    $scope.updateMetaData = function() {
+        dataGraftApi.transformationUpdateMetadataByKey(id, $scope.metadataKey, $scope.metadataValue).success(function(data) {
+            console.log(data);
+            $scope.getMetaData();
+        });
+    }
+    $scope.createMetaData = function() {
+        dataGraftApi.transformationCreateMetadataByKey(id, $scope.metadataKey, $scope.metadataValue).success( function(data) {
+            console.log(data);
+            $scope.getMetaData();
+        });
+    }
+    $scope.deleteMetaData = function() {
+        dataGraftApi.transformationDeleteMetadataByKey(id, $scope.metadataKey).success( function(data) {
+            console.log(data);
+            $scope.getMetaData();
         });
     }
    
-    
-    
-  });
+});

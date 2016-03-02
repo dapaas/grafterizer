@@ -1348,6 +1348,170 @@ var API;
             };
             /**
              *
+             * Retrieve meta data according to the given key for the chosen transformation
+             * @param user ID of the user for who to obtain the meta data for the transformation
+             * @param id ID (slug) of the transformation for which to retrieve the meta data
+             * @param key The key of the meta data field to obtain
+             */
+            DefaultApi.prototype.userTransformationsIdMetadataKeyGet = function (user, id, key, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/transformations/{id}/metadata/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userTransformationsIdMetadataKeyGet');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userTransformationsIdMetadataKeyGet');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userTransformationsIdMetadataKeyGet');
+                }
+                var httpRequestParams = {
+                    method: 'GET',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Update a meta data field for the chosen transformation
+             * @param user ID of the user for who to update the meta data for the transformation
+             * @param id ID (slug) of the transformation for which to update the meta data
+             * @param key The key of the meta data field to update
+             * @param metadata
+             */
+            DefaultApi.prototype.userTransformationsIdMetadataKeyPut = function (user, id, key, metadata, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/transformations/{id}/metadata/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userTransformationsIdMetadataKeyPut');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userTransformationsIdMetadataKeyPut');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userTransformationsIdMetadataKeyPut');
+                }
+                // verify required parameter 'metadata' is set
+                if (!metadata) {
+                    throw new Error('Missing required parameter metadata when calling userTransformationsIdMetadataKeyPut');
+                }
+                var httpRequestParams = {
+                    method: 'PUT',
+                    url: path,
+                    json: true,
+                    data: metadata,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Create a meta data field for the chosen transformation
+             * @param user ID of the user for who to create the meta data for the transformation
+             * @param id ID (slug) of the transformation for which to create the meta data
+             * @param key Key of the metadata to create
+             * @param metadata
+             */
+            DefaultApi.prototype.userTransformationsIdMetadataKeyPost = function (user, id, key, metadata, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/transformations/{id}/metadata/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userTransformationsIdMetadataKeyPost');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userTransformationsIdMetadataKeyPost');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userTransformationsIdMetadataKeyPost');
+                }
+                // verify required parameter 'metadata' is set
+                if (!metadata) {
+                    throw new Error('Missing required parameter metadata when calling userTransformationsIdMetadataKeyPost');
+                }
+                var httpRequestParams = {
+                    method: 'POST',
+                    url: path,
+                    json: true,
+                    data: metadata,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Delete a metadata field for the chosen transformation
+             * @param user ID of the user for who to delete the meta data for the transformation
+             * @param id ID (slug) of the transformation for which to delete the meta data
+             * @param key The key of the meta data field to delete
+             */
+            DefaultApi.prototype.userTransformationsIdMetadataKeyDelete = function (user, id, key, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/transformations/{id}/metadata/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userTransformationsIdMetadataKeyDelete');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userTransformationsIdMetadataKeyDelete');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userTransformationsIdMetadataKeyDelete');
+                }
+                var httpRequestParams = {
+                    method: 'DELETE',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
              * Star the selected transformation
              * @param user ID of the user for who to star the transformation
              * @param id ID (slug) of the transformation to be stared
