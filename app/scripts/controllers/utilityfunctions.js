@@ -35,15 +35,30 @@ angular.module('grafterizerApp')
         Should not be a list, but a dict:
             ufListAll[id] = utility function with that id.
         When loading a uf for the first time, overwriting similar fields.
-        Should also have fields for isLoaded, publicText, publicIcon, changed, showDeleteOptions etc.
-        
+        Additional fields not stored on the server: 
+            - visible (according to public/private/all, shown list is filtered on this variable)
+            - isLoaded (if GET on id is already called)
+            - public.text (hover text for private/public button)
+            - public.icon (name of icon of above button)
+            - changed (boolean for if it can be saved or not)
+            - showDeleteOptions (boolean for showing the "Sure you want to delete?" option)
+            
+            
         SelectedUF should then just be the id.
         
         Need two lists with public ids and private ids.
         
+        New utility functions should have id "new" + newUfCounter - this is safe as all IDs are numerical. When saved, we should delete this entry, reload the new one and set the new one as selectedUF.
+        
         Should really have some unit tests before doing this refactoring... :P
     */
     
+    // New variables
+    $scope.ufAll = {};
+    $scope.publicUFs = [];
+    $scope.privateUFs = [];
+    
+    // Old variables - should be deprecated
     $scope.ufListAll = [];
     $scope.ufListToShow = [];
     var ufListPublicIndices = [];
@@ -85,6 +100,7 @@ angular.module('grafterizerApp')
             $scope.ufListAll = data;
             updateUfStrs();
             for (var i in data) {
+                $scope.ufAll[data[i].id] = data[i];
                 if (data[i].public) {
                     ufListPublicIndices.push(true);
                     data[i].publicText = "Public";
@@ -134,7 +150,7 @@ angular.module('grafterizerApp')
     }
     
     $scope.setSelectedUtilityFunction = function(uf) {
-        console.log("Selecting utility function: " + JSON.stringify(uf));
+        console.log("Selecting utility function: " + JSON.stringify(uf, null, 2));
         setSelectedUtilityFunctionById(uf.id);
     }
     var setSelectedUtilityFunctionById = function(id) {
