@@ -690,6 +690,614 @@ var API;
             };
             /**
              *
+             * Retrieve configuration for the chosen data distribution
+             * @param user ID of the user for who to obtain the configuration for the data distribution
+             * @param id ID (slug) of the data distribution for which to retrieve the configuration
+             */
+            DefaultApi.prototype.userDataDistributionsIdConfigurationGet = function (user, id, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/data_distributions/{id}/configuration'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userDataDistributionsIdConfigurationGet');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userDataDistributionsIdConfigurationGet');
+                }
+                var httpRequestParams = {
+                    method: 'GET',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Update configuration for the chosen data distribution
+             * @param user ID of the user for who to update the configuration for the data distribution
+             * @param id ID (slug) of the data distribution for which to update the configuration
+             * @param configuration
+             */
+            DefaultApi.prototype.userDataDistributionsIdConfigurationPut = function (user, id, configuration, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/data_distributions/{id}/configuration'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userDataDistributionsIdConfigurationPut');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userDataDistributionsIdConfigurationPut');
+                }
+                // verify required parameter 'configuration' is set
+                if (!configuration) {
+                    throw new Error('Missing required parameter configuration when calling userDataDistributionsIdConfigurationPut');
+                }
+                var httpRequestParams = {
+                    method: 'PUT',
+                    url: path,
+                    json: true,
+                    data: configuration,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Create configuration for the chosen data distribution
+             * @param user ID of the user for who to create the configuration for the data distribution
+             * @param id ID (slug) of the data distribution for which to create the configuration
+             * @param configuration
+             */
+            DefaultApi.prototype.userDataDistributionsIdConfigurationPost = function (user, id, configuration, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/data_distributions/{id}/configuration'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userDataDistributionsIdConfigurationPost');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userDataDistributionsIdConfigurationPost');
+                }
+                // verify required parameter 'configuration' is set
+                if (!configuration) {
+                    throw new Error('Missing required parameter configuration when calling userDataDistributionsIdConfigurationPost');
+                }
+                var httpRequestParams = {
+                    method: 'POST',
+                    url: path,
+                    json: true,
+                    data: configuration,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Delete configuration for the chosen data distribution
+             * @param user ID of the user for who to delete the configuration for the data distribution
+             * @param id ID (slug) of the data distribution for which to delete the configuration
+             */
+            DefaultApi.prototype.userDataDistributionsIdConfigurationDelete = function (user, id, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/data_distributions/{id}/configuration'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userDataDistributionsIdConfigurationDelete');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userDataDistributionsIdConfigurationDelete');
+                }
+                var httpRequestParams = {
+                    method: 'DELETE',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Retrieve configuration according to the given key for the chosen data distribution
+             * @param user ID of the user for who to obtain the configuration for the data distribution
+             * @param id ID (slug) of the data distribution for which to retrieve the configuration
+             * @param key The key of the configuration field to obtain
+             */
+            DefaultApi.prototype.userDataDistributionsIdConfigurationKeyGet = function (user, id, key, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/data_distributions/{id}/configuration/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userDataDistributionsIdConfigurationKeyGet');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userDataDistributionsIdConfigurationKeyGet');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userDataDistributionsIdConfigurationKeyGet');
+                }
+                var httpRequestParams = {
+                    method: 'GET',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Update a configuration field for the chosen data distribution
+             * @param user ID of the user for who to update the configuration for the data distribution
+             * @param id ID (slug) of the data distribution for which to update the configuration
+             * @param key The key of the configuration field to update
+             * @param configuration
+             */
+            DefaultApi.prototype.userDataDistributionsIdConfigurationKeyPut = function (user, id, key, configuration, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/data_distributions/{id}/configuration/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userDataDistributionsIdConfigurationKeyPut');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userDataDistributionsIdConfigurationKeyPut');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userDataDistributionsIdConfigurationKeyPut');
+                }
+                // verify required parameter 'configuration' is set
+                if (!configuration) {
+                    throw new Error('Missing required parameter configuration when calling userDataDistributionsIdConfigurationKeyPut');
+                }
+                var httpRequestParams = {
+                    method: 'PUT',
+                    url: path,
+                    json: true,
+                    data: configuration,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Create a configuration field for the chosen data distribution
+             * @param user ID of the user for who to create the configuration for the data distribution
+             * @param id ID (slug) of the data distribution for which to create the configuration
+             * @param key Key of the configuration to create
+             * @param configuration
+             */
+            DefaultApi.prototype.userDataDistributionsIdConfigurationKeyPost = function (user, id, key, configuration, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/data_distributions/{id}/configuration/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userDataDistributionsIdConfigurationKeyPost');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userDataDistributionsIdConfigurationKeyPost');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userDataDistributionsIdConfigurationKeyPost');
+                }
+                // verify required parameter 'configuration' is set
+                if (!configuration) {
+                    throw new Error('Missing required parameter configuration when calling userDataDistributionsIdConfigurationKeyPost');
+                }
+                var httpRequestParams = {
+                    method: 'POST',
+                    url: path,
+                    json: true,
+                    data: configuration,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Delete a configuration field for the chosen data distribution
+             * @param user ID of the user for who to delete the configuration for the data distribution
+             * @param id ID (slug) of the data distribution for which to delete the configuration
+             * @param key The key of the configuration field to delete
+             */
+            DefaultApi.prototype.userDataDistributionsIdConfigurationKeyDelete = function (user, id, key, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/data_distributions/{id}/configuration/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userDataDistributionsIdConfigurationKeyDelete');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userDataDistributionsIdConfigurationKeyDelete');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userDataDistributionsIdConfigurationKeyDelete');
+                }
+                var httpRequestParams = {
+                    method: 'DELETE',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Retrieve meta data for the chosen data distribution
+             * @param user ID of the user for who to obtain the meta data for the data distribution
+             * @param id ID (slug) of the data distribution for which to retrieve the meta data
+             */
+            DefaultApi.prototype.userDataDistributionsIdMetadataGet = function (user, id, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/data_distributions/{id}/metadata'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userDataDistributionsIdMetadataGet');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userDataDistributionsIdMetadataGet');
+                }
+                var httpRequestParams = {
+                    method: 'GET',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Update meta data for the chosen data distribution
+             * @param user ID of the user for who to update the meta data for the data distribution
+             * @param id ID (slug) of the data distribution for which to update the meta data
+             * @param metadata
+             */
+            DefaultApi.prototype.userDataDistributionsIdMetadataPut = function (user, id, metadata, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/data_distributions/{id}/metadata'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userDataDistributionsIdMetadataPut');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userDataDistributionsIdMetadataPut');
+                }
+                // verify required parameter 'metadata' is set
+                if (!metadata) {
+                    throw new Error('Missing required parameter metadata when calling userDataDistributionsIdMetadataPut');
+                }
+                var httpRequestParams = {
+                    method: 'PUT',
+                    url: path,
+                    json: true,
+                    data: metadata,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Create meta data for the chosen data distribution
+             * @param user ID of the user for who to create the meta data for the data distribution
+             * @param id ID (slug) of the data distribution for which to create the meta data
+             * @param metadata
+             */
+            DefaultApi.prototype.userDataDistributionsIdMetadataPost = function (user, id, metadata, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/data_distributions/{id}/metadata'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userDataDistributionsIdMetadataPost');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userDataDistributionsIdMetadataPost');
+                }
+                // verify required parameter 'metadata' is set
+                if (!metadata) {
+                    throw new Error('Missing required parameter metadata when calling userDataDistributionsIdMetadataPost');
+                }
+                var httpRequestParams = {
+                    method: 'POST',
+                    url: path,
+                    json: true,
+                    data: metadata,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Delete meta data for the chosen data distribution
+             * @param user ID of the user for who to delete the meta data for the data distribution
+             * @param id ID (slug) of the data distribution for which to delete the meta data
+             */
+            DefaultApi.prototype.userDataDistributionsIdMetadataDelete = function (user, id, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/data_distributions/{id}/metadata'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userDataDistributionsIdMetadataDelete');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userDataDistributionsIdMetadataDelete');
+                }
+                var httpRequestParams = {
+                    method: 'DELETE',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Retrieve meta data according to the given key for the chosen data distribution
+             * @param user ID of the user for who to obtain the meta data for the data distribution
+             * @param id ID (slug) of the data distribution for which to retrieve the meta data
+             * @param key The key of the meta data field to obtain
+             */
+            DefaultApi.prototype.userDataDistributionsIdMetadataKeyGet = function (user, id, key, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/data_distributions/{id}/metadata/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userDataDistributionsIdMetadataKeyGet');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userDataDistributionsIdMetadataKeyGet');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userDataDistributionsIdMetadataKeyGet');
+                }
+                var httpRequestParams = {
+                    method: 'GET',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Update a meta data field for the chosen data distribution
+             * @param user ID of the user for who to update the meta data for the data distribution
+             * @param id ID (slug) of the data distribution for which to update the meta data
+             * @param key The key of the meta data field to update
+             * @param metadata
+             */
+            DefaultApi.prototype.userDataDistributionsIdMetadataKeyPut = function (user, id, key, metadata, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/data_distributions/{id}/metadata/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userDataDistributionsIdMetadataKeyPut');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userDataDistributionsIdMetadataKeyPut');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userDataDistributionsIdMetadataKeyPut');
+                }
+                // verify required parameter 'metadata' is set
+                if (!metadata) {
+                    throw new Error('Missing required parameter metadata when calling userDataDistributionsIdMetadataKeyPut');
+                }
+                var httpRequestParams = {
+                    method: 'PUT',
+                    url: path,
+                    json: true,
+                    data: metadata,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Create a meta data field for the chosen data distribution
+             * @param user ID of the user for who to create the meta data for the data distribution
+             * @param id ID (slug) of the data distribution for which to create the meta data
+             * @param key Key of the metadata to create
+             * @param metadata
+             */
+            DefaultApi.prototype.userDataDistributionsIdMetadataKeyPost = function (user, id, key, metadata, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/data_distributions/{id}/metadata/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userDataDistributionsIdMetadataKeyPost');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userDataDistributionsIdMetadataKeyPost');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userDataDistributionsIdMetadataKeyPost');
+                }
+                // verify required parameter 'metadata' is set
+                if (!metadata) {
+                    throw new Error('Missing required parameter metadata when calling userDataDistributionsIdMetadataKeyPost');
+                }
+                var httpRequestParams = {
+                    method: 'POST',
+                    url: path,
+                    json: true,
+                    data: metadata,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Delete a metadata field for the chosen data distribution
+             * @param user ID of the user for who to delete the meta data for the data distribution
+             * @param id ID (slug) of the data distribution for which to delete the meta data
+             * @param key The key of the meta data field to delete
+             */
+            DefaultApi.prototype.userDataDistributionsIdMetadataKeyDelete = function (user, id, key, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/data_distributions/{id}/metadata/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userDataDistributionsIdMetadataKeyDelete');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userDataDistributionsIdMetadataKeyDelete');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userDataDistributionsIdMetadataKeyDelete');
+                }
+                var httpRequestParams = {
+                    method: 'DELETE',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
              * (NOT TESTED) Star the selected data distribution
              * @param user ID of the user for who to star the data distribution
              * @param id ID (slug) of the data distribution to be stared

@@ -816,6 +816,694 @@ namespace API.Client {
         }
         /**
          * 
+         * Retrieve configuration for the chosen data distribution
+         * @param user ID of the user for who to obtain the configuration for the data distribution
+         * @param id ID (slug) of the data distribution for which to retrieve the configuration
+         */
+        public userDataDistributionsIdConfigurationGet (user: string, id: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/data_distributions/{id}/configuration'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userDataDistributionsIdConfigurationGet');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userDataDistributionsIdConfigurationGet');
+            }
+            let httpRequestParams: any = {
+                method: 'GET',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Update configuration for the chosen data distribution
+         * @param user ID of the user for who to update the configuration for the data distribution
+         * @param id ID (slug) of the data distribution for which to update the configuration
+         * @param configuration 
+         */
+        public userDataDistributionsIdConfigurationPut (user: string, id: string, configuration: Configuration, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/data_distributions/{id}/configuration'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userDataDistributionsIdConfigurationPut');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userDataDistributionsIdConfigurationPut');
+            }
+            // verify required parameter 'configuration' is set
+            if (!configuration) {
+                throw new Error('Missing required parameter configuration when calling userDataDistributionsIdConfigurationPut');
+            }
+            let httpRequestParams: any = {
+                method: 'PUT',
+                url: path,
+                json: true,
+                data: configuration,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Create configuration for the chosen data distribution
+         * @param user ID of the user for who to create the configuration for the data distribution
+         * @param id ID (slug) of the data distribution for which to create the configuration
+         * @param configuration 
+         */
+        public userDataDistributionsIdConfigurationPost (user: string, id: string, configuration: Configuration, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/data_distributions/{id}/configuration'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userDataDistributionsIdConfigurationPost');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userDataDistributionsIdConfigurationPost');
+            }
+            // verify required parameter 'configuration' is set
+            if (!configuration) {
+                throw new Error('Missing required parameter configuration when calling userDataDistributionsIdConfigurationPost');
+            }
+            let httpRequestParams: any = {
+                method: 'POST',
+                url: path,
+                json: true,
+                data: configuration,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Delete configuration for the chosen data distribution
+         * @param user ID of the user for who to delete the configuration for the data distribution
+         * @param id ID (slug) of the data distribution for which to delete the configuration
+         */
+        public userDataDistributionsIdConfigurationDelete (user: string, id: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/data_distributions/{id}/configuration'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userDataDistributionsIdConfigurationDelete');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userDataDistributionsIdConfigurationDelete');
+            }
+            let httpRequestParams: any = {
+                method: 'DELETE',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Retrieve configuration according to the given key for the chosen data distribution
+         * @param user ID of the user for who to obtain the configuration for the data distribution
+         * @param id ID (slug) of the data distribution for which to retrieve the configuration
+         * @param key The key of the configuration field to obtain
+         */
+        public userDataDistributionsIdConfigurationKeyGet (user: string, id: string, key: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/data_distributions/{id}/configuration/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userDataDistributionsIdConfigurationKeyGet');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userDataDistributionsIdConfigurationKeyGet');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userDataDistributionsIdConfigurationKeyGet');
+            }
+            let httpRequestParams: any = {
+                method: 'GET',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Update a configuration field for the chosen data distribution
+         * @param user ID of the user for who to update the configuration for the data distribution
+         * @param id ID (slug) of the data distribution for which to update the configuration
+         * @param key The key of the configuration field to update
+         * @param configuration 
+         */
+        public userDataDistributionsIdConfigurationKeyPut (user: string, id: string, key: string, configuration: Configuration, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/data_distributions/{id}/configuration/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userDataDistributionsIdConfigurationKeyPut');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userDataDistributionsIdConfigurationKeyPut');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userDataDistributionsIdConfigurationKeyPut');
+            }
+            // verify required parameter 'configuration' is set
+            if (!configuration) {
+                throw new Error('Missing required parameter configuration when calling userDataDistributionsIdConfigurationKeyPut');
+            }
+            let httpRequestParams: any = {
+                method: 'PUT',
+                url: path,
+                json: true,
+                data: configuration,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Create a configuration field for the chosen data distribution
+         * @param user ID of the user for who to create the configuration for the data distribution
+         * @param id ID (slug) of the data distribution for which to create the configuration
+         * @param key Key of the configuration to create
+         * @param configuration 
+         */
+        public userDataDistributionsIdConfigurationKeyPost (user: string, id: string, key: string, configuration: Configuration, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/data_distributions/{id}/configuration/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userDataDistributionsIdConfigurationKeyPost');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userDataDistributionsIdConfigurationKeyPost');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userDataDistributionsIdConfigurationKeyPost');
+            }
+            // verify required parameter 'configuration' is set
+            if (!configuration) {
+                throw new Error('Missing required parameter configuration when calling userDataDistributionsIdConfigurationKeyPost');
+            }
+            let httpRequestParams: any = {
+                method: 'POST',
+                url: path,
+                json: true,
+                data: configuration,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Delete a configuration field for the chosen data distribution
+         * @param user ID of the user for who to delete the configuration for the data distribution
+         * @param id ID (slug) of the data distribution for which to delete the configuration
+         * @param key The key of the configuration field to delete
+         */
+        public userDataDistributionsIdConfigurationKeyDelete (user: string, id: string, key: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/data_distributions/{id}/configuration/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userDataDistributionsIdConfigurationKeyDelete');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userDataDistributionsIdConfigurationKeyDelete');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userDataDistributionsIdConfigurationKeyDelete');
+            }
+            let httpRequestParams: any = {
+                method: 'DELETE',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Retrieve meta data for the chosen data distribution
+         * @param user ID of the user for who to obtain the meta data for the data distribution
+         * @param id ID (slug) of the data distribution for which to retrieve the meta data
+         */
+        public userDataDistributionsIdMetadataGet (user: string, id: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/data_distributions/{id}/metadata'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userDataDistributionsIdMetadataGet');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userDataDistributionsIdMetadataGet');
+            }
+            let httpRequestParams: any = {
+                method: 'GET',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Update meta data for the chosen data distribution
+         * @param user ID of the user for who to update the meta data for the data distribution
+         * @param id ID (slug) of the data distribution for which to update the meta data
+         * @param metadata 
+         */
+        public userDataDistributionsIdMetadataPut (user: string, id: string, metadata: MetaData, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/data_distributions/{id}/metadata'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userDataDistributionsIdMetadataPut');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userDataDistributionsIdMetadataPut');
+            }
+            // verify required parameter 'metadata' is set
+            if (!metadata) {
+                throw new Error('Missing required parameter metadata when calling userDataDistributionsIdMetadataPut');
+            }
+            let httpRequestParams: any = {
+                method: 'PUT',
+                url: path,
+                json: true,
+                data: metadata,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Create meta data for the chosen data distribution
+         * @param user ID of the user for who to create the meta data for the data distribution
+         * @param id ID (slug) of the data distribution for which to create the meta data
+         * @param metadata 
+         */
+        public userDataDistributionsIdMetadataPost (user: string, id: string, metadata: MetaData, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/data_distributions/{id}/metadata'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userDataDistributionsIdMetadataPost');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userDataDistributionsIdMetadataPost');
+            }
+            // verify required parameter 'metadata' is set
+            if (!metadata) {
+                throw new Error('Missing required parameter metadata when calling userDataDistributionsIdMetadataPost');
+            }
+            let httpRequestParams: any = {
+                method: 'POST',
+                url: path,
+                json: true,
+                data: metadata,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Delete meta data for the chosen data distribution
+         * @param user ID of the user for who to delete the meta data for the data distribution
+         * @param id ID (slug) of the data distribution for which to delete the meta data
+         */
+        public userDataDistributionsIdMetadataDelete (user: string, id: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/data_distributions/{id}/metadata'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userDataDistributionsIdMetadataDelete');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userDataDistributionsIdMetadataDelete');
+            }
+            let httpRequestParams: any = {
+                method: 'DELETE',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Retrieve meta data according to the given key for the chosen data distribution
+         * @param user ID of the user for who to obtain the meta data for the data distribution
+         * @param id ID (slug) of the data distribution for which to retrieve the meta data
+         * @param key The key of the meta data field to obtain
+         */
+        public userDataDistributionsIdMetadataKeyGet (user: string, id: string, key: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/data_distributions/{id}/metadata/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userDataDistributionsIdMetadataKeyGet');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userDataDistributionsIdMetadataKeyGet');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userDataDistributionsIdMetadataKeyGet');
+            }
+            let httpRequestParams: any = {
+                method: 'GET',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Update a meta data field for the chosen data distribution
+         * @param user ID of the user for who to update the meta data for the data distribution
+         * @param id ID (slug) of the data distribution for which to update the meta data
+         * @param key The key of the meta data field to update
+         * @param metadata 
+         */
+        public userDataDistributionsIdMetadataKeyPut (user: string, id: string, key: string, metadata: MetaData, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/data_distributions/{id}/metadata/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userDataDistributionsIdMetadataKeyPut');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userDataDistributionsIdMetadataKeyPut');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userDataDistributionsIdMetadataKeyPut');
+            }
+            // verify required parameter 'metadata' is set
+            if (!metadata) {
+                throw new Error('Missing required parameter metadata when calling userDataDistributionsIdMetadataKeyPut');
+            }
+            let httpRequestParams: any = {
+                method: 'PUT',
+                url: path,
+                json: true,
+                data: metadata,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Create a meta data field for the chosen data distribution
+         * @param user ID of the user for who to create the meta data for the data distribution
+         * @param id ID (slug) of the data distribution for which to create the meta data
+         * @param key Key of the metadata to create
+         * @param metadata 
+         */
+        public userDataDistributionsIdMetadataKeyPost (user: string, id: string, key: string, metadata: MetaData, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/data_distributions/{id}/metadata/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userDataDistributionsIdMetadataKeyPost');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userDataDistributionsIdMetadataKeyPost');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userDataDistributionsIdMetadataKeyPost');
+            }
+            // verify required parameter 'metadata' is set
+            if (!metadata) {
+                throw new Error('Missing required parameter metadata when calling userDataDistributionsIdMetadataKeyPost');
+            }
+            let httpRequestParams: any = {
+                method: 'POST',
+                url: path,
+                json: true,
+                data: metadata,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Delete a metadata field for the chosen data distribution
+         * @param user ID of the user for who to delete the meta data for the data distribution
+         * @param id ID (slug) of the data distribution for which to delete the meta data
+         * @param key The key of the meta data field to delete
+         */
+        public userDataDistributionsIdMetadataKeyDelete (user: string, id: string, key: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/data_distributions/{id}/metadata/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userDataDistributionsIdMetadataKeyDelete');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userDataDistributionsIdMetadataKeyDelete');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userDataDistributionsIdMetadataKeyDelete');
+            }
+            let httpRequestParams: any = {
+                method: 'DELETE',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
          * (NOT TESTED) Star the selected data distribution
          * @param user ID of the user for who to star the data distribution
          * @param id ID (slug) of the data distribution to be stared
