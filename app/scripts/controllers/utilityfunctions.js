@@ -352,4 +352,46 @@ angular.module('grafterizerApp')
         });
     }
     
+    // ---------- TESTING UTILITY FUNCTION CONFIGURATION ----
+            
+    var uf = "26";
+    var configuration = ['{"weather": "sunny", "smurning": "vr40", "good": "oyeah"}',
+                    '{"configuration": "yeah"}',
+                    '{"configuration": "yeah", "snow": "some"}'];
+    $scope.ufcftestText = "Currently nothing is tested";
+    $scope.getUFConfiguration = function() {
+        dataGraftApi.utilityFunctionGetConfiguration(uf).success(function(data) {
+            $scope.ufcftestText = JSON.stringify(data, null, 2);
+        });
+    }
+    $scope.getUFConfiguration();
+    
+    $scope.testUFConfiguration = function(conf) {
+        dataGraftApi.utilityFunctionCreateConfiguration(uf, configuration[conf]).success(function(data) {
+                console.log(JSON.stringify(data, null, 2));
+                $scope.getUFConfiguration();
+        });
+    }
+    
+    $scope.UFconfigKey;
+    $scope.UFconfigValue;
+    $scope.updateUFConfig = function() {
+        dataGraftApi.utilityFunctionUpdateConfigurationByKey(uf, $scope.UFconfigKey, $scope.UFconfigValue).success(function(data) {
+            console.log(data);
+            $scope.getUFConfiguration();
+        });
+    }
+    $scope.createUFConfig = function() {
+        dataGraftApi.utilityFunctionCreateConfigurationByKey(uf, $scope.UFconfigKey, $scope.UFconfigValue).success( function(data) {
+            console.log(data);
+            $scope.getUFConfiguration();
+        });
+    }
+    $scope.deleteUFConfig = function() {
+        dataGraftApi.utilityFunctionDeleteConfigurationByKey(uf, $scope.UFconfigKey).success( function(data) {
+            console.log(data);
+            $scope.getUFConfiguration();
+        });
+    }
+    
 });

@@ -104,6 +104,44 @@ angular.module('grafterizerApp')
         return dgApi.userTransformationsIdConfigurationKeyDelete(this.username, id, key);
     }
     
+    
+    // ----- UTILITY FUNCTIONS CONFIGURATION ------------
+    
+    this.utilityFunctionGetConfiguration = function(id) {
+        return dgApi.userUtilityFunctionsIdConfigurationGet(this.username, id);
+    }
+    
+    this.utilityFunctionCreateConfiguration = function(id, config) { 
+        return dgApi.userUtilityFunctionsIdConfigurationPost(this.username, id, config);
+    }
+    
+    this.utilityFunctionGetConfigurationByKey = function(id, key) {
+        return dgApi.userUtilityFunctionsIdConfigurationKeyGet(this.username, id, key);
+    }
+    
+    this.utilityFunctionUpdateConfigurationByKey = function(id, key, newValue) {
+        dgApi.defaultHeaders['Content-Type'] = 'text/plain';
+        var request = dgApi.userUtilityFunctionsIdConfigurationKeyPut(this.username, id, key, newValue);
+        delete dgApi.defaultHeaders['Content-Type'];
+        
+        return request;
+    }
+    
+    this.utilityFunctionCreateConfigurationByKey = function(id, key, value) {
+        dgApi.defaultHeaders['Content-Type'] = 'text/plain';
+        var request = dgApi.userUtilityFunctionsIdConfigurationKeyPost(this.username, id, key, value);
+        delete dgApi.defaultHeaders['Content-Type'];
+        
+        return request;
+    }
+    
+    this.utilityFunctionDeleteConfigurationByKey = function(id, key) {
+        return dgApi.userUtilityFunctionsIdConfigurationKeyDelete(this.username, id, key);
+    }
+    
+    
+    
+    
     // ----- UTILITY FUNCTIONS ---------------
     
     this.utilityFunctionsList = function(showPublic) {

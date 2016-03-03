@@ -1371,6 +1371,222 @@ paths:
       responses:
         200:
           description: Information about the versions of the queried queriable data
+  
+  /{user}/queriable_data_stores/{id}/configuration:
+    get:
+      description: Retrieve configuration for the chosen queriable data store
+      produces: 
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to obtain the configuration for the queriable data store
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the queriable data store for which to retrieve the configuration
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully retrieved the configuration for the queriable data store
+    post:
+      description: Create configuration for the chosen queriable data store
+      produces:
+        - application/json
+      consumes:
+        - application/json
+        - text/plain
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to create the configuration for the queriable data store
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the queriable data store for which to create the configuration
+          type: string
+        - name: configuration
+          in: body
+          schema:
+            $ref: '#/definitions/Configuration'
+          required: true
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully created the configuration
+    put:
+      description: Update configuration for the chosen queriable data store
+      produces:
+        - application/json
+      consumes:
+        - application/json
+        - text/plain
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to update the configuration for the queriable data store
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the queriable data store for which to update the configuration
+          type: string
+        - name: configuration
+          in: body
+          schema:
+            $ref: '#/definitions/Configuration'
+          required: true
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully updated the configuration   
+    delete:
+      description: Delete configuration for the chosen queriable data store
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to delete the configuration for the queriable data store
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the queriable data store for which to delete the configuration
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully deleted the configuration for the queriable data store
+  
+  /{user}/queriable_data_stores/{id}/configuration/{key}:
+    get:
+      description: Retrieve configuration according to the given key for the chosen queriable data store
+      produces: 
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to obtain the configuration for the queriable data store
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the queriable data store for which to retrieve the configuration
+          type: string
+        - name: key
+          in: path
+          description: The key of the configuration field to obtain
+          required: true
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully retrieved the configuration for the queriable data store
+    post:
+      description: Create a configuration field for the chosen queriable data store
+      produces:
+        - application/json
+      consumes:
+        - application/json
+        - text/plain
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to create the configuration for the queriable data store
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the queriable data store for which to create the configuration
+          type: string
+        - name: key
+          in: path
+          required: true
+          description: Key of the configuration to create
+          type: string
+        - name: configuration
+          in: body
+          schema:
+            $ref: '#/definitions/Configuration'
+          required: true
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully created the configuration
+    put: 
+      description: Update a configuration field for the chosen queriable data store
+      produces:
+        - application/json
+      consumes:
+        - application/json
+        - text/plain
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to update the configuration for the queriable data store
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the queriable data store for which to update the configuration
+          type: string
+        - name: key
+          in: path
+          description: The key of the configuration field to update
+          required: true
+          type: string
+        - name: configuration
+          in: body
+          schema:
+            $ref: '#/definitions/Configuration'
+          required: true
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully updated the configuration field
+    delete:
+      description: Delete a configuration field for the chosen queriable data store
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to delete the configuration for the queriable data store
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the queriable data store for which to delete the configuration
+          type: string
+        - name: key
+          in: path
+          description: The key of the configuration field to delete
+          required: true
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully deleted the configuration field
      
     
   /{user}/utility_functions:
@@ -1592,7 +1808,222 @@ paths:
       responses:
         200:
           description: Successfully unstared the utility function
+
+  /{user}/utility_functions/{id}/configuration:
+    get:
+      description: Retrieve configuration for the chosen utility function
+      produces: 
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to obtain the configuration for the utility function
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the utility function for which to retrieve the configuration
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully retrieved the configuration for the utility function
+    post:
+      description: Create configuration for the chosen utility function
+      produces:
+        - application/json
+      consumes:
+        - application/json
+        - text/plain
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to create the configuration for the utility function
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the utility function for which to create the configuration
+          type: string
+        - name: configuration
+          in: body
+          schema:
+            $ref: '#/definitions/Configuration'
+          required: true
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully created the configuration
+    put:
+      description: Update configuration for the chosen utility function
+      produces:
+        - application/json
+      consumes:
+        - application/json
+        - text/plain
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to update the configuration for the utility function
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the utility function for which to update the configuration
+          type: string
+        - name: configuration
+          in: body
+          schema:
+            $ref: '#/definitions/Configuration'
+          required: true
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully updated the configuration   
+    delete:
+      description: Delete configuration for the chosen utility function
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to delete the configuration for the utility function
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the utility function for which to delete the configuration
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully deleted the configuration for the utility function
   
+  /{user}/utility_functions/{id}/configuration/{key}:
+    get:
+      description: Retrieve configuration according to the given key for the chosen utility function
+      produces: 
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to obtain the configuration for the utility function
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the utility function for which to retrieve the configuration
+          type: string
+        - name: key
+          in: path
+          description: The key of the configuration field to obtain
+          required: true
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully retrieved the configuration for the utility function
+    post:
+      description: Create a configuration field for the chosen utility function
+      produces:
+        - application/json
+      consumes:
+        - application/json
+        - text/plain
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to create the configuration for the utility function
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the utility function for which to create the configuration
+          type: string
+        - name: key
+          in: path
+          required: true
+          description: Key of the configuration to create
+          type: string
+        - name: configuration
+          in: body
+          schema:
+            $ref: '#/definitions/Configuration'
+          required: true
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully created the configuration
+    put: 
+      description: Update a configuration field for the chosen utility function
+      produces:
+        - application/json
+      consumes:
+        - application/json
+        - text/plain
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to update the configuration for the utility function
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the utility function for which to update the configuration
+          type: string
+        - name: key
+          in: path
+          description: The key of the configuration field to update
+          required: true
+          type: string
+        - name: configuration
+          in: body
+          schema:
+            $ref: '#/definitions/Configuration'
+          required: true
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully updated the configuration field
+    delete:
+      description: Delete a configuration field for the chosen utility function
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to delete the configuration for the utility function
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the utility function for which to delete the configuration
+          type: string
+        - name: key
+          in: path
+          description: The key of the configuration field to delete
+          required: true
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully deleted the configuration field  
   
   
   /explore:

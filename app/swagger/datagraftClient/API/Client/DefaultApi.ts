@@ -1118,6 +1118,350 @@ namespace API.Client {
         }
         /**
          * 
+         * Retrieve configuration for the chosen queriable data store
+         * @param user ID of the user for who to obtain the configuration for the queriable data store
+         * @param id ID (slug) of the queriable data store for which to retrieve the configuration
+         */
+        public userQueriableDataStoresIdConfigurationGet (user: string, id: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/queriable_data_stores/{id}/configuration'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userQueriableDataStoresIdConfigurationGet');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userQueriableDataStoresIdConfigurationGet');
+            }
+            let httpRequestParams: any = {
+                method: 'GET',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Update configuration for the chosen queriable data store
+         * @param user ID of the user for who to update the configuration for the queriable data store
+         * @param id ID (slug) of the queriable data store for which to update the configuration
+         * @param configuration 
+         */
+        public userQueriableDataStoresIdConfigurationPut (user: string, id: string, configuration: Configuration, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/queriable_data_stores/{id}/configuration'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userQueriableDataStoresIdConfigurationPut');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userQueriableDataStoresIdConfigurationPut');
+            }
+            // verify required parameter 'configuration' is set
+            if (!configuration) {
+                throw new Error('Missing required parameter configuration when calling userQueriableDataStoresIdConfigurationPut');
+            }
+            let httpRequestParams: any = {
+                method: 'PUT',
+                url: path,
+                json: true,
+                data: configuration,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Create configuration for the chosen queriable data store
+         * @param user ID of the user for who to create the configuration for the queriable data store
+         * @param id ID (slug) of the queriable data store for which to create the configuration
+         * @param configuration 
+         */
+        public userQueriableDataStoresIdConfigurationPost (user: string, id: string, configuration: Configuration, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/queriable_data_stores/{id}/configuration'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userQueriableDataStoresIdConfigurationPost');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userQueriableDataStoresIdConfigurationPost');
+            }
+            // verify required parameter 'configuration' is set
+            if (!configuration) {
+                throw new Error('Missing required parameter configuration when calling userQueriableDataStoresIdConfigurationPost');
+            }
+            let httpRequestParams: any = {
+                method: 'POST',
+                url: path,
+                json: true,
+                data: configuration,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Delete configuration for the chosen queriable data store
+         * @param user ID of the user for who to delete the configuration for the queriable data store
+         * @param id ID (slug) of the queriable data store for which to delete the configuration
+         */
+        public userQueriableDataStoresIdConfigurationDelete (user: string, id: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/queriable_data_stores/{id}/configuration'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userQueriableDataStoresIdConfigurationDelete');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userQueriableDataStoresIdConfigurationDelete');
+            }
+            let httpRequestParams: any = {
+                method: 'DELETE',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Retrieve configuration according to the given key for the chosen queriable data store
+         * @param user ID of the user for who to obtain the configuration for the queriable data store
+         * @param id ID (slug) of the queriable data store for which to retrieve the configuration
+         * @param key The key of the configuration field to obtain
+         */
+        public userQueriableDataStoresIdConfigurationKeyGet (user: string, id: string, key: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/queriable_data_stores/{id}/configuration/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userQueriableDataStoresIdConfigurationKeyGet');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userQueriableDataStoresIdConfigurationKeyGet');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userQueriableDataStoresIdConfigurationKeyGet');
+            }
+            let httpRequestParams: any = {
+                method: 'GET',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Update a configuration field for the chosen queriable data store
+         * @param user ID of the user for who to update the configuration for the queriable data store
+         * @param id ID (slug) of the queriable data store for which to update the configuration
+         * @param key The key of the configuration field to update
+         * @param configuration 
+         */
+        public userQueriableDataStoresIdConfigurationKeyPut (user: string, id: string, key: string, configuration: Configuration, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/queriable_data_stores/{id}/configuration/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userQueriableDataStoresIdConfigurationKeyPut');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userQueriableDataStoresIdConfigurationKeyPut');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userQueriableDataStoresIdConfigurationKeyPut');
+            }
+            // verify required parameter 'configuration' is set
+            if (!configuration) {
+                throw new Error('Missing required parameter configuration when calling userQueriableDataStoresIdConfigurationKeyPut');
+            }
+            let httpRequestParams: any = {
+                method: 'PUT',
+                url: path,
+                json: true,
+                data: configuration,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Create a configuration field for the chosen queriable data store
+         * @param user ID of the user for who to create the configuration for the queriable data store
+         * @param id ID (slug) of the queriable data store for which to create the configuration
+         * @param key Key of the configuration to create
+         * @param configuration 
+         */
+        public userQueriableDataStoresIdConfigurationKeyPost (user: string, id: string, key: string, configuration: Configuration, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/queriable_data_stores/{id}/configuration/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userQueriableDataStoresIdConfigurationKeyPost');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userQueriableDataStoresIdConfigurationKeyPost');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userQueriableDataStoresIdConfigurationKeyPost');
+            }
+            // verify required parameter 'configuration' is set
+            if (!configuration) {
+                throw new Error('Missing required parameter configuration when calling userQueriableDataStoresIdConfigurationKeyPost');
+            }
+            let httpRequestParams: any = {
+                method: 'POST',
+                url: path,
+                json: true,
+                data: configuration,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Delete a configuration field for the chosen queriable data store
+         * @param user ID of the user for who to delete the configuration for the queriable data store
+         * @param id ID (slug) of the queriable data store for which to delete the configuration
+         * @param key The key of the configuration field to delete
+         */
+        public userQueriableDataStoresIdConfigurationKeyDelete (user: string, id: string, key: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/queriable_data_stores/{id}/configuration/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userQueriableDataStoresIdConfigurationKeyDelete');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userQueriableDataStoresIdConfigurationKeyDelete');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userQueriableDataStoresIdConfigurationKeyDelete');
+            }
+            let httpRequestParams: any = {
+                method: 'DELETE',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
          * NOT IMPLEMENTED?? Doesn&#39;t work... (Retrieve the code for the queriable data for edit)
          * @param user ID of the user for who to edit the queriable data
          * @param id ID (slug) of the queriable data to be edited
@@ -2470,6 +2814,350 @@ namespace API.Client {
                 url: path,
                 json: true,
                 data: utilityFunction,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Retrieve configuration for the chosen utility function
+         * @param user ID of the user for who to obtain the configuration for the utility function
+         * @param id ID (slug) of the utility function for which to retrieve the configuration
+         */
+        public userUtilityFunctionsIdConfigurationGet (user: string, id: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/utility_functions/{id}/configuration'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userUtilityFunctionsIdConfigurationGet');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userUtilityFunctionsIdConfigurationGet');
+            }
+            let httpRequestParams: any = {
+                method: 'GET',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Update configuration for the chosen utility function
+         * @param user ID of the user for who to update the configuration for the utility function
+         * @param id ID (slug) of the utility function for which to update the configuration
+         * @param configuration 
+         */
+        public userUtilityFunctionsIdConfigurationPut (user: string, id: string, configuration: Configuration, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/utility_functions/{id}/configuration'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userUtilityFunctionsIdConfigurationPut');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userUtilityFunctionsIdConfigurationPut');
+            }
+            // verify required parameter 'configuration' is set
+            if (!configuration) {
+                throw new Error('Missing required parameter configuration when calling userUtilityFunctionsIdConfigurationPut');
+            }
+            let httpRequestParams: any = {
+                method: 'PUT',
+                url: path,
+                json: true,
+                data: configuration,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Create configuration for the chosen utility function
+         * @param user ID of the user for who to create the configuration for the utility function
+         * @param id ID (slug) of the utility function for which to create the configuration
+         * @param configuration 
+         */
+        public userUtilityFunctionsIdConfigurationPost (user: string, id: string, configuration: Configuration, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/utility_functions/{id}/configuration'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userUtilityFunctionsIdConfigurationPost');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userUtilityFunctionsIdConfigurationPost');
+            }
+            // verify required parameter 'configuration' is set
+            if (!configuration) {
+                throw new Error('Missing required parameter configuration when calling userUtilityFunctionsIdConfigurationPost');
+            }
+            let httpRequestParams: any = {
+                method: 'POST',
+                url: path,
+                json: true,
+                data: configuration,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Delete configuration for the chosen utility function
+         * @param user ID of the user for who to delete the configuration for the utility function
+         * @param id ID (slug) of the utility function for which to delete the configuration
+         */
+        public userUtilityFunctionsIdConfigurationDelete (user: string, id: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/utility_functions/{id}/configuration'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userUtilityFunctionsIdConfigurationDelete');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userUtilityFunctionsIdConfigurationDelete');
+            }
+            let httpRequestParams: any = {
+                method: 'DELETE',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Retrieve configuration according to the given key for the chosen utility function
+         * @param user ID of the user for who to obtain the configuration for the utility function
+         * @param id ID (slug) of the utility function for which to retrieve the configuration
+         * @param key The key of the configuration field to obtain
+         */
+        public userUtilityFunctionsIdConfigurationKeyGet (user: string, id: string, key: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/utility_functions/{id}/configuration/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userUtilityFunctionsIdConfigurationKeyGet');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userUtilityFunctionsIdConfigurationKeyGet');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userUtilityFunctionsIdConfigurationKeyGet');
+            }
+            let httpRequestParams: any = {
+                method: 'GET',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Update a configuration field for the chosen utility function
+         * @param user ID of the user for who to update the configuration for the utility function
+         * @param id ID (slug) of the utility function for which to update the configuration
+         * @param key The key of the configuration field to update
+         * @param configuration 
+         */
+        public userUtilityFunctionsIdConfigurationKeyPut (user: string, id: string, key: string, configuration: Configuration, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/utility_functions/{id}/configuration/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userUtilityFunctionsIdConfigurationKeyPut');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userUtilityFunctionsIdConfigurationKeyPut');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userUtilityFunctionsIdConfigurationKeyPut');
+            }
+            // verify required parameter 'configuration' is set
+            if (!configuration) {
+                throw new Error('Missing required parameter configuration when calling userUtilityFunctionsIdConfigurationKeyPut');
+            }
+            let httpRequestParams: any = {
+                method: 'PUT',
+                url: path,
+                json: true,
+                data: configuration,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Create a configuration field for the chosen utility function
+         * @param user ID of the user for who to create the configuration for the utility function
+         * @param id ID (slug) of the utility function for which to create the configuration
+         * @param key Key of the configuration to create
+         * @param configuration 
+         */
+        public userUtilityFunctionsIdConfigurationKeyPost (user: string, id: string, key: string, configuration: Configuration, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/utility_functions/{id}/configuration/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userUtilityFunctionsIdConfigurationKeyPost');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userUtilityFunctionsIdConfigurationKeyPost');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userUtilityFunctionsIdConfigurationKeyPost');
+            }
+            // verify required parameter 'configuration' is set
+            if (!configuration) {
+                throw new Error('Missing required parameter configuration when calling userUtilityFunctionsIdConfigurationKeyPost');
+            }
+            let httpRequestParams: any = {
+                method: 'POST',
+                url: path,
+                json: true,
+                data: configuration,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Delete a configuration field for the chosen utility function
+         * @param user ID of the user for who to delete the configuration for the utility function
+         * @param id ID (slug) of the utility function for which to delete the configuration
+         * @param key The key of the configuration field to delete
+         */
+        public userUtilityFunctionsIdConfigurationKeyDelete (user: string, id: string, key: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/utility_functions/{id}/configuration/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userUtilityFunctionsIdConfigurationKeyDelete');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userUtilityFunctionsIdConfigurationKeyDelete');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userUtilityFunctionsIdConfigurationKeyDelete');
+            }
+            let httpRequestParams: any = {
+                method: 'DELETE',
+                url: path,
+                json: true,
                 
                 
                 params: queryParameters,

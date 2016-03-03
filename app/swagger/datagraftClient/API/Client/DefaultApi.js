@@ -952,6 +952,310 @@ var API;
             };
             /**
              *
+             * Retrieve configuration for the chosen queriable data store
+             * @param user ID of the user for who to obtain the configuration for the queriable data store
+             * @param id ID (slug) of the queriable data store for which to retrieve the configuration
+             */
+            DefaultApi.prototype.userQueriableDataStoresIdConfigurationGet = function (user, id, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/queriable_data_stores/{id}/configuration'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userQueriableDataStoresIdConfigurationGet');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userQueriableDataStoresIdConfigurationGet');
+                }
+                var httpRequestParams = {
+                    method: 'GET',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Update configuration for the chosen queriable data store
+             * @param user ID of the user for who to update the configuration for the queriable data store
+             * @param id ID (slug) of the queriable data store for which to update the configuration
+             * @param configuration
+             */
+            DefaultApi.prototype.userQueriableDataStoresIdConfigurationPut = function (user, id, configuration, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/queriable_data_stores/{id}/configuration'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userQueriableDataStoresIdConfigurationPut');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userQueriableDataStoresIdConfigurationPut');
+                }
+                // verify required parameter 'configuration' is set
+                if (!configuration) {
+                    throw new Error('Missing required parameter configuration when calling userQueriableDataStoresIdConfigurationPut');
+                }
+                var httpRequestParams = {
+                    method: 'PUT',
+                    url: path,
+                    json: true,
+                    data: configuration,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Create configuration for the chosen queriable data store
+             * @param user ID of the user for who to create the configuration for the queriable data store
+             * @param id ID (slug) of the queriable data store for which to create the configuration
+             * @param configuration
+             */
+            DefaultApi.prototype.userQueriableDataStoresIdConfigurationPost = function (user, id, configuration, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/queriable_data_stores/{id}/configuration'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userQueriableDataStoresIdConfigurationPost');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userQueriableDataStoresIdConfigurationPost');
+                }
+                // verify required parameter 'configuration' is set
+                if (!configuration) {
+                    throw new Error('Missing required parameter configuration when calling userQueriableDataStoresIdConfigurationPost');
+                }
+                var httpRequestParams = {
+                    method: 'POST',
+                    url: path,
+                    json: true,
+                    data: configuration,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Delete configuration for the chosen queriable data store
+             * @param user ID of the user for who to delete the configuration for the queriable data store
+             * @param id ID (slug) of the queriable data store for which to delete the configuration
+             */
+            DefaultApi.prototype.userQueriableDataStoresIdConfigurationDelete = function (user, id, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/queriable_data_stores/{id}/configuration'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userQueriableDataStoresIdConfigurationDelete');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userQueriableDataStoresIdConfigurationDelete');
+                }
+                var httpRequestParams = {
+                    method: 'DELETE',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Retrieve configuration according to the given key for the chosen queriable data store
+             * @param user ID of the user for who to obtain the configuration for the queriable data store
+             * @param id ID (slug) of the queriable data store for which to retrieve the configuration
+             * @param key The key of the configuration field to obtain
+             */
+            DefaultApi.prototype.userQueriableDataStoresIdConfigurationKeyGet = function (user, id, key, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/queriable_data_stores/{id}/configuration/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userQueriableDataStoresIdConfigurationKeyGet');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userQueriableDataStoresIdConfigurationKeyGet');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userQueriableDataStoresIdConfigurationKeyGet');
+                }
+                var httpRequestParams = {
+                    method: 'GET',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Update a configuration field for the chosen queriable data store
+             * @param user ID of the user for who to update the configuration for the queriable data store
+             * @param id ID (slug) of the queriable data store for which to update the configuration
+             * @param key The key of the configuration field to update
+             * @param configuration
+             */
+            DefaultApi.prototype.userQueriableDataStoresIdConfigurationKeyPut = function (user, id, key, configuration, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/queriable_data_stores/{id}/configuration/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userQueriableDataStoresIdConfigurationKeyPut');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userQueriableDataStoresIdConfigurationKeyPut');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userQueriableDataStoresIdConfigurationKeyPut');
+                }
+                // verify required parameter 'configuration' is set
+                if (!configuration) {
+                    throw new Error('Missing required parameter configuration when calling userQueriableDataStoresIdConfigurationKeyPut');
+                }
+                var httpRequestParams = {
+                    method: 'PUT',
+                    url: path,
+                    json: true,
+                    data: configuration,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Create a configuration field for the chosen queriable data store
+             * @param user ID of the user for who to create the configuration for the queriable data store
+             * @param id ID (slug) of the queriable data store for which to create the configuration
+             * @param key Key of the configuration to create
+             * @param configuration
+             */
+            DefaultApi.prototype.userQueriableDataStoresIdConfigurationKeyPost = function (user, id, key, configuration, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/queriable_data_stores/{id}/configuration/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userQueriableDataStoresIdConfigurationKeyPost');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userQueriableDataStoresIdConfigurationKeyPost');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userQueriableDataStoresIdConfigurationKeyPost');
+                }
+                // verify required parameter 'configuration' is set
+                if (!configuration) {
+                    throw new Error('Missing required parameter configuration when calling userQueriableDataStoresIdConfigurationKeyPost');
+                }
+                var httpRequestParams = {
+                    method: 'POST',
+                    url: path,
+                    json: true,
+                    data: configuration,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Delete a configuration field for the chosen queriable data store
+             * @param user ID of the user for who to delete the configuration for the queriable data store
+             * @param id ID (slug) of the queriable data store for which to delete the configuration
+             * @param key The key of the configuration field to delete
+             */
+            DefaultApi.prototype.userQueriableDataStoresIdConfigurationKeyDelete = function (user, id, key, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/queriable_data_stores/{id}/configuration/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userQueriableDataStoresIdConfigurationKeyDelete');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userQueriableDataStoresIdConfigurationKeyDelete');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userQueriableDataStoresIdConfigurationKeyDelete');
+                }
+                var httpRequestParams = {
+                    method: 'DELETE',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
              * NOT IMPLEMENTED?? Doesn&#39;t work... (Retrieve the code for the queriable data for edit)
              * @param user ID of the user for who to edit the queriable data
              * @param id ID (slug) of the queriable data to be edited
@@ -2138,6 +2442,310 @@ var API;
                     url: path,
                     json: true,
                     data: utilityFunction,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Retrieve configuration for the chosen utility function
+             * @param user ID of the user for who to obtain the configuration for the utility function
+             * @param id ID (slug) of the utility function for which to retrieve the configuration
+             */
+            DefaultApi.prototype.userUtilityFunctionsIdConfigurationGet = function (user, id, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/utility_functions/{id}/configuration'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userUtilityFunctionsIdConfigurationGet');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userUtilityFunctionsIdConfigurationGet');
+                }
+                var httpRequestParams = {
+                    method: 'GET',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Update configuration for the chosen utility function
+             * @param user ID of the user for who to update the configuration for the utility function
+             * @param id ID (slug) of the utility function for which to update the configuration
+             * @param configuration
+             */
+            DefaultApi.prototype.userUtilityFunctionsIdConfigurationPut = function (user, id, configuration, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/utility_functions/{id}/configuration'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userUtilityFunctionsIdConfigurationPut');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userUtilityFunctionsIdConfigurationPut');
+                }
+                // verify required parameter 'configuration' is set
+                if (!configuration) {
+                    throw new Error('Missing required parameter configuration when calling userUtilityFunctionsIdConfigurationPut');
+                }
+                var httpRequestParams = {
+                    method: 'PUT',
+                    url: path,
+                    json: true,
+                    data: configuration,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Create configuration for the chosen utility function
+             * @param user ID of the user for who to create the configuration for the utility function
+             * @param id ID (slug) of the utility function for which to create the configuration
+             * @param configuration
+             */
+            DefaultApi.prototype.userUtilityFunctionsIdConfigurationPost = function (user, id, configuration, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/utility_functions/{id}/configuration'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userUtilityFunctionsIdConfigurationPost');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userUtilityFunctionsIdConfigurationPost');
+                }
+                // verify required parameter 'configuration' is set
+                if (!configuration) {
+                    throw new Error('Missing required parameter configuration when calling userUtilityFunctionsIdConfigurationPost');
+                }
+                var httpRequestParams = {
+                    method: 'POST',
+                    url: path,
+                    json: true,
+                    data: configuration,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Delete configuration for the chosen utility function
+             * @param user ID of the user for who to delete the configuration for the utility function
+             * @param id ID (slug) of the utility function for which to delete the configuration
+             */
+            DefaultApi.prototype.userUtilityFunctionsIdConfigurationDelete = function (user, id, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/utility_functions/{id}/configuration'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userUtilityFunctionsIdConfigurationDelete');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userUtilityFunctionsIdConfigurationDelete');
+                }
+                var httpRequestParams = {
+                    method: 'DELETE',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Retrieve configuration according to the given key for the chosen utility function
+             * @param user ID of the user for who to obtain the configuration for the utility function
+             * @param id ID (slug) of the utility function for which to retrieve the configuration
+             * @param key The key of the configuration field to obtain
+             */
+            DefaultApi.prototype.userUtilityFunctionsIdConfigurationKeyGet = function (user, id, key, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/utility_functions/{id}/configuration/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userUtilityFunctionsIdConfigurationKeyGet');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userUtilityFunctionsIdConfigurationKeyGet');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userUtilityFunctionsIdConfigurationKeyGet');
+                }
+                var httpRequestParams = {
+                    method: 'GET',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Update a configuration field for the chosen utility function
+             * @param user ID of the user for who to update the configuration for the utility function
+             * @param id ID (slug) of the utility function for which to update the configuration
+             * @param key The key of the configuration field to update
+             * @param configuration
+             */
+            DefaultApi.prototype.userUtilityFunctionsIdConfigurationKeyPut = function (user, id, key, configuration, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/utility_functions/{id}/configuration/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userUtilityFunctionsIdConfigurationKeyPut');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userUtilityFunctionsIdConfigurationKeyPut');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userUtilityFunctionsIdConfigurationKeyPut');
+                }
+                // verify required parameter 'configuration' is set
+                if (!configuration) {
+                    throw new Error('Missing required parameter configuration when calling userUtilityFunctionsIdConfigurationKeyPut');
+                }
+                var httpRequestParams = {
+                    method: 'PUT',
+                    url: path,
+                    json: true,
+                    data: configuration,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Create a configuration field for the chosen utility function
+             * @param user ID of the user for who to create the configuration for the utility function
+             * @param id ID (slug) of the utility function for which to create the configuration
+             * @param key Key of the configuration to create
+             * @param configuration
+             */
+            DefaultApi.prototype.userUtilityFunctionsIdConfigurationKeyPost = function (user, id, key, configuration, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/utility_functions/{id}/configuration/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userUtilityFunctionsIdConfigurationKeyPost');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userUtilityFunctionsIdConfigurationKeyPost');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userUtilityFunctionsIdConfigurationKeyPost');
+                }
+                // verify required parameter 'configuration' is set
+                if (!configuration) {
+                    throw new Error('Missing required parameter configuration when calling userUtilityFunctionsIdConfigurationKeyPost');
+                }
+                var httpRequestParams = {
+                    method: 'POST',
+                    url: path,
+                    json: true,
+                    data: configuration,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Delete a configuration field for the chosen utility function
+             * @param user ID of the user for who to delete the configuration for the utility function
+             * @param id ID (slug) of the utility function for which to delete the configuration
+             * @param key The key of the configuration field to delete
+             */
+            DefaultApi.prototype.userUtilityFunctionsIdConfigurationKeyDelete = function (user, id, key, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/utility_functions/{id}/configuration/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userUtilityFunctionsIdConfigurationKeyDelete');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userUtilityFunctionsIdConfigurationKeyDelete');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userUtilityFunctionsIdConfigurationKeyDelete');
+                }
+                var httpRequestParams = {
+                    method: 'DELETE',
+                    url: path,
+                    json: true,
                     params: queryParameters,
                     headers: headerParams
                 };
