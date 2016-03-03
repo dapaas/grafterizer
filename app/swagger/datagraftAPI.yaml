@@ -1371,6 +1371,222 @@ paths:
       responses:
         200:
           description: Information about the versions of the queried queriable data
+          
+  /{user}/queriable_data_stores/{id}/metadata:
+    get:
+      description: Retrieve meta data for the chosen queriable data store
+      produces: 
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to obtain the meta data for the queriable data store
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the queriable data store for which to retrieve the meta data
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully retrieved the meta data for the queriable data store
+    post:
+      description: Create meta data for the chosen queriable data store
+      produces:
+        - application/json
+      consumes:
+        - application/json
+        - text/plain
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to create the meta data for the queriable data store
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the queriable data store for which to create the meta data
+          type: string
+        - name: metadata
+          in: body
+          schema:
+            $ref: '#/definitions/MetaData'
+          required: true
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully created the meta data
+    put:
+      description: Update meta data for the chosen queriable data store
+      produces:
+        - application/json
+      consumes:
+        - application/json
+        - text/plain
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to update the meta data for the queriable data store
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the queriable data store for which to update the meta data
+          type: string
+        - name: metadata
+          in: body
+          schema:
+            $ref: '#/definitions/MetaData'
+          required: true
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully updated the meta data   
+    delete:
+      description: Delete meta data for the chosen queriable data store
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to delete the meta data for the queriable data store
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the queriable data store for which to delete the meta data
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully deleted the meta datav for the queriable data store
+  
+  /{user}/queriable_data_stores/{id}/metadata/{key}:
+    get:
+      description: Retrieve meta data according to the given key for the chosen queriable data store
+      produces: 
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to obtain the meta data for the queriable data store
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the queriable data store for which to retrieve the meta data
+          type: string
+        - name: key
+          in: path
+          description: The key of the meta data field to obtain
+          required: true
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully retrieved the meta data for the queriable data store
+    post:
+      description: Create a meta data field for the chosen queriable data store
+      produces:
+        - application/json
+      consumes:
+        - application/json
+        - text/plain
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to create the meta data for the queriable data store
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the queriable data store for which to create the meta data
+          type: string
+        - name: key
+          in: path
+          required: true
+          description: Key of the metadata to create
+          type: string
+        - name: metadata
+          in: body
+          schema:
+            $ref: '#/definitions/MetaData'
+          required: true
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully created the meta data
+    put: 
+      description: Update a meta data field for the chosen queriable data store
+      produces:
+        - application/json
+      consumes:
+        - application/json
+        - text/plain
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to update the meta data for the queriable data store
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the queriable data store for which to update the meta data
+          type: string
+        - name: key
+          in: path
+          description: The key of the meta data field to update
+          required: true
+          type: string
+        - name: metadata
+          in: body
+          schema:
+            $ref: '#/definitions/MetaData'
+          required: true
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully updated the meta data field
+    delete:
+      description: Delete a metadata field for the chosen queriable data store
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to delete the meta data for the queriable data store
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the queriable data store for which to delete the meta data
+          type: string
+        - name: key
+          in: path
+          description: The key of the meta data field to delete
+          required: true
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully deleted the meta data field
   
   /{user}/queriable_data_stores/{id}/configuration:
     get:
@@ -1717,53 +1933,6 @@ paths:
       responses:
         200:
           description: Successfully updated the utility function
-          
-  /{user}/utility_functions/{id}/metadata:
-    get:
-      description: Retrieve meta data for the chosen utility function
-      produces:
-        - application/json
-      parameters:
-        - name: user
-          in: path
-          required: true
-          description: ID of the user for who to obtain the meta data for the utility function
-          type: string
-        - name: id
-          in: path
-          required: true
-          description: ID (slug) of the utility function for which retrieve the meta data
-          type: string
-      security:
-        - APIKey: []
-      responses:
-        200:
-          description: Successfully retrieved metadata
-    post:
-      description: Create meta data for the given utility function
-      produces:
-        - application/json
-      parameters:
-        - name: user
-          in: path
-          required: true
-          description: ID of the user for who to create the meta data for the utility function
-          type: string
-        - name: id
-          in: path
-          required: true
-          description: ID (slug) of the utility function for which to create meta data
-          type: string
-        - name: metadata
-          in: body
-          schema:
-            $ref: '#/definitions/MetaData'
-          required: true
-      security:
-        - APIKey: []
-      responses:
-        200:
-          description: Successfully created metadata
   
   /{user}/utility_functions/{id}/star:
     post:
@@ -1808,6 +1977,222 @@ paths:
       responses:
         200:
           description: Successfully unstared the utility function
+
+  /{user}/utility_functions/{id}/metadata:
+    get:
+      description: Retrieve meta data for the chosen utility function
+      produces: 
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to obtain the meta data for the utility function
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the utility function for which to retrieve the meta data
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully retrieved the meta data for the utility function
+    post:
+      description: Create meta data for the chosen utility function
+      produces:
+        - application/json
+      consumes:
+        - application/json
+        - text/plain
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to create the meta data for the utility function
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the utility function for which to create the meta data
+          type: string
+        - name: metadata
+          in: body
+          schema:
+            $ref: '#/definitions/MetaData'
+          required: true
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully created the meta data
+    put:
+      description: Update meta data for the chosen utility function
+      produces:
+        - application/json
+      consumes:
+        - application/json
+        - text/plain
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to update the meta data for the utility function
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the utility function for which to update the meta data
+          type: string
+        - name: metadata
+          in: body
+          schema:
+            $ref: '#/definitions/MetaData'
+          required: true
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully updated the meta data   
+    delete:
+      description: Delete meta data for the chosen utility function
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to delete the meta data for the utility function
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the utility function for which to delete the meta data
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully deleted the meta datav for the utility function
+  
+  /{user}/utility_functions/{id}/metadata/{key}:
+    get:
+      description: Retrieve meta data according to the given key for the chosen utility function
+      produces: 
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to obtain the meta data for the utility function
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the utility function for which to retrieve the meta data
+          type: string
+        - name: key
+          in: path
+          description: The key of the meta data field to obtain
+          required: true
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully retrieved the meta data for the utility function
+    post:
+      description: Create a meta data field for the chosen utility function
+      produces:
+        - application/json
+      consumes:
+        - application/json
+        - text/plain
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to create the meta data for the utility function
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the utility function for which to create the meta data
+          type: string
+        - name: key
+          in: path
+          required: true
+          description: Key of the metadata to create
+          type: string
+        - name: metadata
+          in: body
+          schema:
+            $ref: '#/definitions/MetaData'
+          required: true
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully created the meta data
+    put: 
+      description: Update a meta data field for the chosen utility function
+      produces:
+        - application/json
+      consumes:
+        - application/json
+        - text/plain
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to update the meta data for the utility function
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the utility function for which to update the meta data
+          type: string
+        - name: key
+          in: path
+          description: The key of the meta data field to update
+          required: true
+          type: string
+        - name: metadata
+          in: body
+          schema:
+            $ref: '#/definitions/MetaData'
+          required: true
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully updated the meta data field
+    delete:
+      description: Delete a metadata field for the chosen utility function
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ID of the user for who to delete the meta data for the utility function
+          type: string
+        - name: id
+          in: path
+          required: true
+          description: ID (slug) of the utility function for which to delete the meta data
+          type: string
+        - name: key
+          in: path
+          description: The key of the meta data field to delete
+          required: true
+          type: string
+      security:
+        - APIKey: []
+      responses:
+        200:
+          description: Successfully deleted the meta data field
 
   /{user}/utility_functions/{id}/configuration:
     get:

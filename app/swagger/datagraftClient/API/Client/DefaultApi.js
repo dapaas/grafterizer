@@ -1288,6 +1288,310 @@ var API;
             };
             /**
              *
+             * Retrieve meta data for the chosen queriable data store
+             * @param user ID of the user for who to obtain the meta data for the queriable data store
+             * @param id ID (slug) of the queriable data store for which to retrieve the meta data
+             */
+            DefaultApi.prototype.userQueriableDataStoresIdMetadataGet = function (user, id, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/queriable_data_stores/{id}/metadata'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userQueriableDataStoresIdMetadataGet');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userQueriableDataStoresIdMetadataGet');
+                }
+                var httpRequestParams = {
+                    method: 'GET',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Update meta data for the chosen queriable data store
+             * @param user ID of the user for who to update the meta data for the queriable data store
+             * @param id ID (slug) of the queriable data store for which to update the meta data
+             * @param metadata
+             */
+            DefaultApi.prototype.userQueriableDataStoresIdMetadataPut = function (user, id, metadata, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/queriable_data_stores/{id}/metadata'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userQueriableDataStoresIdMetadataPut');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userQueriableDataStoresIdMetadataPut');
+                }
+                // verify required parameter 'metadata' is set
+                if (!metadata) {
+                    throw new Error('Missing required parameter metadata when calling userQueriableDataStoresIdMetadataPut');
+                }
+                var httpRequestParams = {
+                    method: 'PUT',
+                    url: path,
+                    json: true,
+                    data: metadata,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Create meta data for the chosen queriable data store
+             * @param user ID of the user for who to create the meta data for the queriable data store
+             * @param id ID (slug) of the queriable data store for which to create the meta data
+             * @param metadata
+             */
+            DefaultApi.prototype.userQueriableDataStoresIdMetadataPost = function (user, id, metadata, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/queriable_data_stores/{id}/metadata'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userQueriableDataStoresIdMetadataPost');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userQueriableDataStoresIdMetadataPost');
+                }
+                // verify required parameter 'metadata' is set
+                if (!metadata) {
+                    throw new Error('Missing required parameter metadata when calling userQueriableDataStoresIdMetadataPost');
+                }
+                var httpRequestParams = {
+                    method: 'POST',
+                    url: path,
+                    json: true,
+                    data: metadata,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Delete meta data for the chosen queriable data store
+             * @param user ID of the user for who to delete the meta data for the queriable data store
+             * @param id ID (slug) of the queriable data store for which to delete the meta data
+             */
+            DefaultApi.prototype.userQueriableDataStoresIdMetadataDelete = function (user, id, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/queriable_data_stores/{id}/metadata'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userQueriableDataStoresIdMetadataDelete');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userQueriableDataStoresIdMetadataDelete');
+                }
+                var httpRequestParams = {
+                    method: 'DELETE',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Retrieve meta data according to the given key for the chosen queriable data store
+             * @param user ID of the user for who to obtain the meta data for the queriable data store
+             * @param id ID (slug) of the queriable data store for which to retrieve the meta data
+             * @param key The key of the meta data field to obtain
+             */
+            DefaultApi.prototype.userQueriableDataStoresIdMetadataKeyGet = function (user, id, key, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/queriable_data_stores/{id}/metadata/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userQueriableDataStoresIdMetadataKeyGet');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userQueriableDataStoresIdMetadataKeyGet');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userQueriableDataStoresIdMetadataKeyGet');
+                }
+                var httpRequestParams = {
+                    method: 'GET',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Update a meta data field for the chosen queriable data store
+             * @param user ID of the user for who to update the meta data for the queriable data store
+             * @param id ID (slug) of the queriable data store for which to update the meta data
+             * @param key The key of the meta data field to update
+             * @param metadata
+             */
+            DefaultApi.prototype.userQueriableDataStoresIdMetadataKeyPut = function (user, id, key, metadata, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/queriable_data_stores/{id}/metadata/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userQueriableDataStoresIdMetadataKeyPut');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userQueriableDataStoresIdMetadataKeyPut');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userQueriableDataStoresIdMetadataKeyPut');
+                }
+                // verify required parameter 'metadata' is set
+                if (!metadata) {
+                    throw new Error('Missing required parameter metadata when calling userQueriableDataStoresIdMetadataKeyPut');
+                }
+                var httpRequestParams = {
+                    method: 'PUT',
+                    url: path,
+                    json: true,
+                    data: metadata,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Create a meta data field for the chosen queriable data store
+             * @param user ID of the user for who to create the meta data for the queriable data store
+             * @param id ID (slug) of the queriable data store for which to create the meta data
+             * @param key Key of the metadata to create
+             * @param metadata
+             */
+            DefaultApi.prototype.userQueriableDataStoresIdMetadataKeyPost = function (user, id, key, metadata, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/queriable_data_stores/{id}/metadata/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userQueriableDataStoresIdMetadataKeyPost');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userQueriableDataStoresIdMetadataKeyPost');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userQueriableDataStoresIdMetadataKeyPost');
+                }
+                // verify required parameter 'metadata' is set
+                if (!metadata) {
+                    throw new Error('Missing required parameter metadata when calling userQueriableDataStoresIdMetadataKeyPost');
+                }
+                var httpRequestParams = {
+                    method: 'POST',
+                    url: path,
+                    json: true,
+                    data: metadata,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Delete a metadata field for the chosen queriable data store
+             * @param user ID of the user for who to delete the meta data for the queriable data store
+             * @param id ID (slug) of the queriable data store for which to delete the meta data
+             * @param key The key of the meta data field to delete
+             */
+            DefaultApi.prototype.userQueriableDataStoresIdMetadataKeyDelete = function (user, id, key, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/queriable_data_stores/{id}/metadata/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userQueriableDataStoresIdMetadataKeyDelete');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userQueriableDataStoresIdMetadataKeyDelete');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userQueriableDataStoresIdMetadataKeyDelete');
+                }
+                var httpRequestParams = {
+                    method: 'DELETE',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
              * Star the selected queriable data
              * @param user ID of the user for who to star the queriable data
              * @param id ID (slug) of the queriable data to be stared
@@ -2758,7 +3062,7 @@ var API;
              *
              * Retrieve meta data for the chosen utility function
              * @param user ID of the user for who to obtain the meta data for the utility function
-             * @param id ID (slug) of the utility function for which retrieve the meta data
+             * @param id ID (slug) of the utility function for which to retrieve the meta data
              */
             DefaultApi.prototype.userUtilityFunctionsIdMetadataGet = function (user, id, extraHttpRequestParams) {
                 var path = this.basePath + '/{user}/utility_functions/{id}/metadata'
@@ -2788,9 +3092,47 @@ var API;
             };
             /**
              *
-             * Create meta data for the given utility function
+             * Update meta data for the chosen utility function
+             * @param user ID of the user for who to update the meta data for the utility function
+             * @param id ID (slug) of the utility function for which to update the meta data
+             * @param metadata
+             */
+            DefaultApi.prototype.userUtilityFunctionsIdMetadataPut = function (user, id, metadata, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/utility_functions/{id}/metadata'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userUtilityFunctionsIdMetadataPut');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userUtilityFunctionsIdMetadataPut');
+                }
+                // verify required parameter 'metadata' is set
+                if (!metadata) {
+                    throw new Error('Missing required parameter metadata when calling userUtilityFunctionsIdMetadataPut');
+                }
+                var httpRequestParams = {
+                    method: 'PUT',
+                    url: path,
+                    json: true,
+                    data: metadata,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Create meta data for the chosen utility function
              * @param user ID of the user for who to create the meta data for the utility function
-             * @param id ID (slug) of the utility function for which to create meta data
+             * @param id ID (slug) of the utility function for which to create the meta data
              * @param metadata
              */
             DefaultApi.prototype.userUtilityFunctionsIdMetadataPost = function (user, id, metadata, extraHttpRequestParams) {
@@ -2816,6 +3158,202 @@ var API;
                     url: path,
                     json: true,
                     data: metadata,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Delete meta data for the chosen utility function
+             * @param user ID of the user for who to delete the meta data for the utility function
+             * @param id ID (slug) of the utility function for which to delete the meta data
+             */
+            DefaultApi.prototype.userUtilityFunctionsIdMetadataDelete = function (user, id, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/utility_functions/{id}/metadata'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userUtilityFunctionsIdMetadataDelete');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userUtilityFunctionsIdMetadataDelete');
+                }
+                var httpRequestParams = {
+                    method: 'DELETE',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Retrieve meta data according to the given key for the chosen utility function
+             * @param user ID of the user for who to obtain the meta data for the utility function
+             * @param id ID (slug) of the utility function for which to retrieve the meta data
+             * @param key The key of the meta data field to obtain
+             */
+            DefaultApi.prototype.userUtilityFunctionsIdMetadataKeyGet = function (user, id, key, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/utility_functions/{id}/metadata/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userUtilityFunctionsIdMetadataKeyGet');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userUtilityFunctionsIdMetadataKeyGet');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userUtilityFunctionsIdMetadataKeyGet');
+                }
+                var httpRequestParams = {
+                    method: 'GET',
+                    url: path,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Update a meta data field for the chosen utility function
+             * @param user ID of the user for who to update the meta data for the utility function
+             * @param id ID (slug) of the utility function for which to update the meta data
+             * @param key The key of the meta data field to update
+             * @param metadata
+             */
+            DefaultApi.prototype.userUtilityFunctionsIdMetadataKeyPut = function (user, id, key, metadata, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/utility_functions/{id}/metadata/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userUtilityFunctionsIdMetadataKeyPut');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userUtilityFunctionsIdMetadataKeyPut');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userUtilityFunctionsIdMetadataKeyPut');
+                }
+                // verify required parameter 'metadata' is set
+                if (!metadata) {
+                    throw new Error('Missing required parameter metadata when calling userUtilityFunctionsIdMetadataKeyPut');
+                }
+                var httpRequestParams = {
+                    method: 'PUT',
+                    url: path,
+                    json: true,
+                    data: metadata,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Create a meta data field for the chosen utility function
+             * @param user ID of the user for who to create the meta data for the utility function
+             * @param id ID (slug) of the utility function for which to create the meta data
+             * @param key Key of the metadata to create
+             * @param metadata
+             */
+            DefaultApi.prototype.userUtilityFunctionsIdMetadataKeyPost = function (user, id, key, metadata, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/utility_functions/{id}/metadata/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userUtilityFunctionsIdMetadataKeyPost');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userUtilityFunctionsIdMetadataKeyPost');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userUtilityFunctionsIdMetadataKeyPost');
+                }
+                // verify required parameter 'metadata' is set
+                if (!metadata) {
+                    throw new Error('Missing required parameter metadata when calling userUtilityFunctionsIdMetadataKeyPost');
+                }
+                var httpRequestParams = {
+                    method: 'POST',
+                    url: path,
+                    json: true,
+                    data: metadata,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             *
+             * Delete a metadata field for the chosen utility function
+             * @param user ID of the user for who to delete the meta data for the utility function
+             * @param id ID (slug) of the utility function for which to delete the meta data
+             * @param key The key of the meta data field to delete
+             */
+            DefaultApi.prototype.userUtilityFunctionsIdMetadataKeyDelete = function (user, id, key, extraHttpRequestParams) {
+                var path = this.basePath + '/{user}/utility_functions/{id}/metadata/{key}'
+                    .replace('{' + 'user' + '}', String(user))
+                    .replace('{' + 'id' + '}', String(id))
+                    .replace('{' + 'key' + '}', String(key));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'user' is set
+                if (!user) {
+                    throw new Error('Missing required parameter user when calling userUtilityFunctionsIdMetadataKeyDelete');
+                }
+                // verify required parameter 'id' is set
+                if (!id) {
+                    throw new Error('Missing required parameter id when calling userUtilityFunctionsIdMetadataKeyDelete');
+                }
+                // verify required parameter 'key' is set
+                if (!key) {
+                    throw new Error('Missing required parameter key when calling userUtilityFunctionsIdMetadataKeyDelete');
+                }
+                var httpRequestParams = {
+                    method: 'DELETE',
+                    url: path,
+                    json: true,
                     params: queryParameters,
                     headers: headerParams
                 };

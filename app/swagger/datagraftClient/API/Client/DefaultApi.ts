@@ -1499,6 +1499,350 @@ namespace API.Client {
         }
         /**
          * 
+         * Retrieve meta data for the chosen queriable data store
+         * @param user ID of the user for who to obtain the meta data for the queriable data store
+         * @param id ID (slug) of the queriable data store for which to retrieve the meta data
+         */
+        public userQueriableDataStoresIdMetadataGet (user: string, id: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/queriable_data_stores/{id}/metadata'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userQueriableDataStoresIdMetadataGet');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userQueriableDataStoresIdMetadataGet');
+            }
+            let httpRequestParams: any = {
+                method: 'GET',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Update meta data for the chosen queriable data store
+         * @param user ID of the user for who to update the meta data for the queriable data store
+         * @param id ID (slug) of the queriable data store for which to update the meta data
+         * @param metadata 
+         */
+        public userQueriableDataStoresIdMetadataPut (user: string, id: string, metadata: MetaData, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/queriable_data_stores/{id}/metadata'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userQueriableDataStoresIdMetadataPut');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userQueriableDataStoresIdMetadataPut');
+            }
+            // verify required parameter 'metadata' is set
+            if (!metadata) {
+                throw new Error('Missing required parameter metadata when calling userQueriableDataStoresIdMetadataPut');
+            }
+            let httpRequestParams: any = {
+                method: 'PUT',
+                url: path,
+                json: true,
+                data: metadata,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Create meta data for the chosen queriable data store
+         * @param user ID of the user for who to create the meta data for the queriable data store
+         * @param id ID (slug) of the queriable data store for which to create the meta data
+         * @param metadata 
+         */
+        public userQueriableDataStoresIdMetadataPost (user: string, id: string, metadata: MetaData, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/queriable_data_stores/{id}/metadata'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userQueriableDataStoresIdMetadataPost');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userQueriableDataStoresIdMetadataPost');
+            }
+            // verify required parameter 'metadata' is set
+            if (!metadata) {
+                throw new Error('Missing required parameter metadata when calling userQueriableDataStoresIdMetadataPost');
+            }
+            let httpRequestParams: any = {
+                method: 'POST',
+                url: path,
+                json: true,
+                data: metadata,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Delete meta data for the chosen queriable data store
+         * @param user ID of the user for who to delete the meta data for the queriable data store
+         * @param id ID (slug) of the queriable data store for which to delete the meta data
+         */
+        public userQueriableDataStoresIdMetadataDelete (user: string, id: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/queriable_data_stores/{id}/metadata'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userQueriableDataStoresIdMetadataDelete');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userQueriableDataStoresIdMetadataDelete');
+            }
+            let httpRequestParams: any = {
+                method: 'DELETE',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Retrieve meta data according to the given key for the chosen queriable data store
+         * @param user ID of the user for who to obtain the meta data for the queriable data store
+         * @param id ID (slug) of the queriable data store for which to retrieve the meta data
+         * @param key The key of the meta data field to obtain
+         */
+        public userQueriableDataStoresIdMetadataKeyGet (user: string, id: string, key: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/queriable_data_stores/{id}/metadata/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userQueriableDataStoresIdMetadataKeyGet');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userQueriableDataStoresIdMetadataKeyGet');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userQueriableDataStoresIdMetadataKeyGet');
+            }
+            let httpRequestParams: any = {
+                method: 'GET',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Update a meta data field for the chosen queriable data store
+         * @param user ID of the user for who to update the meta data for the queriable data store
+         * @param id ID (slug) of the queriable data store for which to update the meta data
+         * @param key The key of the meta data field to update
+         * @param metadata 
+         */
+        public userQueriableDataStoresIdMetadataKeyPut (user: string, id: string, key: string, metadata: MetaData, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/queriable_data_stores/{id}/metadata/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userQueriableDataStoresIdMetadataKeyPut');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userQueriableDataStoresIdMetadataKeyPut');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userQueriableDataStoresIdMetadataKeyPut');
+            }
+            // verify required parameter 'metadata' is set
+            if (!metadata) {
+                throw new Error('Missing required parameter metadata when calling userQueriableDataStoresIdMetadataKeyPut');
+            }
+            let httpRequestParams: any = {
+                method: 'PUT',
+                url: path,
+                json: true,
+                data: metadata,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Create a meta data field for the chosen queriable data store
+         * @param user ID of the user for who to create the meta data for the queriable data store
+         * @param id ID (slug) of the queriable data store for which to create the meta data
+         * @param key Key of the metadata to create
+         * @param metadata 
+         */
+        public userQueriableDataStoresIdMetadataKeyPost (user: string, id: string, key: string, metadata: MetaData, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/queriable_data_stores/{id}/metadata/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userQueriableDataStoresIdMetadataKeyPost');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userQueriableDataStoresIdMetadataKeyPost');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userQueriableDataStoresIdMetadataKeyPost');
+            }
+            // verify required parameter 'metadata' is set
+            if (!metadata) {
+                throw new Error('Missing required parameter metadata when calling userQueriableDataStoresIdMetadataKeyPost');
+            }
+            let httpRequestParams: any = {
+                method: 'POST',
+                url: path,
+                json: true,
+                data: metadata,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Delete a metadata field for the chosen queriable data store
+         * @param user ID of the user for who to delete the meta data for the queriable data store
+         * @param id ID (slug) of the queriable data store for which to delete the meta data
+         * @param key The key of the meta data field to delete
+         */
+        public userQueriableDataStoresIdMetadataKeyDelete (user: string, id: string, key: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/queriable_data_stores/{id}/metadata/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userQueriableDataStoresIdMetadataKeyDelete');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userQueriableDataStoresIdMetadataKeyDelete');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userQueriableDataStoresIdMetadataKeyDelete');
+            }
+            let httpRequestParams: any = {
+                method: 'DELETE',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
          * Star the selected queriable data
          * @param user ID of the user for who to star the queriable data
          * @param id ID (slug) of the queriable data to be stared
@@ -3174,7 +3518,7 @@ namespace API.Client {
          * 
          * Retrieve meta data for the chosen utility function
          * @param user ID of the user for who to obtain the meta data for the utility function
-         * @param id ID (slug) of the utility function for which retrieve the meta data
+         * @param id ID (slug) of the utility function for which to retrieve the meta data
          */
         public userUtilityFunctionsIdMetadataGet (user: string, id: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
             const path = this.basePath + '/{user}/utility_functions/{id}/metadata'
@@ -3209,9 +3553,52 @@ namespace API.Client {
         }
         /**
          * 
-         * Create meta data for the given utility function
+         * Update meta data for the chosen utility function
+         * @param user ID of the user for who to update the meta data for the utility function
+         * @param id ID (slug) of the utility function for which to update the meta data
+         * @param metadata 
+         */
+        public userUtilityFunctionsIdMetadataPut (user: string, id: string, metadata: MetaData, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/utility_functions/{id}/metadata'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userUtilityFunctionsIdMetadataPut');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userUtilityFunctionsIdMetadataPut');
+            }
+            // verify required parameter 'metadata' is set
+            if (!metadata) {
+                throw new Error('Missing required parameter metadata when calling userUtilityFunctionsIdMetadataPut');
+            }
+            let httpRequestParams: any = {
+                method: 'PUT',
+                url: path,
+                json: true,
+                data: metadata,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Create meta data for the chosen utility function
          * @param user ID of the user for who to create the meta data for the utility function
-         * @param id ID (slug) of the utility function for which to create meta data
+         * @param id ID (slug) of the utility function for which to create the meta data
          * @param metadata 
          */
         public userUtilityFunctionsIdMetadataPost (user: string, id: string, metadata: MetaData, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
@@ -3238,6 +3625,227 @@ namespace API.Client {
                 url: path,
                 json: true,
                 data: metadata,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Delete meta data for the chosen utility function
+         * @param user ID of the user for who to delete the meta data for the utility function
+         * @param id ID (slug) of the utility function for which to delete the meta data
+         */
+        public userUtilityFunctionsIdMetadataDelete (user: string, id: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/utility_functions/{id}/metadata'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userUtilityFunctionsIdMetadataDelete');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userUtilityFunctionsIdMetadataDelete');
+            }
+            let httpRequestParams: any = {
+                method: 'DELETE',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Retrieve meta data according to the given key for the chosen utility function
+         * @param user ID of the user for who to obtain the meta data for the utility function
+         * @param id ID (slug) of the utility function for which to retrieve the meta data
+         * @param key The key of the meta data field to obtain
+         */
+        public userUtilityFunctionsIdMetadataKeyGet (user: string, id: string, key: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/utility_functions/{id}/metadata/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userUtilityFunctionsIdMetadataKeyGet');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userUtilityFunctionsIdMetadataKeyGet');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userUtilityFunctionsIdMetadataKeyGet');
+            }
+            let httpRequestParams: any = {
+                method: 'GET',
+                url: path,
+                json: true,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Update a meta data field for the chosen utility function
+         * @param user ID of the user for who to update the meta data for the utility function
+         * @param id ID (slug) of the utility function for which to update the meta data
+         * @param key The key of the meta data field to update
+         * @param metadata 
+         */
+        public userUtilityFunctionsIdMetadataKeyPut (user: string, id: string, key: string, metadata: MetaData, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/utility_functions/{id}/metadata/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userUtilityFunctionsIdMetadataKeyPut');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userUtilityFunctionsIdMetadataKeyPut');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userUtilityFunctionsIdMetadataKeyPut');
+            }
+            // verify required parameter 'metadata' is set
+            if (!metadata) {
+                throw new Error('Missing required parameter metadata when calling userUtilityFunctionsIdMetadataKeyPut');
+            }
+            let httpRequestParams: any = {
+                method: 'PUT',
+                url: path,
+                json: true,
+                data: metadata,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Create a meta data field for the chosen utility function
+         * @param user ID of the user for who to create the meta data for the utility function
+         * @param id ID (slug) of the utility function for which to create the meta data
+         * @param key Key of the metadata to create
+         * @param metadata 
+         */
+        public userUtilityFunctionsIdMetadataKeyPost (user: string, id: string, key: string, metadata: MetaData, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/utility_functions/{id}/metadata/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userUtilityFunctionsIdMetadataKeyPost');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userUtilityFunctionsIdMetadataKeyPost');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userUtilityFunctionsIdMetadataKeyPost');
+            }
+            // verify required parameter 'metadata' is set
+            if (!metadata) {
+                throw new Error('Missing required parameter metadata when calling userUtilityFunctionsIdMetadataKeyPost');
+            }
+            let httpRequestParams: any = {
+                method: 'POST',
+                url: path,
+                json: true,
+                data: metadata,
+                
+                
+                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * 
+         * Delete a metadata field for the chosen utility function
+         * @param user ID of the user for who to delete the meta data for the utility function
+         * @param id ID (slug) of the utility function for which to delete the meta data
+         * @param key The key of the meta data field to delete
+         */
+        public userUtilityFunctionsIdMetadataKeyDelete (user: string, id: string, key: string, extraHttpRequestParams?: any ) : ng.IHttpPromise<{}> {
+            const path = this.basePath + '/{user}/utility_functions/{id}/metadata/{key}'
+                .replace('{' + 'user' + '}', String(user))
+                .replace('{' + 'id' + '}', String(id))
+                .replace('{' + 'key' + '}', String(key));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'user' is set
+            if (!user) {
+                throw new Error('Missing required parameter user when calling userUtilityFunctionsIdMetadataKeyDelete');
+            }
+            // verify required parameter 'id' is set
+            if (!id) {
+                throw new Error('Missing required parameter id when calling userUtilityFunctionsIdMetadataKeyDelete');
+            }
+            // verify required parameter 'key' is set
+            if (!key) {
+                throw new Error('Missing required parameter key when calling userUtilityFunctionsIdMetadataKeyDelete');
+            }
+            let httpRequestParams: any = {
+                method: 'DELETE',
+                url: path,
+                json: true,
                 
                 
                 params: queryParameters,
