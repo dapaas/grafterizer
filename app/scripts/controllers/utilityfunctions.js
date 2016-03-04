@@ -38,17 +38,17 @@ angular.module('grafterizerApp')
         Additional fields not stored on the server: 
             - visible (according to public/private/all, shown list is filtered on this variable)
             - isLoaded (if GET on id is already called)
-            - public.text (hover text for private/public button)
-            - public.icon (name of icon of above button)
+            - publicInfo.text (hover text for private/public button)
+            - publicInfo.icon (name of icon of above button)
             - changed (boolean for if it can be saved or not)
             - showDeleteOptions (boolean for showing the "Sure you want to delete?" option)
             
             
-        SelectedUF should then just be the id.
+        selectedUF should then just be the id.
         
         Need two lists with public ids and private ids.
         
-        New utility functions should have id "new" + newUfCounter - this is safe as all IDs are numerical. When saved, we should delete this entry, reload the new one and set the new one as selectedUF.
+        New utility functions should have id "new" + newUfCounter - this is safe as all IDs are numerical. When saved, we should delete this entry, reload the new one and set the new one as selectedUF. The new id (and updating counter) is done by generateNewUFid();
         
         Should really have some unit tests before doing this refactoring... :P
     */
@@ -57,6 +57,61 @@ angular.module('grafterizerApp')
     $scope.ufAll = {};
     $scope.publicUFs = [];
     $scope.privateUFs = [];
+    
+    $scope.selectedUF = undefined;
+    var newUFCounter = 0;
+    var generateNewUFid = function() {
+        var newID = "new" + newUFCounter;
+        newUFCounter = newUFCounter + 1;
+        return newID;
+    }
+    
+    // public and private objects
+    var publicField = {'text': "Public", 'icon': "people"};
+    var privateField = {'text': "Private", 'icon': "person"};
+    
+    // Load the list of utility functions
+    // This should only be done when loading the view.
+    var loadUFList = function() {
+        dataGraftApi.utilityFunctionsList().success( function(data) {
+            for (var i in data) {
+                var id = data[i].id;
+                $scope.ufAll[id] = data[i];
+                // Adding local fields:
+                $scope.ufAll[id].visible = true;
+                $scope.ufAll[id].isLoaded = false;
+                $scope.ufAll[id].changed = false;
+                $scope.ufAll[id].showDeleteOption = false;
+                if (typeof(data[i].public) !== 'undefined' 
+                    && data[i].public) {
+                    $scope.ufAll[id].publicInfo = publicField;
+                } else {
+                    $scope.ufAll[id].publicInfo = privateField;
+                }
+            }
+            var manahmanah = 2;
+        });
+    }
+    loadUFList();
+    
+    
+    $scope.switchShowAll = true; 
+    $scope.switchShowPublic = true;
+    $scope.switchShowPublicText = "Public only";
+    
+    $scope.updateUFList = function() {
+        if ($scope.switchShowAll) {
+            for (var id in $scope.ufAll) {
+                $scope.ufAll[id].visible = true;
+            }
+        } else {
+            for (var id in $scope.ufAll) {
+                $scope.ufAll[id].visible =                     ($scope.ufAll[id].public == $scope.switchShowPublic);
+            }
+        }
+    }
+    
+    
     
     // Old variables - should be deprecated
     $scope.ufListAll = [];
@@ -96,11 +151,11 @@ angular.module('grafterizerApp')
         $scope.ufListAll = [];
         ufListPublicIndices = [];
         updateUfStrs();
-        dataGraftApi.utilityFunctionsList(true).success( function(data) {
+        dataGraftApi.utilityFunctionsList().success( function(data) {
             $scope.ufListAll = data;
             updateUfStrs();
             for (var i in data) {
-                $scope.ufAll[data[i].id] = data[i];
+                //$scope.ufAll[data[i].id] = data[i];
                 if (data[i].public) {
                     ufListPublicIndices.push(true);
                     data[i].publicText = "Public";
@@ -117,9 +172,6 @@ angular.module('grafterizerApp')
     }
     $scope.listUtilityFunctions();
 
-    $scope.switchShowAll = true; 
-    $scope.switchShowPublic = true;
-    $scope.switchShowPublicText = "Public only";
     
     $scope.ufListUpdate = function() {
         resetSelectedUtilityFunction();

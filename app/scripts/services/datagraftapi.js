@@ -144,12 +144,8 @@ angular.module('grafterizerApp')
     
     // ----- UTILITY FUNCTIONS ---------------
     
-    this.utilityFunctionsList = function(showPublic) {
-        if (showPublic) {
-            return dgApi.userUtilityFunctionsGet(this.username);
-        } else {
-            // Insert dgApi.userUtilityFunctionsPublicGet when this exists.
-        }
+    this.utilityFunctionsList = function() {
+        return dgApi.userUtilityFunctionsGet(this.username);
     }
     
     this.utilityFunctionGet = function(id) {
