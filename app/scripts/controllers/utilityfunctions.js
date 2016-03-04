@@ -172,7 +172,24 @@ angular.module('grafterizerApp')
     }
     
     
+    $scope.saveChanges = function(id) {
+        var patch = {};
+        patch.configuration = {};
+        patch.configuration.clojure = $scope.ufAll[$scope.selectedUF].configuration.clojure;
+        console.log(pretty(patch));
+        dataGraftApi.utilityFunctionUpdateConfigurationByKey(id, "clojure", $scope.ufAll[id].configuration.clojure)
+            .success( function(data) {
+            $scope.ufAll[$scope.selectedUF].changed = false;
+            console.log("Response from save changes: " + pretty(data));
+        });
+    }
     
+    
+    
+    
+    $scope.cancelUtilityFunctionChanges = function() {
+        $mdDialog.cancel();
+    }
     
     
     // --- helpful "private" functions
@@ -187,6 +204,8 @@ angular.module('grafterizerApp')
             return privateField;
         }
     }
+    
+
     
     
     
@@ -321,20 +340,9 @@ angular.module('grafterizerApp')
         console.log("Not implemneted: Create new text transformation");
     }
     
-    $scope.cancelUtilityFunctionChanges = function() {
-        $mdDialog.cancel();
-    }
 
-    $scope.saveChanges = function() {
-        var patchUF = {};
-        //patchUF.configuration = "{'clojure': '" + $scope.selectedUtilityFunction.configuration.clojure + "'}";
-        patchUF.configuration.clojure = $scope.selectedUtilityFunction.configuration.clojure;
-        dataGraftApi.utilityFunctionPatch($scope.selectedUtilityFunction.id, patchUF)
-            .success( function(data) {
-            $scope.selectedUtilityFunction.changed = false;
-            console.log("Response from save changes: " + JSON.stringify(data));
-        });
-    }
+
+
     
     $scope.reloadUtilityFunction = function() {
         
