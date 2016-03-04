@@ -103,6 +103,27 @@ angular.module('grafterizerApp')
 
   });
 
+  customfunctions.push(
+    new transformationDataModel.CustomFunctionDeclaration(
+      'get-lat-long-strings-replacement', 
+      '(defn get-lat-long-strings-replacement [easting northing hemisphere zoneNumber] (let [utmCoords (. gov.nasa.worldwind.geom.coords.UTMCoord fromUTM (Integer/parseInt zoneNumber) (if (= hemisphere "N") "gov.nasa.worldwind.avkey.North" (if (= hemisphere "S") "gov.nasa.worldwind.avkey.East" (throw (Exception. "Wrong hemisphere input")))) (Double/parseDouble easting) (Double/parseDouble northing))] (vector (re-pattern easting) (str (.getDegrees (.getLatitude utmCoords))) (re-pattern northing) (str (.getDegrees (.getLongitude utmCoords))))))', 
+      'SERVICE', 
+      'Produces a pair of replacement coordinates for the given easting, northing, hemisphere letter and zone number'),
+
+    new transformationDataModel.CustomFunctionDeclaration(
+      'replace-several', 
+      '(defn replace-several [content replacements] (let [replacement-list (partition 2 replacements)] (reduce (fn [arg1 arg2] (apply clojure.string/replace arg1 arg2)) content replacement-list)))', 
+      'SERVICE',
+      'Replace several strings in another string based on a map of replacement pairs (used with "get-lat-long-strings-replacement" results to convert coordinates)'),
+
+    new transformationDataModel.CustomFunctionDeclaration(
+      'convert-col-lat-long', 
+      '(defn convert-col-lat-long [col hemisphere zoneNumber] (let [all-coords (re-seq (re-pattern "-?[0-9]{1,13}.[0-9]+") col)] (replace-several col (flatten (map (fn [coord-pair] (get-lat-long-strings-replacement (nth coord-pair 0) (nth coord-pair 1) hemisphere zoneNumber)) (partition 2 all-coords))))))', 
+      'SERVICE',
+      'Convert coordinate pairs in a given cell by input hemisphere string ("N" or "S") and zone number (e.g., 32)')
+
+  );
+  
   var predicatefunctions = [
     new transformationDataModel.CustomFunctionDeclaration('empty?', '', 'PREDICATE', 'Returns true if given collection has no items'),
     new transformationDataModel.CustomFunctionDeclaration('not-empty?', '(def not-empty? (complement empty?))', 'PREDICATE', 'Returns true if given collection has at least 1 item'),
@@ -131,7 +152,7 @@ angular.module('grafterizerApp')
       'zero?', '', 'PREDICATE', 'Returns true if argument is zero, else false')];
 
   var numericcustomfunctions = [new transformationDataModel.CustomFunctionDeclaration(
-    ' +', '', 'NUMBER', ''),
+    '+', '', 'NUMBER', ''),
                                 new transformationDataModel.CustomFunctionDeclaration(
                                   '-', '', 'NUMBER', ''),
                                 new transformationDataModel.CustomFunctionDeclaration(
@@ -418,14 +439,12 @@ angular.module('grafterizerApp')
     if (data.__type === 'Transformation') {
       transformation = transformationDataModel.Transformation.revive(
         data);
-
       // TODO: dirty but necessary for now
       var shownUpdateMessage = false;
       angular.forEach(allcustomfunctions, function (expectedCFD) {
         var foundCfd = false;
         angular.forEach(transformation.customFunctionDeclarations, function (cfd) {
           if(cfd.name == expectedCFD.name){
-
             foundCfd = true;
           }
         });
@@ -453,7 +472,6 @@ angular.module('grafterizerApp')
       );
       return loadEmptyTransformation();
     }
-
     $scope.transformation = transformation;
     $rootScope.transformation = $scope.transformation;
     if (transformation.pipelines && transformation.pipelines.length) {
