@@ -80,12 +80,8 @@ angular.module('grafterizerApp')
                 $scope.ufAll[id].isLoaded = false;
                 $scope.ufAll[id].changed = false;
                 $scope.ufAll[id].showDeleteOption = false;
-                if (typeof(data[i].public) !== 'undefined' 
-                    && data[i].public) {
-                    $scope.ufAll[id].publicInfo = publicField;
-                } else {
-                    $scope.ufAll[id].publicInfo = privateField;
-                }
+                $scope.ufAll[id].publicInfo =
+                    getPublicInfo(data[i].public);
             }
             var manahmanah = 2;
         });
@@ -137,15 +133,69 @@ angular.module('grafterizerApp')
         }
     }
     
+    $scope.markAsChanged = function() {
+        $scope.ufAll[$scope.selectedUF].changed = true;
+    }
+    
+    $scope.changePublicity = function() {
+        var patch = {};
+        patch.public = !$scope.ufAll[$scope.selectedUF].public;
+        dataGraftApi.utilityFunctionPatch($scope.selectedUF, patch)
+            .success(function (data) {
+                console.log("changed publicity");
+                $scope.ufAll[$scope.selectedUF].public = data.public;
+                $scope.ufAll[$scope.selectedUF].publicInfo = getPublicInfo(data.public);
+                
+                $scope.updateUFList();
+                //$scope.reloadUtilityFunction();
+        });
+    }
+    
+    $scope.showDelete = function() {
+        $scope.ufAll[$scope.selectedUF].showDeleteOption = true;
+    }
+    $scope.abortDelete = function() {
+        $scope.ufAll[$scope.selectedUF].showDeleteOption = false;
+    }
+    
+    // If the user is fast, the user can change selectedUF before
+    // the request is successful, and we therefore take id as input
+    // to be sure we remove the correct entry.
+    $scope.deleteUtilityFunction = function(id) {
+        dataGraftApi.utilityFunctionDelete(id).success( function(data) {
+            console.log("Deleted UF " + id + " successfully");
+            delete $scope.ufAll[id];
+            if ($scope.selectedUF === id) {
+                $scope.selectedUF = undefined;
+            }
+        });
+    }
     
     
     
     
     
+    // --- helpful "private" functions
+    var pretty = function(data) {
+        return JSON.stringify(data, null, 2);
+    }
+    
+    var getPublicInfo = function(pub) {
+        if (typeof(pub) !== 'undefined' && pub) {
+            return publicField;
+        } else {
+            return privateField;
+        }
+    }
     
     
     
+    
+    
+    // --------------------------------------------
     // Old variables - should be deprecated
+    // --------------------------------------------
+    
     $scope.ufListAll = [];
     $scope.ufListToShow = [];
     var ufListPublicIndices = [];
@@ -259,48 +309,9 @@ angular.module('grafterizerApp')
         }
     }
     
-    $scope.changePublicity = function() {
-        var patchUF = {};
-        patchUF.public = !$scope.selectedUtilityFunction.public;
-        dataGraftApi.utilityFunctionPatch($scope.selectedUtilityFunction.id, patchUF)
-            .success(function (data) {
-                console.log("changed publicity");
-                // Using the response data to update local variables
-                $scope.selectedUtilityFunction[id] = data;
-                for (var i in $scope.ufListAll) {
-                    if ($scope.ufListAll[i].id == data.id) {
-                        console.log("Response from patch publicity\n" + JSON.stringify(data[i]));
-                        $scope.ufListAll[i].public = data.public;
-                        $scope.ufListAll[i].publicText = data.public ? "Public" : "Private";
-                        $scope.ufListAll[i].publicIcon = data.public ? "people" : "person";
-                        ufListPublicIndices[i] = !ufListPublicIndices[i];
-                    }
-                }
-                $scope.reloadUtilityFunction();
-                $scope.ufListUpdate();
-        });
-    }
-    
-    $scope.showDelete = function() {
-        $scope.selectedUtilityFunction.showDeleteOption = true;
-    }
-    $scope.abortDelete = function() {
-        $scope.selectedUtilityFunction.showDeleteOption = false;
-    }
-    
-    $scope.deleteUtilityFunction = function(id) {
-        //Need to remove uf from $scope.ufListAll, $scope.ufListToShow, ufListPublicIndices.
-        for (var i in $scope.ufListAll) {
-            if (id == $scope.ufListAll[i].id) {
-                $scope.ufListAll.splice(i, 1);
-                ufListPublicIndices.splice(i, 1);
-            }
-        }
-        $scope.ufListUpdate();
 
-        console.log("'Deleting' utility function " + id);
-        dataGraftApi.utilityFunctionDelete(id);
-    }
+    
+    
     
     $scope.createNewUtilityFunction = function() {
         console.log("Not implemented: Create new utility function");
@@ -333,10 +344,7 @@ angular.module('grafterizerApp')
         console.log("Resetting: " + $scope.selectedUtilityFunction.name);
     }
     
-    $scope.markAsChanged = function() {
-        $scope.ufLoaded[$scope.selectedUtilityFunction.id].changed = true;
-    }
-    
+  
     
     
     // ------ Below this line should be in parent controller --------- //

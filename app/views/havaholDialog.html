@@ -50,17 +50,17 @@
                     <ui-codemirror ng-model="ufAll[selectedUF].configuration.clojure" ui-codemirror-opts="codemirrorOpts" ng-keydown="markAsChanged()"></ui-codemirror>
                 </div>
             <md-toolbar class="md-actions" layout="row" layout-align="right">
-                <md-button aria-label="Abort delete" ng-click="abortDelete()" ng-hide="!selectedUtilityFunction.showDeleteOption" class="md-raised md-primary">
+                <md-button aria-label="Abort delete" ng-click="abortDelete()" ng-hide="!ufAll[selectedUF].showDeleteOption" class="md-raised md-primary">
                     Abort delete
                 </md-button>
-                <md-button aria-label="Confirm delete" ng-click="deleteUtilityFunction(selectedUtilityFunction.id)" ng-hide="!selectedUtilityFunction.showDeleteOption" class="md-raised md-warn">
+                <md-button aria-label="Confirm delete" ng-click="deleteUtilityFunction(selectedUF)" ng-hide="!ufAll[selectedUF].showDeleteOption" class="md-raised md-warn">
                     Confirm delete
                 </md-button>
                 <md-button aria-label="Discard changes" ng-click="reloadUtilityFunction()" ng-hide ="!selectedUtilityFunction.changed">
                     <md-tooltip>Discard changes</md-tooltip>
                     <i class="material-icons">clear</i>
                 </md-button>
-                <md-button aria-label="Save changes" ng-click="saveChanges()" ng-hide="!selectedUtilityFunction.changed">
+                <md-button aria-label="Save changes" ng-click="saveChanges()" ng-hide="!ufAll[selectedUF].changed">
                     <md-tooltip>Save changes</md-tooltip>
                     <i class="material-icons">save</i>
                 </md-button>
