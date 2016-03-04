@@ -55,8 +55,6 @@ angular.module('grafterizerApp')
     
     // New variables
     $scope.ufAll = {};
-    $scope.publicUFs = [];
-    $scope.privateUFs = [];
     
     $scope.selectedUF = undefined;
     var newUFCounter = 0;
@@ -110,6 +108,40 @@ angular.module('grafterizerApp')
             }
         }
     }
+    
+    // Need to set selectedUF at the end so that we are sure that
+    // the clojure code is loaded
+    $scope.setSelectedUF = function(id) {
+        if (!$scope.ufAll[id].isLoaded) {
+            console.log("Loading utility function " + id);
+            dataGraftApi.utilityFunctionGet(id).success( function(data) {
+                // Copy each field from data into the correct ufAll
+                for (var i in data) {
+                    $scope.ufAll[id][i] = data[i];
+                }
+                
+                // Check if configuration field exist
+                if( typeof($scope.ufAll[id].configuration) === 'undefinied' || $scope.ufAll[id].configuration === null) {
+                    $scope.ufAll[id].configuration = {};
+                }
+                // Check if clojure code exists
+                if (typeof($scope.ufAll[id].configuration.clojure) === 'undefined' || $scope.ufAll[id].configuration.clojure === null) {
+                    $scope.ufAll[id].configuration.clojure = "// No clojure code yet...";
+                }
+                
+                $scope.ufAll[id].isLoaded = true;
+                $scope.selectedUF = id;                
+            });
+        } else {
+            $scope.selectedUF = id;
+        }
+    }
+    
+    
+    
+    
+    
+    
     
     
     
