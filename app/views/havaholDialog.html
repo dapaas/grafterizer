@@ -56,7 +56,7 @@
                 <md-button aria-label="Confirm delete" ng-click="deleteUtilityFunction(selectedUF)" ng-hide="!ufAll[selectedUF].showDeleteOption" class="md-raised md-warn">
                     Confirm delete
                 </md-button>
-                <md-button aria-label="Discard changes" ng-click="reloadUtilityFunction()" ng-hide ="!selectedUtilityFunction.changed">
+                <md-button aria-label="Discard changes" ng-click="reloadUtilityFunction(selectedUF)" ng-hide ="!ufAll[selectedUF].changed">
                     <md-tooltip>Discard changes</md-tooltip>
                     <i class="material-icons">clear</i>
                 </md-button>

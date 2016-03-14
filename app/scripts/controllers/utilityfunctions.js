@@ -84,7 +84,6 @@ angular.module('grafterizerApp')
                 $scope.ufAll[id].publicInfo =
                     getPublicInfo(data[i].public);
             }
-            var manahmanah = 2;
         });
     }
     loadUFList();
@@ -206,31 +205,10 @@ angular.module('grafterizerApp')
     }
     
     $scope.reloadUtilityFunction = function(id) {
-        console.log("Resetting " + id);
-        dataGraftApi.utilityFunctionGet(id).success( function(data) {
-            console.log("Resat " + id + ":\n" + pretty(data));
-            // Copy each field from data into the correct ufAll
-            /*for (var i in data) {
-                $scope.ufAll[id][i] = data[i];
-            }
-
-            // Check if configuration field exist
-            if( typeof($scope.ufAll[id].configuration) === 'undefinied' || $scope.ufAll[id].configuration === null) {
-                $scope.ufAll[id].configuration = {};
-            }
-            // Check if clojure code exists
-            if (typeof($scope.ufAll[id].configuration.clojure) === 'undefined' || $scope.ufAll[id].configuration.clojure === null) {
-                $scope.ufAll[id].configuration.clojure = "// No clojure code yet...";
-            }
-
-            $scope.ufAll[id].isLoaded = true;
-            $scope.selectedUF = id;   */             
-        });
-        
-        //delete $scope.ufLoaded[$scope.selectedUtilityFunction.id];
-        //setSelectedUtilityFunctionById($scope.selectedUtilityFunction.id);
-        
-        console.log("Resetting: " + $scope.selectedUtilityFunction.name);
+        console.log("Resetting: " + id);
+        $scope.ufAll[id].isLoaded = false;
+        $scope.ufAll[id].changed = false;
+        $scope.setSelectedUF(id);
     }
     
     
