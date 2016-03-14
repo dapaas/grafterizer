@@ -42,6 +42,7 @@ angular.module('grafterizerApp')
             - publicInfo.icon (name of icon of above button)
             - changed (boolean for if it can be saved or not)
             - showDeleteOptions (boolean for showing the "Sure you want to delete?" option)
+            - serverHasClojure (boolean if clojure code exists. Makes a different for POST or PUT changed clojure code)
             
             
         selectedUF should then just be the id.
@@ -100,7 +101,7 @@ angular.module('grafterizerApp')
             }
         } else {
             for (var id in $scope.ufAll) {
-                $scope.ufAll[id].visible =                     ($scope.ufAll[id].public == $scope.switchShowPublic);
+                $scope.ufAll[id].visible = ($scope.ufAll[id].public == $scope.switchShowPublic);
             }
         }
     }
@@ -121,7 +122,9 @@ angular.module('grafterizerApp')
                     $scope.ufAll[id].configuration = {};
                 }
                 // Check if clojure code exists
+                $scope.ufAll[id].serverHasClojure = true;
                 if (typeof($scope.ufAll[id].configuration.clojure) === 'undefined' || $scope.ufAll[id].configuration.clojure === null) {
+                    $scope.ufAll[id].serverHasClojure = false;
                     $scope.ufAll[id].configuration.clojure = "// No clojure code yet...";
                 }
                 
@@ -174,17 +177,61 @@ angular.module('grafterizerApp')
     
     $scope.saveChanges = function(id) {
         var patch = {};
-        patch.configuration = {};
-        patch.configuration.clojure = $scope.ufAll[$scope.selectedUF].configuration.clojure;
+        patch.clojure = $scope.ufAll[$scope.selectedUF].configuration.clojure;
         console.log(pretty(patch));
-        dataGraftApi.utilityFunctionUpdateConfigurationByKey(id, "clojure", $scope.ufAll[id].configuration.clojure)
-            .success( function(data) {
-            $scope.ufAll[$scope.selectedUF].changed = false;
-            console.log("Response from save changes: " + pretty(data));
-        });
+        if ($scope.ufAll[id].serverHasClojure) {
+            console.log("Updating clojure for " + id);
+            dataGraftApi.utilityFunctionUpdateConfigurationByKey(id, "clojure", $scope.ufAll[id].configuration.clojure)
+                .success( function(data) {
+                    $scope.ufAll[id].changed = false;
+                    console.log("Response from save changes: " + pretty(data));
+                    logServerUtilityFunction(id);
+                });
+        } else {
+            console.log("Creating clojure for " + id);
+            dataGraftApi.utilityFunctionCreateConfiguration(id, patch)
+                .success( function(data) {
+                    $scope.ufAll[id].changed = false;
+                    $scope.ufAll[id].serverHasClojure = true;
+                    logServerUtilityFunction(id);
+                });
+        }
     }
     
+    var logServerUtilityFunction = function(id) {
+        dataGraftApi.utilityFunctionGet(id).success( function(data) {
+            console.log("Server version of " + id + ":\n" + pretty(data));
+        });
+
+    }
     
+    $scope.reloadUtilityFunction = function(id) {
+        console.log("Resetting " + id);
+        dataGraftApi.utilityFunctionGet(id).success( function(data) {
+            console.log("Resat " + id + ":\n" + pretty(data));
+            // Copy each field from data into the correct ufAll
+            /*for (var i in data) {
+                $scope.ufAll[id][i] = data[i];
+            }
+
+            // Check if configuration field exist
+            if( typeof($scope.ufAll[id].configuration) === 'undefinied' || $scope.ufAll[id].configuration === null) {
+                $scope.ufAll[id].configuration = {};
+            }
+            // Check if clojure code exists
+            if (typeof($scope.ufAll[id].configuration.clojure) === 'undefined' || $scope.ufAll[id].configuration.clojure === null) {
+                $scope.ufAll[id].configuration.clojure = "// No clojure code yet...";
+            }
+
+            $scope.ufAll[id].isLoaded = true;
+            $scope.selectedUF = id;   */             
+        });
+        
+        //delete $scope.ufLoaded[$scope.selectedUtilityFunction.id];
+        //setSelectedUtilityFunctionById($scope.selectedUtilityFunction.id);
+        
+        console.log("Resetting: " + $scope.selectedUtilityFunction.name);
+    }
     
     
     $scope.cancelUtilityFunctionChanges = function() {
@@ -344,13 +391,7 @@ angular.module('grafterizerApp')
 
 
     
-    $scope.reloadUtilityFunction = function() {
-        
-        delete $scope.ufLoaded[$scope.selectedUtilityFunction.id];
-        setSelectedUtilityFunctionById($scope.selectedUtilityFunction.id);
-        
-        console.log("Resetting: " + $scope.selectedUtilityFunction.name);
-    }
+
     
   
     
