@@ -144,10 +144,7 @@ angular.module('grafterizerApp')
     $scope.changePublicity = function() {
         var id = $scope.selectedUF;
         if ($scope.ufAll[id].isNew) {
-            $scope.ufAll[id].public = !$scope.ufAll[id].public
-            $scope.ufAll[id].publicInfo = getPublicInfo($scope.ufAll[id].public);
-            
-            $scope.updateUFList();
+            changePublicityLocally(id);
         }
         else {
             var patch = {};
@@ -155,14 +152,18 @@ angular.module('grafterizerApp')
             dataGraftApi.utilityFunctionPatch(id, patch)
                 .success(function (data) {
                     console.log("changed publicity");
-                    $scope.ufAll[id].public = data.public;
-                    $scope.ufAll[id].publicInfo = getPublicInfo(data.public);
-
-                    $scope.updateUFList();
-                    //$scope.reloadUtilityFunction();
+                    changePublicityLocally(id);
             });
         }
     }
+    
+    var changePublicityLocally = function(id) {
+        $scope.ufAll[id].public = !$scope.ufAll[id].public
+        $scope.ufAll[id].publicInfo = getPublicInfo($scope.ufAll[id].public);
+
+        $scope.updateUFList();
+    }
+    
         
     $scope.showDelete = function() {
         $scope.ufAll[$scope.selectedUF].showDeleteOption = true;
@@ -175,13 +176,21 @@ angular.module('grafterizerApp')
     // the request is successful, and we therefore take id as input
     // to be sure we remove the correct entry.
     $scope.deleteUtilityFunction = function(id) {
-        dataGraftApi.utilityFunctionDelete(id).success( function(data) {
-            console.log("Deleted UF " + id + " successfully");
-            delete $scope.ufAll[id];
-            if ($scope.selectedUF === id) {
-                $scope.selectedUF = undefined;
-            }
-        });
+        if ($scope.ufAll[id].isNew) {
+            deleteUFLocally(id);
+        } else {
+            dataGraftApi.utilityFunctionDelete(id).success( function(data) {
+                console.log("Deleted UF " + id + " successfully");
+                deleteUFLocally(id);
+            });
+        }
+    }
+    
+    var deleteUFLocally = function(id) {
+        delete $scope.ufAll[id];
+        if ($scope.selectedUF === id) {
+            $scope.selectedUF = undefined;
+        }
     }
     
     
