@@ -62,15 +62,15 @@
                 </md-button>
                 <md-button aria-label="Discard changes" ng-click="reloadUtilityFunction(selectedUF)" ng-hide ="!ufAll[selectedUF].changed || ufAll[selectedUF].isNew">
                     <md-tooltip>Discard changes</md-tooltip>
-                    <i class="material-icons">clear</i>
+                    <i class="fa fa-trash-o fa-lg"></i>
                 </md-button>
                 <md-button aria-label="Save changes" ng-click="saveChanges(selectedUF)" ng-hide="!ufAll[selectedUF].changed || ufAll[selectedUF].isNew || ufAll[selectedUF].nameWarning">
                     <md-tooltip>Save changes</md-tooltip>
-                    <i class="material-icons">save</i>
+                    <i class="fa fa-floppy-o fa-lg"></i>
                 </md-button>
                 <md-button aria-label="Save new function" ng-click="saveNewUtilityFunction(selectedUF)" ng-hide="!ufAll[selectedUF].isNew || ufAll[selectedUF].nameWarning">
                     <md-tooltip>Save utility function</md-tooltip>
-                    <i class="material-icons">save</i>
+                    <i class="fa fa-floppy-o fa-lg"></i>
                 </md-button>
                 <md-button ng-click="cancelUtilityFunctionChanges()"  aria-label="Cancel changes to utility functions">Done</md-button>
             </md-toolbar>

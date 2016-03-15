@@ -41,7 +41,6 @@ angular.module('grafterizerApp')
             - visible (according to public/private/all, shown list is filtered on this variable)
             - isLoaded (if GET on id is already called)
             - publicInfo.text (hover text for private/public button)
-            - publicInfo.icon (name of icon of above button)
             - changed (boolean for if it can be saved or not)
             - showDeleteOptions (boolean for showing the "Sure you want to delete?" option)
             - serverHasClojure (boolean if clojure code exists. Makes a different for POST or PUT changed clojure code)
@@ -71,8 +70,8 @@ angular.module('grafterizerApp')
     }
     
     // public and private objects
-    var publicField = {'text': "Public", 'icon': "people"};
-    var privateField = {'text': "Private", 'icon': "person"};
+    var publicField = {'text': "Public"};
+    var privateField = {'text': "Private"};
     
     // Load the list of utility functions
     // This should only be done when loading the view.
