@@ -148,6 +148,10 @@ angular.module('grafterizerApp')
         return dgApi.userUtilityFunctionsGet(this.username);
     }
     
+    this.utilityFunctionCreate = function(utilityFunction) {
+        return dgApi.userUtilityFunctionsPost(this.username, utilityFunction)
+    }
+    
     this.utilityFunctionGet = function(id) {
         return dgApi.userUtilityFunctionsIdGet(this.username, id);
     }

@@ -27,7 +27,9 @@ angular.module('grafterizerApp')
     $scope.log = function(a) {
         console.log(a);
     }
-
+    var log = function(a) {
+        console.log(a);
+    }
     
     /* 
         Large required refactoring:
@@ -216,6 +218,37 @@ angular.module('grafterizerApp')
                 });
         }
     }
+    
+    // Saving a brand new utility function
+    $scope.saveNewUtilityFunction = function(id) {
+        // Should we build this object here, or in datagraftapi.js???
+        var newUF = {};
+        newUF.public = $scope.ufAll[id].public;
+        newUF.name = $scope.ufAll[id].name;
+        newUF.configuration = {};
+        newUF.configuration.clojure = $scope.ufAll[id].configuration.clojure;
+        log("creating new utilityFunction from:\n" + pretty(newUF));
+        dataGraftApi.utilityFunctionCreate(newUF).success(function(data) {
+            log("Creating new UF - response from server:\n" + pretty(data));
+            var reloadedUF = $scope.ufAll[id];
+            reloadedUF.isNew = false;
+            reloadedUF.isLoaded = true;
+            reloadedUF.changed = false;
+            //reloadedUF.serverHasClojure = true;
+            reloadedUF.id = data.id;
+            delete $scope.ufAll[id];
+            $scope.ufAll[data.id] = reloadedUF;
+            $scope.setSelectedUF(data.id);
+            
+            // Hack fix to store clojure:
+            $scope.saveChanges(data.id);
+            
+        });
+        
+    }
+    
+    
+    
     
     var logServerUtilityFunction = function(id) {
         dataGraftApi.utilityFunctionGet(id).success( function(data) {
