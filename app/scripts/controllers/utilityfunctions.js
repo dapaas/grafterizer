@@ -43,6 +43,7 @@ angular.module('grafterizerApp')
             - changed (boolean for if it can be saved or not)
             - showDeleteOptions (boolean for showing the "Sure you want to delete?" option)
             - serverHasClojure (boolean if clojure code exists. Makes a different for POST or PUT changed clojure code)
+            - isNew (is this a new utility function or not?)
             
             
         selectedUF should then just be the id.
@@ -81,6 +82,7 @@ angular.module('grafterizerApp')
                 $scope.ufAll[id].isLoaded = false;
                 $scope.ufAll[id].changed = false;
                 $scope.ufAll[id].showDeleteOption = false;
+                $scope.ufAll[id].isNew = false;
                 $scope.ufAll[id].publicInfo =
                     getPublicInfo(data[i].public);
             }
@@ -140,19 +142,28 @@ angular.module('grafterizerApp')
     }
     
     $scope.changePublicity = function() {
-        var patch = {};
-        patch.public = !$scope.ufAll[$scope.selectedUF].public;
-        dataGraftApi.utilityFunctionPatch($scope.selectedUF, patch)
-            .success(function (data) {
-                console.log("changed publicity");
-                $scope.ufAll[$scope.selectedUF].public = data.public;
-                $scope.ufAll[$scope.selectedUF].publicInfo = getPublicInfo(data.public);
-                
-                $scope.updateUFList();
-                //$scope.reloadUtilityFunction();
-        });
+        var id = $scope.selectedUF;
+        if ($scope.ufAll[id].isNew) {
+            $scope.ufAll[id].public = !$scope.ufAll[id].public
+            $scope.ufAll[id].publicInfo = getPublicInfo($scope.ufAll[id].public);
+            
+            $scope.updateUFList();
+        }
+        else {
+            var patch = {};
+            patch.public = !$scope.ufAll[id].public;
+            dataGraftApi.utilityFunctionPatch(id, patch)
+                .success(function (data) {
+                    console.log("changed publicity");
+                    $scope.ufAll[id].public = data.public;
+                    $scope.ufAll[id].publicInfo = getPublicInfo(data.public);
+
+                    $scope.updateUFList();
+                    //$scope.reloadUtilityFunction();
+            });
+        }
     }
-    
+        
     $scope.showDelete = function() {
         $scope.ufAll[$scope.selectedUF].showDeleteOption = true;
     }
@@ -210,6 +221,31 @@ angular.module('grafterizerApp')
         $scope.ufAll[id].changed = false;
         $scope.setSelectedUF(id);
     }
+    
+    
+    $scope.createNewUtilityFunction = function() {
+        var newUF = {};
+        newUF.isNew = true;
+        
+        newUF.visible = true;
+        newUF.isLoaded = true;
+        newUF.public = false;
+        newUF.publicInfo = getPublicInfo(newUF.public);
+        newUF.changed = true;
+        newUF.showDeleteOption = false;
+        newUF.serverHasClojure = false;
+        newUF.configuration = {};
+        newUF.configuration.clojure = "// Please write your clojure code here";
+        
+        var id = generateNewUFid();
+        $scope.ufAll[id] = newUF;
+        
+        $scope.setSelectedUF(id);
+    }
+    
+
+    
+    
     
     
     $scope.cancelUtilityFunctionChanges = function() {
@@ -357,9 +393,7 @@ angular.module('grafterizerApp')
     
     
     
-    $scope.createNewUtilityFunction = function() {
-        console.log("Not implemented: Create new utility function");
-    }
+
     
     $scope.createNewTextTransformation = function() {
         console.log("Not implemneted: Create new text transformation");
