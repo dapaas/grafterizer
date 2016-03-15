@@ -39,10 +39,6 @@
                 
             </md-content>
             <md-toolbar class="md-actions" layout = "row" layout-align="left">
-                <md-input-container>
-                    <label>New name</label>
-                    <input type="text" ng-model="ufAll[selectedUF].name" ng-hide=!ufAll[selectedUF].isNew>
-                </md-input-container>
                 <md-button aria-label="Create new function" ng-click="createNewUtilityFunction()">
                     <md-tooltip>New utility function</md-tooltip>
                     <i class="fa fa-plus"></i>
@@ -68,11 +64,11 @@
                     <md-tooltip>Discard changes</md-tooltip>
                     <i class="material-icons">clear</i>
                 </md-button>
-                <md-button aria-label="Save changes" ng-click="saveChanges(selectedUF)" ng-hide="!ufAll[selectedUF].changed || ufAll[selectedUF].isNew">
+                <md-button aria-label="Save changes" ng-click="saveChanges(selectedUF)" ng-hide="!ufAll[selectedUF].changed || ufAll[selectedUF].isNew || ufAll[selectedUF].nameWarning">
                     <md-tooltip>Save changes</md-tooltip>
                     <i class="material-icons">save</i>
                 </md-button>
-                <md-button aria-label="Save new function" ng-click="saveNewUtilityFunction(selectedUF)" ng-hide="!ufAll[selectedUF].isNew">
+                <md-button aria-label="Save new function" ng-click="saveNewUtilityFunction(selectedUF)" ng-hide="!ufAll[selectedUF].isNew || ufAll[selectedUF].nameWarning">
                     <md-tooltip>Save utility function</md-tooltip>
                     <i class="material-icons">save</i>
                 </md-button>

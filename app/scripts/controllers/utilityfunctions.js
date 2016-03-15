@@ -46,6 +46,8 @@ angular.module('grafterizerApp')
             - showDeleteOptions (boolean for showing the "Sure you want to delete?" option)
             - serverHasClojure (boolean if clojure code exists. Makes a different for POST or PUT changed clojure code)
             - isNew (is this a new utility function or not?)
+            - nameIsChanged (do we have to update the name as well when saving changed code?)
+            - nameWarning (make a warning to the user about the name being used already)
             
             
         selectedUF should then just be the id.
@@ -85,6 +87,8 @@ angular.module('grafterizerApp')
                 $scope.ufAll[id].changed = false;
                 $scope.ufAll[id].showDeleteOption = false;
                 $scope.ufAll[id].isNew = false;
+                $scope.ufAll[id].nameIsChanged = false;
+                $scope.ufAll[id].nameWarning = false;
                 $scope.ufAll[id].publicInfo =
                     getPublicInfo(data[i].public);
             }
@@ -209,6 +213,7 @@ angular.module('grafterizerApp')
                     $scope.ufAll[id].changed = false;
                     console.log("Response from save changes: " + pretty(data));
                     logServerUtilityFunction(id);
+                    updateNameServerSide(id);
                 });
         } else {
             console.log("Creating clojure for " + id);
@@ -217,6 +222,19 @@ angular.module('grafterizerApp')
                     $scope.ufAll[id].changed = false;
                     $scope.ufAll[id].serverHasClojure = true;
                     logServerUtilityFunction(id);
+                    updateNameServerSide(id);
+            });
+        }
+    }
+    
+    var updateNameServerSide = function(id) {
+        if ($scope.ufAll[id].nameIsChanged) {
+            var patchedUF = {};
+            patchedUF.name = $scope.ufAll[id].name;
+            log("Should update name to be: " + pretty(patchedUF));
+            dataGraftApi.utilityFunctionPatch(id, patchedUF).success(
+                function(data) {
+                    log("Name updated with response: " + pretty(data));
                 });
         }
     }
@@ -324,8 +342,41 @@ angular.module('grafterizerApp')
 
 
 
-    
+    // clojure.substr(clojure.indexOf("(defn ") + 6, clojure.substr(clojure.indexOf("(defn ") + 6).indexOf(" "))
 
+    
+    var functionName = /\(defn?\s+([^\s\)]+)/i;
+    $scope.$watch('ufAll[selectedUF].configuration.clojure', function() {
+        
+        var id = $scope.selectedUF; 
+        
+        if (!id) return;
+        
+        var code = $scope.ufAll[id].configuration.clojure;
+        if (!code) return;
+        
+        var m = code.match(functionName);
+        if (m) {
+            var name = m[1];
+            if ($scope.ufAll[id].name == name) return;
+            
+            $scope.ufAll[id].name = name;
+            $scope.ufAll[id].nameIsChanged = true;
+            $scope.ufAll[id].changed = true;
+            
+            var conflict = false;
+            for (var i in $scope.ufAll) {
+                if (($scope.ufAll[i].name == name) && (i != id)) {
+                    conflict = true;
+                }
+            }
+            $scope.ufAll[id].nameWarning = conflict;
+            
+        }
+    });
+    
+    
+    
     
   
     
