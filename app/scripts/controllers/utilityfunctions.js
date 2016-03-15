@@ -143,8 +143,7 @@ angular.module('grafterizerApp')
         $scope.ufAll[$scope.selectedUF].changed = true;
     }
     
-    $scope.changePublicity = function() {
-        var id = $scope.selectedUF;
+    $scope.changePublicity = function(id) {
         if ($scope.ufAll[id].isNew) {
             changePublicityLocally(id);
         }
@@ -198,7 +197,7 @@ angular.module('grafterizerApp')
     
     $scope.saveChanges = function(id) {
         var patch = {};
-        patch.clojure = $scope.ufAll[$scope.selectedUF].configuration.clojure;
+        patch.clojure = $scope.ufAll[id].configuration.clojure;
         console.log(pretty(patch));
         if ($scope.ufAll[id].serverHasClojure) {
             console.log("Updating clojure for " + id);
