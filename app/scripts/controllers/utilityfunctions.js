@@ -161,7 +161,10 @@ angular.module('grafterizerApp')
     var changePublicityLocally = function(id) {
         $scope.ufAll[id].public = !$scope.ufAll[id].public
         $scope.ufAll[id].publicInfo = getPublicInfo($scope.ufAll[id].public);
-
+        if (!$scope.switchShowAll) {
+            // The UF will no longer be listed
+            $scope.selectedUF = undefined;
+        }
         $scope.updateUFList();
     }
     
@@ -309,128 +312,6 @@ angular.module('grafterizerApp')
     
 
     
-    
-    
-    
-    
-    // --------------------------------------------
-    // Old variables - should be deprecated
-    // --------------------------------------------
-    
-    $scope.ufListAll = [];
-    $scope.ufListToShow = [];
-    var ufListPublicIndices = [];
-    
-    // New table containing the clojure code as well
-    $scope.ufLoaded = {}; // A look up table - no need to iterate
-    
-    $scope.selectedUtilityFunction = {};
-    $scope.hideSwitchSelectedIsPublic = true;
-    $scope.switchSelectedIsPublic = false;
-
-    
-    // ---- Just for simple testing - start ----
-    $scope.ufListAllStr = "hang on...";
-    $scope.ufListPrivateStr = "hang on...";
-    $scope.ufListPublicStr = "hang on...";
-    var stringifyUfList = function(showPublic) {
-        var listToStringify = [];
-        for(var i in $scope.ufListAll) {
-            if (showPublic == ufListPublicIndices[i]) {
-                listToStringify.push($scope.ufListAll[i]);
-            }
-        }
-        return JSON.stringify(listToStringify, null, 4);
-    }
-    var updateUfStrs = function() {
-        //$scope.ufListAllStr =  JSON.stringify($scope.ufListAll, null, 4);
-        //$scope.ufListPrivateStr = stringifyUfList(false);
-        //$scope.ufListPublicStr = stringifyUfList(true);
-    }    
-    // ---- Just for simple testing - end ----    
-    
-    
-    $scope.listUtilityFunctions = function() {
-        $scope.ufListAll = [];
-        ufListPublicIndices = [];
-        updateUfStrs();
-        dataGraftApi.utilityFunctionsList().success( function(data) {
-            $scope.ufListAll = data;
-            updateUfStrs();
-            for (var i in data) {
-                //$scope.ufAll[data[i].id] = data[i];
-                if (data[i].public) {
-                    ufListPublicIndices.push(true);
-                    data[i].publicText = "Public";
-                    data[i].publicIcon = "people";
-                } else {
-                    ufListPublicIndices.push(false);
-                    data[i].publicText = "Private";
-                    data[i].publicIcon = "person"
-                }
-            }
-            updateUfStrs();
-            $scope.ufListToShow = $scope.ufListAll;
-        });
-    }
-    $scope.listUtilityFunctions();
-
-    
-    $scope.ufListUpdate = function() {
-        resetSelectedUtilityFunction();
-        console.log("Updating utility function list");
-        $scope.switchShowPublicText = $scope.switchShowPublic ? "Public only" : "Private only";
-        if ($scope.switchShowAll) {
-            $scope.ufListToShow = $scope.ufListAll;
-        } else {
-            $scope.ufListToShow = [];
-            for (var i in $scope.ufListAll) {
-                if (ufListPublicIndices[i] === $scope.switchShowPublic) {
-                    $scope.ufListToShow.push($scope.ufListAll[i]);
-                }
-            }
-        }
-    }
-
-    var resetSelectedUtilityFunction = function() {
-        $scope.selectedUtilityFunction = {};
-        $scope.hideSwitchSelectedIsPublic = true;
-    }
-    var updateSwitchSelectedIsPublic = function() {
-        $scope.hideSwitchSelectedIsPublic = false;
-        $scope.switchSelectedIsPublic = $scope.false;
-        if ($scope.selectedUtilityFunction.public) {
-            $scope.switchSelectedIsPublic = true;
-        }
-    }
-    
-    $scope.setSelectedUtilityFunction = function(uf) {
-        console.log("Selecting utility function: " + JSON.stringify(uf, null, 2));
-        setSelectedUtilityFunctionById(uf.id);
-    }
-    var setSelectedUtilityFunctionById = function(id) {
-        if (typeof $scope.ufLoaded[id] === "undefined") {
-            dataGraftApi.utilityFunctionGet(id).success( function(data) {
-                $scope.selectedUtilityFunction = data;
-                if ($scope.selectedUtilityFunction.configuration === null
-                   || typeof $scope.selectedUtilityFunction.configuration === "undefined") {
-                    $scope.selectedUtilityFunction.configuration = {};
-                }
-                if ($scope.selectedUtilityFunction.configuration.clojure === null 
-                    || typeof $scope.selectedUtilityFunction.configuration.clojure === "undefined") {
-                    $scope.selectedUtilityFunction.configuration.clojure = "// Could not find clojure code...";
-                }
-                updateSwitchSelectedIsPublic();
-                $scope.selectedUtilityFunction.changed = false;
-                $scope.selectedUtilityFunction.showDeleteOption = false;
-                $scope.ufLoaded[id] = $scope.selectedUtilityFunction;
-            });
-        } else {
-            $scope.selectedUtilityFunction = $scope.ufLoaded[id];
-        }
-    }
-    
-
     
     
     

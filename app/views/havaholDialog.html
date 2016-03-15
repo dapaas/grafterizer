@@ -17,7 +17,7 @@
         <div class="content-stuff utility-functions" layout="column" flex="33">
             <md-content class="sin-functions-list" layout="column" flex md-scroll-y>
                 <md-button ng-repeat="(id,function) in ufAll" ng-show="function.visible" ng-click="setSelectedUF(id)"  ng-disabled="id == selectedUF">{{function.name}}
-                    <md-button class="button-tight" aria-label="Delete this function" ng-click="showDelete()" ng-hide="id != selectedUF">
+                    <md-button class="button-tight sin-utilty-function-sub-buttons" aria-label="Delete this function" ng-click="showDelete()" ng-hide="id != selectedUF">
                         <i class="fa fa-minus-circle"></i>
                         <md-tooltip>Delete this function</md-tooltip>
                     </md-button>
@@ -26,8 +26,12 @@
                         <md-tooltip>A function already exists with the same name</md-tooltip>
                     </span>
                     <span flex></span>
-                    <md-button class="button-tight" ng-disabled="id != selectedUF" ng-click="changePublicity()">
-                        <i class="material-icons">{{function.publicInfo.icon}}</i>
+                    <md-button class="button-tight sin-utility-function-sub-buttons" ng-disabled="id != selectedUF" ng-click="changePublicity(selectedUF)" ng-hide="!ufAll[id].public">
+                        <i class="fa fa-unlock"></i>
+                        <md-tooltip>{{function.publicInfo.text}}</md-tooltip>
+                    </md-button>
+                    <md-button class="button-tight sin-utility-function-sub-buttons" ng-disabled="id != selectedUF" ng-click="changePublicity(selectedUF)" ng-hide="ufAll[id].public">
+                        <i class="fa fa-lock"></i>
                         <md-tooltip>{{function.publicInfo.text}}</md-tooltip>
                     </md-button>
                 </md-button>
@@ -72,7 +76,7 @@
                     <md-tooltip>Save utility function</md-tooltip>
                     <i class="material-icons">save</i>
                 </md-button>
-                <md-button ng-click="cancelUtilityFunctionChanges()"  aria-label="Cancel changes to custom functions">Cancel</md-button>
+                <md-button ng-click="cancelUtilityFunctionChanges()"  aria-label="Cancel changes to utility functions">Done</md-button>
             </md-toolbar>
         </div>
     </md-dialog-content>
