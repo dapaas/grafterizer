@@ -20,6 +20,21 @@ angular.module('grafterizerApp')
       'Karma'
     ];
     
+    // settings for the code text field
+    $scope.codemirrorOpts = {
+      lineWrapping: true,
+      lineNumbers: true,
+      mode: 'clojure',
+      theme: 'monokai'
+    };
+    // Fix to properly align line numbers:
+    window.setTimeout(function() {
+      _.each(document.getElementsByClassName('CodeMirror'), function(el) {
+        el.CodeMirror.refresh();
+      });
+    }, 250);
+    
+    
     
     $scope.consoleTest = function() {
         console.log("This is the consoleTest functions");
@@ -345,6 +360,8 @@ angular.module('grafterizerApp')
 
     
     var functionName = /\(defn?\s+([^\s\)]+)/i;
+    
+    // $Watch gives a list of variables that should have more complex update behaviour when they are modified.
     $scope.$watch('ufAll[selectedUF].configuration.clojure', function() {
         
         var id = $scope.selectedUF; 
