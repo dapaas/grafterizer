@@ -25,7 +25,8 @@ angular.module('grafterizerApp')
       lineWrapping: true,
       lineNumbers: true,
       mode: 'clojure',
-      theme: 'monokai'
+      theme: 'monokai',
+      readOnly: 'nocursor'
     };
     // Fix to properly align line numbers:
     window.setTimeout(function() {
@@ -36,9 +37,6 @@ angular.module('grafterizerApp')
     
     
     
-    $scope.consoleTest = function() {
-        console.log("This is the consoleTest functions");
-    }
     $scope.log = function(a) {
         console.log(a);
     }
@@ -286,7 +284,7 @@ angular.module('grafterizerApp')
     
     var logServerUtilityFunction = function(id) {
         dataGraftApi.utilityFunctionGet(id).success( function(data) {
-            console.log("Server version of " + id + ":\n" + pretty(data));
+            log("Server version of " + id + ":\n" + pretty(data));
         });
 
     }
@@ -334,7 +332,7 @@ angular.module('grafterizerApp')
     }
     
     $scope.createNewTextTransformation = function() {
-        console.log("Not implemneted: Create new text transformation");
+        log("Not implemneted: Create new text transformation");
     }
     
 
@@ -349,7 +347,6 @@ angular.module('grafterizerApp')
     
     // $Watch gives a list of variables that should have more complex update behaviour when they are modified.
     $scope.$watch('ufAll[selectedUF].configuration.clojure', function() {
-        
         var id = $scope.selectedUF; 
         
         if (!id) return;
@@ -376,5 +373,32 @@ angular.module('grafterizerApp')
             
         }
     });
- 
+    
+    // We need to have selected a UF in order to modify the code
+    $scope.$watch('selectedUF', function() {
+        var undef = (typeof $scope.selectedUF === 'undefined');
+        var nocursor = ($scope.codemirrorOpts.readOnly == 'nocursor');
+        
+        if (undef && !nocursor) {
+            $scope.codemirrorOpts.readOnly = 'nocursor';
+        }
+        else if (!undef && nocursor) {
+            $scope.codemirrorOpts.readOnly = false;
+        }
+    });
+    
+    // Need to monitor two more variables... This becomes messy...
+    $scope.$watch('switchShowAll', function() {
+        if ($scope.selectedUF === undefined) return;
+        if ($scope.switchShowAll) return;
+        if ($scope.switchShowPublic === $scope.ufAll[$scope.selectedUF].public) return;
+        
+        $scope.selectedUF = undefined;
+    });
+    $scope.$watch('switchShowPublic', function() {
+        if ($scope.selectedUF === undefined) return;
+        if ($scope.switchShowPublic === $scope.ufAll[$scope.selectedUF].public) return;
+        
+        $scope.selectedUF = undefined;
+    });
 });
