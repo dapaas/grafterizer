@@ -37,11 +37,11 @@ angular.module('grafterizerApp')
     
     
     
-    $scope.log = function(a) {
-        console.log(a);
-    }
+    var _debug_ = false;
     var log = function(a) {
-        console.log(a);
+        if (_debug_) {
+            console.log(a);
+        }
     }
     
     /* 
@@ -129,7 +129,7 @@ angular.module('grafterizerApp')
     // the clojure code is loaded
     $scope.setSelectedUF = function(id) {
         if (!$scope.ufAll[id].isLoaded) {
-            console.log("Loading utility function " + id);
+            log("Loading utility function " + id);
             dataGraftApi.utilityFunctionGet(id).success( function(data) {
                 // Copy each field from data into the correct ufAll
                 for (var i in data) {
@@ -168,7 +168,7 @@ angular.module('grafterizerApp')
             patch.public = !$scope.ufAll[id].public;
             dataGraftApi.utilityFunctionPatch(id, patch)
                 .success(function (data) {
-                    console.log("changed publicity");
+                    log("changed publicity");
                     changePublicityLocally(id);
             });
         }
@@ -200,7 +200,7 @@ angular.module('grafterizerApp')
             deleteUFLocally(id);
         } else {
             dataGraftApi.utilityFunctionDelete(id).success( function(data) {
-                console.log("Deleted UF " + id + " successfully");
+                log("Deleted UF " + id + " successfully");
                 deleteUFLocally(id);
             });
         }
@@ -217,18 +217,18 @@ angular.module('grafterizerApp')
     $scope.saveChanges = function(id) {
         var patch = {};
         patch.clojure = $scope.ufAll[id].configuration.clojure;
-        console.log(pretty(patch));
+        log(pretty(patch));
         if ($scope.ufAll[id].serverHasClojure) {
-            console.log("Updating clojure for " + id);
+            log("Updating clojure for " + id);
             dataGraftApi.utilityFunctionUpdateConfigurationByKey(id, "clojure", $scope.ufAll[id].configuration.clojure)
                 .success( function(data) {
                     $scope.ufAll[id].changed = false;
-                    console.log("Response from save changes: " + pretty(data));
+                    log("Response from save changes: " + pretty(data));
                     logServerUtilityFunction(id);
                     updateNameServerSide(id);
                 });
         } else {
-            console.log("Creating clojure for " + id);
+            log("Creating clojure for " + id);
             dataGraftApi.utilityFunctionCreateConfiguration(id, patch)
                 .success( function(data) {
                     $scope.ufAll[id].changed = false;
@@ -290,7 +290,7 @@ angular.module('grafterizerApp')
     }
     
     $scope.reloadUtilityFunction = function(id) {
-        console.log("Resetting: " + id);
+        log("Resetting: " + id);
         $scope.ufAll[id].isLoaded = false;
         $scope.ufAll[id].changed = false;
         $scope.setSelectedUF(id);
