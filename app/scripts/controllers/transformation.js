@@ -255,6 +255,21 @@ angular.module('grafterizerApp')
         angular.copy($scope.originalPrefixers, $scope.transformation.prefixers);
       });
     };
+    
+    // This function should open the dialog box and set controller for it.
+    // Let's try to use the same controller as we're already in :)
+    $scope.defineUtilityFunctions = function() {
+      //$scope.originalCustomFunctionDeclarations = [];
+      //angular.copy($scope.transformation.customFunctionDeclarations, $scope
+      //    .originalCustomFunctionDeclarations);
+      $mdDialog.show({
+        templateUrl: 'views/utilityfunctiondialog.html',
+        controller: 'UtilityFunctionsCtrl',
+        scope: $scope.$new(false, $scope),
+        clickOutsideToClose: true
+      }).then(
+        function() {});//,
+    };
 
     $scope.defineCustomFunctions = function() {
       $scope.originalCustomFunctionDeclarations = [];

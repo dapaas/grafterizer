@@ -318,16 +318,7 @@ angular.module('grafterizerApp')
         
         $scope.setSelectedUF(id);
     }
-    
-
-    
-    
-    
-    
-    $scope.cancelUtilityFunctionChanges = function() {
-        $mdDialog.cancel();
-    }
-    
+        
     
     // --- helpful "private" functions
     var pretty = function(data) {
@@ -342,20 +333,15 @@ angular.module('grafterizerApp')
         }
     }
     
-
-    
-    
-    
-    
-
-    
     $scope.createNewTextTransformation = function() {
         console.log("Not implemneted: Create new text transformation");
     }
     
 
-
-
+    $scope.cancelUtilityFunctionChanges = function() {
+        $mdDialog.cancel();
+    }
+    
     // clojure.substr(clojure.indexOf("(defn ") + 6, clojure.substr(clojure.indexOf("(defn ") + 6).indexOf(" "))
 
     
@@ -390,166 +376,5 @@ angular.module('grafterizerApp')
             
         }
     });
-    
-    
-    
-    
-  
-    
-    
-    // ------ Below this line should be in parent controller --------- //
-    
-    // This function should open the dialog box and set controller for it.
-    // Let's try to use the same controller as we're already in :)
-    $scope.defineCustomFunctions = function() {
-      //$scope.originalCustomFunctionDeclarations = [];
-      //angular.copy($scope.transformation.customFunctionDeclarations, $scope
-      //    .originalCustomFunctionDeclarations);
-      $mdDialog.show({
-        templateUrl: 'views/havaholDialog.html',
-        controller: 'UtilityFunctionsCtrl',
-        scope: $scope.$new(false, $scope),
-        clickOutsideToClose: true
-      }).then(
-        function() {});//,
-
-        //function() {
-        //  angular.copy($scope.originalCustomFunctionDeclarations, $scope.transformation
-        //    .customFunctionDeclarations);
-        //});
-    };
-    
-    
-    $scope.apiKey = dataGraftApi.apiKey;
-
-
-    // ---------- Testing transformations with metadata ---------
-    
-    var metadata = ['{"weather": "sunny", "smurning": "vr40", "good": "oyeah"}',
-                    '{"metadata": "yeah"}',
-                    '{"metadata": "yeah", "snow": "some"}'];
-    
-    //$scope.utilityFunctionsObj = metadata;
-    var id = "testah";
-    $scope.testText = "Currently nothing is tested";
-    $scope.getMetaData = function() {
-        dataGraftApi.transformationGetMetadata(id).success(function(data) {
-            $scope.testText = JSON.stringify(data, null, 2);
-        });
-    }
-    $scope.getMetaData();
-    
-    $scope.testMetadata = function(md) {
-        dataGraftApi.transformationCreateMetadata(id, metadata[md]).success(function(data) {
-                $scope.testText = JSON.stringify(data, null, 2);
-                dataGraftApi.transformationGetMetadata(id).success(function(data) {
-                    $scope.testText = JSON.stringify(data, null, 2);
-                });
-        });
-    }
-    
-    $scope.metadataKey;
-    $scope.metadataValue;
-    $scope.updateMetaData = function() {
-        dataGraftApi.transformationUpdateMetadataByKey(id, $scope.metadataKey, $scope.metadataValue).success(function(data) {
-            console.log(data);
-            $scope.getMetaData();
-        });
-    }
-    $scope.createMetaData = function() {
-        dataGraftApi.transformationCreateMetadataByKey(id, $scope.metadataKey, $scope.metadataValue).success( function(data) {
-            console.log(data);
-            $scope.getMetaData();
-        });
-    }
-    $scope.deleteMetaData = function() {
-        dataGraftApi.transformationDeleteMetadataByKey(id, $scope.metadataKey).success( function(data) {
-            console.log(data);
-            $scope.getMetaData();
-        });
-    }
-   
-    // ---------- TESTING CONFIGURATION ---------
-    
-    var configuration = ['{"weather": "sunny", "smurning": "vr40", "good": "oyeah"}',
-                    '{"configuration": "yeah"}',
-                    '{"configuration": "yeah", "snow": "some"}'];
-    $scope.cftestText = "Currently nothing is tested";
-    $scope.getConfiguration = function() {
-        dataGraftApi.transformationGetConfiguration(id).success(function(data) {
-            $scope.cftestText = JSON.stringify(data, null, 2);
-        });
-    }
-    $scope.getConfiguration();
-    
-    $scope.testConfiguration = function(conf) {
-        dataGraftApi.transformationCreateConfiguration(id, configuration[conf]).success(function(data) {
-                console.log(JSON.stringify(data, null, 2));
-                $scope.getConfiguration();
-        });
-    }
-    
-    $scope.configKey;
-    $scope.configValue;
-    $scope.updateConfig = function() {
-        dataGraftApi.transformationUpdateConfigurationByKey(id, $scope.configKey, $scope.configValue).success(function(data) {
-            console.log(data);
-            $scope.getConfiguration();
-        });
-    }
-    $scope.createConfig = function() {
-        dataGraftApi.transformationCreateConfigurationByKey(id, $scope.configKey, $scope.configValue).success( function(data) {
-            console.log(data);
-            $scope.getConfiguration();
-        });
-    }
-    $scope.deleteConfig = function() {
-        dataGraftApi.transformationDeleteConfigurationByKey(id, $scope.configKey).success( function(data) {
-            console.log(data);
-            $scope.getConfiguration();
-        });
-    }
-    
-    // ---------- TESTING UTILITY FUNCTION CONFIGURATION ----
-            
-    var uf = "26";
-    var configuration = ['{"weather": "sunny", "smurning": "vr40", "good": "oyeah"}',
-                    '{"configuration": "yeah"}',
-                    '{"configuration": "yeah", "snow": "some"}'];
-    $scope.ufcftestText = "Currently nothing is tested";
-    $scope.getUFConfiguration = function() {
-        dataGraftApi.utilityFunctionGetConfiguration(uf).success(function(data) {
-            $scope.ufcftestText = JSON.stringify(data, null, 2);
-        });
-    }
-    $scope.getUFConfiguration();
-    
-    $scope.testUFConfiguration = function(conf) {
-        dataGraftApi.utilityFunctionCreateConfiguration(uf, configuration[conf]).success(function(data) {
-                console.log(JSON.stringify(data, null, 2));
-                $scope.getUFConfiguration();
-        });
-    }
-    
-    $scope.UFconfigKey;
-    $scope.UFconfigValue;
-    $scope.updateUFConfig = function() {
-        dataGraftApi.utilityFunctionUpdateConfigurationByKey(uf, $scope.UFconfigKey, $scope.UFconfigValue).success(function(data) {
-            console.log(data);
-            $scope.getUFConfiguration();
-        });
-    }
-    $scope.createUFConfig = function() {
-        dataGraftApi.utilityFunctionCreateConfigurationByKey(uf, $scope.UFconfigKey, $scope.UFconfigValue).success( function(data) {
-            console.log(data);
-            $scope.getUFConfiguration();
-        });
-    }
-    $scope.deleteUFConfig = function() {
-        dataGraftApi.utilityFunctionDeleteConfigurationByKey(uf, $scope.UFconfigKey).success( function(data) {
-            console.log(data);
-            $scope.getUFConfiguration();
-        });
-    }
-    
+ 
 });
