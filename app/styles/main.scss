@@ -681,13 +681,6 @@ graph-mapping div {
 
   &[disabled] {
     // background-color: #006400;
-    background-color: #272822;
-    color: white;
-    cursor: default;
-  }
-  
-  &[enabled] {
-    // background-color: #006400;
     background-color:#272822;
     color: white;
     cursor: default;
@@ -744,16 +737,7 @@ graph-mapping div {
     .md-button {
       float:right;
     }
-    
   }
-    
-  & > .md-button[enabled] {
-      padding-right:0;
-      .md-button {
-        float:right;
-      }
-
-    }
 }
 
 .utility-functions .sin-functions-list .sin-utility-function-sub-buttons {
