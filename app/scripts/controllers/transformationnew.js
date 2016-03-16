@@ -112,7 +112,7 @@ angular.module('grafterizerApp')
   customfunctions.push(
     new transformationDataModel.CustomFunctionDeclaration(
       'get-lat-long-strings-replacement', 
-      '(defn get-lat-long-strings-replacement [easting northing hemisphere zoneNumber] (let [utmCoords (. gov.nasa.worldwind.geom.coords.UTMCoord fromUTM (Integer/parseInt zoneNumber) (if (= hemisphere "N") "gov.nasa.worldwind.avkey.North" (if (= hemisphere "S") "gov.nasa.worldwind.avkey.East" (throw (Exception. "Wrong hemisphere input")))) (Double/parseDouble easting) (Double/parseDouble northing))] (vector (re-pattern easting) (str (.getDegrees (.getLatitude utmCoords))) (re-pattern northing) (str (.getDegrees (.getLongitude utmCoords))))))', 
+      '(defn get-lat-long-strings-replacement [easting northing hemisphere zoneNumber] (let [utmCoords (. gov.nasa.worldwind.geom.coords.UTMCoord fromUTM (Integer/parseInt zoneNumber) (if (= hemisphere "N") "gov.nasa.worldwind.avkey.North" (if (= hemisphere "S") "gov.nasa.worldwind.avkey.East" (throw (Exception. "Wrong hemisphere input")))) (Double/parseDouble easting) (Double/parseDouble northing))] (vector (re-pattern easting) (str (.getDegrees (.getLongitude utmCoords))) (re-pattern northing) (str (.getDegrees (.getLatitude utmCoords))))))', 
       'SERVICE', 
       'Produces a pair of replacement coordinates for the given easting, northing, hemisphere letter and zone number'),
 
