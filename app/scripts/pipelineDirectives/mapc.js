@@ -29,49 +29,49 @@ angular.module('grafterizerApp')
         _.extend(newFunction, scope.function);
         scope.function = newFunction;
       }
-        scope.colnames = (typeof scope.$parent.$root.colnames === 'undefined') ? [] : scope.$parent.$root.colnames();
-var colCtr = 0;
-scope.addColumn = function(query) {
-    return { 
-        id: colCtr++,
-        value: query
-    };
-};
-        scope.$parent.generateCurrFunction = function() {
-          return new transformationDataModel.MapcFunction(scope.function.keyFunctionPairs, scope.function.docstring);
+      scope.colnames = (typeof scope.$parent.$root.colnames === 'undefined') ? [] : scope.$parent.$root.colnames();
+      var colCtr = 0;
+      scope.addColumn = function(query) {
+        return { 
+          id: colCtr++,
+          value: query
         };
+      };
+      scope.$parent.generateCurrFunction = function() {
+        return new transformationDataModel.MapcFunction(scope.function.keyFunctionPairs, scope.function.docstring);
+      };
 
-scope.getCustomFunctionsAndPrefixers = function() {
+      scope.getCustomFunctionsAndPrefixers = function() {
 
-var customFunctionsAndPrefixers = [];
-for (var i = 0; i < scope.$parent.transformation.customFunctionDeclarations.length; ++i) {
-    customFunctionsAndPrefixers.push({
-        name: scope.$parent.transformation.customFunctionDeclarations[i].name,
-        clojureCode: scope.$parent.transformation.customFunctionDeclarations[i].clojureCode,
-        group: scope.$parent.transformation.customFunctionDeclarations[i].group,
-        id: i}
-        );
-}
-for (var i = 0; i < scope.$parent.transformation.prefixers.length; ++i) {
-    customFunctionsAndPrefixers.push({
-        name: scope.$parent.transformation.prefixers[i].name,
-        group: 'PREFIXERS',
-        id: customFunctionsAndPrefixers.length}
-        );
-}
-return customFunctionsAndPrefixers;
-};
+        var customFunctionsAndPrefixers = [];
+        for (var i = 0; i < scope.$parent.transformation.customFunctionDeclarations.length; ++i) {
+          customFunctionsAndPrefixers.push({
+            name: scope.$parent.transformation.customFunctionDeclarations[i].name,
+            clojureCode: scope.$parent.transformation.customFunctionDeclarations[i].clojureCode,
+            group: scope.$parent.transformation.customFunctionDeclarations[i].group,
+            id: i}
+                                          );
+        }
+        for (var i = 0; i < scope.$parent.transformation.prefixers.length; ++i) {
+          customFunctionsAndPrefixers.push({
+            name: scope.$parent.transformation.prefixers[i].name,
+            group: 'PREFIXERS',
+            id: customFunctionsAndPrefixers.length}
+                                          );
+        }
+        return customFunctionsAndPrefixers;
+      };
 
-        scope.addKeyFunctionPair = function() {
-            var newKeyFunctionPair = new transformationDataModel.KeyFunctionPair('',{name:'string-literal',
-           group:'CONVERT_DATATYPE',
-           id:0},[]);
-            this.function.keyFunctionPairs.push(newKeyFunctionPair);
+      scope.addKeyFunctionPair = function() {
+        var newKeyFunctionPair = new transformationDataModel.KeyFunctionPair('',{name:'string-literal',
+                                                                                 group:'CONVERT_DATATYPE',
+                                                                                 id:0},[]);
+        this.function.keyFunctionPairs.push(newKeyFunctionPair);
       };
       scope.removeKeyFunctionPair = function(kfPair) {
         scope.function.removeKeyFunctionPair(kfPair);
       };
-  //    console.log(scope);
+      //    console.log(scope);
     }
   };
 });

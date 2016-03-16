@@ -1,65 +1,65 @@
 <div layout="column">
-    <div>
-        <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
-        <div ng-show = "showUsage" layout="column" class="api-doc-docstring">
-            <p> Takes a vector of functions and maps each to the key column for every row. Both cell-to-cell and collection-to-collection functions may be used </p>
-              <p> <b>Example: </b></p>
-                <p> Given original dataset containing records about persons firstnames and lastnames: </p>
-                <table  class="doc-table">
-                    <tr>
-                        <td> firstName </td>
-                        <td> lastName </td>
-                    </tr>
-                    <tr>
-                        <td> Alice </td>
-                        <td> Smith </td>
-                    </tr>
-                    <tr>
-                        <td> Bob </td>
-                        <td> Johnson </td>
-                    </tr>
-                    <tr>
-                        <td> Mary </td>
-                        <td> Williams </td>
-                    </tr>
-            </table>
-            
-            <p><img src="/images/mapc.png"></p>
-            <a href="http://api.grafter.org/master/grafter.tabular.html#var-mapc" target="_blank">view source</a>
-        </div>
-        </div>
-        <div>
-        <h3>Parameters</h3>
-<md-button class="md-raised" ng-click="addKeyFunctionPair()" aria-label="Add mapping" ng-disabled="$root.readonlymode">Add mapping</md-button>
-<div layout="row"  ng-repeat="keyFunctionPair in function.keyFunctionPairs">
-    <div layout="row">
+  <div>
+    <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
+    <div ng-show = "showUsage" layout="column" class="api-doc-docstring">
+      <p> Takes a vector of functions and maps each to the key column for every row. Both cell-to-cell and collection-to-collection functions may be used </p>
+      <p> <b>Example: </b></p>
+      <p> Given original dataset containing records about persons firstnames and lastnames: </p>
+      <table  class="doc-table">
+        <tr>
+          <td> firstName </td>
+          <td> lastName </td>
+        </tr>
+        <tr>
+          <td> Alice </td>
+          <td> Smith </td>
+        </tr>
+        <tr>
+          <td> Bob </td>
+          <td> Johnson </td>
+        </tr>
+        <tr>
+          <td> Mary </td>
+          <td> Williams </td>
+        </tr>
+      </table>
+
+      <p><img src="/images/mapc.png"></p>
+      <a href="http://api.grafter.org/master/grafter.tabular.html#var-mapc" target="_blank">view source</a>
+    </div>
+  </div>
+  <div>
+    <h3>Parameters</h3>
+    <md-button class="md-raised" ng-click="addKeyFunctionPair()" aria-label="Add mapping" ng-disabled="$root.readonlymode">Add mapping</md-button>
+    <div layout="row" ng-repeat="keyFunctionPair in function.keyFunctionPairs">
+      <div layout="row" layout-align="start center">
         <md-button class="md-primary button-tight md-default-theme" ng-disabled="function.keyFunctionPairs.length === 1 || $root.readonlymode" ng-click="removeKeyFunctionPair(keyFunctionPair)" aria-label="Remove column mapping">
-            <i class="fa fa-trash fa-lg"></i>
+          <i class="fa fa-trash fa-lg"></i>
         </md-button>
         <div layout="column" flex style = "min-width:200px">
-                <label>Column</label>
-        <oi-select ng-show = "colnames.length !== 0" oi-options="column.value for column in colnames track by column.id" ng-model="keyFunctionPair.key" ng-disabled="$root.readonlymode"></oi-select>
-        <oi-select ng-show = "colnames.length === 0" oi-options="column.value for column in []" ng-model="keyFunctionPair.key" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-disabled="$root.readonlymode"></oi-select>
+          <label>Column</label>
+          <oi-select ng-show = "colnames.length !== 0" oi-options="column.value for column in colnames track by column.id" ng-model="keyFunctionPair.key" ng-disabled="$root.readonlymode"></oi-select>
+          <oi-select ng-show = "colnames.length === 0" oi-options="column.value for column in []" ng-model="keyFunctionPair.key" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-disabled="$root.readonlymode"></oi-select>
         </div>
-                          <div layout="column" flex style="margin-left:20px; min-width:200px">
-                <label>Function</label>
-        <!--oi-select oi-options="customFunction.name group by customFunction.group for customFunction in  transformation.customFunctionDeclarations track by customFunction.$$hashKey" title="customFunction.docstring"   ng-model="keyFunctionPair.func" ng-disabled="$root.readonlymode"></oi-select-->
-        <oi-select oi-options="customFunction.name group by customFunction.group for customFunction in  getCustomFunctionsAndPrefixers() track by customFunction.id" title="customFunction.docstring"   ng-model="keyFunctionPair.func" ng-disabled="$root.readonlymode"></oi-select>
-    </div>
-    <div layout = "row" ng-repeat = "param in keyFunctionPair.getParams()" >
-        <md-input-container>
-        <label>{{param}}</label>
-        <input ng-model = "keyFunctionPair.funcParams[$index]">
-        </md-input-container> 
-    
-    </div>
-    </div>
+        <div layout="column" flex style="margin-left:20px; min-width:200px">
+          <label>Function</label>
+          <!--oi-select oi-options="customFunction.name group by customFunction.group for customFunction in  transformation.customFunctionDeclarations track by customFunction.$$hashKey" title="customFunction.docstring"   ng-model="keyFunctionPair.func" ng-disabled="$root.readonlymode"></oi-select-->
+          <oi-select oi-options="customFunction.name group by customFunction.group for customFunction in  getCustomFunctionsAndPrefixers() track by customFunction.id" title="customFunction.docstring" ng-model="keyFunctionPair.func" ng-disabled="$root.readonlymode"></oi-select>
+        </div>
+        <div layout="column" style="margin-left:20px">
+          <md-input-container ng-repeat="param in keyFunctionPair.getParams()">
+            <label>{{param}}</label>
+            <input ng-model = "keyFunctionPair.funcParams[$index]">
+          </md-input-container> 
 
-</div>
+        </div>
+      </div>
+
+    </div>
     <md-input-container flex>
-        <label>Comment</label>
+      <label>Comment</label>
 
-        <input ng-model="function.docstring" type="text" ng-readonly="$root.readonlymode">
+      <input ng-model="function.docstring" type="text" ng-readonly="$root.readonlymode">
     </md-input-container>
-</div>
+  </div>
 </div>
