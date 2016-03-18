@@ -187,19 +187,19 @@ angular.module('grafterizerApp')
       },
       {
         name: 'trim both sides',
-        code: 'trim'
+        code: 'clojure.string/trim'
       },
       {
         name: 'trim left side',
-        code: 'triml'
+        code: 'clojure.string/triml'
       },
       {
         name: 'trim right side',
-        code: 'trimr'
+        code: 'clojure.string/trimr'
       },
       {
         name: 'trim newlines',
-        code: 'trim-newline'
+        code: 'clojure.string/trim-newline'
       },
       {
         name: 'remove all blank space',
@@ -213,15 +213,15 @@ angular.module('grafterizerApp')
       },
       {
         name: 'UPPER CASE',
-        code: 'upper-case'
+        code: 'clojure.string/upper-case'
       },
       {
         name: 'lower case',
-        code: 'lower-case'
+        code: 'clojure.string/lower-case'
       },
       {
         name: 'Capitalize string',
-        code: 'capitalize'
+        code: 'clojure.string/capitalize'
       },
       {
         name: 'Capitalize Each Word',

@@ -4,7 +4,55 @@
         <div class="api-doc-docstring" ng-show = "showUsage" layout="column">
             <p> Adds a new column to the end of the row which is derived from existing column(s) with help of specified function.
             
-            <p><img src="/images/derivecolumn.png"></p>
+          
+            </p>
+                <p> <b>Example: </b></p>
+                <p> Given original dataset containing records about persons firstnames and lastnames: </p>
+                <table  class="doc-table">
+                    <tr>
+                        <td> firstName </td>
+                        <td> lastName </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Smith </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> Johnson </td>
+                    </tr>
+                    <tr>
+                        <td> Mary </td>
+                        <td> Williams </td>
+                    </tr>
+            </table>
+            <p> It is possible to derive full names: </p>
+             <p>
+                <img src="/images/derivecolumn.png"  style="width: 100%; height: 100%"/>
+            </p>
+            
+                <table  class="doc-table">
+                    <tr>
+                        <td> firstName </td>
+                        <td> lastName </td>
+                        <td> fullName </td>
+                    </tr>
+                    <tr>
+                        <td> Alice </td>
+                        <td> Smith </td>
+                        <td> Alice Smith </td>
+                    </tr>
+                    <tr>
+                        <td> Bob </td>
+                        <td> Johnson </td>
+                        <td> Bob Johnson </td>
+                    </tr>
+                    <tr>
+                        <td> Mary </td>
+                        <td> Williams </td>
+                        <td> Mary Williams </td>
+                    </tr>
+            </table>
             <a href="http://api.grafter.org/master/grafter.tabular.html#var-derive-column" target="_blank">view source</a>
     </div>
     </div>
@@ -17,7 +65,7 @@
     </md-input-container>
 
     <label>Columns to derive from</label>
-        <oi-select ng-show="colnames.length !== 0" oi-options="column.value for column in colnames track by column.id" ng-model="function.colsToDeriveFrom" multiple ng-disabled="$root.readonlymode"></oi-select>
+        <oi-select ng-show="colnames.length !== 0" oi-options="column.value for column in colnames track by column.id" ng-model="function.colsToDeriveFrom" multiple ng-disabled="$root.readonlymode" ></oi-select>
         <oi-select ng-show="colnames.length === 0" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="function.colsToDeriveFrom" multiple ng-disabled="$root.readonlymode"></oi-select>
     <br>
     <div layout="column">
@@ -26,7 +74,7 @@
         <div ng-repeat="deriveFunction in function.functionsToDeriveWith" >
         <!--oi-select oi-options="customFunction.name group by customFunction.group for customFunction in  transformation.customFunctionDeclarations track by customFunction.$$hashKey" title="customFunction.docstring"   ng-model="deriveFunction.funct" ng-disabled="$root.readonlymode"></oi-select-->
         <oi-select oi-options="customFunction.name group by customFunction.group for customFunction in  getCustomFunctionsAndPrefixers() track by customFunction.id" title="customFunction.docstring"   ng-model="deriveFunction.funct" ng-disabled="$root.readonlymode"></oi-select>
-    <div layout = "row" ng-repeat = "param in deriveFunction.getParams() track by $index" >
+    <div layout = "row" ng-repeat = "param in reduceFunctionParams(deriveFunction.getParams()) track by $index" >
         <md-input-container>
         <label>{{param}}</label>
         <input ng-model = "deriveFunction.functParams[$index]">

@@ -37,7 +37,7 @@ angular.module('grafterizerApp')
     
     
     
-    var _debug_ = fa,se;
+    var _debug_ = false;
     var log = function(a) {
         if (_debug_) {
             console.log(a);

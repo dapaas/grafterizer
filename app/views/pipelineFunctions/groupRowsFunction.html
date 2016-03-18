@@ -1,7 +1,7 @@
 <div layout="column">
     <div>
         <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
-            <div class="api-doc-docstring" ng-show = "showUsage" layout="column">
+            <div class="md-padding" class="api-doc-docstring" ng-show = "showUsage" layout="column">
                 <p> Groups dataset by given column(set of columns) and creates specified aggregations on other columns. </p>
                 <p> Set of available aggregations: </p>
                 <ul>
@@ -13,9 +13,9 @@
                     <li> MERGE -- merge together all distinct values in group separated by user-specified separator
                 </ul>
 
-                <p> Example: 
+                <p> <b>Example: </b> 
                  Given original dataset containing records about orders made by clients: </p>
-                <table>
+                <table class="doc-table">
                     <tr>
                         <td> firstName </td>
                         <td> lastName </td>
@@ -69,9 +69,9 @@
                 </table>
                 <p> It is possible to calculate total number of orders each client made, total number of items each client orderered, average and maximum total cost per one order: </p>
             <p>
-                <img src="/images/group1.png"/>
+                <img src="/images/group2.png"  style="width: 100%; height: 100%"/>
             </p>
-                <table>
+                <table  class="doc-table">
                     <tr>
                         <td> firstName </td>
                         <td> lastName </td>

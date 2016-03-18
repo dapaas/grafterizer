@@ -19,11 +19,66 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
   $mdToast) {
 
   var connection = leObject.serveraddress;
-
+  $scope.propertyCondition = false;
   $scope.propertyValue = {
-    value: ''
+    value: '',
+    condition: [{column: null,
+                 operator: {id:0, name: 'Not empty'},
+                 operand: '',
+                 conj: null}]
   };
-
+  $scope.colnames = (typeof $rootScope.colnames === 'undefined') ? [] : $rootScope.colnames();
+    $scope.conditionOperators = [
+    {
+        id:0,
+        name:'Not empty'
+    },
+    {
+        id:1,
+        name:'Equals (=)'
+    },
+    {
+        id:2,
+        name:'Not equals (!=)'
+    },
+    {
+        id:3,
+        name:'Greater than (>)'
+    },
+    {
+        id:4,
+        name:'Less than (<)'
+    },
+    {
+        id:5,
+        name:'Contains text'
+    },
+  
+    {
+        id:6,
+        name:'Custom code'
+    }
+    ];
+    
+    var colCtr = 0;
+$scope.addColumn = function(query) {
+    return {
+        id: colCtr++,
+        value: query
+    };
+};
+    
+      $scope.onConditionalChange = function(value) {
+      
+            if (!value)  {
+                $scope.propertyValue.condition = [{column: null,
+                                                   operator: {id:0, name: 'Not empty'},
+                                                   operand: '',
+                                                   conj: null}];
+                $scope.propertyCondition = false;
+            }
+  }; 
+    
   $scope.showSearchDialog = true;
   $scope.showProgress = false;
 
@@ -66,7 +121,7 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
     return false;
   };
   if (!$scope.property) {
-    $scope.property = new transformationDataModel.Property('', '', []);
+    $scope.property = new transformationDataModel.Property('', '', [ new transformationDataModel.Condition(null,null,null,null)], []);
   } else {
     if ($scope.property.prefix) {
       // we have a prefix - display prefix:property-name
@@ -81,9 +136,35 @@ angular.module('grafterizerApp').controller('PropertydialogCtrl', function(
         $scope.propertyValue.value = ':' + $scope.property.propertyName;
       }
     }
+     // if ($scope.property.hasOwnProperty('propertyCondition') && $scope.property.propertyCondition !== '' && $scope.property.propertyCondition !== undefined) {
+            if ($scope.property.hasOwnProperty('propertyCondition')  && $scope.property.propertyCondition.length !== 0) {
+          $scope.propertyCondition = true;
+                $scope.propertyValue.condition = [];
+          //$scope.propertyValue.condition = $scope.property.propertyCondition; 
+          for (var i = 0; i < $scope.property.propertyCondition.length; ++i) {
+            
+            $scope.propertyValue.condition.push({column: $scope.property.propertyCondition[i].column,
+                                                 operator: $scope.property.propertyCondition[i].operator,
+                                                 operand: $scope.property.propertyCondition[i].operand,
+                                                 conj: $scope.property.propertyCondition[i].conj
+                                                });
+      }
+   
+  }
   }
   $scope.addProperty = function() {
-
+      //TODO: add some elementary validation here
+      var conditions = [];
+      for (var i = 0; i < $scope.propertyValue.condition.length; ++i) {
+          if (!($scope.propertyValue.condition[i].column === null && $scope.propertyValue.condition[i].operator.id === 0)) {
+          
+              conditions.push(new transformationDataModel.Condition($scope.propertyValue.condition[i].column,
+                                                                    $scope.propertyValue.condition[i].operator,
+                                                                    $scope.propertyValue.condition[i].operand,
+                                                                    $scope.propertyValue.condition[i].conj));
+          }
+      }
+      $scope.property.propertyCondition = conditions;
     if ($scope.isProbablyUri($scope.propertyValue.value)) {
       // probably an outright URI - we put the whole URI in there
       $scope.property.prefix = '';

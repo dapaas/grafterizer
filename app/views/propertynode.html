@@ -5,9 +5,19 @@
                        class="md-scale" md-open="fabIsOpen"
                          ng-mouseenter="fabIsOpen=true" ng-mouseleave="fabIsOpen=false">
       <md-fab-trigger>
+        
         <md-button class="rdf-mapping-property-button" ng-click="editProperty()" ng-disabled="$root.readonlymode">
-          <span class="fa-stack">
+          <span class="fa-stack" ng-if = "property.propertyCondition.length === 0">
             <i class="fa fa-circle fa-stack-2x rdf-mapping-icon-background-inset"></i>
+            <i class="fa fa-arrow-right fa-stack-1x fa-inverse"></i>
+          </span>
+            <span class="fa-stack"  ng-if = "property.propertyCondition.length > 0">
+            <i class="fa fa-circle fa-stack-2x rdf-mapping-icon-background-inset"></i>
+            <i class="fa fa-filter fa-stack-1x fa-inverse"></i>
+            
+          </span>
+             <span class="fa-stack"  ng-if = "property.propertyCondition.length > 0">
+           <i class="fa fa-circle fa-stack-2x rdf-mapping-icon-background-inset"></i>
             <i class="fa fa-arrow-right fa-stack-1x fa-inverse"></i>
           </span>
           {{property.prefix ? property.prefix + ':' : '' }}{{property.propertyName}}

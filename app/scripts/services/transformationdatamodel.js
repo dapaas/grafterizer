@@ -8,9 +8,9 @@
  * Service in the grafterizerApp.
  */
 angular.module('grafterizerApp')
-  .service('transformationDataModel', function($mdToast) {
+  .service('transformationDataModel', function() {
   var _this = this;
-
+  
   var Prefixer = function(name, uri, parentPrefix) {
     this.name = name;
     this.uri = uri;
@@ -44,7 +44,7 @@ angular.module('grafterizerApp')
   };
   
   this.CustomFunctionDeclaration = CustomFunctionDeclaration;
-
+  
   var DropRowsFunction = function(indexFrom, indexTo, take, docstring) {
     GenericFunction.call(this);
     this.indexFrom = indexFrom;
@@ -58,37 +58,37 @@ angular.module('grafterizerApp')
     this.__type = 'DropRowsFunction';
   };
   DropRowsFunction.revive = function(data) {
-      var indexFrom;
-      var indexTo;
+    var indexFrom;
+    var indexTo;
 
-      if (!data.hasOwnProperty('indexFrom')) {
-        indexFrom = 0;
-        indexTo = data.numberOfRows;
-      } else {
-        indexFrom = data.indexFrom;
-        indexTo = data.indexTo;
-      }
+    if (!data.hasOwnProperty('indexFrom')) {
+      indexFrom = 0;
+      indexTo = data.numberOfRows;
+    } else {
+      indexFrom = data.indexFrom;
+      indexTo = data.indexTo;
+    }
 
-      return new DropRowsFunction(indexFrom, indexTo, data.take, data.docstring);
+    return new DropRowsFunction(indexFrom, indexTo, data.take, data.docstring);
   };
   DropRowsFunction.prototype = Object.create(GenericFunction.prototype);
   DropRowsFunction.prototype.generateClojure = function() {
-      if (this.take === false && this.indexFrom === 0) 
-          return new jsedn.List([jsedn.sym('drop-rows'),this.indexTo]);
-      var values = [jsedn.sym('rows')];
-      if (this.take) values.push(new jsedn.List([jsedn.sym('range'),
-                                                 this.indexFrom,
-                                                 this.indexTo + 1]));
-      else values.push(new jsedn.List([jsedn.sym('concat'),
-                                       new jsedn.List([jsedn.sym('range'),
-                                                       0,
-                                                       this.indexFrom
-                                                       ]),
-                                       new jsedn.List([jsedn.sym('drop'),
-                                                       this.indexTo + 1,
-                                                       new jsedn.List([jsedn.sym('range')])])]));
+    if (this.take === false && this.indexFrom === 0) 
+      return new jsedn.List([jsedn.sym('drop-rows'),this.indexTo]);
+    var values = [jsedn.sym('rows')];
+    if (this.take) values.push(new jsedn.List([jsedn.sym('range'),
+                                               this.indexFrom,
+                                               this.indexTo + 1]));
+    else values.push(new jsedn.List([jsedn.sym('concat'),
+                                     new jsedn.List([jsedn.sym('range'),
+                                                     0,
+                                                     this.indexFrom
+                                                    ]),
+                                     new jsedn.List([jsedn.sym('drop'),
+                                                     this.indexTo + 1,
+                                                     new jsedn.List([jsedn.sym('range')])])]));
 
-      return new jsedn.List(values);
+    return new jsedn.List(values);
   };
   this.DropRowsFunction = DropRowsFunction;
 
@@ -103,8 +103,8 @@ angular.module('grafterizerApp')
     this.__type = 'SplitFunction';
   };
   SplitFunction.revive = function(data) {
-      var colName;
-      if (!data.colName.hasOwnProperty('id')) colName = {id:0, value:data.colName}; else colName = data.colName;
+    var colName;
+    if (!data.colName.hasOwnProperty('id')) colName = {id:0, value:data.colName}; else colName = data.colName;
     return new SplitFunction(colName,  data.separator, data.docstring);
   };
   SplitFunction.prototype = Object.create(GenericFunction.prototype);
@@ -297,17 +297,17 @@ angular.module('grafterizerApp')
     var take;
     var grepmode;
     if (!data.hasOwnProperty('take'))
-        take = true;
+      take = true;
     else take = data.take;
     if (!data.hasOwnProperty('grepmode'))
-        grepmode = data.filterText ? 'text' : (data.filterRegex ? 'regex' : 'function');
+      grepmode = data.filterText ? 'text' : (data.filterRegex ? 'regex' : 'function');
     else grepmode = data.grepmode;
     var columnsArray = [];
     if (data.colsToFilter.length > 0 && data.colsToFilter[0] && !data.colsToFilter[0].hasOwnProperty('id')) {
-        for (var i = 0; i < data.colsToFilter.length; ++i) {
-            var colname = {id:i, value:data.colsToFilter[i]};
-            columnsArray.push(colname);
-        }
+      for (var i = 0; i < data.colsToFilter.length; ++i) {
+        var colname = {id:i, value:data.colsToFilter[i]};
+        columnsArray.push(colname);
+      }
     } else {
       columnsArray = data.colsToFilter;
     }
@@ -335,24 +335,29 @@ angular.module('grafterizerApp')
       case ('text'):
         if (this.ignoreCase) {
           regexParsed = '#\"(?i).*' + this.filterText + '.*\"';
-          if (!this.take)
-              values.push(new jsedn.List([jsedn.sym('comp'), jsedn.sym('not'), new jsedn.List([jsedn.sym('fn [cell] (re-find (read-string ' + regexParsed + ' ) (str cell))')])]));
-          else
-              values.push(new jsedn.List([jsedn.sym('read-string'), regexParsed]));
+
+          if (!this.take) {
+            values.push(new jsedn.List([jsedn.sym('comp'), jsedn.sym('not'), new jsedn.List([jsedn.sym('fn [cell]'),
+                                                                                             new jsedn.List([jsedn.sym('re-find'), new jsedn.List([jsedn.sym('read-string'), regexParsed]), jsedn.sym('(str cell)')])])]));
+
+          }
+          else {
+            values.push(new jsedn.List([jsedn.sym('read-string'), regexParsed]));
+          }
         } else {
           if (!this.take)
-              values.push(new jsedn.List([jsedn.sym('comp'), jsedn.sym('not'), new jsedn.List([jsedn.sym('fn [^String cell] (.contains (str cell) \"' + this.filterText + '\")')])]));
+            values.push(new jsedn.List([jsedn.sym('comp'), jsedn.sym('not'), new jsedn.List([jsedn.sym('fn [^String cell] (.contains (str cell) \"' + this.filterText + '\")')])]));
           else
-              values.push(this.filterText);
+            values.push(this.filterText);
         }
         break;
 
       case ('regex'):
         regexParsed = '#\"' + this.filterRegex + '\"';
-          if (!this.take)
-              values.push(new jsedn.List([jsedn.sym('comp'), jsedn.sym('not'), new jsedn.List([jsedn.sym('fn [cell] (re-find (read-string '), regexParsed, jsedn.sym(' ) (str cell))')])]));
-          else
-              values.push(new jsedn.List([jsedn.sym('read-string'), regexParsed]));
+        if (!this.take)
+          values.push(new jsedn.List([jsedn.sym('comp'), jsedn.sym('not'), new jsedn.List([jsedn.sym('fn [cell] (re-find (read-string '), regexParsed, jsedn.sym(' ) (str cell))')])]));
+        else
+          values.push(new jsedn.List([jsedn.sym('read-string'), regexParsed]));
         break;
 
       case ('function'):
@@ -369,11 +374,11 @@ angular.module('grafterizerApp')
           functions.push(new jsedn.List(comp));
         }
         if (!this.take) {
-            functions.unshift(jsedn.sym('not'));
-            functions.unshift(jsedn.sym('comp'));
-            values.push(new jsedn.List(functions));
+          functions.unshift(jsedn.sym('not'));
+          functions.unshift(jsedn.sym('comp'));
+          values.push(new jsedn.List(functions));
         } else
-            values = values.concat(functions);
+          values = values.concat(functions);
 
         break;
 
@@ -387,7 +392,7 @@ angular.module('grafterizerApp')
         break;
     }
     if (this.colsToFilter.length > 0)
-            values.push(colsToFilter);
+      values.push(colsToFilter);
 
     return new jsedn.List(values);
   };
@@ -400,9 +405,9 @@ angular.module('grafterizerApp')
     this.name = 'merge-columns';
     this.displayName = 'merge-columns';
     if (!separator)
-       this.separator = '';
+      this.separator = '';
     else
-       this.separator = separator;
+      this.separator = separator;
     this.__type = 'MergeColumnsFunction';
     if (!docstring && colsToMerge[0]) {
       this.docstring = 'Merge columns ';
@@ -427,13 +432,13 @@ angular.module('grafterizerApp')
     }
     var values = [new jsedn.sym('merge-columns'), colsToMerge, new jsedn.sym('"' + this.separator + '"')];
     if (this.newColName)
-        values.push(new jsedn.kw(':' + this.newColName));
+      values.push(new jsedn.kw(':' + this.newColName));
     return new jsedn.List(values);
     /*if (this.separator === "") return new jsedn.List([new jsedn.sym('merge-columns'),colsToMerge,new jsedn.sym('""'), this.newColName ? new jsedn.kw(':'+this.newColName) : null]);
     else return new jsedn.List([new jsedn.sym('merge-columns'),colsToMerge, new jsedn.sym('"'+this.separator+'"'), this.newColName ? new jsedn.kw(':'+this.newColName) : null ]);*/
   };
   this.MergeColumnsFunction = MergeColumnsFunction;
-  
+
   var FunctionWithArgs = function(funct, functParams) {
     this.funct = funct;
     this.functParams = functParams;
@@ -446,19 +451,19 @@ angular.module('grafterizerApp')
     if (!this.funct.clojureCode) return params;
     var d = this.funct.clojureCode.match(/\[(.*?)\]/g); 
     if (d) {
-        d[0]=d[0].replace(/^\[|\]$/g, '');
-        params = d[0].split(" ");
-        params.splice(0,1);
+      d[0]=d[0].replace(/^\[|\]$/g, '');
+      params = d[0].split(" ");
+      params.splice(0,1);
     }
     return params;
   };
-  
+
   FunctionWithArgs.revive = function(data) {
-      return new FunctionWithArgs(data.funct, data.functParams);
+    return new FunctionWithArgs(data.funct, data.functParams);
   };
   this.FunctionWithArgs = FunctionWithArgs;
 
-  
+
   var DeriveColumnFunction = function(newColName, colsToDeriveFrom, functionsToDeriveWith,  docstring) {
     GenericFunction.call(this);
     this.newColName = newColName;
@@ -468,16 +473,16 @@ angular.module('grafterizerApp')
     var i;
     var funct_args;
     if (functionsToDeriveWith !== null) {
-        for (i=0; i<functionsToDeriveWith.length; ++i) {
-            funct_args = functionsToDeriveWith[i];
-            if (funct_args !== null) {
-                if (!funct_args instanceof FunctionWithArgs) {
-                    functionsToDeriveWith[i] = new FunctionWithArgs(funct_args);
-                }
-            }
+      for (i=0; i<functionsToDeriveWith.length; ++i) {
+        funct_args = functionsToDeriveWith[i];
+        if (funct_args !== null) {
+          if (!funct_args instanceof FunctionWithArgs) {
+            functionsToDeriveWith[i] = new FunctionWithArgs(funct_args);
+          }
         }
+      }
     }
-  /*  this.paramsToFunctions = paramsToFunctions;
+    /*  this.paramsToFunctions = paramsToFunctions;
     var deriveFunc;
     var i;
 
@@ -509,35 +514,35 @@ angular.module('grafterizerApp')
     }
   };
   DeriveColumnFunction.revive = function(data) {
-      var columnsArray = [];
-      if (data.colsToDeriveFrom.length > 0 && !data.colsToDeriveFrom[0].hasOwnProperty('id')) {
-          for (var i = 0; i < data.colsToDeriveFrom.length; ++i) {
-              var colname = {id:i, value:data.colsToDeriveFrom[i]};
-              columnsArray.push(colname);
-          }
+    var columnsArray = [];
+    if (data.colsToDeriveFrom.length > 0 && !data.colsToDeriveFrom[0].hasOwnProperty('id')) {
+      for (var i = 0; i < data.colsToDeriveFrom.length; ++i) {
+        var colname = {id:i, value:data.colsToDeriveFrom[i]};
+        columnsArray.push(colname);
       }
-      else columnsArray = data.colsToDeriveFrom;
-      var functionsArray = [];
-      
-      for (var i = 0; i < data.functionsToDeriveWith.length; ++i) {
-          if (data.functionsToDeriveWith[i] instanceof FunctionWithArgs === false){
-              var newFunct;
-              if (data.functionsToDeriveWith[i].__type === 'FunctionWithArgs') {
-               
-                  newFunct = FunctionWithArgs.revive(data.functionsToDeriveWith[i]);
-              functionsArray.push(newFunct);
-              }
-              else {
-                  newFunct = {name:data.functionsToDeriveWith[i].name,
-                                id:0,
-                                group:(data.functionsToDeriveWith[i].hasOwnProperty('group')?data.functionsToDeriveWith[i].group:'PREFIXERS')};
-               
-//               var newFunct = new FunctionWithArgs({funct:data.functionsToDeriveWith[i],functParams:[]});
-              functionsArray.push(new FunctionWithArgs(newFunct,[]));
-              }
-          }
-          else functionsArray.push(data.functionsToDeriveWith[i]);
+    }
+    else columnsArray = data.colsToDeriveFrom;
+    var functionsArray = [];
+
+    for (var i = 0; i < data.functionsToDeriveWith.length; ++i) {
+      if (data.functionsToDeriveWith[i] instanceof FunctionWithArgs === false){
+        var newFunct;
+        if (data.functionsToDeriveWith[i].__type === 'FunctionWithArgs') {
+
+          newFunct = FunctionWithArgs.revive(data.functionsToDeriveWith[i]);
+          functionsArray.push(newFunct);
+        }
+        else {
+          newFunct = {name:data.functionsToDeriveWith[i].name,
+                      id:0,
+                      group:(data.functionsToDeriveWith[i].hasOwnProperty('group')?data.functionsToDeriveWith[i].group:'PREFIXERS')};
+
+          //               var newFunct = new FunctionWithArgs({funct:data.functionsToDeriveWith[i],functParams:[]});
+          functionsArray.push(new FunctionWithArgs(newFunct,[]));
+        }
       }
+      else functionsArray.push(data.functionsToDeriveWith[i]);
+    }
     return new DeriveColumnFunction(data.newColName, columnsArray, functionsArray, data.paramsToFunctions,
                                     data.docstring);
   };
@@ -546,6 +551,7 @@ angular.module('grafterizerApp')
     var colsToDeriveFromClj = new jsedn.Vector([]);
     var flag = false;
     var deriveFunc;
+    var  functWithParams = [];
     var i;
     for (i = 0; i < this.colsToDeriveFrom.length; ++i) {
       colsToDeriveFromClj.val.push(new jsedn.kw(':' + this.colsToDeriveFrom[i].value));
@@ -558,16 +564,16 @@ angular.module('grafterizerApp')
     var deriveFuncts = [];
     for (i = 0; i< this.functionsToDeriveWith.length; ++i)
     { if (this.functionsToDeriveWith[i].functParams.length === 0)
-        deriveFuncts.push(new jsedn.sym(this.functionsToDeriveWith[i].funct.name));
-        else {
-            functWithParams = [new jsedn.sym(this.functionsToDeriveWith[i].funct.name), new jsedn.sym('arg')];
-            functWithParams = functWithParams.concat(this.functionsToDeriveWith[i].functParams);
-            deriveFuncts.push(new jsedn.List([new jsedn.sym('fn [arg]'),
-                        new jsedn.List(functWithParams)]));
-        }
+      deriveFuncts.push(new jsedn.sym(this.functionsToDeriveWith[i].funct.name));
+     else {
+       functWithParams = [new jsedn.sym(this.functionsToDeriveWith[i].funct.name), new jsedn.sym('arg')];
+       functWithParams = functWithParams.concat(this.functionsToDeriveWith[i].functParams);
+       deriveFuncts.push(new jsedn.List([new jsedn.sym('fn [arg]'),
+                                         new jsedn.List(functWithParams)]));
+     }
     }
     if (deriveFuncts.length === 1) {
-    values.push(deriveFuncts[0]);
+      values.push(deriveFuncts[0]);
     }
     else {
       var compFuncts = ['comp'];
@@ -575,7 +581,7 @@ angular.module('grafterizerApp')
       values.push(new jsedn.List(compFuncts));
     }
 
-     /*   if (this.paramsToFunctions[0]) values.push(new jsedn.List([jsedn.sym(this.functionsToDeriveWith[0].name),
+    /*   if (this.paramsToFunctions[0]) values.push(new jsedn.List([jsedn.sym(this.functionsToDeriveWith[0].name),
                                                                  '' + this.paramsToFunctions[0]]));
       else
         values.push(jsedn.sym(this.functionsToDeriveWith[0].name));
@@ -606,9 +612,9 @@ angular.module('grafterizerApp')
     if (!docstring) {
       this.docstring = 'Group rows by column(s): ';
       if (colnames.length > 0) {
-          for (var i = 0; i < colnames.length; ++i) {
-            this.docstring += colnames[i].value + ' ';
-          }
+        for (var i = 0; i < colnames.length; ++i) {
+          this.docstring += colnames[i].value + ' ';
+        }
       }
     } else {
       this.docstring = docstring;
@@ -623,19 +629,19 @@ angular.module('grafterizerApp')
     var i;
 
     for (i = 0; i < this.colnames.length; ++i) {
-        colnames.val.push(jsedn.kw(':' + this.colnames[i].value));
+      colnames.val.push(jsedn.kw(':' + this.colnames[i].value));
     }
     var set = new jsedn.Set([]);
     for (i = 0; i < this.colnamesFunctionsSet.length; i += 2) {
-        var colnameFunctionPair = new jsedn.Map([]);
-        colnameFunctionPair.set(new jsedn.kw(':' + this.colnamesFunctionsSet[i].value),
-                                (this.colnamesFunctionsSet[i+1] === "MERGE"?this.separatorSet[i]:jsedn.sym(this.colnamesFunctionsSet[i+1])));
-        set.val.push(colnameFunctionPair);
+      var colnameFunctionPair = new jsedn.Map([]);
+      colnameFunctionPair.set(new jsedn.kw(':' + this.colnamesFunctionsSet[i].value),
+                              (this.colnamesFunctionsSet[i+1] === "MERGE"?this.separatorSet[i]:jsedn.sym(this.colnamesFunctionsSet[i+1])));
+      set.val.push(colnameFunctionPair);
     }
 
     return new jsedn.List([jsedn.sym('group-rows'), colnames, set]);
   };
-  
+
   this.GroupRowsFunction = GroupRowsFunction;
 
   var RenameColumnsFunction = function(functionsToRenameWith, mappings, docstring) {
@@ -695,11 +701,11 @@ angular.module('grafterizerApp')
     }
   };
   RenameColumnsFunction.revive = function(data) {
-      var mappings = [];
-      if (data.mappings.length > 0)
-        if (data.mappings[0] && !data.mappings[0].hasOwnProperty('id')) {
+    var mappings = [];
+    if (data.mappings.length > 0)
+      if (data.mappings[0] && !data.mappings[0].hasOwnProperty('id')) {
         for (var i = 0; i < data.mappings.length; ++i) {
-            mappings.push((i % 2) ? data.mappings[i] : {id:i / 2, value:data.mappings[i]});
+          mappings.push((i % 2) ? data.mappings[i] : {id:i / 2, value:data.mappings[i]});
         }
       } else
         mappings = data.mappings;
@@ -752,13 +758,13 @@ angular.module('grafterizerApp')
     var key;
     var params;
     if (!data.key.hasOwnProperty('id'))
-        key = {id:0, value:data.key};
+      key = {id:0, value:data.key};
     else
-        key = data.key;
+      key = data.key;
     if (!data.hasOwnProperty('funcParams'))
-        params = [];
+      params = [];
     else
-        params = data.funcParams;
+      params = data.funcParams;
     return new KeyFunctionPair(key, data.func, params);
   };
   KeyFunctionPair.prototype.getParams = function() {
@@ -767,9 +773,9 @@ angular.module('grafterizerApp')
     if (!this.func.clojureCode) return params;
     var d = this.func.clojureCode.match(/\[(.*?)\]/g); 
     if (d) {
-        d[0]=d[0].replace(/^\[|\]$/g, '');
-        params = d[0].split(" ");
-        params.splice(0,1);
+      d[0]=d[0].replace(/^\[|\]$/g, '');
+      params = d[0].split(" ");
+      params.splice(0,1);
     }
     return params;
   };
@@ -868,7 +874,7 @@ angular.module('grafterizerApp')
     this.__type = 'MapcFunction';
   };
   MapcFunction.revive = function(data) {
-     
+
     return new MapcFunction(data.keyFunctionPairs, data.docstring);
   };
   MapcFunction.prototype = Object.create(GenericFunction.prototype);
@@ -884,20 +890,20 @@ angular.module('grafterizerApp')
           new jsedn.sym(this.keyFunctionPairs[i].func.name)
         );
       else
-          if (this.keyFunctionPairs[i].funcParams.length > 0) {
-              var funcWithParams = [new jsedn.sym(this.keyFunctionPairs[i].func.name), new jsedn.sym('arg')];
-              funcWithParams = funcWithParams.concat(this.keyFunctionPairs[i].funcParams);
-              var mapcFunc = new jsedn.List([new jsedn.sym('fn [arg]'),
-                new jsedn.List(funcWithParams)]);
-              mkeyFunctionPairsClj.set(
-                new jsedn.kw(':' + this.keyFunctionPairs[i].key.value),
-                mapcFunc);
-          } else {
-            mkeyFunctionPairsClj.set(
-              new jsedn.kw(':' + this.keyFunctionPairs[i].key.value),
-              new jsedn.sym(this.keyFunctionPairs[i].func.name)
-            );
-          }
+        if (this.keyFunctionPairs[i].funcParams.length > 0) {
+          var funcWithParams = [new jsedn.sym(this.keyFunctionPairs[i].func.name), new jsedn.sym('arg')];
+          funcWithParams = funcWithParams.concat(this.keyFunctionPairs[i].funcParams);
+          var mapcFunc = new jsedn.List([new jsedn.sym('fn [arg]'),
+                                         new jsedn.List(funcWithParams)]);
+          mkeyFunctionPairsClj.set(
+            new jsedn.kw(':' + this.keyFunctionPairs[i].key.value),
+            mapcFunc);
+        } else {
+          mkeyFunctionPairsClj.set(
+            new jsedn.kw(':' + this.keyFunctionPairs[i].key.value),
+            new jsedn.sym(this.keyFunctionPairs[i].func.name)
+          );
+        }
     }
 
     var mapc;
@@ -970,7 +976,7 @@ angular.module('grafterizerApp')
     this.__type = 'SortDatasetFunction';
     if (!docstring) {
       this.docstring = 'Sort dataset';
-      
+
     } else this.docstring = docstring;
   };
   SortDatasetFunction.revive = function(data) {
@@ -978,32 +984,32 @@ angular.module('grafterizerApp')
   };
   SortDatasetFunction.prototype = Object.create(GenericFunction.prototype);
   SortDatasetFunction.prototype.generateClojure = function() {
-    
+
     var values  = new jsedn.Vector([]);
     var sort;
     for (var i = 0; i < this.colnamesSorttypesMap.length; ++i) {
-    var newColnamesSorttypesMap = new jsedn.Map([]);
-        sort = this.colnamesSorttypesMap[i].order ? 'desc' : 'asc';
-        switch (this.colnamesSorttypesMap[i].sorttype) {
-            case 'Alphabetical':
-               sort += 'alpha';
-               break;
-            case 'Numerical':
-               sort += 'num';
-               break;
-            case 'By length':
-               sort += 'len';
-               break;
-            case 'Date':
-               sort += 'date';
-               break;
-            default:
-               sort = null;
-        }
+      var newColnamesSorttypesMap = new jsedn.Map([]);
+      sort = this.colnamesSorttypesMap[i].order ? 'desc' : 'asc';
+      switch (this.colnamesSorttypesMap[i].sorttype) {
+        case 'Alphabetical':
+          sort += 'alpha';
+          break;
+        case 'Numerical':
+          sort += 'num';
+          break;
+        case 'By length':
+          sort += 'len';
+          break;
+        case 'Date':
+          sort += 'date';
+          break;
+        default:
+          sort = null;
+      }
 
-        newColnamesSorttypesMap.set(new jsedn.kw(':' + this.colnamesSorttypesMap[i].colname.value),
-                                    new jsedn.kw(':' + sort));
-        values.val.push(newColnamesSorttypesMap);
+      newColnamesSorttypesMap.set(new jsedn.kw(':' + this.colnamesSorttypesMap[i].colname.value),
+                                  new jsedn.kw(':' + sort));
+      values.val.push(newColnamesSorttypesMap);
     }
 
     return new jsedn.List([jsedn.sym('sort-dataset'), values]);
@@ -1024,80 +1030,74 @@ angular.module('grafterizerApp')
     return true;
   };
   this.SortDatasetFunction = SortDatasetFunction;
-  
+
   var AddRowFunction = function(position, values, docstring) {
-      this.name = 'add-row';
-      this.displayName = 'add-row';
-      GenericFunction.call(this);
-      this.position = position;
-      this.values = values;
-      this.__type = 'AddRowFunction';
-      if (!docstring)
-          this.docstring = 'Add new row';
-      else this.docstring = docstring;
-    };
-
-  AddRowFunction.revive = function(data) {
-      return new AddRowFunction(data.position, data.values, data.docstring);
+    this.name = 'add-row';
+    this.displayName = 'add-row';
+    GenericFunction.call(this);
+    this.position = position;
+    this.values = values;
+    this.__type = 'AddRowFunction';
+    if (!docstring)
+      this.docstring = 'Add new row';
+    else this.docstring = docstring;
   };
-
+  AddRowFunction.revive = function(data) {
+    return new AddRowFunction(data.position, data.values, data.docstring);
+  };
   AddRowFunction.prototype = Object.create(GenericFunction.prototype);
   AddRowFunction.prototype.generateClojure = function() {
 
     var values  = new jsedn.Vector([]);
     for (var i = 0; i < this.values.length; ++i)
-        values.val.push(this.values[i]);
+      values.val.push(this.values[i]);
     return new jsedn.List([jsedn.sym('add-row'), values]);
   };
   this.AddRowFunction = AddRowFunction;
-  
+
   var ShiftRowFunction = function(indexFrom, indexTo, shiftrowmode, docstring) {
-      this.name = 'shift-row';
-      this.displayName = 'shift-row';
-      GenericFunction.call(this);
-      this.indexFrom = indexFrom;
-      this.indexTo = indexTo;
-      this.shiftrowmode = shiftrowmode;
-      this.__type = 'ShiftRowFunction';
-      if (!docstring)
-          this.docstring = 'Shift row number ' + indexFrom + (shiftrowmode === 'position') ? (' to position ' + indexTo) : ' to the end of the dataset';
-      else this.docstring = docstring;
-    };
-
-  ShiftRowFunction.revive = function(data) {
-      return new ShiftRowFunction(data.indexFrom, data.indexTo, data.shiftrowmode, data.docstring);
+    this.name = 'shift-row';
+    this.displayName = 'shift-row';
+    GenericFunction.call(this);
+    this.indexFrom = indexFrom;
+    this.indexTo = indexTo;
+    this.shiftrowmode = shiftrowmode;
+    this.__type = 'ShiftRowFunction';
+    if (!docstring)
+      this.docstring = 'Shift row number ' + indexFrom + (shiftrowmode === 'position') ? (' to position ' + indexTo) : ' to the end of the dataset';
+    else this.docstring = docstring;
   };
-
+  ShiftRowFunction.revive = function(data) {
+    return new ShiftRowFunction(data.indexFrom, data.indexTo, data.shiftrowmode, data.docstring);
+  };
   ShiftRowFunction.prototype = Object.create(GenericFunction.prototype);
   ShiftRowFunction.prototype.generateClojure = function() {
-     var values = [jsedn.sym('shift-row'), this.indexFrom];
-     if (this.shiftrowmode === 'position') values.push(this.indexTo);
-     return new jsedn.List(values);
+    var values = [jsedn.sym('shift-row'), this.indexFrom];
+    if (this.shiftrowmode === 'position') values.push(this.indexTo);
+    return new jsedn.List(values);
   };
   this.ShiftRowFunction = ShiftRowFunction;
-  
+
   var ShiftColumnFunction = function(colFrom, indexTo, shiftcolmode, docstring) {
-      this.name = 'shift-column';
-      this.displayName = 'shift-column';
-      GenericFunction.call(this);
-      this.colFrom = colFrom;
-      this.indexTo = indexTo;
-      this.shiftcolmode = shiftcolmode;
-      this.__type = 'ShiftColumnFunction';
-      if (!docstring)
-          this.docstring = 'Shift column ' + colFrom + (shiftcolmode === 'position') ? (' to index ' + indexTo) : ' to the rightmost position';
-      else this.docstring = docstring;
-    };
-
-  ShiftColumnFunction.revive = function(data) {
-      return new ShiftColumnFunction(data.colFrom, data.indexTo, data.shiftcolmode, data.docstring);
+    this.name = 'shift-column';
+    this.displayName = 'shift-column';
+    GenericFunction.call(this);
+    this.colFrom = colFrom;
+    this.indexTo = indexTo;
+    this.shiftcolmode = shiftcolmode;
+    this.__type = 'ShiftColumnFunction';
+    if (!docstring)
+      this.docstring = 'Shift column ' + colFrom + (shiftcolmode === 'position') ? (' to index ' + indexTo) : ' to the rightmost position';
+    else this.docstring = docstring;
   };
-
+  ShiftColumnFunction.revive = function(data) {
+    return new ShiftColumnFunction(data.colFrom, data.indexTo, data.shiftcolmode, data.docstring);
+  };
   ShiftColumnFunction.prototype = Object.create(GenericFunction.prototype);
   ShiftColumnFunction.prototype.generateClojure = function() {
-     var values = [jsedn.sym('shift-column'), jsedn.kw(':' + this.colFrom.value)];
-     if (this.shiftcolmode === 'position') values.push(this.indexTo);
-     return new jsedn.List(values);
+    var values = [jsedn.sym('shift-column'), jsedn.kw(':' + this.colFrom.value)];
+    if (this.shiftcolmode === 'position') values.push(this.indexTo);
+    return new jsedn.List(values);
   };
   this.ShiftColumnFunction = ShiftColumnFunction;
 
@@ -1121,12 +1121,12 @@ angular.module('grafterizerApp')
   RemoveDuplicatesFunction.prototype.generateClojure = function() {
     var values = [jsedn.sym('remove-duplicates')];
     if (this.mode !== 'full') {
-    var colNamesClj = new jsedn.Vector([]);
-        for (var i = 0; i < this.colNames.length; ++i) {
-          colNamesClj.val.push(new jsedn.kw(':' + this.colNames[i].value));
-        }
-    
-    values.push(colNamesClj);
+      var colNamesClj = new jsedn.Vector([]);
+      for (var i = 0; i < this.colNames.length; ++i) {
+        colNamesClj.val.push(new jsedn.kw(':' + this.colNames[i].value));
+      }
+
+      values.push(colNamesClj);
     }
     /*if (this.mode === 'merge')
         values.push(this.separator);
@@ -1134,7 +1134,7 @@ angular.module('grafterizerApp')
     return new jsedn.List(values);
   };
   this.RemoveDuplicatesFunction = RemoveDuplicatesFunction;
-  
+
   var MakeDatasetFunction = function(columnsArray, useLazy, numberOfColumns, moveFirstRowToHeader, docstring) {
     // array of column names
     this.name = 'make-dataset';
@@ -1151,16 +1151,16 @@ angular.module('grafterizerApp')
     } else this.docstring = docstring;
   };
   MakeDatasetFunction.revive = function(data) {
-      // to revive those transformations that have been created before autocomplete in select
-      var columnsArray = [];
-      if (data.columnsArray.length > 0 && data.columnsArray[0] && !data.columnsArray[0].hasOwnProperty('id')) {
-          for (var i = 0; i < data.columnsArray.length; ++i) {
-              var colname = {id:i, value:data.columnsArray[i]};
-              columnsArray.push(colname);
-          }
-      } else {
-        columnsArray = data.columnsArray;
+    // to revive those transformations that have been created before autocomplete in select
+    var columnsArray = [];
+    if (data.columnsArray.length > 0 && data.columnsArray[0] && !data.columnsArray[0].hasOwnProperty('id')) {
+      for (var i = 0; i < data.columnsArray.length; ++i) {
+        var colname = {id:i, value:data.columnsArray[i]};
+        columnsArray.push(colname);
       }
+    } else {
+      columnsArray = data.columnsArray;
+    }
     return new MakeDatasetFunction(columnsArray, data.useLazy, data.numberOfColumns, data.moveFirstRowToHeader);
   };
   MakeDatasetFunction.prototype = Object.create(GenericFunction.prototype);
@@ -1169,29 +1169,29 @@ angular.module('grafterizerApp')
     var i;
     var colNamesClj = new jsedn.Vector([]);
     if (this.useLazy !== true) {
-        if (this.moveFirstRowToHeader) {
-          return new jsedn.List([
-            jsedn.sym('->'),
-            new jsedn.List([jsedn.sym('make-dataset'), jsedn.sym('move-first-row-to-header')]),
-            new jsedn.List([jsedn.sym('rename-columns'),
-                            new jsedn.List([
-                              jsedn.sym('comp'),
-                              jsedn.sym('keyword'),
-                              jsedn.sym('string-as-keyword')])
-                           ])
-          ]);
-        }
-        else {
-            if (this.columnsArray.length > 0) {
-                for (i = 0; i < this.columnsArray.length; ++i) {
-                    colNamesClj.val.push(new jsedn.kw(':' + this.columnsArray[i].value));
-                }
+      if (this.moveFirstRowToHeader) {
+        return new jsedn.List([
+          jsedn.sym('->'),
+          new jsedn.List([jsedn.sym('make-dataset'), jsedn.sym('move-first-row-to-header')]),
+          new jsedn.List([jsedn.sym('rename-columns'),
+                          new jsedn.List([
+                            jsedn.sym('comp'),
+                            jsedn.sym('keyword'),
+                            jsedn.sym('string-as-keyword')])
+                         ])
+        ]);
+      }
+      else {
+        if (this.columnsArray.length > 0) {
+          for (i = 0; i < this.columnsArray.length; ++i) {
+            colNamesClj.val.push(new jsedn.kw(':' + this.columnsArray[i].value));
+          }
 
-                return new jsedn.List([jsedn.sym('make-dataset'), colNamesClj]);
-            } 
-            
-            else return new jsedn.List([jsedn.sym('make-dataset')]);
-        }
+          return new jsedn.List([jsedn.sym('make-dataset'), colNamesClj]);
+        } 
+
+        else return new jsedn.List([jsedn.sym('make-dataset')]);
+      }
     } else {
       // make dataset with lazy naming
       return new jsedn.List([jsedn.sym('make-dataset'), 
@@ -1232,24 +1232,24 @@ angular.module('grafterizerApp')
     } else this.docstring = docstring;
   };
   ColumnsFunction.revive = function(data) {
-      var columnsArray = [];
-      if (data.columnsArray.length > 0)
-          if (!data.columnsArray[0].hasOwnProperty('id')) {
-          for (var i = 0; i < data.columnsArray.length; ++i) {
-              var colname = {id:i, value:data.columnsArray[i]};
-              columnsArray.push(colname);
-          }
+    var columnsArray = [];
+    if (data.columnsArray.length > 0)
+      if (!data.columnsArray[0].hasOwnProperty('id')) {
+        for (var i = 0; i < data.columnsArray.length; ++i) {
+          var colname = {id:i, value:data.columnsArray[i]};
+          columnsArray.push(colname);
+        }
       } else
         columnsArray = data.columnsArray;
-      var indexFrom;
-      var indexTo;
-      if (data.hasOwnProperty('numberOfColumns')) {
-          indexFrom = 0;
-          indexTo = data.numberOfColumns;
-      } else {
-          indexFrom = data.indexFrom;
-          indexTo = data.indexTo;
-      }
+    var indexFrom;
+    var indexTo;
+    if (data.hasOwnProperty('numberOfColumns')) {
+      indexFrom = 0;
+      indexTo = data.numberOfColumns;
+    } else {
+      indexFrom = data.indexFrom;
+      indexTo = data.indexTo;
+    }
     return new ColumnsFunction(columnsArray, indexFrom, indexTo, data.take, data.docstring);
   };
   ColumnsFunction.prototype = Object.create(GenericFunction.prototype);
@@ -1266,22 +1266,22 @@ angular.module('grafterizerApp')
     } else {
       return this.take? new jsedn.List([jsedn.sym('columns'),
                                         new jsedn.List([jsedn.sym('range'), this.indexFrom, this.indexTo+1])]) : 
-                        new jsedn.List([jsedn.sym('remove-columns'),
-                                        this.indexFrom, this.indexTo]);
+      new jsedn.List([jsedn.sym('remove-columns'),
+                      this.indexFrom, this.indexTo]);
     }
 
   };
   this.ColumnsFunction = ColumnsFunction;
 
   var ChangeColtype = function(columnName, datatype) {
-      this.name = 'changeColtype';
-      this.displayName = 'change-type';
-      GenericFunction.call(this);
-      this.columnName = columnName;
-      this.datatype = datatype;
-      this.docstring = 'Change datatype of column ' + columnName + ' to ' + datatype;
+    this.name = 'changeColtype';
+    this.displayName = 'change-type';
+    GenericFunction.call(this);
+    this.columnName = columnName;
+    this.datatype = datatype;
+    this.docstring = 'Change datatype of column ' + columnName + ' to ' + datatype;
   }
- this.ChangeColtype = ChangeColtype;
+  this.ChangeColtype = ChangeColtype;
 
 
   var MeltFunction = function(columnsArray, docstring) {
@@ -1305,14 +1305,14 @@ angular.module('grafterizerApp')
   };
   MeltFunction.revive = function(data) {
 
-      var columnsArray = [];
-      if (data.columnsArray.length > 0 && !data.columnsArray[0].hasOwnProperty('id')) {
-          for (var i = 0; i < data.columnsArray.length; ++i) {
-              var colname = {id:i, value:data.columnsArray[i]};
-              columnsArray.push(colname);
-          }
-      } else
-        columnsArray = data.columnsArray;
+    var columnsArray = [];
+    if (data.columnsArray.length > 0 && !data.columnsArray[0].hasOwnProperty('id')) {
+      for (var i = 0; i < data.columnsArray.length; ++i) {
+        var colname = {id:i, value:data.columnsArray[i]};
+        columnsArray.push(colname);
+      }
+    } else
+      columnsArray = data.columnsArray;
     return new MeltFunction(columnsArray, data.docstring);
   };
   MeltFunction.prototype = Object.create(GenericFunction.prototype);
@@ -1389,7 +1389,7 @@ angular.module('grafterizerApp')
         if (funct.__type === 'MakeDatasetFunction') {
           functions[i] = MakeDatasetFunction.revive(funct);
         }
-        
+
         if (funct.__type === 'RemoveDuplicatesFunction') {
           functions[i] = RemoveDuplicatesFunction.revive(funct);
         }
@@ -1446,7 +1446,6 @@ angular.module('grafterizerApp')
     this.functions.splice(index, 1);
     return true;
   };
-
   this.Pipeline = Pipeline;
 
   this.getGraphElement = function(inputElement) {
@@ -1514,38 +1513,75 @@ angular.module('grafterizerApp')
   };
   this.URINode = URINode;
 
-  var ConstantURI = function(prefix, constantURIText, subElements) {
+  var ConstantURI = function(prefix, constantURIText, nodeCondition, subElements) {
     URINode.call(this, prefix, subElements);
     this.constant = constantURIText;
+    this.nodeCondition = nodeCondition;
     this.__type = 'ConstantURI';
   };
   ConstantURI.prototype = Object.create(URINode.prototype);
   ConstantURI.revive = function(data) {
-    return new ConstantURI(data.prefix, data.constant, data.subElements);
+    var conditions = [];
+    if (data.hasOwnProperty('nodeCondition')) {
+      if (data.nodeCondition.constructor === Array && data.nodeCondition.length > 0) {
+        for (var i = 0; i< data.nodeCondition.length; ++i) {
+          conditions.push(Condition.revive(data.nodeCondition[i]));
+        }
+      }
+    }
+    return new ConstantURI(data.prefix, data.constant, conditions, data.subElements);
   };
   this.ConstantURI = ConstantURI;
 
-  var ColumnURI = function(prefix, columnName, subElements) {
-    URINode.call(this, prefix, subElements);
+  var ColumnURI = function(prefix, columnName, nodeCondition, subElements) {
+    URINode.call(this, prefix.value, subElements);
     this.column = columnName;
+    this.nodeCondition = nodeCondition;
     this.__type = 'ColumnURI';
   };
   ColumnURI.prototype = Object.create(URINode.prototype);
   ColumnURI.revive = function(data) {
-    var colname;
+
+    var colname, prefix;
     if (data.column.hasOwnProperty('id')) colname = data.column;
     else colname = {
-        id:0,
-        value:data.column
+      id:0,
+      value:data.column
     };
-      return new ColumnURI(data.prefix, colname, data.subElements);
+    if (data.prefix.hasOwnProperty('id')) prefix = data.prefix;
+    else prefix = {
+      id:0,
+      value:data.prefix
+    };
+    var conditions = [];
+    if (data.hasOwnProperty('nodeCondition')) {
+      if (data.nodeCondition.constructor === Array && data.nodeCondition.length > 0) {
+        for (var i = 0; i< data.nodeCondition.length; ++i) {
+          conditions.push(Condition.revive(data.nodeCondition[i]));
+        }
+      }
+    }
+    return new ColumnURI(prefix, colname, conditions, data.subElements);
   };
   this.ColumnURI = ColumnURI;
 
-  var Property = function(prefix, propertyName, subElements) {
+  var Condition = function(column, operator, operand, conj) {
+    this.column = column;
+    this.operator = operator;
+    this.operand = operand;
+    this.conj = conj;   
+    this.__type = 'Condition';
+  };
+  Condition.revive = function(data) {
+    return new Condition(data.column, data.operator, data.operand, data.conj);
+  };
+  this.Condition = Condition;
+
+  var Property = function(prefix, propertyName, propertyCondition, subElements) {
     RDFElement.call(this, subElements);
     this.prefix = prefix;
     this.propertyName = propertyName;
+    this.propertyCondition = propertyCondition;
     this.__type = 'Property';
   };
   Property.prototype = Object.create(RDFElement.prototype);
@@ -1581,46 +1617,106 @@ angular.module('grafterizerApp')
     return childIndex;
   };
   Property.revive = function(data) {
-    return new Property(data.prefix, data.propertyName, data.subElements);
+
+    var conditions = [];
+    if (data.hasOwnProperty('propertyCondition')) {
+      if (data.propertyCondition.constructor === Array && data.propertyCondition.length > 0) {
+        for (var i = 0; i< data.propertyCondition.length; ++i) {
+          conditions.push(Condition.revive(data.propertyCondition[i]));
+        }
+      }
+      else {
+
+        if (data.propertyCondition.length!==0 && data.propertyCondition !== "") {
+
+          conditions.push(new Condition(null, {"id":6, "name":"Custom code"}, data.propertyCondition.toString(), null)); 
+        }
+      }
+    }
+    //else console.log("No prop condition");
+
+    return new Property(data.prefix, data.propertyName, conditions ,data.subElements);
   };
   this.Property = Property;
 
-  var ColumnLiteral = function(literalText) {
+  var ColumnLiteral = function(literalText,datatype,onEmpty,onError,langTag,datatypeURI, nodeCondition) {
     RDFElement.call(this, []);
     this.literalValue = literalText;
+    this.datatype = datatype;
+    this.onEmpty = onEmpty;
+    this.onError = onError;
+    this.langTag = langTag;
+    this.datatypeURI = datatypeURI;
+    this.nodeCondition = nodeCondition;
     this.__type = 'ColumnLiteral';
   };
   ColumnLiteral.prototype = Object.create(RDFElement.prototype);
   ColumnLiteral.revive = function(data) {
-      var colname;
-      if (data.literalValue.hasOwnProperty('id')) colname = data.literalValue;
-      else colname = {
-          id:0,
-          value: data.literalValue
-      };
-    return new ColumnLiteral(colname, data.subElements);
+    var colname;
+    if (data.literalValue.hasOwnProperty('id')) colname = data.literalValue;
+    else colname = {
+      id:0,
+      value: data.literalValue
+    };
+    var datatype = data.hasOwnProperty('datatype') ? data.datatype : 
+    {
+      name:'unspecified',
+      id:0
+    };
+    var onEmpty = data.hasOwnProperty('onEmpty') ? data.onEmpty : null;
+    var onError = data.hasOwnProperty('onError') ? data.onError : null;
+    var langTag = data.hasOwnProperty('langTag') ? data.langTag : null;
+    var datatypeURI = data.hasOwnProperty('datatypeURI') ? data.datatypeURI : null;
+    var conditions = [];
+    if (data.hasOwnProperty('nodeCondition')) {
+      if (data.nodeCondition.constructor === Array && data.nodeCondition.length > 0) {
+        for (var i = 0; i< data.nodeCondition.length; ++i) {
+          conditions.push(Condition.revive(data.nodeCondition[i]));
+        }
+      }
+    }
+    return new ColumnLiteral(colname, datatype, onEmpty, onError, langTag, datatypeURI, conditions);
+
   };
   this.ColumnLiteral = ColumnLiteral;
 
-  var ConstantLiteral = function(literalText) {
+  var ConstantLiteral = function(literalText, nodeCondition) {
     RDFElement.call(this, []);
     this.literalValue = literalText;
+    this.nodeCondition = nodeCondition;
     this.__type = 'ConstantLiteral';
   };
   ConstantLiteral.prototype = Object.create(RDFElement.prototype);
   ConstantLiteral.revive = function(data) {
-    return new ConstantLiteral(data.literalValue, data.subElements);
+    var conditions = [];
+    if (data.hasOwnProperty('nodeCondition')) {
+      if (data.nodeCondition.constructor === Array && data.nodeCondition.length > 0) {
+        for (var i = 0; i< data.nodeCondition.length; ++i) {
+          conditions.push(Condition.revive(data.nodeCondition[i]));
+        }
+      }
+    }
+    return new ConstantLiteral(data.literalValue, conditions);
   };
   this.ConstantLiteral = ConstantLiteral;
 
   // TODO add support for blank nodes
-  var BlankNode = function(subElements) {
+  var BlankNode = function(nodeCondition, subElements) {
     RDFElement.call(this, subElements);
+    this.nodeCondition = nodeCondition;
     this.__type = 'BlankNode';
   };
   BlankNode.prototype = Object.create(URINode.prototype);
   BlankNode.revive = function(data) {
-    return new BlankNode(data.subElements);
+    var conditions = [];
+    if (data.hasOwnProperty('nodeCondition')) {
+      if (data.nodeCondition.constructor === Array && data.nodeCondition.length > 0) {
+        for (var i = 0; i< data.nodeCondition.length; ++i) {
+          conditions.push(Condition.revive(data.nodeCondition[i]));
+        }
+      }
+    }    
+    return new BlankNode(conditions, data.subElements);
   };
   this.BlankNode = BlankNode;
 
@@ -1695,12 +1791,7 @@ angular.module('grafterizerApp')
   var Transformation = function(customFunctionDeclarations, prefixers, pipelines, graphs, rdfVocabs) {
 
     // validate that inputs are revived
-    var i;
-    var cfd;
-    var prefixer;
-    var pipeline;
-    var graph;
-    var rdfVocab;
+    var i, cfd, prefixer, pipeline, graph, rdfVocab;
     if (!customFunctionDeclarations)
       customFunctionDeclarations = [];
     if (!prefixers)
@@ -1761,33 +1852,41 @@ angular.module('grafterizerApp')
   Transformation.revive = function(data) {
     var pipelines = [];
     for (var a = 0; a< data.pipelines.length; ++a) {
-        var currPipeline = data.pipelines[a];
-        var functions = [];
-        for (var i = 0; i< data.pipelines[a].functions.length; ++i) {
-            var currFunct = data.pipelines[a].functions[i];
-            if (currFunct.__type === 'MapcFunction') {
-                for (var j = 0; j < currFunct.keyFunctionPairs.length; ++j) {
-                    if (!currFunct.keyFunctionPairs[j].func.hasOwnProperty('name')) {
-                        for (var k = 0; k < data.customFunctionDeclarations.length; ++k) { 
-                            if (data.customFunctionDeclarations[k].name === currFunct.keyFunctionPairs[j].func) currFunct.keyFunctionPairs[j].func = {
-                                name:data.customFunctionDeclarations[k].name,
-                                group:data.customFunctionDeclarations[k].group,
-                                id:0};
-                        }
-                        for (var k = 0; k < data.prefixers.length; ++k) { 
-                            if (data.prefixers[k].name === currFunct.keyFunctionPairs[j].func) currFunct.keyFunctionPairs[j].func = {name:data.prefixers[k].name,
-                                group:'PREFIXERS',
-                                    id:0};
-                        }
-                    }
+      var currPipeline = data.pipelines[a];
+      var functions = [];
+      for (var i = 0; i< data.pipelines[a].functions.length; ++i) {
+        var currFunct = data.pipelines[a].functions[i];
+        if (currFunct.__type === 'MapcFunction') {
+          for (var j = 0; j < currFunct.keyFunctionPairs.length; ++j) {
+            if (!currFunct.keyFunctionPairs[j].func.hasOwnProperty('name')) {
+              for (var k = 0; k < data.customFunctionDeclarations.length; ++k) { 
+                if (data.customFunctionDeclarations[k].name === currFunct.keyFunctionPairs[j].func) {
+                  currFunct.keyFunctionPairs[j].func = {
+                    name: data.customFunctionDeclarations[k].name,                    
+                    group: data.customFunctionDeclarations[k].group, 
+                    id: 0
+                  };
                 }
-                functions.push(currFunct);
+              }
+
+              for (var k = 0; k < data.prefixers.length; ++k) { 
+                if (data.prefixers[k].name === currFunct.keyFunctionPairs[j].func) {
+                  currFunct.keyFunctionPairs[j].func = {
+                    name: data.prefixers[k].name,
+                    group: 'PREFIXERS',
+                    id: 0
+                  };
+                }
+              }
             }
-            else
-            functions.push(currFunct);
-    }
-        currPipeline.functions = functions;
-        pipelines.push(currPipeline);
+          }
+          functions.push(currFunct);
+        }
+        else
+          functions.push(currFunct);
+      }
+      currPipeline.functions = functions;
+      pipelines.push(currPipeline);
     }
     return new Transformation(data.customFunctionDeclarations, data.prefixers, pipelines, data.graphs, data.rdfVocabs);
   };
@@ -1846,7 +1945,7 @@ angular.module('grafterizerApp')
     return false;
   };
   Transformation.prototype.getCustomFunctionDeclarations = function() {
-      return this.customFunctionDeclarations;
+    return this.customFunctionDeclarations;
   };
   Transformation.prototype.findPrefixerOrCustomFunctionByName = function(name) {
     var i;
@@ -1865,6 +1964,7 @@ angular.module('grafterizerApp')
     return null;
   };
   Transformation.prototype.getColumnKeysFromGraphNodes = function() {
+    // console.log(this.graphs);
     var requestedColumnKeys = [];
     var rootNode;
     for (var j = 0; j < this.graphs.length; ++j)
@@ -1876,6 +1976,9 @@ angular.module('grafterizerApp')
         if (rootNode instanceof ColumnLiteral)
           if (requestedColumnKeys.indexOf(rootNode.literalValue.value) === -1)
             requestedColumnKeys.push(rootNode.literalValue.value);
+        for (var k = 0; k < rootNode.nodeCondition.length; ++k)
+          if (rootNode.nodeCondition[k].column && requestedColumnKeys.indexOf(rootNode.nodeCondition[k].column.value) === -1)
+            requestedColumnKeys.push(rootNode.nodeCondition[k].column.value);
         requestedColumnKeys = getKeysFromSubs(rootNode, requestedColumnKeys);
       }
 
@@ -1932,13 +2035,25 @@ angular.module('grafterizerApp')
 
   // TODO should this just be a prototype function of every RDFElement?
   var getKeysFromSubs = function(rootNode, subColKeys) {
+
     for (var i = 0; i < rootNode.subElements.length; ++i) {
       if (rootNode.subElements[i] instanceof ColumnURI)
         if (subColKeys.indexOf(rootNode.subElements[i].column.value) === -1)
           subColKeys.push(rootNode.subElements[i].column.value);
-      if (rootNode.subElements[i] instanceof ColumnLiteral)
+      if (rootNode.subElements[i] instanceof ColumnLiteral) 
+
         if (subColKeys.indexOf(rootNode.subElements[i].literalValue.value) === -1)
           subColKeys.push(rootNode.subElements[i].literalValue.value);
+
+      if (rootNode.subElements[i] instanceof Property)
+        for (var j = 0; j < rootNode.subElements[i].propertyCondition.length; ++j)
+          if (rootNode.subElements[i].propertyCondition[j].column && subColKeys.indexOf(rootNode.subElements[i].propertyCondition[j].column.value) === -1)
+            subColKeys.push(rootNode.subElements[i].propertyCondition[j].column.value);
+      if (rootNode.subElements[i].__type !== "Property") {
+        for (var j = 0; j < rootNode.subElements[i].nodeCondition.length; ++j)
+          if (rootNode.subElements[i].nodeCondition[j].column && subColKeys.indexOf(rootNode.subElements[i].nodeCondition[j].column.value) === -1)
+            subColKeys.push(rootNode.subElements[i].nodeCondition[j].column.value);
+      }
       getKeysFromSubs(rootNode.subElements[i], subColKeys);
     }
 
@@ -1949,17 +2064,17 @@ angular.module('grafterizerApp')
     // TODO how to support multi-pipe transformation??
     try {
       if (!untilFunction) {
-//        console.log("Unable to compute partial transformation: empty until function");
+        //        console.log("Unable to compute partial transformation: empty until function");
         return this;
       }
       if (!(untilFunction instanceof GenericFunction)) {
-//        console.log("Unable to compute partial transformation: wrong type of input parameter");
+        //        console.log("Unable to compute partial transformation: wrong type of input parameter");
         return this;
       }
 
       var index = this.pipelines[0].functions.indexOf(untilFunction);
       if (index === -1) {
-//        console.error("Unable to compute partial transformation: unable to find until function");
+        //        console.error("Unable to compute partial transformation: unable to find until function");
         return this;
       }
 
@@ -1977,5 +2092,8 @@ angular.module('grafterizerApp')
 
   };
   this.Transformation = Transformation;
-  // AngularJS will instantiate a singleton by calling 'new' on this function
+
+  
+  
+
 });

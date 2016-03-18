@@ -82,6 +82,12 @@ scope.addColumn = function(query) {
             scope.function.docstring);
         };
 
+        scope.reduceFunctionParams = function(params) {
+            for (var i = 1; i < scope.function.colsToDeriveFrom.length; ++i) {
+                params.splice(0, 1);
+            }
+            return params;
+        }
         scope.addDeriveFunction = function() {
           var derfunc = scope.$parent.transformation.customFunctionDeclarations[0];
           this.function.functionsToDeriveWith.push(derfunc);

@@ -6,12 +6,20 @@
       <md-fab-trigger>
         <md-button flex class="md-raised rdf-mapping-node-button" aria-label="{{node.prefix+':'+node.column}}" ng-click="editNode()" ng-disabled="$root.readonlymode">
           <div layout="row" layout-align="start center">
-            <div class="fa-stack">
+            <div class="fa-stack" ng-if = "node.nodeCondition.length === 0">
+              <i class="fa fa-circle fa-stack-2x rdf-mapping-icon-background-inset"></i>
+              <i class="fa fa-columns fa-stack-1x fa-inverse"></i>
+            </div>
+              <div class="fa-stack" ng-if = "node.nodeCondition.length > 0">
+              <i class="fa fa-circle fa-stack-2x rdf-mapping-icon-background-inset"></i>
+              <i class="fa fa-filter fa-stack-1x fa-inverse"></i>
+            </div>
+              <div class="fa-stack" ng-if = "node.nodeCondition.length > 0">
               <i class="fa fa-circle fa-stack-2x rdf-mapping-icon-background-inset"></i>
               <i class="fa fa-columns fa-stack-1x fa-inverse"></i>
             </div>
             <div class="rdf-mapping-node-text">
-              <div class="rdf-mapping-prefix-text">{{node.prefix ? '(' + node.prefix + ')' : 'no prefix'}}</div>
+              <div class="rdf-mapping-prefix-text">{{node.prefix ? '(' + (node.prefix.hasOwnProperty('id') ? node.prefix.value : node.prefix) + ')' : 'no prefix'}}</div>
               <div class="rdf-mapping-node-text rdf-mapping-column-name-text">
                 {{node.column.value}}
               </div>

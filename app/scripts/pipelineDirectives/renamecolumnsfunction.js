@@ -67,7 +67,7 @@ angular.module('grafterizerApp')
 
         scope.getMapLength = function(num) {
           var b = [];
-          for (var i = 0; i <= num / 2; i += 2) b.push(i);
+          for (var i = 0; i < num ; i += 2) b.push(i);
           return b;
         };
 

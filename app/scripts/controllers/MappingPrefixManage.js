@@ -9,14 +9,14 @@
  */
 
 angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
-  $scope,
-  $rootScope,
-  $http,
-  $mdDialog,
-  $log,
-  $mdSidenav,
-  $mdUtil,
-  leObject) {
+                                            $scope,
+                                             $rootScope,
+                                             $http,
+                                             $mdDialog,
+                                             $log,
+                                             $mdSidenav,
+                                             $mdUtil,
+                                             leObject) {
 
   var connection = leObject.serveraddress;
   var object = leObject.object;
@@ -74,7 +74,7 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
     $scope.VocabItems = [];
     if (localVocabulary) {
       for (var i = localVocabulary.length - 1; i >= 0; i--) {
-        if (localVocabulary[i].fromServer === false) {
+        if (!localVocabulary[i].fromServer) {
           VocabList.push(localVocabulary[i]);
         }
       }
@@ -175,18 +175,24 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
       .then(function() {});
 
     var localVocabulary = $rootScope.transformation.rdfVocabs;
-
-    for (var i = 0; i < localVocabulary.length; i++) {
-      if (localVocabulary[i].namespace === namespace) {
-        var j;
-        for (j = 0; j < localVocabulary[i].classes.length; j++) {
-          $scope.vocabClassArray.push(localVocabulary[i].classes[j].name.substring(
-            localVocabulary[i].classes[j].name.indexOf(':') + 1));
-        }
-
-        for (j = 0; j < localVocabulary[i].properties.length; j++) {
-          $scope.vocabPropertyArray.push(localVocabulary[i].properties[j].name.substring(
-            localVocabulary[i].properties[j].name.indexOf(':') + 1));
+    if(localVocabulary){
+      for (var i = 0; i < localVocabulary.length; ++i) {
+        if(localVocabulary[i].namespace){
+          if (localVocabulary[i].namespace === namespace) {
+            var j;
+            if(localVocabulary[i].classes){
+              for (j = 0; j < localVocabulary[i].classes.length; j++) {
+                $scope.vocabClassArray.push(localVocabulary[i].classes[j].name.substring(
+                  localVocabulary[i].classes[j].name.indexOf(':') + 1));
+              }
+            }
+            if(localVocabulary[i].properties){
+              for (j = 0; j < localVocabulary[i].properties.length; j++) {
+                $scope.vocabPropertyArray.push(localVocabulary[i].properties[j].name.substring(
+                  localVocabulary[i].properties[j].name.indexOf(':') + 1));
+              }
+            }
+          }
         }
       }
     }
@@ -197,22 +203,22 @@ angular.module('grafterizerApp').controller('MappingPrefixManageCtrl', function(
         name: name,
         namespace: namespace
       }).success(function(response) {
-        
-        var i;
-        if ($scope.vocabClassArray.length === 0) {
-          for (i = response.classResult.length - 1; i >= 0; i--) {
-            $scope.vocabClassArray.push(response.classResult[i].value);
-          }
-        }
 
-        if ($scope.vocabPropertyArray.length === 0) {
-          for (i = response.propertyResult.length - 1; i >= 0; i--) {
-            $scope.vocabPropertyArray.push(response.propertyResult[i].value);
-          }
+      var i;
+      if ($scope.vocabClassArray.length === 0) {
+        for (i = response.classResult.length - 1; i >= 0; i--) {
+          $scope.vocabClassArray.push(response.classResult[i].value);
         }
-      }).error(function(data, status, headers, config) {
+      }
 
-      });
+      if ($scope.vocabPropertyArray.length === 0) {
+        for (i = response.propertyResult.length - 1; i >= 0; i--) {
+          $scope.vocabPropertyArray.push(response.propertyResult[i].value);
+        }
+      }
+    }).error(function(data, status, headers, config) {
+
+    });
   };
 
   //delete local vocabulary
