@@ -37,7 +37,7 @@ angular.module('grafterizerApp')
     
     
     
-    var _debug_ = false;
+    var _debug_ = true;
     var log = function(a) {
         if (_debug_) {
             console.log(a);
@@ -57,6 +57,7 @@ angular.module('grafterizerApp')
             - changed (boolean for if it can be saved or not)
             - showDeleteOptions (boolean for showing the "Sure you want to delete?" option)
             - serverHasClojure (boolean if clojure code exists. Makes a different for POST or PUT changed clojure code)
+            - serverHasConfiguration (boolean. Same as above, to prevent us from loosing other kinds of configurations if clojure does not exist)
             - isNew (is this a new utility function or not?)
             - nameIsChanged (do we have to update the name as well when saving changed code?)
             - nameWarning (make a warning to the user about the name being used already)
@@ -131,20 +132,24 @@ angular.module('grafterizerApp')
         if (!$scope.ufAll[id].isLoaded) {
             log("Loading utility function " + id);
             dataGraftApi.utilityFunctionGet(id).success( function(data) {
+                log("Loaded id " + id + ":\n" + pretty(data));
+                
                 // Copy each field from data into the correct ufAll
                 for (var i in data) {
                     $scope.ufAll[id][i] = data[i];
                 }
                 
                 // Check if configuration field exist
+                $scope.ufAll[id].serverHasConfiguration = true;
                 if( typeof($scope.ufAll[id].configuration) === 'undefinied' || $scope.ufAll[id].configuration === null) {
+                    $scope.ufAll[id].serverHasConfiguration = false;
                     $scope.ufAll[id].configuration = {};
                 }
                 // Check if clojure code exists
                 $scope.ufAll[id].serverHasClojure = true;
-                if (typeof($scope.ufAll[id].configuration.clojure) === 'undefined' || $scope.ufAll[id].configuration.clojure === null) {
+                if (typeof($scope.ufAll[id].configuration.code) === 'undefined' || $scope.ufAll[id].configuration.code === null) {
                     $scope.ufAll[id].serverHasClojure = false;
-                    $scope.ufAll[id].configuration.clojure = "// No clojure code yet...";
+                    $scope.ufAll[id].configuration.code = "// No clojure code yet...";
                 }
                 
                 $scope.ufAll[id].isLoaded = true;
@@ -216,26 +221,36 @@ angular.module('grafterizerApp')
     
     $scope.saveChanges = function(id) {
         var patch = {};
-        patch.clojure = $scope.ufAll[id].configuration.clojure;
-        log(pretty(patch));
-        if ($scope.ufAll[id].serverHasClojure) {
-            log("Updating clojure for " + id);
-            dataGraftApi.utilityFunctionUpdateConfigurationByKey(id, "clojure", $scope.ufAll[id].configuration.clojure)
+        patch.code = $scope.ufAll[id].configuration.code;
+        log("Patch from code field:\n" + pretty(patch));
+        if (!$scope.ufAll[id].serverHasConfiguration) {
+            log("Creating configuration with clojure for " + id);
+            dataGraftApi.utilityFunctionCreateConfiguration(id, patch)
                 .success( function(data) {
                     $scope.ufAll[id].changed = false;
-                    log("Response from save changes: " + pretty(data));
+                    $scope.ufAll[id].serverHasConfiguration = true;
+                    $scope.ufAll[id].serverHasClojure = true;
                     logServerUtilityFunction(id);
                     updateNameServerSide(id);
-                });
-        } else {
-            log("Creating clojure for " + id);
-            dataGraftApi.utilityFunctionCreateConfiguration(id, patch)
+            });
+        } else if (!$scope.ufAll[id].serverHasClojure) {
+            log("Creating configuration code key for " + id);
+            dataGraftApi.utilityFunctionCreateConfigurationByKey(id, "code", patch.code)
                 .success( function(data) {
                     $scope.ufAll[id].changed = false;
                     $scope.ufAll[id].serverHasClojure = true;
                     logServerUtilityFunction(id);
                     updateNameServerSide(id);
             });
+        } else {
+            log("Updating clojure for " + id);
+            dataGraftApi.utilityFunctionUpdateConfigurationByKey(id, "code", $scope.ufAll[id].configuration.code)
+                .success( function(data) {
+                    $scope.ufAll[id].changed = false;
+                    log("Response from save changes: " + pretty(data));
+                    logServerUtilityFunction(id);
+                    updateNameServerSide(id);
+                });
         }
     }
     
@@ -258,7 +273,7 @@ angular.module('grafterizerApp')
         newUF.public = $scope.ufAll[id].public;
         newUF.name = $scope.ufAll[id].name;
         newUF.configuration = {};
-        newUF.configuration.clojure = $scope.ufAll[id].configuration.clojure;
+        newUF.configuration.code = $scope.ufAll[id].configuration.code;
         log("creating new utilityFunction from:\n" + pretty(newUF));
         dataGraftApi.utilityFunctionCreate(newUF).success(function(data) {
             log("Creating new UF - response from server:\n" + pretty(data));
@@ -309,7 +324,7 @@ angular.module('grafterizerApp')
         newUF.showDeleteOption = false;
         newUF.serverHasClojure = false;
         newUF.configuration = {};
-        newUF.configuration.clojure = "// Please write your clojure code here";
+        newUF.configuration.code = "// Please write your clojure code here";
         
         var id = generateNewUFid();
         $scope.ufAll[id] = newUF;
@@ -346,12 +361,12 @@ angular.module('grafterizerApp')
     var functionName = /\(defn?\s+([^\s\)]+)/i;
     
     // $Watch gives a list of variables that should have more complex update behaviour when they are modified.
-    $scope.$watch('ufAll[selectedUF].configuration.clojure', function() {
+    $scope.$watch('ufAll[selectedUF].configuration.code', function() {
         var id = $scope.selectedUF; 
         
         if (!id) return;
         
-        var code = $scope.ufAll[id].configuration.clojure;
+        var code = $scope.ufAll[id].configuration.code;
         if (!code) return;
         
         var m = code.match(functionName);
