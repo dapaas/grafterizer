@@ -13,7 +13,10 @@ angular.module('grafterizerApp')
     
     var dgApi = new API.Client.DefaultApi($http=$http,  $httpParamSerializer=$httpParamSerializer);
     
-    this.username = "havahol";
+    // Using the reserved keyword making the server find the correct username automagically
+    this.username = "myassets";
+    
+    
     this.apiKey = "s4n7s3ehlrbi:8l29krbjh0jnp2h";
     
     //Need to set correct headers for accepting headers only.
