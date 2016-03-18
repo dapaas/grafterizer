@@ -40,7 +40,7 @@ angular
     'oi.select'
 ])
   .config(function(
-    ontotextAPIProvider,
+    backendServiceProvider,
     PipeServiceProvider,
     jarfterServiceProvider,
     $mdThemingProvider,
@@ -50,7 +50,8 @@ angular
     cfpLoadingBarProvider,
     $breadcrumbProvider,
     $locationProvider,
-    $provide) {
+    $provide,
+    $httpProvider) {
 
     var developmentMode = window.location.origin === 'http://localhost:9000';
 
@@ -78,18 +79,20 @@ angular
       };
     }
 
-    ontotextAPIProvider.setEndpoint('https://api.datagraft.net');
-
     if (developmentMode) {
-      PipeServiceProvider.setEndpoints(
-        'https://grafterizer.datagraft.net/backend',
-        'https://grafterizer.datagraft.net/cache');
+      // PipeServiceProvider.setEndpoints(
+        // 'https://grafterizer.datagraft.net/backend',
+        // 'https://grafterizer.datagraft.net/cache');
+      // backendServiceProvider.setEndpoint('https://grafterizer.datagraft.net');
       jarfterServiceProvider.setEndpoint('https://grafterizer.datagraft.net');
-
-      // PipeServiceProvider.setEndpoints('http://localhost:8080', 'http://localhost:8082');
+      PipeServiceProvider.setEndpoints(
+        'http://localhost:8082',
+        'http://localhost:8083');
+      backendServiceProvider.setEndpoint('http://localhost:8082');
     } else {
       PipeServiceProvider.setEndpoints('/backend', '/cache');
       jarfterServiceProvider.setEndpoint('');
+      backendServiceProvider.setEndpoint('/backend');
     }
 
     $urlRouterProvider.otherwise('/transformations');
@@ -169,7 +172,7 @@ angular
         }
       })
       .state('transformations.transformation', {
-        url: '/{id:nonURIEncoded}',
+        url: '/:publisher/:id',
         views: {
           'main@': {
             templateUrl: 'views/transformation.html',
@@ -181,11 +184,11 @@ angular
           }
         },
         ncyBreadcrumb: {
-          label: '{{document.title || "File "+id}}'
+          label: '{{document.title || "File " + title}}'
         }
       })
       .state('transformations.transformation.preview', {
-        url: '^/transform/{id:nonURIEncoded}?{distribution:previewURI}',
+        url: '/preview/:distributionId',
         views: {
           preview: {
             templateUrl: 'views/preview.html',
@@ -197,7 +200,7 @@ angular
         }
       })
       .state('transformations.readonly', {
-        url: '^/readonly/{id:nonURIEncoded}',
+        url: '^/readonly/id',
         params: {
           showToolbar: null,
         },
@@ -213,63 +216,6 @@ angular
         },
         ncyBreadcrumb: {
           label: '{{document.title || "File "+id}}'
-        }
-      })
-      .state('datasets', {
-        url: '/datasets',
-        views: {
-          'main@': {
-            templateUrl: 'views/datasets.html',
-            controller: 'DatasetsCtrl'
-          }
-        },
-        ncyBreadcrumb: {
-          label: 'Datasets'
-        }
-      })
-      .state('datasets.dataset', {
-        url: '/datasets/{id:nonURIEncoded}',
-        views: {
-          'main@': {
-            templateUrl: 'views/dataset.html',
-            controller: 'DatasetCtrl'
-          }
-        },
-        ncyBreadcrumb: {
-          label: '{{document.title || id}}'
-        }
-      })
-      .state('distribution', {
-        url: '/distribution/{id:nonURIEncoded}',
-        views: {
-          'main@': {
-            templateUrl: 'views/distribution.html',
-            controller: 'DistributionCtrl'
-          }
-        },
-        ncyBreadcrumb: {
-          label: '{{document.title || id}}'
-        }
-      })
-      .state('embedded', {
-        url: '/embedded',
-        views: {
-          main: true
-        },
-        ncyBreadcrumb: {
-          label: 'Loading'
-        }
-      })
-      .state('apikey', {
-        url: '/apiKey',
-        views: {
-          main: {
-            templateUrl: 'views/apikey.html',
-            controller: 'ApikeyCtrl'
-          }
-        },
-        ncyBreadcrumb: {
-          label: 'API Key'
         }
       })
       .state('help', {
@@ -363,18 +309,13 @@ angular
 
     // JSEDN is too restrictive by default on valid symbols
     jsedn.Symbol.prototype.validRegex = new RegExp(/[\s\S]*/);
-  }).run(function(datagraftPostMessage, apiKeyService, $state, $rootScope) {
+
+    // Enable credentials with the API communication
+    $httpProvider.defaults.withCredentials = true;
+  }).run(function(datagraftPostMessage, $state, $rootScope) {
     datagraftPostMessage.setup();
 
     // Mobile detection (as Leaflet 1.0 does)
     var ua = navigator.userAgent.toLowerCase();
     $rootScope.isMobile = typeof orientation !== 'undefined' || ua.indexOf('mobile') !== -1;
-
-    if (!apiKeyService.hasKeyPass()) {
-      window.setTimeout(function() {
-        if (!apiKeyService.hasKeyPass() && !$state.is('transformations.readonly')) {
-          $state.go('apikey');
-        }
-      }, 2000);
-    }
   });

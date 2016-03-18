@@ -11,7 +11,7 @@ angular.module('grafterizerApp')
   .controller('TransformationCtrl', function(
               $scope,
                $stateParams,
-               ontotextAPI,
+               backendService,
                uploadFile,
                $rootScope,
                $state,
@@ -20,7 +20,6 @@ angular.module('grafterizerApp')
                transformationDataModel,
                generateClojure,
                $controller) {
-
 
   var customfunctions = [
     new transformationDataModel.CustomFunctionDeclaration(
@@ -33,11 +32,11 @@ angular.module('grafterizerApp')
       'DATE FUNCTIONS', 'Transform date dd/mm/yyyy ~> yyyy-mm-dd'),
     new transformationDataModel.CustomFunctionDeclaration(
       'double-literal',
-      '(defn double-literal [s] (if (nil? (re-matches #"[0-9.]+" s)) 0 (Double/parseDouble s)))', 
+      '(defn double-literal [s] (if (nil? (re-matches #"[0-9.]+" s)) 0 (Double/parseDouble s)))',
       'CONVERT DATATYPE', 'Coerce to double. Null and non-valid values are replaced with zero'),
     new transformationDataModel.CustomFunctionDeclaration(
       'integer-literal',
-      '(defn integer-literal [s] (if (nil? (re-matches #"[0-9.]+" s)) 0 (Integer/parseInt s)))', 
+      '(defn integer-literal [s] (if (nil? (re-matches #"[0-9.]+" s)) 0 (Integer/parseInt s)))',
       'CONVERT DATATYPE', 'Coerce to integer. Null and non-valid values are replaced with zero'),
     new transformationDataModel.CustomFunctionDeclaration(
       'transform-gender',
@@ -48,7 +47,7 @@ angular.module('grafterizerApp')
       '(defn stringToNumeric    [x] (if (= "" x) nil  (if (.contains x ".") (Double/parseDouble x)(Integer/parseInt x))))',
       'CONVERT DATATYPE', 'Convert string to numeric'),
     new transformationDataModel.CustomFunctionDeclaration(
-      'string-literal', 
+      'string-literal',
       '(def string-literal s)',
       'CONVERT DATATYPE', 'Coerce to string'),
     new transformationDataModel.CustomFunctionDeclaration('boolean', '', 'CONVERT DATATYPE', 'Coerce to boolean'),
@@ -67,18 +66,18 @@ angular.module('grafterizerApp')
     new transformationDataModel.CustomFunctionDeclaration('second', '', 'COLLECTION', 'Returns the second item in the collection'),
     new transformationDataModel.CustomFunctionDeclaration('short', '', 'CONVERT DATATYPE', 'Coerce to short'),
     new transformationDataModel.CustomFunctionDeclaration(
-      'join',        
-      '(defn join [& strings] (clojure.string/join " " strings))', 
+      'join',
+      '(defn join [& strings] (clojure.string/join " " strings))',
       'STRING', 'Returns a string of all elements in the collection separated by space.'),
     new transformationDataModel.CustomFunctionDeclaration(
       'join-with',
-      '(defn join-with [sep] ( fn [& strings] (clojure.string/join sep strings)))', 
+      '(defn join-with [sep] ( fn [& strings] (clojure.string/join sep strings)))',
       'STRING', 'Returns a string of all elements in the collection separated by custom separator.'),
     new transformationDataModel.CustomFunctionDeclaration('lower-case', '', 'STRING', 'Converts string to all lower-case'),
     new transformationDataModel.CustomFunctionDeclaration('upper-case', '', 'STRING', 'Converts string to all upper-case'),
     new transformationDataModel.CustomFunctionDeclaration('reverse', '', 'STRING', 'Returns given string with its characters reversed'),
     new transformationDataModel.CustomFunctionDeclaration(
-      'string-as-keyword', 
+      'string-as-keyword',
       '(defn string-as-keyword [s] ( when (seq s) (->   (str s) clojure.string/trim   (clojure.string/replace "(" "-") (clojure.string/replace ")" "") (clojure.string/replace " " "_") (clojure.string/replace "," "-") (clojure.string/replace "." "") (clojure.string/replace "/" "-") (clojure.string/replace "---" "-") (clojure.string/replace "--" "-") (clojure.string/replace ":" "") (clojure.string/replace "\\"" "") )))', 'STRING', 'Removes blanks and special symbols from a string thus making it possible to use it as a keyword'),
     new transformationDataModel.CustomFunctionDeclaration('remove-blanks', '(defn remove-blanks [s]  (when (seq s)  (clojure.string/replace s " " "")))', 'STRING', 'Removes blanks in a string'),
     new transformationDataModel.CustomFunctionDeclaration('titleize', '(defn titleize [st] (when (seq st) (let [a (clojure.string/split st (read-string "#\\" \\"")) c (map clojure.string/capitalize a)]  (->> c (interpose " ") (apply str) clojure.string/trim))))', 'STRING', 'Capitalizes each word in a string'),
@@ -193,13 +192,13 @@ angular.module('grafterizerApp')
                                                           '(let [newcolname  (keyword (str (name (key (first keyval))) "_" ( case (str (first (re-find (read-string "#\\"(?<=\\\\\\\\$)(.*?)(?=\\\\\\\\@)\\"") (str (val (first keyval)))))) ' +
                                                           '("MAX" "MIN" "SUM" "AVG" "COUNT") ' +
                                                           '(first (re-find (read-string "#\\"(?<=\\\\\\\\$)(.*?)(?=\\\\\\\\@)\\"") (str (val (first keyval))))) ' +
-                                                          '"MERGED") ' + 
+                                                          '"MERGED") ' +
                                                           ' ))]' +
                                                           '(if (and (re-find (read-string "#\\"COUNT+\\"") (str (val (first keyval))) ) ' +
                                                           ' (= (count  (map (fn [k] (hash-map newcolname (get [k] (key (first keyval))))) (val m))) 1)) ' +
                                                           ' (hash-map newcolname 1) ' +
-                                                          ' (case  (str (first (re-find (read-string "#\\"(?<=\\\\\\\\$)(.*?)(?=\\\\\\\\@)\\"") (str (val (first keyval)))))) ' + 
-                                                          ' ("MAX" "MIN" "SUM" "AVG" "COUNT" ) ' +   
+                                                          ' (case  (str (first (re-find (read-string "#\\"(?<=\\\\\\\\$)(.*?)(?=\\\\\\\\@)\\"") (str (val (first keyval)))))) ' +
+                                                          ' ("MAX" "MIN" "SUM" "AVG" "COUNT" ) ' +
                                                           ' (apply merge-with  (val (first keyval)) ' +
                                                           '(map (fn [k] (hash-map newcolname (get k (key (first keyval))))) (val m)))' +
                                                           ' (apply merge-with  (fn [& args] (clojure.string/join (str (val (first keyval))) (distinct (into [] args)))) ' +
@@ -210,11 +209,10 @@ angular.module('grafterizerApp')
                                                           'new-colnames (concat colnames (for [keyval colnames-functions] (keyword (str (name (key (first keyval))) "_" (case (first (re-find (read-string "#\\"(?<=\\\\\\\\$)(.*?)(?=\\\\\\\\@)\\"") (str (val (first keyval))))) ' +
                                                           '("MAX" "MIN" "SUM" "AVG" "COUNT") ' +
                                                           '(first (re-find (read-string "#\\"(?<=\\\\\\\\$)(.*?)(?=\\\\\\\\@)\\"") (str (val (first keyval))))) ' +
-                                                          '"MERGED") ' + 
+                                                          '"MERGED") ' +
                                                           '))))]' +
-                                                          '(-> (make-dataset grouped-rows new-colnames)(with-meta (meta dataset)))))'
-
-                                                          , 'SERVICE',
+                                                          '(-> (make-dataset grouped-rows new-colnames)(with-meta (meta dataset)))))',
+                                                          'SERVICE',
                                                           'Groups rows in a dataset'
                                                          ),
 
@@ -274,7 +272,7 @@ angular.module('grafterizerApp')
                                                           '(map (fn [k] (dissoc k (key groupvar))) (val m)))'        +
                                                           '(key groupvar) (val groupvar)))))]' +
                                                           ' (-> (make-dataset grouped-rows (column-names dataset)) (with-meta (meta dataset)))))' +
-                                                          ')', 
+                                                          ')',
                                                           'SERVICE', 'Removes duplicates from a dataset'),
     new transformationDataModel.CustomFunctionDeclaration('shift-row',
                                                           '(defn shift-row' +
@@ -290,7 +288,7 @@ angular.module('grafterizerApp')
                                                           'eods (count (:rows dataset)) ]' +
                                                           '(-> (make-dataset (cond (< position-from position-to) (:rows (incanter.core/conj-rows (take-rows dataset position-from)' +
                                                           '(rows dataset (range f t))' +
-                                                          '(rows dataset [position-from])' +   
+                                                          '(rows dataset [position-from])' +
                                                           '(rows dataset (range t eods))))' +
                                                           ':else (:rows (incanter.core/conj-rows (take-rows dataset position-to)' +
                                                           '(rows dataset [position-from])' +
@@ -303,7 +301,7 @@ angular.module('grafterizerApp')
       '(defn is-numeric [x] (not (nil? (re-matches #"[0-9.-]+" (str x)))))',
       'SERVICE', 'Used by convert-literal'),
     new transformationDataModel.CustomFunctionDeclaration('true-value',
-                                                          '(defn true-value? [x]  (if (or (= (clojure.string/trim (clojure.string/lower-case (str x))) "false")  (and (re-matches #"[0-9.]+" (str x)) (= (str x) "0")) ) false true))','SERVICE', 'Used by convert-literal'),
+                                                          '(defn true-value? [x]  (if (or (= (clojure.string/trim (clojure.string/lower-case (str x))) "false")  (and (re-matches #"[0-9.]+" (str x)) (= (str x) "0")) ) false true))', 'SERVICE', 'Used by convert-literal'),
     new transformationDataModel.CustomFunctionDeclaration('check-datatype',
                                                           '(defn check-datatype [dtype a]  (case dtype ' +
                                                           '"byte"  (and  (is-numeric a) (< (Double/parseDouble (str a)) 128) (> (Double/parseDouble (str a)) -129)) ' +
@@ -313,13 +311,13 @@ angular.module('grafterizerApp')
                                                           '"integer" (and (not (nil? (re-matches #"[0-9-]+" (str a)))) (< (Long/parseLong (str a)) (Long/parseLong "2147483648")) (> (Long/parseLong (str a)) (Long/parseLong "-2147483649"))) ' +
                                                           '"long" (and (not (nil? (re-matches #"[0-9-]+" (str a)))) (< (Double/parseDouble (str a)) (Long/parseLong "9223372036854775808")) (> (Long/parseLong (str a)) (Long/parseLong "-9223372036854775809"))) ' +
                                                           '"float" (is-numeric a) ' +
-                                                          'nil))' ,
+                                                          'nil))',
                                                           'SERVICE', 'Used by convert-literal'),
-    new transformationDataModel.CustomFunctionDeclaration('parce-date-eu','(defn parse-date-eu [d] (.toDate (clj-time.format/parse (clj-time.format/formatter (clj-time.core/default-time-zone) "dd/MM/yyyy"   "dd-MM-yyyy" "dd.MM.yyyy" ) d)))',
+    new transformationDataModel.CustomFunctionDeclaration('parce-date-eu', '(defn parse-date-eu [d] (.toDate (clj-time.format/parse (clj-time.format/formatter (clj-time.core/default-time-zone) "dd/MM/yyyy"   "dd-MM-yyyy" "dd.MM.yyyy" ) d)))',
                                                           'SERVICE', 'Used by convert-literal'),
-    new transformationDataModel.CustomFunctionDeclaration('parce-date-us','(defn parse-date-us [d] (.toDate (clj-time.format/parse (clj-time.format/formatter (clj-time.core/default-time-zone) "MM/dd/yyyy"   "MM-dd-yyyy" "MM.dd.yyyy" "yyyy-MM-dd" "yyyy.MM.dd" "yyyy/MM/dd") d)))',
+    new transformationDataModel.CustomFunctionDeclaration('parce-date-us', '(defn parse-date-us [d] (.toDate (clj-time.format/parse (clj-time.format/formatter (clj-time.core/default-time-zone) "MM/dd/yyyy"   "MM-dd-yyyy" "MM.dd.yyyy" "yyyy-MM-dd" "yyyy.MM.dd" "yyyy/MM/dd") d)))',
                                                           'SERVICE', 'Used by convert-literal'),
-    new transformationDataModel.CustomFunctionDeclaration('date-validator','(defn date-validator [d] ( if (re-matches #"(?:(?:31(\\\\\\\\/|-|\\\\\\\\.)(?:0?[13578]|1[02]))\\\\\\\\1|(?:(?:29|30)(\\\\\\\\/|-|\\\\\\\\.)(?:0?[1,3-9]|1[0-2])\\\\\\\\2))(?:(?:1[6-9]|[2-9]\\\\\\\\d)?\\\\\\\\d{2})$|^(?:29(\\\\\\\\/|-|\\\\\\\\.)0?2\\\\\\\\3(?:(?:(?:1[6-9]|[2-9]\\\\\\\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\\\\\\\\d|2[0-8])(\\\\\\\\/|-|\\\\\\\\.)(?:(?:0?[1-9])|(?:1[0-2]))\\\\\\\\4(?:(?:1[6-9]|[2-9]\\\\\\\\d)?\\\\\\\\d{2})$" d) "eu" ' +
+    new transformationDataModel.CustomFunctionDeclaration('date-validator', '(defn date-validator [d] ( if (re-matches #"(?:(?:31(\\\\\\\\/|-|\\\\\\\\.)(?:0?[13578]|1[02]))\\\\\\\\1|(?:(?:29|30)(\\\\\\\\/|-|\\\\\\\\.)(?:0?[1,3-9]|1[0-2])\\\\\\\\2))(?:(?:1[6-9]|[2-9]\\\\\\\\d)?\\\\\\\\d{2})$|^(?:29(\\\\\\\\/|-|\\\\\\\\.)0?2\\\\\\\\3(?:(?:(?:1[6-9]|[2-9]\\\\\\\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\\\\\\\\d|2[0-8])(\\\\\\\\/|-|\\\\\\\\.)(?:(?:0?[1-9])|(?:1[0-2]))\\\\\\\\4(?:(?:1[6-9]|[2-9]\\\\\\\\d)?\\\\\\\\d{2})$" d) "eu" ' +
                                                           ' (if (re-matches #"(?:(?:(?:0?[13578]|1[02])(\\\\\\\\/|-|\\\\\\\\.)31)\\\\\\\\1|(?:(?:0?[1,3-9]|1[0-2])(\\\\\\\\/|-|\\\\\\\\.)(?:29|30)\\\\\\\\2))(?:(?:1[6-9]|[2-9]\\\\\\\\d)?\\\\\\\\d{2})$|^(?:0?2(\\\\\\\\/|-|\\\\\\\\.)29\\\\\\\\3(?:(?:(?:1[6-9]|[2-9]\\\\\\\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:(?:0?[1-9])|(?:1[0-2]))(\\\\\\\\/|-|\\\\\\\\.)(?:0?[1-9]|1\\\\\\\\d|2[0-8])\\\\\\\\4(?:(?:1[6-9]|[2-9]\\\\\\\\d)?\\\\\\\\d{2})$" d) "us" ' +
                                                           ' (if (re-matches #"(19|20)\\\\\\\\d\\\\\\\\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$" d) "us" nil))))',
                                                           'SERVICE', 'Used by convert-literal'),
@@ -340,7 +338,7 @@ angular.module('grafterizerApp')
       '(not (check-datatype dtype arg)) (if (not (check-datatype dtype on-error)) (f 0) (f (Double/parseDouble (str on-error))))' +
       '(not (check-datatype dtype arg)) (if (not (check-datatype dtype on-error)) (f 0) (f (Double/parseDouble (str on-error))))' +
       ':else (f (Double/parseDouble arg))))) ',
-      'SERVICE','Used by convert-literal'),
+      'SERVICE', 'Used by convert-literal'),
 
     new transformationDataModel.CustomFunctionDeclaration('convert-literal',
                                                           '(defn convert-literal' +
@@ -361,17 +359,13 @@ angular.module('grafterizerApp')
                                                           '"eu" (parse-date-eu arg) ' +
                                                           '"us" (parse-date-us arg) ' +
                                                           '(if (date-validator (str on-error)) (convert-literal on-error "date") default-date) )) ' +
-                                                          ' (if (or (nil? x) (empty? (str x))) (if (nil? lang-tag) (s (str on-empty-s)) (s (str on-empty-s) lang-tag) ) (if (nil? lang-tag) (s x) (s x lang-tag)))))) ', 'CONVERT DATATYPE', 'Coerce argument to specified datatype') 
-
-
-
-
-
+                                                          ' (if (or (nil? x) (empty? (str x))) (if (nil? lang-tag) (s (str on-empty-s)) (s (str on-empty-s) lang-tag) ) (if (nil? lang-tag) (s x) (s x lang-tag)))))) ', 'CONVERT DATATYPE', 'Coerce argument to specified datatype')
   ];
   var allcustomfunctions = customfunctions.concat(predicatefunctions.concat(numericcustomfunctions));
   allcustomfunctions = servicefunctions.concat(allcustomfunctions);
 
   var id = $scope.id = $stateParams.id;
+  var publisher = $stateParams.publisher;
   $scope.document = {
     title: 'transformation loading',
     keywords: []
@@ -381,7 +375,7 @@ angular.module('grafterizerApp')
   $rootScope.readonlymode = true;
 
   // setTimeout(function() {
-  ontotextAPI.transformation(id).success(function(data) {
+  backendService.transformation(publisher, id).success(function(data) {
     $scope.loading = false;
     $rootScope.readonlymode = $state.is('transformations.readonly');
     $scope.document = data;
@@ -399,11 +393,6 @@ angular.module('grafterizerApp')
     $rootScope.readonlymode = $state.is('transformations.readonly');
     $state.go('transformations');
   });
-  // }, 40)
-
-  // ontotextAPI.getClojure(id).success(function(data){
-  //     $scope.clojure = data;
-  // });
 
   var loadEmptyTransformation = function() {
     var pipeline = new transformationDataModel.Pipeline([]);
@@ -413,7 +402,7 @@ angular.module('grafterizerApp')
     $scope.pipeline = pipeline;
   };
 
-  ontotextAPI.getJson(id).success(function(data) {
+  backendService.getTransformationJson(publisher, id).success(function(data) {
     var transformation;
     if (data.__type === 'Transformation') {
       transformation = transformationDataModel.Transformation.revive(
@@ -421,17 +410,18 @@ angular.module('grafterizerApp')
 
       // TODO: dirty but necessary for now
       var shownUpdateMessage = false;
-      angular.forEach(allcustomfunctions, function (expectedCFD) {
+      angular.forEach(allcustomfunctions, function(expectedCFD) {
         var foundCfd = false;
-        angular.forEach(transformation.customFunctionDeclarations, function (cfd) {
-          if(cfd.name == expectedCFD.name){
+        angular.forEach(transformation.customFunctionDeclarations, function(cfd) {
+          if (cfd.name == expectedCFD.name) {
 
             foundCfd = true;
           }
         });
-        if(!foundCfd){
+
+        if (!foundCfd) {
           transformation.addCustomFunctionDeclaration(expectedCFD.name, expectedCFD.clojureCode, expectedCFD.group, expectedCFD.docstring);
-          if(!shownUpdateMessage){
+          if (!shownUpdateMessage) {
             $mdToast.show(
               $mdToast.simple()
               .content('Auto-migrated transformation to latest version of Grafterizer. Please save to apply changes.')
@@ -442,7 +432,6 @@ angular.module('grafterizerApp')
           }
         }
       });
-
 
     } else {
       $mdToast.show(
@@ -462,6 +451,13 @@ angular.module('grafterizerApp')
       $scope.pipeline = new transformationDataModel.Pipeline([]);
       transformation.pipelines = [$scope.pipeline];
     }
+  }).error(function() {
+      $mdToast.show(
+        $mdToast.simple()
+        .content('Transformation unfound in the save file')
+        .position('bottom left')
+        .hideDelay(6000)
+      );
   }).error(loadEmptyTransformation);
 
   $scope.$watch('fileUpload', function() {
@@ -482,9 +478,9 @@ angular.module('grafterizerApp')
       var file = $scope.fileUpload;
 
       uploadFile.upload(file, function(data) {
+        console.log(data)
         $state.go('transformations.transformation.preview', {
-          id: $stateParams.id,
-          distribution: data['@id']
+          distributionId: data.id
         });
       });
 
@@ -505,13 +501,6 @@ angular.module('grafterizerApp')
 
   $rootScope.actions = {
     save: function(noPreviewRequest) {
-      var update = angular.copy($scope.document);
-      update['dct:title'] = update.title;
-      update['dct:description'] = update.description;
-      update['dct:modified'] = moment().format('YYYY-MM-DD');
-      update['dcat:public'] = $scope.document['dct:public'] ? 'true' :
-      'false';
-
       var transformationType = 'pipe';
       var transformationCommand = 'my-pipe';
 
@@ -521,19 +510,26 @@ angular.module('grafterizerApp')
         transformationCommand = 'my-graft';
       }
 
-      update['dcat:transformationType'] = transformationType;
-      update['dcat:transformationCommand'] = transformationCommand;
-
-      delete update.title;
-      delete update.description;
-      delete update['dct:clojureDataID'];
-      delete update['dct:jsonDataID'];
-      delete update['dct:publisher'];
-
       var clojure = generateClojure.fromTransformation($scope.transformation);
 
-      ontotextAPI.updateTransformation(update, clojure, $scope.transformation)
-        .success(function() {
+      backendService.updateTransformation(publisher, id,
+      // Base information
+      {
+        name: $scope.document.title,
+        public: $scope.document['dct:public'] ? 'true' : 'false'
+      },
+      // Extra metadata
+      {
+        description: $scope.document.description,
+        'dcat:keyword': $scope.document.keywords
+      },
+      // Configuration
+      {
+        transformationType: transformationType,
+        transformationCommand: transformationCommand,
+        code: clojure,
+        extra: $scope.transformation
+      }).then(function() {
         if (!noPreviewRequest) {
           $scope.$broadcast('preview-request');
         }
@@ -550,7 +546,7 @@ angular.module('grafterizerApp')
       .targetEvent(ev);
 
       $mdDialog.show(confirm).then(function() {
-        ontotextAPI.deleteTransformation(id).success(function() {
+        backendService.deleteTransformation(publisher, id).success(function() {
           $state.go('transformations');
           $mdToast.show(
             $mdToast.simple()
@@ -594,7 +590,7 @@ angular.module('grafterizerApp')
           .hideDelay(6000)
         );
         $state.go('transformations.transformation', {
-          id: data['@id']
+          id: data.id
         });
       });
     },
@@ -657,8 +653,8 @@ angular.module('grafterizerApp')
       clickOutsideToClose: true
     }).then(function(distribution) {
       $state.go('transformations.transformation.preview', {
-        id: $stateParams.id,
-        distribution: distribution
+        // id: $stateParams.id,
+        distributionId: distribution.id
       });
     });
   };

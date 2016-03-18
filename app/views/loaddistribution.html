@@ -6,31 +6,23 @@
     </md-toolbar>
     <md-dialog-content layout="column">
         <md-content class="sin-load-distribution-view" layout="column" flex md-scroll-y>
-        <p class="md-padding md-caption" style="text-align:center;" ng-if="datasets.length === 0">You don't have distributions yet.</p>
-        <md-radio-group ng-model="selectedDistribution" ng-change="load(selectedDistribution)">
-        <v-accordion class="vAccordion--default md-margin" flex
-            onexpand="accordionExpandCallback(index)">
-          <v-pane ng-repeat="dataset in datasets" expanded="$first">
-            <v-pane-header layout="row">
-              <md-button class="md-raised">
-                {{dataset['dct:title']}}
-              </md-button>
-            </v-pane-header>
-            <v-pane-content>
-                <md-progress-circular class="md-hue-2" md-mode="indeterminate" ng-if="dataset.distributionsLoading"></md-progress-circular>
-                <div ng-repeat="distribution in dataset.distributions">
-                  <md-radio-button ng-value="distribution">{{distribution | beautifyUri}}</md-radio-button>
-                </div>
-                <div ng-if="!dataset.distributionsLoading &amp;&amp;dataset.distributions.length===0">
-                  <p class="empty-distribution md-body-1">This distribution doesn't contain datasets.</p>
-                </div>
-            </v-pane-content>
-          </v-pane>
-        </v-accordion>
-        </md-radio-group>
+            <p class="md-padding md-caption" style="text-align:center;" ng-if="dataDistributions.length === 0">You don't have distributions yet.</p>
+            <md-virtual-repeat-container flex class="dapaas-list">
+                <md-list>
+                    <md-list-item class="md-2-line" md-virtual-repeat="distribution in dataDistributions" ng-click="load(distribution)">
+                        <div class="md-avatar fa fa-file">
+                        <!-- <i class="fa fa-filter"></i> -->
+                        </div>
+                        <div class="md-list-item-text">
+                            <h3>{{distribution['dct:title']}}</h3>
+                            <p>{{distribution['dct:modified'] | date:'d/M/yyyy'}}</p>
+                        </div>
+                    </md-list-item>
+                </md-list>
+            </md-virtual-repeat-container>
         </md-content>
         <md-toolbar class="md-actions" layout="row" layout-align="right">
-            <md-button ng-click="cancel()"  aria-label="Cancel changes to custom functions">Cancel</md-button>
+            <md-button ng-click="cancel()"  aria-label="Cancel the distribution loading">Cancel</md-button>
         </md-toolbar>
     </md-dialog-content>
 </md-dialog>

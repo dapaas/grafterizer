@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('grafterizerApp')
-  .controller('TransformationsCtrl', function($scope, ontotextAPI, $state) {
+  .controller('TransformationsCtrl', function($scope, $state, backendService) {
 
     var showTransformations = function(data) {
-      $scope.transformations = data['dcat:record'].reverse();
+      $scope.transformations = data['dcat:record'];//.reverse();
     };
 
     $scope.searchinput = $state.params.search;
@@ -12,12 +12,12 @@ angular.module('grafterizerApp')
 
     $scope.transformations = [];
     if ($scope.searchinput) {
-      ontotextAPI.searchTransformations($scope.searchinput, $scope.showShared ? 'y' : 'n')
+      backendService.searchTransformations($scope.searchinput, $scope.showShared ? 'y' : 'n')
        .success(showTransformations);
     } else if ($scope.showShared) {
-      ontotextAPI.publicTransformations().success(showTransformations);
+      backendService.publicTransformations().success(showTransformations);
     } else {
-      ontotextAPI.transformations().success(showTransformations);
+      backendService.transformations().success(showTransformations);
     }
 
     $scope.submit = function() {
@@ -29,7 +29,8 @@ angular.module('grafterizerApp')
 
     $scope.selectTransformation = function(transformation) {
       $state.go($scope.showShared ? 'transformations.readonly' : 'transformations.transformation', {
-        id: transformation['foaf:primaryTopic'],
+        id: transformation.id,
+        publisher: transformation['foaf:publisher'],
         showToolbar: true
       });
     };

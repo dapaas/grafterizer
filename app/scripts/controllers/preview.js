@@ -10,7 +10,6 @@
 angular.module('grafterizerApp')
 .controller('PreviewCtrl', function(
             $scope,
-            ontotextAPI,
             PipeService,
             $timeout,
             $rootScope,
@@ -40,13 +39,7 @@ angular.module('grafterizerApp')
     }
   });
 
-  try {
-    $scope.selectedDistribution = $stateParams.distribution ?
-      window.atob($stateParams.distribution) : undefined;
-
-  } catch (e) {
-    $scope.distribution = null;
-  }
+  $scope.selectedDistribution = $stateParams.distributionId;
 
   $scope.totalNumberOfCalls = 0;
   var savedGeneratedClojure;

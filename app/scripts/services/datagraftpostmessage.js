@@ -11,7 +11,6 @@ angular.module('grafterizerApp')
 .service('datagraftPostMessage', function(
   $rootScope,
   $state,
-  apiKeyService,
   uploadFile) {
 
   var channel = 'datagraft-post-message';
@@ -26,15 +25,11 @@ angular.module('grafterizerApp')
         case 'state.go':
           $state.go(data.state, data.toParams);
           break;
-        case 'set-authorization':
-          connected = true;
-          apiKeyService.setKeyPass(data.keypass);
-          break;
         case 'upload-and-new':
           var file = new Blob([data.distribution], {type: data.type});
           file.name = data.name;
           uploadFile.upload(file, function(data) {
-            $rootScope.actions.save(data['@id']);
+            $rootScope.actions.save(data.id);
           });
 
           break;
