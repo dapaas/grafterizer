@@ -23,9 +23,9 @@
             <md-input-container flex ng-if="dialogState.mappingType=='dataset-col'">
               <label>Select node prefix</label>
               <!--input ng-model="nodeCurrentState.prefix" type="text"-->
-                <oi-select oi-options="prefix.value for prefix in prefixes() track by prefix.id" oi-select-options="{newItem: true, newItemFn: 'addPref($query)'}" ng-model="nodeCurrentState.prefix" ng-disabled="$root.readonlymode"></oi-select>
+              <oi-select oi-options="prefix.value for prefix in prefixes() track by prefix.id" oi-select-options="{newItem: true, newItemFn: 'addPref($query)'}" ng-model="nodeCurrentState.prefix" ng-disabled="$root.readonlymode"></oi-select>
             </md-input-container>
-              
+
             <md-input-container flex ng-if="dialogState.mappingType=='dataset-col' && colnames.length !== 0">
               <label>Select column</label>
               <oi-select oi-options="column.value for column in colnames track by column.id" ng-model="nodeCurrentState.column" ng-disabled="$root.readonlymode"></oi-select>
@@ -34,8 +34,8 @@
               <oi-select ng-show="!$root.colnames()" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="nodeCurrentState.column" ng-disabled="$root.readonlymode"></oi-select>
               <!--input ng-model="nodeCurrentState.column" type="text"-->
             </md-input-container>
-               
-              
+
+
             <div class="modal-dialog animate-switch-container" ng-switch on="selection" ng-if="dialogState.mappingType=='free-defined'">
               <div class="modal-content animate-switch" ng-switch-default>
                 <form name="graphsForm" >
@@ -73,34 +73,34 @@
                 </div>
               </div>
             </div>
-  <!-- CONDITION -->   
-              <md-switch style=" min-width:200px; " ng-model="nodeCondition" aria-label="add conditional property" ng-disabled="$root.readonlymode" ng-change="onConditionalChange(nodeCondition)">
-                    Specify condition
-                    </md-switch>
+            <!-- CONDITION -->   
+            <md-switch style=" min-width:200px; " ng-model="nodeCondition" aria-label="add conditional property" ng-disabled="$root.readonlymode" ng-change="onConditionalChange(nodeCondition)">
+              Specify condition
+            </md-switch>
             <div class="md-padding"  ng-if = "nodeCondition" ng-repeat = "nCondition in propertyValue.condition">
-   <md-radio-group ng-if="$index > 0" layout = "row" ng-model="nCondition.conj" readonly="$root.readonlymode">
-                    <md-radio-button value="specify">AND</md-radio-button>
-                    <md-radio-button value="header">OR</md-radio-button>
-                </md-radio-group>
-            <div layout="row" >
+              <md-radio-group ng-if="$index > 0" layout = "row" ng-model="nCondition.conj" readonly="$root.readonlymode">
+                <md-radio-button value="specify">AND</md-radio-button>
+                <md-radio-button value="header">OR</md-radio-button>
+              </md-radio-group>
+              <div layout="row" >
                 <div>
-                <label style="min-width:150px; padding-top:15px;">Column</label>
-                    
-                    <oi-select ng-if="colnames.length !== 0"  oi-options="column.value for column in colnames track by column.id" ng-model="nCondition.column" ng-disabled="$root.readonlymode"></oi-select>
-                    <oi-select ng-if="colnames.length === 0" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="nCondition.column" ng-disabled="$root.readonlymode"></oi-select>
+                  <label style="min-width:150px; padding-top:15px;">Column</label>
+
+                  <oi-select style="min-width:200px; padding-bottom: 100px;" ng-if="colnames.length !== 0"  oi-options="column.value for column in colnames track by column.id" ng-model="nCondition.column" ng-disabled="$root.readonlymode"></oi-select>
+                  <oi-select  style="min-width:200px"ng-if="colnames.length === 0" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="nCondition.column" ng-disabled="$root.readonlymode"></oi-select>
                 </div>
                 <div style="padding-left:20px">
-                    <label style="min-width:150px; padding-top:15px;">Operator</label>
-                    <oi-select oi-options="operator.name for operator in conditionOperators track by operator.id" ng-model="nCondition.operator"  ng-disabled="$root.readonlymode"></oi-select>
+                  <label style="min-width:150px; padding-top:15px;">Operator</label>
+                  <oi-select style="min-width:200px" oi-options="operator.name for operator in conditionOperators track by operator.id" ng-model="nCondition.operator"  ng-disabled="$root.readonlymode"></oi-select>
                 </div>
                 <div layout="column" style="padding-left:20px" ng-if="nCondition.operator.id!==0">
-                    <label>{{nCondition.operator.id === 6 ? "Custom code" : "Operand"}}</label>
-                    <input ng-model="nCondition.operand" type="text" >
+                  <label>{{nCondition.operator.id === 6 ? "Custom code" : "Operand"}}</label>
+                  <input  style="min-width:200px" ng-model="nCondition.operand" type="text" >
                 </div>
-                </div>
-             
+              </div>
+
             </div>
-              <!-- CONDITION -->
+            <!-- CONDITION -->
           </div>
         </md-tab-body>
       </md-tab>
@@ -116,177 +116,177 @@
               <label>Literal value</label>
               <input ng-model="nodeCurrentState.literalValue" type="text">
             </md-input-container>
-              
-                  
-              
+
+
+
             <div ng-if="dialogState.mappingType=='dataset-col' ">
-                <div layout = "row">
-                    <label style="min-width:150px; padding-top:15px;">Select column</label>
-                    <!--input ng-model="nodeCurrentState.literalValue" type="text"-->
-                    <oi-select style="padding-top:10px" ng-if="colnames.length !== 0"  oi-options="column.value for column in colnames track by column.id" ng-model="nodeCurrentState.literalValue" ng-disabled="$root.readonlymode"></oi-select>
-                    <oi-select style="padding-top:10px" ng-if="colnames.length === 0" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="nodeCurrentState.literalValue" ng-disabled="$root.readonlymode"></oi-select>
-                    <md-switch style=" min-width:200px; " ng-model="columnLiteralHasDatatype" aria-label="assign datatype to literal" ng-disabled="$root.readonlymode" ng-change="onDatatypeChange(columnLiteralHasDatatype)">
-                    Assign datatype
-                    </md-switch>
-                </div>
-                <div layout="row" ng-if="columnLiteralHasDatatype">
-                    <label style="min-width:150px; padding-top:10px;">Data type </label>
-                    <oi-select oi-options="datatype.name for datatype in availableDatatypes track by datatype.id" ng-model="nodeCurrentState.datatype" ng-disabled="$root.readonlymode"></oi-select>
-                    <md-input-container ng-if="nodeCurrentState.datatype.name!== 'string' && nodeCurrentState.datatype.name!=='custom' && nodeCurrentState.datatype.name!=='boolean'" style="top:-20px; margin-left:20px;" flex>
-                        <label>Value on-error</label>
-                        <input  ng-trim = "false" ng-model="nodeCurrentState.onError" type="text" ng-readonly="$root.readonlymode">
-                    </md-input-container>
-                    <md-input-container ng-if="nodeCurrentState.datatype.name!=='custom'" style="top:-20px; margin-left:20px;" flex>
-                        <label>Value on-empty</label>
-                        <input ng-trim = "false" ng-model="nodeCurrentState.onEmpty" type="text"  ng-readonly="$root.readonlymode">
-                    </md-input-container>
-                </div>
-                <md-input-container ng-if="nodeCurrentState.datatype.name==='string'" style=" margin-left:150px;top:-50px;" flex>
-                    <label>Language tag</label>
-                    <input ng-model="nodeCurrentState.langTag" type="text"  ng-readonly="$root.readonlymode">
-                </md-input-container>
-                <md-input-container ng-if="nodeCurrentState.datatype.name==='custom'" style=" margin-left:150px;top:0px;" flex>
-                    <label>Datatype URI</label>
-                    <input ng-model="nodeCurrentState.datatypeURI" type="text"  ng-readonly="$root.readonlymode">
-                </md-input-container>
-            
-                <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
-                <div class="api-doc-docstring" ng-show = "showUsage" layout="column">
-                    <p> Convert given value to the specified datatype. Supported datatypes (with corresponding xsd types) : </p>
-                    <table>
-                        <tr>
-                            <td> Name of data type </td>
-                            <td> XSD datatype </td>
-                            <td> Value space </td>
-                        </tr>
-                        <tr>
-                            <td> Byte </td>
-                            <td> xsd:byte </td>
-                            <td> -128…+127 (8 bit) </td>
-                        </tr>
-                        <tr>
-                            <td> Short </td>
-                            <td> xsd:short </td>
-                            <td> -32768…+32767 (16 bit) </td>
-                        </tr>
-                        <tr>
-                            <td> Integer </td>
-                            <td> xsd:int </td>
-                            <td> -2147483648…+2147483647 (32 bit) </td>
-                        </tr>
-                        <tr>
-                            <td> Long </td>
-                            <td> xsd:integer </td>
-                            <td> -9223372036854775808…+9223372036854775807 (64 bit) </td>
-                        </tr>
-                        <tr>
-                            <td> Decimal </td>
-                            <td> xsd:decimal </td>
-                            <td> Arbitrary-precision decimal numbers </td>
-                        </tr>
-                        <tr>
-                            <td> Float </td>
-                            <td> xsd:float </td>
-                            <td> 32-bit floating point numbers </td>
-                        </tr>
-                        <tr>
-                            <td> Double </td>
-                            <td> xsd:double </td>
-                            <td> 64-bit floating point numbers </td>
-                        </tr>               
-                        <tr>
-                            <td> Boolean </td>
-                            <td> xsd:boolean </td>
-                            <td> true,false </td>
-                        </tr>
-                        <tr>
-                            <td> Date </td>
-                            <td> xsd:dateTime </td>
-                            <td> Date and time with timezone </td>
-                        </tr>
-                        <tr>
-                            <td> String </td>
-                            <td> xsd:string </td>
-                            <td> Character strings </td>
-                        </tr>
-                    </table>
-                    <p> Optional parameters :</p>
-                    <ul>
-                        <li>  
-                            <p>on-error  -- specifies value, that should be used to replace non-valid arguments. </p>
-                            <p> By default function replaces all non-valid values with 0 for all numeric types, </p>
-                            <p> "false" for data type boolean and "31.12.2099" for dates; </p> 
-                        </li>
-                        <li>  
-                            <p>on-empty -- specifies value, that should be used to replace empty(nil) arguments. </p>
-                            <p>By default function replaces all empty values with 0 for all numeric types, "false" for </p>
-                            <p>data type boolean and "31.12.2099" for dates, "Unknown" for strings</p> 
-                        </li>
-                    </ul>
-                    <p> It is possible to construct language-tagged string literals by filling in an input field labeled "Language tag". </p>
-                    <p> To assign a datatype not mentioned on the list of available datatypes for conversion it is possible to use "custom" datatype option. In this case, the URI that defines a datatype should be specified in the input field labeled "Data type URI"</p>
-                    <p> When converting to literals of data type "date", dates are validated and date format is recognized automatically. Different rows in a dataset may have different date formats. Recognized date formats(priority is defined by this order): </p>
-                    <ol>
-                    <li>"dd.MM.yyyy"</li>
-                    <li>"dd/MM/yyyy"</li>
-                    <li>"dd-MM-yyyy"</li>
-                    <li>"MM.dd.yyyy"</li>
-                    <li>"MM/dd/yyyy"</li>
-                    <li>"MM-dd-yyyy"</li>
-                    <li>"yyyy.MM.dd"</li>
-                    <li>"yyyy/MM/dd"</li>
-                    <li>"yyyy-MM-dd"</li>
-                    </ol>
-                    <p> When converting to literals of data type "boolean", following values are recognized as false: </p>
-                    <ul>
-                    <li>"false" (as string);</li>
-                    <li>"0" (as string);</li>
-                    <li>"" (empty string);</li>
-                    <li><i>false</i> (as java.lang.Boolean);</li>
-                    <li>0 (as java.lang.Integer);</li>
-                    <li>nil.</li>
-                    </ul>
-                    <p> Other values will be converted to the value <i>true</i>. </p>
-                    <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
-                </div>
+              <div layout = "row">
+                <label style="min-width:150px; padding-top:15px;">Select column</label>
+                <!--input ng-model="nodeCurrentState.literalValue" type="text"-->
+                <oi-select style="padding-top:10px" ng-if="colnames.length !== 0"  oi-options="column.value for column in colnames track by column.id" ng-model="nodeCurrentState.literalValue" ng-disabled="$root.readonlymode"></oi-select>
+                <oi-select style="padding-top:10px" ng-if="colnames.length === 0" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="nodeCurrentState.literalValue" ng-disabled="$root.readonlymode"></oi-select>
+                <md-switch style=" min-width:200px; " ng-model="columnLiteralHasDatatype" aria-label="assign datatype to literal" ng-disabled="$root.readonlymode" ng-change="onDatatypeChange(columnLiteralHasDatatype)">
+                  Assign datatype
+                </md-switch>
               </div>
-                 <!-- CONDITION -->   
-              <md-switch style=" min-width:200px; " ng-model="nodeCondition" aria-label="add conditional property" ng-disabled="$root.readonlymode" ng-change="onConditionalChange(nodeCondition)">
-                    Specify condition
-                    </md-switch>
+              <div layout="row" ng-if="columnLiteralHasDatatype">
+                <label style="min-width:150px; padding-top:10px;">Data type </label>
+                <oi-select oi-options="datatype.name for datatype in availableDatatypes track by datatype.id" ng-model="nodeCurrentState.datatype" ng-disabled="$root.readonlymode"></oi-select>
+                <md-input-container ng-if="nodeCurrentState.datatype.name!== 'string' && nodeCurrentState.datatype.name!=='custom' && nodeCurrentState.datatype.name!=='boolean'" style="top:-20px; margin-left:20px;" flex>
+                  <label>Value on-error</label>
+                  <input  ng-trim = "false" ng-model="nodeCurrentState.onError" type="text" ng-readonly="$root.readonlymode">
+                </md-input-container>
+                <md-input-container ng-if="nodeCurrentState.datatype.name!=='custom'" style="top:-20px; margin-left:20px;" flex>
+                  <label>Value on-empty</label>
+                  <input ng-trim = "false" ng-model="nodeCurrentState.onEmpty" type="text"  ng-readonly="$root.readonlymode">
+                </md-input-container>
+              </div>
+              <md-input-container ng-if="nodeCurrentState.datatype.name==='string'" style=" margin-left:150px;top:-50px;" flex>
+                <label>Language tag</label>
+                <input ng-model="nodeCurrentState.langTag" type="text"  ng-readonly="$root.readonlymode">
+              </md-input-container>
+              <md-input-container ng-if="nodeCurrentState.datatype.name==='custom'" style=" margin-left:150px;top:0px;" flex>
+                <label>Datatype URI</label>
+                <input ng-model="nodeCurrentState.datatypeURI" type="text"  ng-readonly="$root.readonlymode">
+              </md-input-container>
+
+              <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
+              <div class="api-doc-docstring" ng-show = "showUsage" layout="column">
+                <p> Convert given value to the specified datatype. Supported datatypes (with corresponding xsd types) : </p>
+                <table>
+                  <tr>
+                    <td> Name of data type </td>
+                    <td> XSD datatype </td>
+                    <td> Value space </td>
+                  </tr>
+                  <tr>
+                    <td> Byte </td>
+                    <td> xsd:byte </td>
+                    <td> -128…+127 (8 bit) </td>
+                  </tr>
+                  <tr>
+                    <td> Short </td>
+                    <td> xsd:short </td>
+                    <td> -32768…+32767 (16 bit) </td>
+                  </tr>
+                  <tr>
+                    <td> Integer </td>
+                    <td> xsd:int </td>
+                    <td> -2147483648…+2147483647 (32 bit) </td>
+                  </tr>
+                  <tr>
+                    <td> Long </td>
+                    <td> xsd:integer </td>
+                    <td> -9223372036854775808…+9223372036854775807 (64 bit) </td>
+                  </tr>
+                  <tr>
+                    <td> Decimal </td>
+                    <td> xsd:decimal </td>
+                    <td> Arbitrary-precision decimal numbers </td>
+                  </tr>
+                  <tr>
+                    <td> Float </td>
+                    <td> xsd:float </td>
+                    <td> 32-bit floating point numbers </td>
+                  </tr>
+                  <tr>
+                    <td> Double </td>
+                    <td> xsd:double </td>
+                    <td> 64-bit floating point numbers </td>
+                  </tr>               
+                  <tr>
+                    <td> Boolean </td>
+                    <td> xsd:boolean </td>
+                    <td> true,false </td>
+                  </tr>
+                  <tr>
+                    <td> Date </td>
+                    <td> xsd:dateTime </td>
+                    <td> Date and time with timezone </td>
+                  </tr>
+                  <tr>
+                    <td> String </td>
+                    <td> xsd:string </td>
+                    <td> Character strings </td>
+                  </tr>
+                </table>
+                <p> Optional parameters :</p>
+                <ul>
+                  <li>  
+                    <p>on-error  -- specifies value, that should be used to replace non-valid arguments. </p>
+                    <p> By default function replaces all non-valid values with 0 for all numeric types, </p>
+                    <p> "false" for data type boolean and "31.12.2099" for dates; </p> 
+                  </li>
+                  <li>  
+                    <p>on-empty -- specifies value, that should be used to replace empty(nil) arguments. </p>
+                    <p>By default function replaces all empty values with 0 for all numeric types, "false" for </p>
+                    <p>data type boolean and "31.12.2099" for dates, "Unknown" for strings</p> 
+                  </li>
+                </ul>
+                <p> It is possible to construct language-tagged string literals by filling in an input field labeled "Language tag". </p>
+                <p> To assign a datatype not mentioned on the list of available datatypes for conversion it is possible to use "custom" datatype option. In this case, the URI that defines a datatype should be specified in the input field labeled "Data type URI"</p>
+                <p> When converting to literals of data type "date", dates are validated and date format is recognized automatically. Different rows in a dataset may have different date formats. Recognized date formats(priority is defined by this order): </p>
+                <ol>
+                  <li>"dd.MM.yyyy"</li>
+                  <li>"dd/MM/yyyy"</li>
+                  <li>"dd-MM-yyyy"</li>
+                  <li>"MM.dd.yyyy"</li>
+                  <li>"MM/dd/yyyy"</li>
+                  <li>"MM-dd-yyyy"</li>
+                  <li>"yyyy.MM.dd"</li>
+                  <li>"yyyy/MM/dd"</li>
+                  <li>"yyyy-MM-dd"</li>
+                </ol>
+                <p> When converting to literals of data type "boolean", following values are recognized as false: </p>
+                <ul>
+                  <li>"false" (as string);</li>
+                  <li>"0" (as string);</li>
+                  <li>"" (empty string);</li>
+                  <li><i>false</i> (as java.lang.Boolean);</li>
+                  <li>0 (as java.lang.Integer);</li>
+                  <li>nil.</li>
+                </ul>
+                <p> Other values will be converted to the value <i>true</i>. </p>
+                <show-hide-documentation show-usage="showUsage"></show-hide-documentation>
+              </div>
+            </div>
+            <!-- CONDITION -->   
+            <md-switch style=" min-width:200px; " ng-model="nodeCondition" aria-label="add conditional property" ng-disabled="$root.readonlymode" ng-change="onConditionalChange(nodeCondition)">
+              Specify condition
+            </md-switch>
             <div class="md-padding"  ng-if = "nodeCondition" ng-repeat = "nCondition in propertyValue.condition">
-   <md-radio-group ng-if="$index > 0" layout = "row" ng-model="nCondition.conj" readonly="$root.readonlymode">
-                    <md-radio-button value="specify">AND</md-radio-button>
-                    <md-radio-button value="header">OR</md-radio-button>
-                </md-radio-group>
-            <div layout="row" >
+              <md-radio-group ng-if="$index > 0" layout = "row" ng-model="nCondition.conj" readonly="$root.readonlymode">
+                <md-radio-button value="specify">AND</md-radio-button>
+                <md-radio-button value="header">OR</md-radio-button>
+              </md-radio-group>
+              <div layout="row" >
                 <div>
-                <label style="min-width:150px; padding-top:15px;">Column</label>
-                    
-                    <oi-select ng-if="colnames.length !== 0"  oi-options="column.value for column in colnames track by column.id" ng-model="nCondition.column" ng-disabled="$root.readonlymode"></oi-select>
-                    <oi-select ng-if="colnames.length === 0" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="nCondition.column" ng-disabled="$root.readonlymode"></oi-select>
+                  <label style="min-width:150px; padding-top:15px;">Column</label>
+
+                  <oi-select style="min-width:200px; padding-bottom: 100px;" ng-if="colnames.length !== 0"  oi-options="column.value for column in colnames track by column.id" ng-model="nCondition.column" ng-disabled="$root.readonlymode"></oi-select>
+                  <oi-select style="min-width:200px; padding-bottom: 100px;" ng-if="colnames.length === 0" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="nCondition.column" ng-disabled="$root.readonlymode"></oi-select>
                 </div>
                 <div style="padding-left:20px">
-                    <label style="min-width:150px; padding-top:15px;">Operator</label>
-                    <oi-select oi-options="operator.name for operator in conditionOperators track by operator.id" ng-model="nCondition.operator"  ng-disabled="$root.readonlymode"></oi-select>
+                  <label style="min-width:150px; padding-top:15px;">Operator</label>
+                  <oi-select style="min-width:200px; padding-bottom: 100px;" oi-options="operator.name for operator in conditionOperators track by operator.id" ng-model="nCondition.operator"  ng-disabled="$root.readonlymode"></oi-select>
                 </div>
                 <div layout="column" style="padding-left:20px" ng-if="nCondition.operator.id!==0">
-                    <label>{{nCondition.operator.id === 6 ? "Custom code" : "Operand"}}</label>
-                    <input ng-model="nCondition.operand" type="text" >
+                  <label>{{nCondition.operator.id === 6 ? "Custom code" : "Operand"}}</label>
+                  <input style="min-width:200px;" ng-model="nCondition.operand" type="text" >
                 </div>
-                </div>
-             
+              </div>
+
             </div>
-              <!-- CONDITION -->  
-               </div> 
-            <!--md-input-container flex ng-if="dialogState.mappingType=='dataset-col' && colnames.length !== 0 ">
-              <label>Select column</label>
-              <oi-select  oi-options="column.value for column in colnames track by column.id" ng-model="nodeCurrentState.literalValue" ng-disabled="$root.readonlymode"></oi-select>
-            </md-input-container>
-            <md-input-container flex ng-if="dialogState.mappingType=='dataset-col' && colnames.length === 0">
-              <oi-select  oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="nodeCurrentState.literalValue" ng-disabled="$root.readonlymode"></oi-select>
-            </md-input-container-->
-             
+            <!-- CONDITION -->  
+          </div> 
+          <!--md-input-container flex ng-if="dialogState.mappingType=='dataset-col' && colnames.length !== 0 ">
+<label>Select column</label>
+<oi-select  oi-options="column.value for column in colnames track by column.id" ng-model="nodeCurrentState.literalValue" ng-disabled="$root.readonlymode"></oi-select>
+</md-input-container>
+<md-input-container flex ng-if="dialogState.mappingType=='dataset-col' && colnames.length === 0">
+<oi-select  oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="nodeCurrentState.literalValue" ng-disabled="$root.readonlymode"></oi-select>
+</md-input-container-->
+
         </md-tab-body>
 
       </md-tab>

@@ -1,27 +1,16 @@
-<md-dialog aria-label='Specify property node...' class="sin-function-dialog">
-    <style type="text/css">
-        .dropzone {
-          width: 250px;
-          height: 15px;
-          border: 1px dashed #ccc;
-          text-align: center;
-          padding: 30px;
-          margin: 20px;
-          font-family: Arial;
-        }
-    </style>
-    <md-toolbar>
-        <div class="md-toolbar-tools" ng-show="showSearchDialog">
-            <h2>Specify property node</h2>
-        </div>
-		<md-progress-linear md-mode="indeterminate" ng-show="showProgress"></md-progress-linear>
-    </md-toolbar>
+<md-dialog aria-label='Specify property node...' class="sin-function-dialog" flex="60">
+  <md-toolbar>
+    <div class="md-toolbar-tools" ng-show="showSearchDialog">
+      <h2>Specify property node</h2>
+    </div>
+    <md-progress-linear md-mode="indeterminate" ng-show="showProgress"></md-progress-linear>
+  </md-toolbar>
 
-	<md-dialog-content>
-		<div class="modal-dialog animate-switch-container" ng-switch on="selection" >
-			<div class="modal-content animate-switch" ng-switch-default>
-        <form name="graphsForm" >
-          <div layout="row" class="md-padding" >
+  <md-dialog-content layout="row">
+    <div class="modal-dialog animate-switch-container" ng-switch on="selection" layout="column" style="min-height:60%" flex>
+      <div class="modal-content animate-switch" ng-switch-default layout="column">
+        <form name="graphsForm" layout="column" flex>
+          <div layout="row" class="md-padding" flex>
             <md-input-container flex class="sin-no-shrink">
               <label>Property name</label>
               <input ng-model="propertyValue.value" type="text" name="searchInput" required>
@@ -30,65 +19,44 @@
                 <div ng-message="pattern">Not a valid property.</div>
               </div>
             </md-input-container>
-            <!--
-            <div ng-controller="DemoCtrl as ctrl" flex = "80">
-              <md-autocomplete
-                md-selected-item="ctrl.selectedItem"
-                md-search-text="ctrl.searchText"
-                md-items="item in ctrl.querySearch(ctrl.searchText)"
-                md-item-text="item.display"
-                md-selected-item-change="ctrl.selectedItemChange(item)"
-                md-floating-label ="Property name">
-                <md-item-template>
-                  <span md-highlight-text="ctrl.searchText">{{item.display}}</span>
-                </md-item-template>
-              </md-autocomplete>
-
-            </div>
-            -->
             <md-button aria-label='search' class="md-icon-button fa fa-search" ng-click="search(propertyValue.value)"></md-button>
           </div>
-            <md-switch style=" min-width:200px; " ng-model="propertyCondition" aria-label="add conditional property" ng-disabled="$root.readonlymode" ng-change="onConditionalChange(propertyCondition)">
-                    Specify condition
-                    </md-switch>
-            <div class="md-padding"  ng-if = "propertyCondition" ng-repeat = "propCondition in propertyValue.condition">
-   <md-radio-group ng-if="$index > 0" layout = "row" ng-model="propCondition.conj" readonly="$root.readonlymode">
-                    <md-radio-button value="specify">AND</md-radio-button>
-                    <md-radio-button value="header">OR</md-radio-button>
-                </md-radio-group>
-            <div layout="row" >
-                <div>
+          <md-switch style="min-width:200px;" ng-model="propertyCondition" aria-label="add conditional property" ng-disabled="$root.readonlymode" ng-change="onConditionalChange(propertyCondition)" flex>
+            Specify condition
+          </md-switch>
+
+          <div class="md-padding" ng-if = "propertyCondition" ng-repeat = "propCondition in propertyValue.condition" flex>
+            <md-radio-group ng-if="$index > 0" layout = "row" ng-model="propCondition.conj" readonly="$root.readonlymode">
+              <md-radio-button value="specify">AND</md-radio-button>
+              <md-radio-button value="header">OR</md-radio-button>
+            </md-radio-group>
+            <div layout="row">
+              <div>
                 <label style="min-width:150px; padding-top:15px;">Column</label>
-                    
-                    <oi-select ng-if="colnames.length !== 0"  oi-options="column.value for column in colnames track by column.id" ng-model="propCondition.column" ng-disabled="$root.readonlymode"></oi-select>
-                    <oi-select ng-if="colnames.length === 0" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="propCondition.column" ng-disabled="$root.readonlymode"></oi-select>
-                </div>
-                <div style="padding-left:20px">
-                    <label style="min-width:150px; padding-top:15px;">Operator</label>
-                    <oi-select oi-options="operator.name for operator in conditionOperators track by operator.id" ng-model="propCondition.operator"  ng-disabled="$root.readonlymode"></oi-select>
-                </div>
-                <div layout="column" style="padding-left:20px" ng-if="propCondition.operator.id!==0">
-                    <label>{{propCondition.operator.id === 6 ? "Custom code" : "Operand"}}</label>
-                    <input ng-model="propCondition.operand" type="text" >
-                </div>
-                </div>
-             
+                <oi-select style="min-width:200px; padding-bottom: 100px;" ng-if="colnames.length !== 0" oi-options="column.value for column in colnames track by column.id" ng-model="propCondition.column" ng-disabled="$root.readonlymode" style="min-width:175px"></oi-select>
+                <oi-select style="min-width:200px;" ng-if="colnames.length === 0" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="propCondition.column" ng-disabled="$root.readonlymode"></oi-select>
+              </div>
+              <div style="padding-left:20px">
+                <label style="min-width:150px; padding-top:15px;">Operator</label>
+                <oi-select style="min-width:200px;" oi-options="operator.name for operator in conditionOperators track by operator.id" ng-model="propCondition.operator"  ng-disabled="$root.readonlymode"></oi-select>
+              </div>
+              <div layout="column" style="padding-left:20px" ng-if="propCondition.operator.id!==0">
+                <label>{{propCondition.operator.id === 6 ? "Custom code" : "Operand"}}</label>
+                <input style="min-width:200px;" ng-model="propCondition.operand" type="text" >
+              </div>
             </div>
-            <!--md-input-container flex ng-if = "propertyCondition" class="md-padding">
-              <label>Condition (code)</label>
-              <input ng-model="propertyValue.condition" type="text" >
-            
-            </md-input-container-->
-            
+
+          </div>
+          <h5 align="center" ng-show="showSearchEmptyResult" flex>No matched result</h5>
         </form>
-        <h5 align="center" ng-show="showSearchEmptyResult">No matched result</h5>
-				<div ng-show="showSearchResult" >
-					<md-list>
-						<md-list-item ng-click="addResult(item)" ng-repeat="item in items | startFrom:currentPage*pageSize | limitTo:pageSize track by $index">
-							<p> {{item}} </p>
-							<md-button aria-label='add' class="md-primary md-icon-button fa fa-plus" ng-click="addResult(item)"></md-button>
-						</md-list-item>
-					</md-list>
+
+        <div ng-show="showSearchResult" flex>
+          <md-list>
+            <md-list-item ng-click="addResult(item)" ng-repeat="item in items | startFrom:currentPage*pageSize | limitTo:pageSize track by $index">
+              <p> {{item}} </p>
+              <md-button aria-label='add' class="md-primary md-icon-button fa fa-plus" ng-click="addResult(item)"></md-button>
+            </md-list-item>
+          </md-list>
           <div ng-show="showSearchPagination">
             <md-button aria-label='<<' class="md-icon-button fa fa-angle-double-left"  ng-disabled="currentPage == 0" ng-click="currentPage=0">
             </md-button>
@@ -100,13 +68,13 @@
             <md-button aria-label='>>' class="md-icon-button fa fa-angle-double-right" ng-disabled="currentPage >= numberOfPages() - 1" ng-click="currentPage=numberOfPages() - 1">
             </md-button>
           </div>
-				</div>
+        </div>
 
-				<div class="md-actions" layout="row" layout-align="right">
-					<md-button class="md-primary" ng-click="addProperty()">{{isCreateNew ? 'Create' : 'Edit'}} property</md-button>
-					<md-button class="md-primary" ng-click="closeDialog()">Cancel</md-button>
-				</div>
-			</div>
-		</div>
-    </md-dialog-content>
+        <div class="md-actions" layout="row" layout-align="right" flex>
+          <md-button class="md-primary" ng-click="addProperty()">{{isCreateNew ? 'Create' : 'Edit'}} property</md-button>
+          <md-button class="md-primary" ng-click="closeDialog()">Cancel</md-button>
+        </div>
+      </div>
+    </div>
+  </md-dialog-content>
 </md-dialog>
