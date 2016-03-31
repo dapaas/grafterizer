@@ -27,7 +27,7 @@ angular.module('grafterizerApp')
           for (var i = 0; i < num; i += 2) b.push(i);
           return b;
         };
-scope.aggrFunctions = ['MIN','MAX','SUM','COUNT','AVG','MERGE'];
+cope.aggrFunctions = ['MIN','MAX','SUM','COUNT','COUNT-DISTINCT','AVG','MERGE'];
 // fn to create new colname items if not in preview mode
   scope.colnames = (typeof scope.$parent.$root.colnames === 'undefined') ? [] : scope.$parent.$root.colnames();
 var colCtr = 0;

@@ -79,6 +79,7 @@
                     <li> SUM -- take summation of values for each observation
                     <li> AVG -- take average value for each observation
                     <li> COUNT -- take number of non-empty values for each observation
+                    <li> COUNT-DISTINCT -- take number of distinct non-empty values for each observation
                     <li> MERGE -- merge together all distinct values for each observation separated by user-specified separator
                 </ul>
 
@@ -182,13 +183,41 @@
         </div>
         <div>
         <h3>Parameters</h3>
-        <label>Specify column names</label>
-        <oi-select ng-show = "colnames.length !== 0" oi-options="column.value for column in colnames track by column.id" ng-model="function.columnsArray" multiple></oi-select>
-        <oi-select ng-show = "colnames.length === 0" oi-options="column.value for column in []" ng-model="function.columnsArray" multiple oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}"></oi-select>
-                
-    <md-input-container flex>
-        <label>Comment</label>
-
+    <md-radio-group ng-model="reshapedatasetmode" readonly="$root.readonlymode">
+            <md-radio-button value="melt">Reshape using <b>melt</b> function </md-radio-button>
+            <md-radio-button value="cast">Reshape using <b>cast</b> function </md-radio-button>
+        </md-radio-group>
+        <div ng-if="reshapedatasetmode === 'melt'">
+            <label>Specify column names</label>
+            <oi-select ng-show = "colnames.length !== 0" oi-options="column.value for column in colnames track by column.id" ng-model="function.columnsArray" multiple></oi-select>
+            <oi-select ng-show = "colnames.length === 0" oi-options="column.value for column in []" ng-model="function.columnsArray" multiple oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}"></oi-select>
+                 </div>
+        <div ng-if="reshapedatasetmode === 'cast'" >
+            <div layout="row">
+                <div>
+                    <label> Variable column</label>
+                    <oi-select ng-show = "colnames.length !== 0" oi-options="column.value for column in colnames track by column.id" ng-model="function.variable"></oi-select>
+                    <oi-select ng-show = "colnames.length === 0" oi-options="column.value for column in []" ng-model="function.variable" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}"></oi-select>                             </div>
+                <div  style= "margin-left:20px; ">
+                    <label> Value column</label>
+                    <oi-select ng-show = "colnames.length !== 0" oi-options="column.value for column in colnames track by column.id" ng-model="function.value" ></oi-select>
+                    <oi-select ng-show = "colnames.length === 0" oi-options="column.value for column in []" ng-model="function.value" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}"></oi-select>               
+                </div>
+            </div>
+             
+            <div layout="row">
+                <md-select  flex class = "md-primary md-default-theme" aria-label="cast function" placeholder="{{ function.aggrFunction ? function.aggrFunction : 'Choose aggregation function'}}" ng-model="function.aggrFunction" ng-disabled="$root.readonlymode">
+                    <md-option ng-repeat="val in aggrFunctions"  value = {{val}}>{{val}}</md-option>
+                 </md-select>
+            <md-input-container flex ng-show="function.aggrFunction === 'MERGE'">
+                <label>Separator</label>
+                <input ng-model="function.separator" ng-trim="false" type="text" ng-readonly="$root.readonlymode">
+            </md-input-container>
+            
+            </div>
+        </div>
+        <md-input-container flex>
+            <label>Comment</label>
             <input ng-model="function.docstring" type="text" ng-readonly="$root.readonlymode"/>
         </md-input-container>
     </div>

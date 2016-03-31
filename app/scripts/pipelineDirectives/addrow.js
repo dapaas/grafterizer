@@ -17,9 +17,9 @@ angular.module('grafterizerApp')
           if (typeof scope.$parent.$root.colnames !== 'undefined') { //if in preview mode -- add as many fields for columns as needed
           var temp = scope.$parent.$root.colnames();
             for (var i = 0; i < temp.length; ++i)
-                values.push(null);
+                values.push("");
           } else
-            values.push(null);
+            values.push("");
           scope.function = new transformationDataModel.AddRowFunction(0, values);
           scope.function.docstring = null;
         }

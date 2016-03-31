@@ -111,7 +111,7 @@ angular.module('grafterizerApp')
   SplitFunction.prototype.generateClojure = function() {
 
     var regex = new jsedn.List([jsedn.sym('read-string'), '#\"' + this.separator + '\"']);
-    return new jsedn.List([jsedn.sym('split-column'), jsedn.kw(':' + this.colName.value), regex]);
+    return new jsedn.List([jsedn.sym('new-tabular/split-column'), jsedn.kw(':' + this.colName.value), regex]);
   };
   this.SplitFunction = SplitFunction;
 
@@ -430,7 +430,7 @@ angular.module('grafterizerApp')
     for (i = 0; i < this.colsToMerge.length; ++i) {
       colsToMerge.val.push(new jsedn.kw(':' + this.colsToMerge[i].value));
     }
-    var values = [new jsedn.sym('merge-columns'), colsToMerge, new jsedn.sym('"' + this.separator + '"')];
+   var values = [new jsedn.sym('new-tabular/merge-columns'), colsToMerge, new jsedn.sym('"' + this.separator + '"')];
     if (this.newColName)
       values.push(new jsedn.kw(':' + this.newColName));
     return new jsedn.List(values);
@@ -635,11 +635,11 @@ angular.module('grafterizerApp')
     for (i = 0; i < this.colnamesFunctionsSet.length; i += 2) {
       var colnameFunctionPair = new jsedn.Map([]);
       colnameFunctionPair.set(new jsedn.kw(':' + this.colnamesFunctionsSet[i].value),
-                              (this.colnamesFunctionsSet[i+1] === "MERGE"?this.separatorSet[i]:jsedn.sym(this.colnamesFunctionsSet[i+1])));
+                              (this.colnamesFunctionsSet[i+1] === "MERGE" ? this.separatorSet[i] : this.colnamesFunctionsSet[i+1]));
       set.val.push(colnameFunctionPair);
     }
 
-    return new jsedn.List([jsedn.sym('group-rows'), colnames, set]);
+    return new jsedn.List([jsedn.sym('new-tabular/group-rows'), colnames, set]);
   };
 
   this.GroupRowsFunction = GroupRowsFunction;
@@ -1012,7 +1012,7 @@ angular.module('grafterizerApp')
       values.val.push(newColnamesSorttypesMap);
     }
 
-    return new jsedn.List([jsedn.sym('sort-dataset'), values]);
+    return new jsedn.List([jsedn.sym('new-tabular/sort-dataset'), values]);
   };
   SortDatasetFunction.prototype.removeColnameSorttype = function(nametype) {
     var index = this.colnamesSorttypesMap.indexOf(nametype);
@@ -1051,7 +1051,7 @@ angular.module('grafterizerApp')
     var values  = new jsedn.Vector([]);
     for (var i = 0; i < this.values.length; ++i)
       values.val.push(this.values[i]);
-    return new jsedn.List([jsedn.sym('add-row'), values]);
+   return new jsedn.List([jsedn.sym('new-tabular/add-row'), values]);
   };
   this.AddRowFunction = AddRowFunction;
 
@@ -1072,7 +1072,7 @@ angular.module('grafterizerApp')
   };
   ShiftRowFunction.prototype = Object.create(GenericFunction.prototype);
   ShiftRowFunction.prototype.generateClojure = function() {
-    var values = [jsedn.sym('shift-row'), this.indexFrom];
+    var values = [jsedn.sym('new-tabular/shift-row'), this.indexFrom];
     if (this.shiftrowmode === 'position') values.push(this.indexTo);
     return new jsedn.List(values);
   };
@@ -1095,7 +1095,7 @@ angular.module('grafterizerApp')
   };
   ShiftColumnFunction.prototype = Object.create(GenericFunction.prototype);
   ShiftColumnFunction.prototype.generateClojure = function() {
-    var values = [jsedn.sym('shift-column'), jsedn.kw(':' + this.colFrom.value)];
+    var values = [jsedn.sym('new-tabular/shift-column'), jsedn.kw(':' + this.colFrom.value)];
     if (this.shiftcolmode === 'position') values.push(this.indexTo);
     return new jsedn.List(values);
   };
@@ -1119,7 +1119,7 @@ angular.module('grafterizerApp')
   };
   RemoveDuplicatesFunction.prototype = Object.create(GenericFunction.prototype);
   RemoveDuplicatesFunction.prototype.generateClojure = function() {
-    var values = [jsedn.sym('remove-duplicates')];
+    var values = [jsedn.sym('new-tabular/remove-duplicates')];
     if (this.mode !== 'full') {
       var colNamesClj = new jsedn.Vector([]);
       for (var i = 0; i < this.colNames.length; ++i) {
@@ -1177,7 +1177,7 @@ angular.module('grafterizerApp')
                           new jsedn.List([
                             jsedn.sym('comp'),
                             jsedn.sym('keyword'),
-                            jsedn.sym('string-as-keyword')])
+                            jsedn.sym('new-tabular/string-as-keyword')])
                          ])
         ]);
       }
@@ -1262,12 +1262,12 @@ angular.module('grafterizerApp')
         colNamesClj.val.push(new jsedn.kw(':' + this.columnsArray[i].value));
       }
 
-      return new jsedn.List([jsedn.sym((this.take ? 'columns' : 'remove-columns')), colNamesClj]);
+    return new jsedn.List([jsedn.sym((this.take ? 'columns' : 'new-tabular/remove-columns')), colNamesClj]);
     } else {
       return this.take? new jsedn.List([jsedn.sym('columns'),
                                         new jsedn.List([jsedn.sym('range'), this.indexFrom, this.indexTo+1])]) : 
-      new jsedn.List([jsedn.sym('remove-columns'),
-                      this.indexFrom, this.indexTo]);
+                                        new jsedn.List([jsedn.sym('new-tabular/remove-columns'),
+                                        this.indexFrom, this.indexTo]);
     }
 
   };
@@ -1284,7 +1284,7 @@ angular.module('grafterizerApp')
   this.ChangeColtype = ChangeColtype;
 
 
-  var MeltFunction = function(columnsArray, docstring) {
+  /*var MeltFunction = function(columnsArray, docstring) {
     // array of column names
     this.name = 'melt';
     this.displayName = 'melt';
@@ -1325,6 +1325,57 @@ angular.module('grafterizerApp')
 
     return new jsedn.List([jsedn.sym('melt'), colNamesClj]);
 
+  };
+  this.MeltFunction = MeltFunction;*/
+    var MeltFunction = function(columnsArray, variable, value, aggrFunction, separator, docstring) {
+    // array of column names
+    this.name = 'melt';
+    this.displayName = variable ? 'cast' : 'melt';
+    GenericFunction.call(this);
+    this.columnsArray = columnsArray;
+    this.variable = variable;
+    this.value = value;
+    this.aggrFunction = aggrFunction;
+    this.separator = separator;
+    this.__type = 'MeltFunction';
+    if (!docstring) {
+      this.docstring = 'Reshape dataset';
+    } else {
+      this.docstring = docstring;
+    }
+  };
+  MeltFunction.revive = function(data) {
+      var variable, value, aggrFunction, separator;
+      var columnsArray = [];
+      if (data.columnsArray.length > 0 && !data.columnsArray[0].hasOwnProperty('id')) {
+          for (var i = 0; i < data.columnsArray.length; ++i) {
+              var colname = {id:i, value:data.columnsArray[i]};
+              columnsArray.push(colname);
+          }
+      } else
+        columnsArray = data.columnsArray;
+      variable = data.hasOwnProperty('variable') ? data.variable : null;
+      value = data.hasOwnProperty('value') ? data.value : null;
+      aggrFunction = data.hasOwnProperty('aggrFunction') ? data.aggrFunction : null;
+      separator = data.hasOwnProperty('separator') ? data.separator : null;
+    return new MeltFunction(columnsArray, variable, value, aggrFunction, separator, data.docstring);
+  };
+  MeltFunction.prototype = Object.create(GenericFunction.prototype);
+  MeltFunction.prototype.generateClojure = function() {
+    var i;
+    var returnValue;
+      if (this.columnsArray.length > 0) {
+          var colNamesClj = new jsedn.Vector([]);
+          for (i = 0; i < this.columnsArray.length; ++i) {
+              colNamesClj.val.push(new jsedn.kw(':' + this.columnsArray[i].value));
+          }
+          returnValue = new jsedn.List([jsedn.sym('melt'), colNamesClj]);
+      }
+      else {
+         
+          returnValue = new jsedn.List([jsedn.sym('new-tabular/cast'), jsedn.kw(':' + this.variable.value), jsedn.kw(':' + this.value.value), this.aggrFunction]);
+      }
+    return returnValue;
   };
   this.MeltFunction = MeltFunction;
 
