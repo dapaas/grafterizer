@@ -89,6 +89,8 @@ md-sidenav .md-button.md-default-theme {
 .fill-height {
   display: flex;
   align-items: center;
+  // BUGFIX chrome ?
+  width: 0;
 }
 
 .md-toolbar-tools {

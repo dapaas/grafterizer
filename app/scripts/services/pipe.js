@@ -51,7 +51,11 @@ angular.module('grafterizerApp')
       var errorHandler = function(data, status, headers, config) {
         var message;
         if (data && data.error) {
-          message = 'API error: ' + data.error;
+          if (typeof data.error === 'string') {
+            message = 'API error: ' + data.error;
+          } else {
+            message = 'API error: ' + JSON.stringify(data.error);
+          }
         } else if (status) {
           message = 'Error ' + status + ' while contacting server';
         } else {
@@ -77,13 +81,11 @@ angular.module('grafterizerApp')
         });
       };
 
-      api.computeTuplesHref = function(distributionUri, transformationUri, type) {
-        return endpointRest + '/download?authorization=' +
-          // window.encodeURIComponent(apiAuthorization) +
-          '&transformationUri=' +
-          window.encodeURIComponent(transformationUri) +
-          '&distributionUri=' + window.encodeURIComponent(distributionUri) +
-          '&type=' + (type ? window.encodeURIComponent(type) : 'pipe');
+      api.computeTuplesHref = function(distributionId, transformationId, type) {
+        return endpointRest + '/transform/' +
+          window.encodeURIComponent(distributionId) +
+          '/' + window.encodeURIComponent(transformationId) +
+          '?type=' + (type ? window.encodeURIComponent(type) : 'pipe');
       };
 
       var loadDataAsync = function(deferred, hash, nbIterations, justTheStatusPlease) {

@@ -144,7 +144,7 @@ angular
         }
       })
       .state('transformations', {
-        url: '/transformations?showShared&search',
+        url: '/transformations?showPublic&search',
         views: {
           main: {
             templateUrl: 'views/transformations.html',
@@ -200,7 +200,7 @@ angular
         }
       })
       .state('transformations.readonly', {
-        url: '^/readonly/id',
+        url: '/readonly/:publisher/:id',
         params: {
           showToolbar: null,
         },

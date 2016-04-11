@@ -8,30 +8,25 @@ angular.module('grafterizerApp')
     };
 
     $scope.searchinput = $state.params.search;
-    $scope.showShared = $state.params.showShared ? $state.params.showShared !== 'false' : false;
+    $scope.showPublic = $state.params.showPublic ? $state.params.showPublic !== 'false' : false;
 
     $scope.transformations = [];
-    if ($scope.searchinput) {
-      backendService.searchTransformations($scope.searchinput, $scope.showShared ? 'y' : 'n')
-       .success(showTransformations);
-    } else if ($scope.showShared) {
-      backendService.publicTransformations().success(showTransformations);
-    } else {
-      backendService.transformations().success(showTransformations);
-    }
+    backendService.transformations($scope.searchinput, $scope.showPublic)
+      .success(showTransformations);
 
     $scope.submit = function() {
       $state.go('.', {
         search: $scope.searchinput,
-        showShared: $scope.showShared
+        showPublic: $scope.showPublic
       });
     };
 
     $scope.selectTransformation = function(transformation) {
-      $state.go($scope.showShared ? 'transformations.readonly' : 'transformations.transformation', {
+      $state.go($scope.showPublic ? 'transformations.readonly' : 'transformations.transformation', {
         id: transformation.id,
         publisher: transformation['foaf:publisher'],
-        showToolbar: true
+        showToolbar: true,
+        showPublic: undefined
       });
     };
 

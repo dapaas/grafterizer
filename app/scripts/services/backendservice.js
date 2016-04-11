@@ -21,7 +21,11 @@ angular.module('grafterizerApp')
     var errorHandler = function(data, status, headers, config) {
       var message;
       if (data && data.error) {
-        message = 'API error: ' + data.error;
+        if (typeof data.error === 'string') {
+          message = 'API error: ' + data.error;
+        } else {
+          message = 'API error: ' + JSON.stringify(data.error);
+        }
       } else if (status) {
         if (status === 401) {
           window.location = endpoint + '/oauth/begin';
@@ -58,18 +62,18 @@ angular.module('grafterizerApp')
       return endpoint + '/' + encodeURIComponent(publisher) + '/transformations/' + encodeURIComponent(id);
     };
 
-    api.transformations = function() {
-      return $http.get(endpoint + '/myassets/transformations').error(errorHandler);
-    };
+    api.transformations = function(searchInput, showPublic) {
+      var params;
+      if (searchInput) {
+        params = {
+          params: {
+            search: searchInput
+          }
+        };
+      }
 
-    api.publicTransformations = function() {
-      errorHandler({error: 'Not implemented'});
-      return {success: function() {}};
-    };
-
-    api.searchTransformations = function() {
-      errorHandler({error: 'Not implemented'});
-      return {success: function() {}};
+      return $http.get(endpoint + '/' + (showPublic ? 'public_assets' : 'myassets') + '/transformations', params)
+        .error(errorHandler);
     };
 
     api.transformation = function(publisher, id) {
@@ -115,6 +119,10 @@ angular.module('grafterizerApp')
 
     api.deleteTransformation = function(publisher, id) {
       return $http.delete(computeTransformationUrl(publisher, id)).error(errorHandler);
+    };
+
+    api.forkTransformation = function(publisher, id) {
+      return $http.post(computeTransformationUrl(publisher, id) + '/fork').error(errorHandler);
     };
 
     api.getTransformationJson = function(publisher, id) {

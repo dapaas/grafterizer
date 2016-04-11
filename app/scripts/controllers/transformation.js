@@ -560,37 +560,17 @@ angular.module('grafterizerApp')
     },
 
     fork: function(ev) {
-      var clojure = generateClojure.fromTransformation($scope.transformation);
-
-      var transformationType = 'pipe';
-      var transformationCommand = 'my-pipe';
-
-      if ($scope.transformation.graphs &&
-          $scope.transformation.graphs.length !== 0) {
-        transformationType = 'graft';
-        transformationCommand = 'my-graft';
-      }
-
-      ontotextAPI.newTransformation({
-        '@context': ontotextAPI.getContextDeclaration(),
-        '@type': 'dcat:Transformation',
-        'dct:title': $scope.document.title + '-fork',
-        'dct:description': $scope.document.description,
-        'dcat:public': $scope.document['dct:public'] ? 'true' : 'false',
-        'dct:modified': moment().format('YYYY-MM-DD'),
-        'dcat:keyword': $scope.document.keywords,
-        'dcat:transformationType': transformationType,
-        'dcat:transformationCommand': transformationCommand
-      }, clojure, $scope.transformation)
-        .success(function(data) {
+      backendService.forkTransformation(publisher, id).success(function(data) {
         $mdToast.show(
           $mdToast.simple()
           .content('Transformation forked')
           .position('bottom left')
           .hideDelay(6000)
         );
+
         $state.go('transformations.transformation', {
-          id: data.id
+          id: data.id,
+          publisher: data['foaf:publisher']
         });
       });
     },

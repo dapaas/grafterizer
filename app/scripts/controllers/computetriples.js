@@ -13,18 +13,13 @@ angular.module('grafterizerApp')
     $rootScope,
     $mdDialog,
     $stateParams,
-    ontotextAPI,
+    backendService,
     PipeService,
     datagraftPostMessage,
     jarfterService,
     $sanitize) {
 
-    try {
-      $scope.distribution = $stateParams.distribution ?
-        window.atob($stateParams.distribution) : undefined;
-    } catch (e) {
-      $scope.distribution = null;
-    }
+    $scope.distribution = $stateParams.distributionId;
 
     $scope.transformation = $stateParams.id;
 

@@ -382,7 +382,7 @@ angular.module('grafterizerApp')
     $rootScope.transformation = $scope.transformation;
 
     $rootScope.actions = {
-      save: function(distributionId) {
+      save: function(distribution) {
         var clojure = generateClojure.fromTransformation($scope.transformation);
 
         var transformationType = 'pipe';
@@ -418,11 +418,11 @@ angular.module('grafterizerApp')
               .position('bottom left')
               .hideDelay(6000)
             );
-            if (distributionId) {
+            if (distribution) {
               $state.go('transformations.transformation.preview', {
                 id: data.id,
                 publisher: data.publisher,
-                distributionId: distributionId
+                distributionId: distribution.id
               });
             } else {
               $state.go('transformations.transformation', {
