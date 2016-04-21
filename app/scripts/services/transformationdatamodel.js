@@ -10,7 +10,7 @@
 angular.module('grafterizerApp')
   .service('transformationDataModel', function() {
   var _this = this;
-  
+
   var Prefixer = function(name, uri, parentPrefix) {
     this.name = name;
     this.uri = uri;
@@ -42,9 +42,8 @@ angular.module('grafterizerApp')
   CustomFunctionDeclaration.revive = function(data) {
     return new CustomFunctionDeclaration(data.name, data.clojureCode, data.group, data.docstring);
   };
-  
   this.CustomFunctionDeclaration = CustomFunctionDeclaration;
-  
+
   var DropRowsFunction = function(indexFrom, indexTo, take, docstring) {
     GenericFunction.call(this);
     this.indexFrom = indexFrom;
@@ -430,7 +429,7 @@ angular.module('grafterizerApp')
     for (i = 0; i < this.colsToMerge.length; ++i) {
       colsToMerge.val.push(new jsedn.kw(':' + this.colsToMerge[i].value));
     }
-   var values = [new jsedn.sym('new-tabular/merge-columns'), colsToMerge, new jsedn.sym('"' + this.separator + '"')];
+    var values = [new jsedn.sym('new-tabular/merge-columns'), colsToMerge, new jsedn.sym('"' + this.separator + '"')];
     if (this.newColName)
       values.push(new jsedn.kw(':' + this.newColName));
     return new jsedn.List(values);
@@ -457,12 +456,10 @@ angular.module('grafterizerApp')
     }
     return params;
   };
-
   FunctionWithArgs.revive = function(data) {
     return new FunctionWithArgs(data.funct, data.functParams);
   };
   this.FunctionWithArgs = FunctionWithArgs;
-
 
   var DeriveColumnFunction = function(newColName, colsToDeriveFrom, functionsToDeriveWith,  docstring) {
     GenericFunction.call(this);
@@ -641,7 +638,6 @@ angular.module('grafterizerApp')
 
     return new jsedn.List([jsedn.sym('new-tabular/group-rows'), colnames, set]);
   };
-
   this.GroupRowsFunction = GroupRowsFunction;
 
   var RenameColumnsFunction = function(functionsToRenameWith, mappings, docstring) {
@@ -1051,7 +1047,7 @@ angular.module('grafterizerApp')
     var values  = new jsedn.Vector([]);
     for (var i = 0; i < this.values.length; ++i)
       values.val.push(this.values[i]);
-   return new jsedn.List([jsedn.sym('new-tabular/add-row'), values]);
+    return new jsedn.List([jsedn.sym('new-tabular/add-row'), values]);
   };
   this.AddRowFunction = AddRowFunction;
 
@@ -1262,12 +1258,12 @@ angular.module('grafterizerApp')
         colNamesClj.val.push(new jsedn.kw(':' + this.columnsArray[i].value));
       }
 
-    return new jsedn.List([jsedn.sym((this.take ? 'columns' : 'new-tabular/remove-columns')), colNamesClj]);
+      return new jsedn.List([jsedn.sym((this.take ? 'columns' : 'new-tabular/remove-columns')), colNamesClj]);
     } else {
       return this.take? new jsedn.List([jsedn.sym('columns'),
                                         new jsedn.List([jsedn.sym('range'), this.indexFrom, this.indexTo+1])]) : 
-                                        new jsedn.List([jsedn.sym('new-tabular/remove-columns'),
-                                        this.indexFrom, this.indexTo]);
+      new jsedn.List([jsedn.sym('new-tabular/remove-columns'),
+                      this.indexFrom, this.indexTo]);
     }
 
   };
@@ -1284,50 +1280,7 @@ angular.module('grafterizerApp')
   this.ChangeColtype = ChangeColtype;
 
 
-  /*var MeltFunction = function(columnsArray, docstring) {
-    // array of column names
-    this.name = 'melt';
-    this.displayName = 'melt';
-    GenericFunction.call(this);
-    this.columnsArray = columnsArray;
-    this.__type = 'MeltFunction';
-
-    if (!docstring) {
-      this.docstring = 'Reshape dataset on columns: ';
-      var i;
-      for (i = 0; i < columnsArray.length; ++i) {
-        this.docstring += ' ' + columnsArray[i].value;
-      }
-    } else {
-      this.docstring = docstring;
-    }
-
-  };
-  MeltFunction.revive = function(data) {
-
-    var columnsArray = [];
-    if (data.columnsArray.length > 0 && !data.columnsArray[0].hasOwnProperty('id')) {
-      for (var i = 0; i < data.columnsArray.length; ++i) {
-        var colname = {id:i, value:data.columnsArray[i]};
-        columnsArray.push(colname);
-      }
-    } else
-      columnsArray = data.columnsArray;
-    return new MeltFunction(columnsArray, data.docstring);
-  };
-  MeltFunction.prototype = Object.create(GenericFunction.prototype);
-  MeltFunction.prototype.generateClojure = function() {
-    var i;
-    var colNamesClj = new jsedn.Vector([]);
-    for (i = 0; i < this.columnsArray.length; ++i) {
-      colNamesClj.val.push(new jsedn.kw(':' + this.columnsArray[i].value));
-    }
-
-    return new jsedn.List([jsedn.sym('melt'), colNamesClj]);
-
-  };
-  this.MeltFunction = MeltFunction;*/
-    var MeltFunction = function(columnsArray, variable, value, aggrFunction, separator, docstring) {
+  var MeltFunction = function(columnsArray, variable, value, aggrFunction, separator, docstring) {
     // array of column names
     this.name = 'melt';
     this.displayName = variable ? 'cast' : 'melt';
@@ -1345,36 +1298,36 @@ angular.module('grafterizerApp')
     }
   };
   MeltFunction.revive = function(data) {
-      var variable, value, aggrFunction, separator;
-      var columnsArray = [];
-      if (data.columnsArray.length > 0 && !data.columnsArray[0].hasOwnProperty('id')) {
-          for (var i = 0; i < data.columnsArray.length; ++i) {
-              var colname = {id:i, value:data.columnsArray[i]};
-              columnsArray.push(colname);
-          }
-      } else
-        columnsArray = data.columnsArray;
-      variable = data.hasOwnProperty('variable') ? data.variable : null;
-      value = data.hasOwnProperty('value') ? data.value : null;
-      aggrFunction = data.hasOwnProperty('aggrFunction') ? data.aggrFunction : null;
-      separator = data.hasOwnProperty('separator') ? data.separator : null;
+    var variable, value, aggrFunction, separator;
+    var columnsArray = [];
+    if (data.columnsArray.length > 0 && !data.columnsArray[0].hasOwnProperty('id')) {
+      for (var i = 0; i < data.columnsArray.length; ++i) {
+        var colname = {id:i, value:data.columnsArray[i]};
+        columnsArray.push(colname);
+      }
+    } else
+      columnsArray = data.columnsArray;
+    variable = data.hasOwnProperty('variable') ? data.variable : null;
+    value = data.hasOwnProperty('value') ? data.value : null;
+    aggrFunction = data.hasOwnProperty('aggrFunction') ? data.aggrFunction : null;
+    separator = data.hasOwnProperty('separator') ? data.separator : null;
     return new MeltFunction(columnsArray, variable, value, aggrFunction, separator, data.docstring);
   };
   MeltFunction.prototype = Object.create(GenericFunction.prototype);
   MeltFunction.prototype.generateClojure = function() {
     var i;
     var returnValue;
-      if (this.columnsArray.length > 0) {
-          var colNamesClj = new jsedn.Vector([]);
-          for (i = 0; i < this.columnsArray.length; ++i) {
-              colNamesClj.val.push(new jsedn.kw(':' + this.columnsArray[i].value));
-          }
-          returnValue = new jsedn.List([jsedn.sym('melt'), colNamesClj]);
+    if (this.columnsArray.length > 0) {
+      var colNamesClj = new jsedn.Vector([]);
+      for (i = 0; i < this.columnsArray.length; ++i) {
+        colNamesClj.val.push(new jsedn.kw(':' + this.columnsArray[i].value));
       }
-      else {
-         
-          returnValue = new jsedn.List([jsedn.sym('new-tabular/cast'), jsedn.kw(':' + this.variable.value), jsedn.kw(':' + this.value.value), this.separator ? this.separator : this.aggrFunction]);
-      }
+      returnValue = new jsedn.List([jsedn.sym('melt'), colNamesClj]);
+    }
+    else {
+
+      returnValue = new jsedn.List([jsedn.sym('new-tabular/cast'), jsedn.kw(':' + this.variable.value), jsedn.kw(':' + this.value.value), this.separator ? this.separator : this.aggrFunction]);
+    }
     return returnValue;
   };
   this.MeltFunction = MeltFunction;
@@ -2015,7 +1968,6 @@ angular.module('grafterizerApp')
     return null;
   };
   Transformation.prototype.getColumnKeysFromGraphNodes = function() {
-    // console.log(this.graphs);
     var requestedColumnKeys = [];
     var rootNode;
     for (var j = 0; j < this.graphs.length; ++j)
@@ -2083,33 +2035,6 @@ angular.module('grafterizerApp')
     return availableColumnKeys;
 
   };
-
-  // TODO should this just be a prototype function of every RDFElement?
-  var getKeysFromSubs = function(rootNode, subColKeys) {
-
-    for (var i = 0; i < rootNode.subElements.length; ++i) {
-      if (rootNode.subElements[i] instanceof ColumnURI)
-        if (subColKeys.indexOf(rootNode.subElements[i].column.value) === -1)
-          subColKeys.push(rootNode.subElements[i].column.value);
-      if (rootNode.subElements[i] instanceof ColumnLiteral) 
-
-        if (subColKeys.indexOf(rootNode.subElements[i].literalValue.value) === -1)
-          subColKeys.push(rootNode.subElements[i].literalValue.value);
-
-      if (rootNode.subElements[i] instanceof Property)
-        for (var j = 0; j < rootNode.subElements[i].propertyCondition.length; ++j)
-          if (rootNode.subElements[i].propertyCondition[j].column && subColKeys.indexOf(rootNode.subElements[i].propertyCondition[j].column.value) === -1)
-            subColKeys.push(rootNode.subElements[i].propertyCondition[j].column.value);
-      if (rootNode.subElements[i].__type !== "Property") {
-        for (var j = 0; j < rootNode.subElements[i].nodeCondition.length; ++j)
-          if (rootNode.subElements[i].nodeCondition[j].column && subColKeys.indexOf(rootNode.subElements[i].nodeCondition[j].column.value) === -1)
-            subColKeys.push(rootNode.subElements[i].nodeCondition[j].column.value);
-      }
-      getKeysFromSubs(rootNode.subElements[i], subColKeys);
-    }
-
-    return subColKeys;
-  };
   Transformation.prototype.getPartialTransformation = function(untilFunction) {
     // TODO report errors?
     // TODO how to support multi-pipe transformation??
@@ -2143,8 +2068,35 @@ angular.module('grafterizerApp')
 
   };
   this.Transformation = Transformation;
+  
+  // TODO should this just be a prototype function of every RDFElement?
+  var getKeysFromSubs = function(rootNode, subColKeys) {
+    for (var i = 0; i < rootNode.subElements.length; ++i) {
+      if (rootNode.subElements[i] instanceof ColumnURI)
+        if (subColKeys.indexOf(rootNode.subElements[i].column.value) === -1)
+          subColKeys.push(rootNode.subElements[i].column.value);
+      if (rootNode.subElements[i] instanceof ColumnLiteral) 
 
-  
-  
+        if (subColKeys.indexOf(rootNode.subElements[i].literalValue.value) === -1)
+          subColKeys.push(rootNode.subElements[i].literalValue.value);
+
+      if (rootNode.subElements[i] instanceof Property)
+        for (var j = 0; j < rootNode.subElements[i].propertyCondition.length; ++j)
+          if (rootNode.subElements[i].propertyCondition[j].column && subColKeys.indexOf(rootNode.subElements[i].propertyCondition[j].column.value) === -1)
+            subColKeys.push(rootNode.subElements[i].propertyCondition[j].column.value);
+      if (rootNode.subElements[i].__type !== "Property") {
+        for (var j = 0; j < rootNode.subElements[i].nodeCondition.length; ++j)
+          if (rootNode.subElements[i].nodeCondition[j].column && subColKeys.indexOf(rootNode.subElements[i].nodeCondition[j].column.value) === -1)
+            subColKeys.push(rootNode.subElements[i].nodeCondition[j].column.value);
+      }
+      getKeysFromSubs(rootNode.subElements[i], subColKeys);
+    }
+
+    return subColKeys;
+  };
+
+
+
+
 
 });
