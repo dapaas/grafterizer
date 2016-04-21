@@ -1373,7 +1373,7 @@ angular.module('grafterizerApp')
       }
       else {
          
-          returnValue = new jsedn.List([jsedn.sym('new-tabular/cast'), jsedn.kw(':' + this.variable.value), jsedn.kw(':' + this.value.value), this.aggrFunction]);
+          returnValue = new jsedn.List([jsedn.sym('new-tabular/cast'), jsedn.kw(':' + this.variable.value), jsedn.kw(':' + this.value.value), this.separator ? this.separator : this.aggrFunction]);
       }
     return returnValue;
   };

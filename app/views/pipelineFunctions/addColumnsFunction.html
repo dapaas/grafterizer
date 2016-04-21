@@ -20,19 +20,19 @@
           <input ng-model="columnSpec.colName" type="text" required ng-readonly="$root.readonlymode"></md-input-container>
         <md-input-container flex>
           <label>Value</label>
-          <input ng-model="columnSpec.colValue" type="text" ng-readonly="$root.readonlymode" />
+          <input ng-model="columnSpec.colValue" ng-disabled="columnSpec.specValue" type="text" ng-readonly="$root.readonlymode" />
         </md-input-container>
       </div>
       <div layout="row">
         <md-input-container flex>
-          <md-select  aria-label="new column expression" placeholder="{{columnSpec.specValue?columnSpec.specValue:'Choose expression type'}}" ng-model="columnSpec.specValue" ng-disabled="$root.readonlymode">
+          <md-select ng-disabled="columnSpec.colValue" aria-label="new column expression" placeholder="{{columnSpec.specValue?columnSpec.specValue:'Choose expression type'}}" ng-model="columnSpec.specValue" ng-disabled="$root.readonlymode">
             <md-option ng-repeat="val in newColumnValues"  value = {{val}}>{{val}}</md-option>
           </md-select>
 
         </md-input-container>
-        <md-input-container ng-if="columnSpec.specValue==='custom expression'" flex>
+        <md-input-container ng-if="columnSpec.specValue==='custom expression'"  flex>
           <label>Expression</label>
-          <input ng-model="columnSpec.expression" type="text" ng-readonly="$root.readonlymode"/>
+          <input ng-model="columnSpec.expression" type="text"  ng-readonly="$root.readonlymode"/>
         </md-input-container>
       </div>
     </div>

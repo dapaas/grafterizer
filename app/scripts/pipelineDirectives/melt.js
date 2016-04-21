@@ -47,7 +47,7 @@ angular.module('grafterizerApp')
           
      
           scope.$parent.generateCurrFunction = function() {
-          return new transformationDataModel.MeltFunction(scope.function.columnsArray, scope.function.variable, scope.function.value, scope.function.aggrFunction, scope.function.separator, scope.function.docstring);
+          return new transformationDataModel.MeltFunction(scope.function.columnsArray, scope.function.variable, scope.function.value, scope.function.aggrFunction, scope.function.aggrFunction === 'MERGE' ? scope.function.separator : null, scope.function.docstring);
         };
       }
     };
