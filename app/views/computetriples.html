@@ -7,11 +7,23 @@
     <md-dialog-content layout="row" layout-sm="column" class="sticky-container" layout-align="center">
         <div class="md-padding" flex-gt-sm="33" layout="column" ng-show="distribution">
                 <h4 class="md-title">Execute and save</h4>
-             <p class="md-caption">Execute the transformation on the dataset and save the results in a new datapage. This may take a few minutes.</p>
+             <p class="md-caption">Execute the transformation on the dataset and save the results in a queriable datastore. This may take a few minutes.</p>
             <md-progress-circular style="margin: 30px auto 0px auto;" ng-if="processing" md-mode="indeterminate"></md-progress-circular>
             <p class="processing-status" ng-show="processingStatus">{{processingStatus}}</p>
-            <form ng-submit="makeNewDataset()" ng-hide="processing" layout="column" layout-align="center center">
-                <md-input-container class="sin-no-shrink" ng-hide="verySlowMode">
+            <form name="executeAndSaveForm" ng-submit="executeAndSave()" ng-hide="processing" layout="column" layout-align="center center">
+                <md-input-container class="sin-no-shrink">
+                    <label>Queriable Data Store</label>
+                    <md-select name="selectedQDS" ng-model="selectedQDS" aria-label="Select a DataStore" required>
+                        <md-option placeholder="Create a New Queriable Data Store" value="new">
+                            <em>New Queriable Data Store</em>
+                        </md-option>
+                        <md-option ng-repeat="qds in QDSs" placeholder="{{qds['dct:title']}}"
+                        value="{{qds['dcat:accessURL']}}">
+                            {{qds['dct:title']}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+                <md-input-container class="sin-no-shrink" ng-if="selectedQDS=='new' &amp;&amp; !verySlowMode">
                     <label>Title</label>
                     <input ng-model="dataset.title" name="title" required pattern="[a-zA-Z0-9\s\-]*">
                     <div ng-messages="transformationForm.title.$error">
@@ -19,12 +31,8 @@
                         <div ng-message="pattern">The title shouldn't <command type="command checkbox radio" label="Use Command" title="Use Command does stuff" icon="/icons/command.png">ntain special characters.</div>
                     </div>
                 </md-input-container>
-                <md-input-container class="sin-no-shrink" ng-hide="verySlowMode">
-                    <label>Description</label>
-                    <textarea ng-model="dataset.description"></textarea>
-                </md-input-container>
                 <div flex></div> 
-                <md-button class="md-fab sin-fa-button md-accent" aria-label="Download N-triples" type="submit" ng-disabled="verySlowMode">
+                <md-button class="md-fab sin-fa-button md-accent" aria-label="Download N-triples" type="submit" ng-disabled="verySlowMode || executeAndSaveForm.$invalid">
                     <i class="fa fa-database"></i>
                 </md-button>
                 <p class="slow-mode-warning" ng-if="verySlowMode">

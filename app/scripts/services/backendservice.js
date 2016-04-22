@@ -145,6 +145,10 @@ angular.module('grafterizerApp')
       }).error(errorHandler);
     };
 
+    api.queriableDataStores = function() {
+      return $http.get(endpoint + '/myassets/queriable_data_stores').error(errorHandler);
+    };
+
     return api;
   };
 });

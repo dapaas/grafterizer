@@ -146,7 +146,7 @@ angular.module('grafterizerApp')
         };
       };
 
-      var lastPreviewDuration = Number.MAX_VALUE;
+      var lastPreviewDuration = 60 * 1000 * 10; // 10 minutes
 
       api.preview = function(distributionId, clojure, page, pageSize) {
         var deferred = $q.defer();
@@ -228,7 +228,7 @@ angular.module('grafterizerApp')
           url: endpointRest + '/save',
           method: 'GET',
           params: {
-            datasetId: datasetId,
+            datasetId: datasetId  ,
             // authorization: apiAuthorization,
             distributionUri: distributionUri,
             transformationUri: transformationUri,
@@ -237,7 +237,7 @@ angular.module('grafterizerApp')
         });
       };
 
-      api.fillRDFrepo = function(distributionUri, repositoryUri) {
+      api.fillRDFrepo = function(distribution, transformation, queriableDataStore) {
         return $http({
           url: endpointRest + '/fillRDFrepo',
           method: 'POST',
@@ -246,8 +246,10 @@ angular.module('grafterizerApp')
             // Authorization: apiAuthorization
           },
           data: {
-            distributionUri: distributionUri,
-            repositoryUri: repositoryUri
+            distribution: distribution,
+            transformation: transformation,
+            queriabledatastore: queriableDataStore,
+            ontotext: true
           }
         });
       };
