@@ -158,7 +158,7 @@ angular.module('grafterizerApp')
             var minWidth = isNaN(rawWidths[f]) ? 200 : Math.min(80 + rawWidths[f] * 8, 200);
             var colNameString = f[0] === ':' ? f.substring(1) : f;
             return {
-              name: '' + f,
+              name: window.btoa('' + f),
               displayName: colNameString,
               width: width,
               minWidth: minWidth,
@@ -194,7 +194,19 @@ angular.module('grafterizerApp')
             return namesArray;
         };
 
-        scope.gridOptions.data = rows;
+        // Ui-Grid has a bug with keys containing paranthesis and maybe other symbols
+        // Workaround: convert the keys to base64
+        var btoaData = [];
+
+        for (i = 0; i < rows.length; ++i) {
+          var tuple = {};
+          for (key in rows[i]) {
+            tuple[window.btoa(key)] = rows[i][key];
+          }
+          btoaData.push(tuple);
+        }
+
+        scope.gridOptions.data = btoaData;
       });
     }
   };
