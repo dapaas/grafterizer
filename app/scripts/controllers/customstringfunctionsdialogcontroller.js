@@ -34,16 +34,20 @@ angular.module('grafterizerApp')
       if (!$scope.functionCodeOptions.docstring) $scope.functionCodeOptions.docstring = 'Transforms text';
 
       var options = $scope.functionCodeOptions;
-      var functionCode = '(defn ' + options.name + ' "' + options.docstring + '" [s] (when (seq s) (->   s ' +
+      var functionCode = '(defn ' + options.name + ' "' + options.docstring + '" [s]  (->   s ' +
         options.textCaseOption + ' ' +
         options.textTrimOption + ' ';
-      if (options.substr[0]) functionCode += '(subs ' + options.substr[0] + ' ' + options.substr[1] + ') ';
+      if (options.substr[0] || options.substr[1]) {
+          functionCode += '(subs ' + (options.substr[0] ? options.substr[0] : '0');
+          if (options.substr[1]) functionCode += ' ' + options.substr[1];
+          functionCode += ') ';
+      }
       if (!(options.replaceMap[0] === null && options.replaceMap[1] === null))
         for (var i = 0; i < options.replaceMap.length; i += 2)
 
       functionCode += '(clojure.string/replace "' + (options.replaceMap[i] ? options.replaceMap[i] : '') + '" "' + (
         options.replaceMap[i + 1] ? options.replaceMap[i + 1] : '') + '") ';
-      functionCode += ')))';
+      functionCode += '))';
       var result = $scope.$parent.transformation.addCustomFunctionDeclaration($scope.functionCodeOptions.name,
         functionCode, 'UTILITY', $scope.functionCodeOptions.docstring);
 
