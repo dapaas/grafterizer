@@ -19,8 +19,8 @@
   <br>
   <div ng-show="makedatasetmode === 'specify'">
     <label>Column names: </label>
-    <oi-select ng-show="colnames.length !== 0" oi-options="column.value for column in colnames track by column.id" ng-model="function.columnsArray" multiple ng-disabled="$root.readonlymode"></oi-select>
-    <oi-select ng-show="colnames.length === 0" oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="function.columnsArray" multiple ng-disabled="$root.readonlymode"></oi-select>
+    <!--oi-select ng-show="colnames.length !== 0" oi-options="column.value for column in colnames track by column.id" ng-model="function.columnsArray" multiple ng-disabled="$root.readonlymode"></oi-select-->
+    <oi-select  oi-options="column.value for column in []" oi-select-options="{newItem: true, newItemFn: 'addColumn($query)'}" ng-model="function.columnsArray" multiple ng-disabled="$root.readonlymode"></oi-select>
   </div>
   <div ng-show="makedatasetmode === 'fetch'">
     <md-input-container>
