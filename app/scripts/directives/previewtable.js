@@ -94,9 +94,9 @@ angular.module('grafterizerApp')
         var rows = data[':rows'];
         var largest = 0;
 
+        var i;
+        var key;
         {
-          var i;
-          var key;
           var irow;
           var w;
           var maxIter = Math.min(10, rows.length);

@@ -17,24 +17,6 @@ angular.module('grafterizerApp')
         var target = document.getElementById(attrs.
           for);
         if (!target) return;
-       
-        var mousemove;
-
-        if (window.requestAnimationFrame) {
-          var requestAnim = 0;
-          mousemove = function(e) {
-            if (!requestAnim) {
-              requestAnim = window.requestAnimationFrame(function() {
-                updateLayout(e.offsetX);
-                requestAnim = 0;
-              });
-            }
-          };
-        } else {
-          mousemove = _.throttle(function(e) {
-            updateLayout(e.offsetX);
-          }, 1 / 2000);
-        }
 
         var savedW = 0;
         var updateLayout = function(w)  {
@@ -72,6 +54,24 @@ angular.module('grafterizerApp')
             window.sessionStorage.setItem('resizeHand' + attrs.for, w);
           }
         };
+
+        var mousemove;
+
+        if (window.requestAnimationFrame) {
+          var requestAnim = 0;
+          mousemove = function(e) {
+            if (!requestAnim) {
+              requestAnim = window.requestAnimationFrame(function() {
+                updateLayout(e.offsetX);
+                requestAnim = 0;
+              });
+            }
+          };
+        } else {
+          mousemove = _.throttle(function(e) {
+            updateLayout(e.offsetX);
+          }, 1 / 2000);
+        }
 
         window.addEventListener('resize', function() {
           mousemove({

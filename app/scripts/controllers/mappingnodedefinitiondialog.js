@@ -32,7 +32,7 @@ angular.module('grafterizerApp')
           allPrefixes.push({id: i, 
                             value: $rootScope.transformation.rdfVocabs[i].name});
       return allPrefixes;
-  }
+  };
  
      $scope.conditionOperators = [
     {
@@ -327,7 +327,7 @@ $scope.addPref = function(query) {
                 $scope.nodeCurrentState.datatype = {name: 'unspecified', id: 0};
                 $scope.columnLiteralHasDatatype = false;
             }
-  } 
+  };
         
   $scope.addNode = function() {
            

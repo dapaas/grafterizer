@@ -86,6 +86,7 @@ angular
       // backendServiceProvider.setEndpoint('https://grafterizer.datagraft.net');
       jarfterServiceProvider.setEndpoint('https://grafterizer.datagraft.net');
       PipeServiceProvider.setEndpoints(
+        'http://localhost:8082',
       // PipeServiceProvider.setEndpoints('http://localhost:8080', 'http://localhost:8082');
         'http://localhost:8083');
       backendServiceProvider.setEndpoint('http://localhost:8082');

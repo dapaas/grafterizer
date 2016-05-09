@@ -94,7 +94,7 @@ angular.module('grafterizerApp')
         });
     };
 
-    var showError = function(data) {
+    /*var showError = function(data) {
       $mdDialog.hide();
 
       var contentError = '';
@@ -114,7 +114,7 @@ angular.module('grafterizerApp')
           })
         );
       }, 500);
-    };
+    };*/
 
     var executeAndSaveToQDS = function(accessUrl) {
       PipeService.fillRDFrepo($scope.distribution, $scope.transformation, accessUrl).success(function(data) {

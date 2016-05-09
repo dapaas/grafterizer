@@ -116,6 +116,7 @@ angular.module('grafterizerApp')
     }
   });
 
+  var fileSaved = false;
   $scope.$watch('transformation', function() {
     if ($scope.livePreview && $rootScope.transformation) {
       if ($rootScope.currentlyPreviewedFunction) {
@@ -130,7 +131,6 @@ angular.module('grafterizerApp')
     }
   }, true);
 
-  var fileSaved = false;
   $scope.$on('preview-request', function() {
     throttlePreview(false);
     fileSaved = true;

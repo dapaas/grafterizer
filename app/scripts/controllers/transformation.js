@@ -209,7 +209,7 @@ angular.module('grafterizerApp')
       angular.forEach(allcustomfunctions, function(expectedCFD) {
         var foundCfd = false;
         angular.forEach(transformation.customFunctionDeclarations, function(cfd) {
-          if (cfd.name == expectedCFD.name) {
+          if (cfd.name === expectedCFD.name) {
 
             foundCfd = true;
           }
