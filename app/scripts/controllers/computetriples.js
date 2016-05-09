@@ -137,7 +137,8 @@ angular.module('grafterizerApp')
 
       if ($scope.selectedQDS === 'new') {
         $scope.processingStatus = 'Creating the Queriable Data Store';
-        alert("Not implemented")
+        // TODO check this
+        window.alert('Not implemented');
       } else {
         executeAndSaveToQDS($scope.selectedQDS);
       }
