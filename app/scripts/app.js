@@ -53,7 +53,7 @@ angular
     $provide,
     $httpProvider) {
 
-    var developmentMode = window.location.origin === 'http://localhost:9000';
+    var developmentMode = !!window.location.port;
 
     if (typeof Raven !== 'undefined') {
 
@@ -80,16 +80,10 @@ angular
     }
 
     if (developmentMode) {
-      // PipeServiceProvider.setEndpoints(
-        // 'https://grafterizer.datagraft.net/backend',
-        // 'https://grafterizer.datagraft.net/cache');
-      // backendServiceProvider.setEndpoint('https://grafterizer.datagraft.net');
-      jarfterServiceProvider.setEndpoint('https://grafterizer.datagraft.net');
-      PipeServiceProvider.setEndpoints(
-        'http://localhost:8082',
-      // PipeServiceProvider.setEndpoints('http://localhost:8080', 'http://localhost:8082');
-        'http://localhost:8083');
-      backendServiceProvider.setEndpoint('http://localhost:8082');
+      var path = location.protocol + '//' + location.hostname;
+      jarfterServiceProvider.setEndpoint(path + ':8081');
+      backendServiceProvider.setEndpoint(path + ':8082');
+      PipeServiceProvider.setEndpoints(path + ':8082', path + ':8083');
     } else {
       PipeServiceProvider.setEndpoints('/backend', '/cache');
       jarfterServiceProvider.setEndpoint('');

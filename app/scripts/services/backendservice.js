@@ -27,7 +27,7 @@ angular.module('grafterizerApp')
           message = 'API error: ' + JSON.stringify(data.error);
         }
       } else if (status) {
-        if (status === 401) {
+        if (status === 401 || status < 100) {
           window.location = endpoint + '/oauth/begin';
           // message = 'Unauthorized access to the API';
           // $state.go('apikey');
