@@ -42,10 +42,10 @@ angular.module('grafterizerApp')
 
   try {
     $scope.selectedDistribution = $stateParams.distribution ?
-      window.atob($stateParams.distribution) : undefined;
+      $stateParams.distribution : undefined;
 
   } catch (e) {
-    $scope.distribution = null;
+    $scope.selectedDistribution = null;
   }
 
   $scope.totalNumberOfCalls = 0;
@@ -59,7 +59,6 @@ angular.module('grafterizerApp')
     $scope.totalNumberOfCalls++;
     savedGeneratedClojure = clojure;
     currentPreviewPage = 0;
-
     if (!clojure) return;
 
     PipeService.preview($scope.selectedDistribution, clojure, 0, paginationSize)

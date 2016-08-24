@@ -21,7 +21,7 @@ angular.module('grafterizerApp')
 
     try {
       $scope.distribution = $stateParams.distribution ?
-        window.atob($stateParams.distribution) : undefined;
+        $stateParams.distribution : undefined;
     } catch (e) {
       $scope.distribution = null;
     }

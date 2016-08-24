@@ -44,7 +44,6 @@ angular.module('grafterizerApp')
       } else {
         // if pipe - execute just pipe
         clojure += '\r\n(defn import-data\r\n  [pipe-result destination]\r\n  (write-dataset destination pipe-result)\r\n)\r\n\r\n(defn my-transformation [dataset output]\r\n\r\n  (import-data \r\n   (my-pipe dataset)\r\n  output)\r\n)';
-        console.log("PIPE");
       }
 
       return clojure;
