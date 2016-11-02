@@ -21,19 +21,21 @@ angular.module('grafterizerApp')
             transformationDataModel) {
   
   var paginationSize = 100;
-
+  
+  $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){ 
+    if(toParams.distribution){
+      $scope.$parent.showPreview = true;
+      $rootScope.previewmode = true;
+    } else {
+      $scope.$parent.showPreview = false;
+      $rootScope.previewmode = false;
+    }
+  });
+  
   $scope.livePreview = !(window.sessionStorage && window.sessionStorage.livePreview === 'false');
   $scope.selectedTabIndex = 0;
 
-  // $rootScope.previewmode = true;
-  $rootScope.$evalAsync('previewmode = true');
-
-  // TODO IT DOES WORK
-  $scope.$parent.showPreview = true;
   $scope.$on('$destroy', function() {
-    $scope.$parent.showPreview = false;
-    // $rootScope.previewmode = false;
-    $rootScope.$evalAsync('previewmode = false');
     if ($rootScope.currentlyPreviewedFunction) {
       $rootScope.currentlyPreviewedFunction.isPreviewed = false;
       $rootScope.currentlyPreviewedFunction = {};
